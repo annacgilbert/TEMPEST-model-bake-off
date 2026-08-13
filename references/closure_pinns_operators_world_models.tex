@@ -1,0 +1,1826 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,mathtools,bm}
+\usepackage{booktabs,tabularx,longtable,array}
+\usepackage{enumitem}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage[round,authoryear]{natbib}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{caption}
+\usepackage{needspace}
+
+\definecolor{deepblue}{RGB}{30,65,110}
+\definecolor{softblue}{RGB}{238,245,252}
+\definecolor{softgray}{RGB}{246,247,249}
+\definecolor{deepgreen}{RGB}{31,99,72}
+\definecolor{softgreen}{RGB}{238,248,243}
+\definecolor{deepred}{RGB}{145,52,52}
+\definecolor{softred}{RGB}{252,241,241}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=deepblue,
+  citecolor=deepgreen,
+  urlcolor=deepblue,
+  pdftitle={Closure Models, PINNs, Neural Operators, and World Models},
+  pdfauthor={}
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.62em}
+\setlist[itemize]{leftmargin=1.5em,itemsep=0.25em,topsep=0.25em}
+\setlist[enumerate]{leftmargin=1.7em,itemsep=0.25em,topsep=0.25em}
+\renewcommand{\arraystretch}{1.18}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\titleformat{\section}{\Large\bfseries\color{deepblue}}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\large\bfseries\color{deepblue}}{\thesubsection}{0.7em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{deepblue}}{\thesubsubsection}{0.7em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Closure Models, Neural Scientific Computing, and World Models}
+\fancyhead[R]{\small \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newtcolorbox{bigidea}[1][]{
+  enhanced,
+  breakable,
+  colback=softblue,
+  colframe=deepblue,
+  boxrule=0.7pt,
+  arc=2pt,
+  left=8pt,right=8pt,top=7pt,bottom=7pt,
+  title={#1},
+  fonttitle=\bfseries
+}
+
+\newtcolorbox{warningbox}[1][]{
+  enhanced,
+  breakable,
+  colback=softred,
+  colframe=deepred,
+  boxrule=0.7pt,
+  arc=2pt,
+  left=8pt,right=8pt,top=7pt,bottom=7pt,
+  title={#1},
+  fonttitle=\bfseries
+}
+
+\newtcolorbox{takeaway}[1][]{
+  enhanced,
+  breakable,
+  colback=softgreen,
+  colframe=deepgreen,
+  boxrule=0.7pt,
+  arc=2pt,
+  left=8pt,right=8pt,top=7pt,bottom=7pt,
+  title={#1},
+  fonttitle=\bfseries
+}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\G}{\mathcal{G}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\NN}{\mathrm{NN}}
+\newcommand{\sgs}{\mathrm{sgs}}
+\newcommand{\pinn}{\mathrm{PINN}}
+
+\title{\textbf{Closure Models, Physics-Informed Neural Networks,\\Neural Operators, and World Models}\\[0.45em]
+\large A unified numerical-approximation perspective}
+\author{}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This chapter develops a common language for several ideas that are often discussed in separate communities: closure modeling in fluid dynamics and kinetic theory, physics-informed neural networks, neural operators, structure-preserving scientific machine learning, and world models. The central observation is deliberately simple. A neural network is a flexible numerical approximation family; the decisive question is \emph{which mathematical object it is approximating}. It may approximate one solution of a differential equation, an input-to-solution operator, a constitutive or closure relation, a dynamical vector field, a time-advance map, an invariant manifold, or an action-conditioned transition kernel. Once that object is identified, the roles of equations, data, numerical solvers, physical constraints, and recursive prediction become much clearer.
+
+Particular attention is given to three complementary research programs. Work by Zaher Hani and collaborators on long-time particle-to-kinetic, kinetic-to-fluid, and wave-to-kinetic limits supplies canonical physical settings in which closure, factorization, cumulants, and interaction history can be tested against a known asymptotic answer. Work by Andrew Christlieb and collaborators develops hyperbolic machine-learned kinetic moment closures, while Qi Tang and collaborators study stabilized neural ODEs, fast-slow neural networks, symplectic neural maps, energetic variational learning, and local-global neural operators. These methods are compared with classical residual PINNs and with neural operators in the standard function-space sense. The final sections explain how the same approximation viewpoint extends naturally to world models: learned internal simulators that estimate latent state, predict action-conditioned futures, and support planning or policy learning.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{The organizing idea: what mathematical object is the network approximating?}
+
+At an extremely high level, a neural network is a flexible, parameterized family of functions. Training chooses parameters \(\theta\) so that one member of that family approximates a desired mathematical object. The object may be a scalar-valued function, a vector field, an operator between function spaces, a constitutive relation, a coordinate transformation, or a probability kernel.
+
+The vocabulary changes from field to field because the \emph{role} of the approximation changes. The same broad mathematical technology can therefore appear under very different names.
+
+\begin{bigidea}[The gross-level unification]
+\[
+\boxed{
+\text{neural network}
+=
+\text{a flexible numerical ansatz for a function, map, operator, or kernel.}
+}
+\]
+The scientifically meaningful questions are:
+\begin{enumerate}
+  \item What object is being approximated?
+  \item What information is used to fit it: equations, data, or both?
+  \item Which mathematical properties are merely encouraged, and which are guaranteed by construction?
+  \item Does the network replace the whole numerical solver, or only one component of it?
+  \item Will the learned object be evaluated once, integrated in time, or composed recursively for long rollouts?
+\end{enumerate}
+\end{bigidea}
+
+A useful first taxonomy is
+\begin{equation}
+\begin{aligned}
+ u_\theta(x,t)
+ &\approx u(x,t),
+ &&\text{a particular solution},\\
+ \G_\theta(a)
+ &\approx \G^\dagger(a),
+ &&\text{an input-to-solution operator},\\
+ \C_\theta(m,\nabla m)
+ &\approx \text{an unresolved closure term},\\
+ F_\theta(z)
+ &\approx F(z),
+ &&\text{a dynamical vector field},\\
+ \Phi_\theta(z,a)
+ &\approx \Phi(z,a),
+ &&\text{a controlled time-advance map},\\
+ h_\theta(x)
+ &\approx h(x),
+ &&\text{an invariant or slow manifold},\\
+ P_\theta(\dd z'\mid z,a)
+ &\approx P(\dd z'\mid z,a),
+ &&\text{a stochastic transition kernel}.
+\end{aligned}
+\end{equation}
+
+This classification already separates the major paradigms:
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}P{0.19\textwidth}Y Y@{}}
+\toprule
+\textbf{Paradigm} & \textbf{Typical learned object} & \textbf{Numerical role} \\
+\midrule
+Classical PINN & One function \(u_\theta(x,t)\) & Neural trial function for one forward or inverse problem \\
+Neural operator & Map \(a(\cdot)\mapsto u(\cdot)\) & Amortized solver for a family of problem instances \\
+Learned closure & Missing relation \(\C_\theta\) & Component inserted into a retained reduced PDE or ODE model \\
+Neural ODE & Vector field \(F_\theta\) & Learned right-hand side integrated by an ODE solver \\
+Learned flow map & Step map \(\Phi_\theta\) & Direct state-to-state surrogate, often recursively composed \\
+World model & Latent state model and transition kernel & Internal simulator for prediction, counterfactual rollout, and planning \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The rest of the chapter makes these distinctions precise, beginning with the classical closure problem in fluid dynamics.
+
+\section{Closure models and closure theories in fluid dynamics}
+
+\subsection{Closure begins before turbulence}
+
+Fluid mechanics is built from balance laws. Conservation of mass, momentum, and energy constrains the evolution of density, velocity, and internal energy, but these balances do not by themselves specify the material response. A momentum equation contains a stress tensor; an energy equation contains a heat flux. To obtain a usable continuum model one introduces constitutive relations, such as
+\[
+\boldsymbol{\sigma}
+= -pI + 2\mu S + \lambda(\nabla\cdot u)I,
+\qquad
+q=-\kappa\nabla T,
+\]
+together with an equation of state. The Newtonian stress law, Fourier heat conduction, and the equation of state are already \emph{closures}. They replace microscopic information by relations among retained macroscopic variables.
+
+Thus the Navier--Stokes--Fourier equations are not raw conservation laws. They are a closed continuum model of a more microscopic kinetic system.
+
+\subsection{The general closure mechanism}
+
+Suppose a full state \(X(t)\) evolves by
+\[
+\dot X=\mathcal{F}(X),
+\]
+but we retain only reduced variables
+\[
+a=\Pi X.
+\]
+Projecting or averaging the full equations often gives an exact identity for \(a\), but the identity contains quantities depending on the discarded part of \(X\). A closure replaces those unresolved quantities by a model involving the retained variables, perhaps including gradients, history, stochastic forcing, or auxiliary variables.
+
+\begin{takeaway}[Exact reduced equation versus approximate closure]
+Averaging, filtering, taking moments, or projecting modes can produce an exact reduced equation. The approximation enters when unresolved correlations, fluxes, memory terms, or conditional expectations are replaced by a tractable model.
+\end{takeaway}
+
+This distinction is essential. The reduced equation and the closure are conceptually different objects, even when they are written together as one model.
+
+\subsection{Reynolds-averaged turbulence and the moment hierarchy}
+
+For incompressible Navier--Stokes,
+\begin{equation}
+\partial_t u_i+u_j\partial_j u_i
+=-\partial_i p+\nu\Delta u_i,
+\qquad
+\partial_i u_i=0,
+\end{equation}
+write
+\[
+u_i=U_i+u_i',
+\qquad
+\langle u_i'\rangle=0.
+\]
+Averaging gives
+\begin{equation}
+\partial_t U_i+U_j\partial_jU_i
+=-\partial_i\overline p+\nu\Delta U_i-\partial_jR_{ij},
+\end{equation}
+where
+\[
+R_{ij}=\langle u_i'u_j'\rangle
+\]
+is the Reynolds-stress tensor. The equation for the mean velocity is not closed because \(R\) is not determined by \(U\).
+
+One can derive a transport equation for \(R_{ij}\). Schematically,
+\begin{equation}
+\frac{D R_{ij}}{Dt}
+=P_{ij}+\Phi_{ij}-\varepsilon_{ij}+D_{ij},
+\end{equation}
+where production is largely determined by resolved mean gradients, while pressure--strain redistribution, dissipation, and turbulent transport involve new correlations. Third moments such as
+\[
+\langle u_i'u_j'u_k'\rangle
+\]
+appear; their equations involve fourth moments; and so on. This is the turbulence moment hierarchy.
+
+\subsection{RANS closures}
+
+Reynolds-averaged Navier--Stokes models seek mean quantities without resolving individual turbulent eddies \citep{pope2000turbulent}.
+
+\subsubsection{Linear eddy viscosity}
+
+The classical Boussinesq form is
+\begin{equation}
+R_{ij}
+=\frac{2}{3}k\delta_{ij}-2\nu_t S_{ij},
+\qquad
+k=\frac12R_{ii},
+\end{equation}
+with
+\[
+S_{ij}=\frac12(\partial_jU_i+\partial_iU_j).
+\]
+The eddy viscosity \(\nu_t\) models turbulent momentum transport. The key restriction is tensorial: the anisotropic stress is assumed locally aligned with the mean strain.
+
+A mixing-length closure may use
+\[
+\nu_t=\ell_m^2\left|\frac{\dd U}{\dd y}\right|.
+\]
+One-equation models transport a viscosity-like or energy-like variable. Two-equation models transport two turbulent quantities, for example
+\[
+\nu_t=C_\mu\frac{k^2}{\varepsilon}
+\qquad\text{or}\qquad
+\nu_t\sim\frac{k}{\omega}.
+\]
+The extra equations do not eliminate closure; their production, diffusion, dissipation, and wall behavior must themselves be modeled.
+
+\subsubsection{Nonlinear algebraic stress and Reynolds-stress transport}
+
+A nonlinear eddy-viscosity model permits a richer tensor relation
+\begin{equation}
+b
+=\frac{R}{2k}-\frac13I
+=\sum_n g_n(I_1,I_2,\ldots)T^{(n)}(S,\Omega),
+\end{equation}
+where \(T^{(n)}\) are invariant tensor-basis elements formed from strain \(S\) and rotation \(\Omega\).
+
+A Reynolds-stress transport model instead evolves the six independent entries of \(R\), plus one or more scale variables. This gives more freedom for anisotropy, rotation, curvature, and secondary flows, but the pressure--strain, dissipation, and triple-correlation transport terms remain unclosed. Closure has moved deeper into the hierarchy rather than disappeared.
+
+\subsection{Large-eddy simulation closure}
+
+Large-eddy simulation filters the velocity rather than taking a long-time or ensemble mean. Filtering gives
+\begin{equation}
+\partial_t\overline u_i
++\overline u_j\partial_j\overline u_i
+=-\partial_i\overline p+\nu\Delta\overline u_i-\partial_j\tau_{ij},
+\end{equation}
+where
+\begin{equation}
+\tau_{ij}
+=\overline{u_i u_j}-\overline u_i\,\overline u_j
+\end{equation}
+is the subgrid-scale stress. LES resolves large eddies and models the transfer across a chosen filter or grid scale.
+
+\subsubsection{Functional closures}
+
+A functional model emphasizes the net transfer of energy between resolved and unresolved scales. The Smagorinsky model uses
+\begin{equation}
+\tau_{ij}^{d}
+=-2\nu_{\sgs}\overline S_{ij},
+\qquad
+\nu_{\sgs}=(C_s\Delta)^2|\overline S|,
+\end{equation}
+following the subgrid-viscosity idea of \citet{smagorinsky1963general}. Its modeled energy transfer is
+\begin{equation}
+\Pi=-\tau_{ij}\overline S_{ij}
+=2\nu_{\sgs}\overline S_{ij}\overline S_{ij}\ge 0,
+\end{equation}
+so the model always removes energy from the resolved field. This is stabilizing and represents the average forward cascade, but it excludes local backscatter.
+
+Dynamic models infer coefficients from the resolved flow by comparing two filter levels, using the Germano identity \citep{germano1991dynamic}.
+
+\subsubsection{Structural closures and implicit LES}
+
+Structural models seek to approximate the tensor \(\tau\) itself. Scale-similarity models, gradient expansions, approximate deconvolution, and mixed models fall into this category. They can represent stress structure and backscatter more faithfully, but they may supply too little net dissipation for a stable computation.
+
+In implicit LES no explicit subgrid stress is written. Dissipation from reconstruction, limiting, fluxes, and time stepping acts as an effective closure. The numerical discretization is then part of the physical model rather than a neutral implementation detail.
+
+\subsection{Statistical closure theories}
+
+In homogeneous turbulence one can derive evolution equations for two-point correlations or spectra. A two-point covariance
+\[
+C_{ij}(x-y,t)=\langle u_i(x,t)u_j(y,t)\rangle
+\]
+or an energy spectrum \(E(k,t)\) evolves through third-order correlations representing triadic interactions. Equations for third-order correlations involve fourth-order correlations.
+
+Classical closure strategies include quasi-normal approximations, eddy-damped quasi-normal models, direct-interaction approximation, and Lagrangian-history variants. Kraichnan's direct-interaction program introduced response functions alongside correlations and derived self-consistent spectral equations \citep{kraichnan1959structure}.
+
+An essential requirement is \emph{realizability}. A modeled covariance must remain positive semidefinite, and an energy spectrum cannot become negative. A statistical closure that violates these conditions is not merely inaccurate; it no longer corresponds to any probability law.
+
+\subsection{Kinetic and moment closure}
+
+Let \(f(x,v,t)\) be a kinetic distribution. Its moments are
+\begin{equation}
+M^{(n)}(x,t)=\int v^{\otimes n}f(x,v,t)\dd v.
+\end{equation}
+The equation for the \(n\)-th moment generally contains the \((n+1)\)-st moment. Retaining density, momentum, and energy does not automatically determine stress and heat flux.
+
+Different assumptions on \(f\) produce different fluid closures:
+\begin{itemize}
+  \item a local Maxwellian gives compressible Euler;
+  \item near-equilibrium asymptotics give Navier--Stokes--Fourier;
+  \item Grad systems retain finitely many polynomial or Hermite moments;
+  \item Gaussian closures retain anisotropic covariance information;
+  \item maximum-entropy closures choose a distribution by constrained entropy optimization.
+\end{itemize}
+
+Entropy-based moment hierarchies make structural goals such as hyperbolicity, realizability, and entropy dissipation explicit \citep{levermore1996moment}.
+
+\subsection{Mori--Zwanzig: exact closure generally contains memory}
+
+Projection-operator theory gives a particularly clean abstract account. If the full dynamics contain resolved variables \(a\) and unresolved variables \(b\), then eliminating \(b\) leads formally to a generalized Langevin equation
+\begin{equation}
+\dot a(t)
+=\M(a(t))
++\int_0^t\K(a(t-s),s)\dd s
++\eta(t).
+\end{equation}
+The three pieces are an instantaneous term, a memory term, and an orthogonal-dynamics or fluctuating term \citep{mori1965transport,zwanzig1961memory}.
+
+\begin{bigidea}[A crucial closure lesson]
+Exact reduced dynamics are generally nonlocal in time and depend on unresolved initial information. A local deterministic closure
+\[
+\dot a=F(a)
+\]
+is therefore a modeling assumption, not a generic consequence of eliminating variables.
+\end{bigidea}
+
+This point will return later. A neural ODE trained on coarse observations may not mention the original PDE, yet it is implicitly making a Markovian closure assumption.
+
+\subsection{Data-driven closure}
+
+Machine learning changes the representation or calibration of the closure; it does not remove the closure problem. One may learn
+\[
+R_{ij}=\C_{ij}(U,\nabla U,k,\varepsilon,\ldots),
+\]
+a subgrid stress, a correction to a production term, an unresolved kinetic moment, or a memory kernel.
+
+A credible learned closure should respect as much known structure as possible:
+\begin{equation}
+\begin{gathered}
+\text{frame invariance},\quad
+\text{tensor symmetry},\quad
+\text{conservation},\quad
+\text{realizability},\\
+\text{correct asymptotic limits},\quad
+\text{stable energy behavior}.
+\end{gathered}
+\end{equation}
+
+It is also important to distinguish two tests:
+\begin{align*}
+\textit{a priori:}&\quad
+\text{Does the closure match high-fidelity targets on stored data?}\\
+\textit{a posteriori:}&\quad
+\text{Does the coupled reduced equation plus closure produce the correct evolution?}
+\end{align*}
+A highly accurate offline stress fit can still destabilize the closed PDE, alter its attractor, or feed itself inputs outside the training distribution.
+
+\subsection{What makes a closure credible?}
+
+Across RANS, LES, kinetic moments, and data-driven reduction, several requirements recur.
+
+\begin{enumerate}
+  \item \textbf{Symmetry and invariance.} The model should transform correctly under rotations, translations, and changes of inertial frame.
+  \item \textbf{Realizability.} For example, a Reynolds stress satisfies
+  \[
+  R=\langle u'u'^{T}\rangle\succeq0,
+  \qquad
+  |R_{ij}|^2\le R_{ii}R_{jj}.
+  \]
+  \item \textbf{Correct energy or entropy behavior.} The closure must put energy in the right scales and must not generate forbidden growth.
+  \item \textbf{Correct limits.} It should recover laminar, near-equilibrium, diffusive, near-wall, or mesh-refined limits where appropriate.
+  \item \textbf{Nonlocality and memory.} A purely local instantaneous closure is a substantive simplification.
+  \item \textbf{Well-posedness.} A plausible stress formula is not enough if the resulting PDE loses hyperbolicity, parabolicity, or numerical stability.
+\end{enumerate}
+
+The next sections explain how neural approximations enter these problems, and why different scientific-machine-learning paradigms learn different mathematical objects.
+
+\section{Zaher Hani and collaborators: rigorous scale limits as canonical closure benchmarks}
+
+The work of Zaher Hani and collaborators is not a catalog of plug-in closure formulas. It is more foundational: it proves, in carefully controlled physical regimes, when a microscopic or wave description reduces to a kinetic equation and when a kinetic equation reduces further to fluid mechanics. Those results identify the scaling limit, the information discarded by the reduction, the time horizon over which the reduction remains valid, and the mathematical structures used to control the discarded information. For a computational closure program, that combination is unusually valuable.
+
+The three relevant papers form a connected chain. Deng, Hani, and Ma derive the Boltzmann equation from a rarefied hard-sphere gas for arbitrarily long times within the lifespan of the Boltzmann solution \citep{denghani2025boltzmann}. A companion paper connects hard-sphere dynamics, through Boltzmann kinetic theory, to compressible Euler and incompressible Navier--Stokes--Fourier limits \citep{denghani2025hilbert}. Deng and Hani obtain a long-time justification of the homogeneous wave kinetic equation over its full lifespan in a weakly nonlinear random-wave regime \citep{denghani2024wave}.
+
+\subsection{What the three results contribute}
+
+\subsubsection{Hard spheres to Boltzmann}
+
+The microscopic system consists of elastically colliding hard particles in a rarefied-gas scaling. The reduced description is the one-particle distribution governed by the Boltzmann equation. The central closure assumption is propagation of chaos: finite collections of particles become approximately independent in the kinetic limit, so that the collision term can be written using products of one-particle distributions.
+
+At finite density and finite scale separation, independence is not exact. Recollisions and shared collision ancestry produce connected correlations. The long-time proof propagates a structured cumulant ansatz, restarts partial expansions across time layers, and organizes collision histories through diagrams called \emph{molecules}. Computationally, these objects suggest measurable diagnostics: projected two- and three-particle cumulants, recollision counts, collision-graph connectivity, factorization error, and the residual of the Boltzmann equation.
+
+\subsubsection{Boltzmann to fluid}
+
+The companion result continues the reduction from kinetic theory to classical fluid equations. Compressible Euler arises from a local-equilibrium regime, while incompressible Navier--Stokes--Fourier arises under a different hydrodynamic scaling and preparation of the kinetic data. This makes the work especially useful for closure research because it displays two successive information losses:
+\[
+\text{Newtonian particles}
+\longrightarrow
+\text{Boltzmann distribution}
+\longrightarrow
+\text{fluid fields and constitutive fluxes}.
+\]
+The first step suppresses particle correlations; the second suppresses velocity-space information beyond a few hydrodynamic moments. A numerical benchmark can therefore test not only whether the end-to-end fluid limit is recovered, but also which error enters at each reduction and whether a learned correction is attached to the correct level of the hierarchy.
+
+\subsubsection{Nonlinear waves to wave kinetics}
+
+The wave-turbulence result treats a different microscopic mechanism but the same closure logic. A nonlinear dispersive wave field has interacting Fourier modes; the reduced wave kinetic equation evolves a spectrum rather than the phases and higher joint statistics of those modes. Random-phase or near-Gaussian factorization is the analogue of molecular chaos. Connected spectral cumulants and resonant interaction histories measure the information discarded by that closure.
+
+The long-time analysis again uses time layering and structured interaction diagrams, here called canonical layered gardens. This supplies a second canonical testbed in which the unresolved information is spectral rather than particle based. Agreement of a closure diagnostic across the particle and wave tracks would therefore be stronger evidence than success on two variants of the same simulator.
+
+\subsection{Why these are unusually good benchmark settings}
+
+These regimes are ``standard'' in a precise sense: hard-sphere kinetic theory, Boltzmann hydrodynamic limits, and weakly nonlinear wave kinetics are canonical models with explicit microscopic dynamics, explicit reduced equations, and named small parameters. They are substantially cleaner than a driven, bounded, magnetized, multispecies TEMPEST application, but that simplicity is an advantage at the validation stage.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}P{0.19\textwidth}P{0.21\textwidth}P{0.24\textwidth}Y@{}}
+\toprule
+\textbf{Canonical reduction} & \textbf{Classical closure} & \textbf{Discarded information} & \textbf{Benchmark evidence} \\
+\midrule
+Hard particles $\to$ Boltzmann & Molecular chaos / factorization & Connected particle cumulants and collision ancestry & Convergence of marginals, collision statistics, cumulants, and Boltzmann residuals \\
+Boltzmann $\to$ fluid & Local equilibrium and constitutive asymptotics & Non-Maxwellian velocity structure, higher moments, and kinetic remainder & Recovery of Euler or Navier--Stokes--Fourier fields, stresses, heat fluxes, and scaling rates \\
+Nonlinear waves $\to$ wave kinetics & Random-phase or near-Gaussian spectral factorization & Spectral cumulants, phase information, and resonant interaction history & Convergence of spectra, transfer rates, spectral cumulants, and wave-kinetic residuals \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+They provide six properties that an evaluation harness needs:
+\begin{enumerate}
+  \item \textbf{A known target.} The limiting kinetic or fluid equation is specified before any model is trained.
+  \item \textbf{A scaling coordinate.} Density, particle size, Knudsen number, wave nonlinearity, or scale separation can be swept toward and away from the trusted limit.
+  \item \textbf{Observable discarded information.} Cumulants, histories, non-equilibrium moments, and hierarchy residuals can be estimated from ensembles rather than discussed only qualitatively.
+  \item \textbf{A long-time test.} The results are designed to control kinetic behavior beyond the very short horizons on which a closure may look accurate accidentally.
+  \item \textbf{Controlled failure regimes.} One can deliberately leave the asymptotic assumptions by increasing density, strengthening correlations or coherent waves, reducing scale separation, or introducing steep kinetic structure.
+  \item \textbf{Error separation.} Numerical discretization, ensemble estimation, asymptotic-limit error, closure-model error, and learned-model error can be varied and reported separately.
+\end{enumerate}
+
+\subsection{From proof objects to a computational evaluation harness}
+
+For each canonical track, let $U^\varepsilon$ denote the high-fidelity state at scale parameter $\varepsilon$, let $u^\varepsilon=\Pi U^\varepsilon$ be the retained state, and let $\mathcal F_0(u^\varepsilon)$ denote the declared classical reduced operator. The measurable closure defect is
+\begin{equation}
+\mathcal D^\varepsilon(t)
+=
+\partial_t u^\varepsilon(t)-\mathcal F_0\bigl(u^\varepsilon(t)\bigr).
+\end{equation}
+The numerical program asks whether $\mathcal D^\varepsilon$ is predicted by a compact state built from projected cumulants, interaction-history summaries, non-equilibrium moments, or finite memory. Analytic, learned, and hybrid closures are then invoked through the same interface and scored with the same accuracy, stability, structure, reliability, and cost metrics.
+
+The proof machinery is not itself assumed to be an efficient algorithm. Molecules, gardens, and cutting arguments first tell us what must be controlled. The computational question is whether low-order projections or learned compressions of those objects predict closure failure and improve the reduced solver. Negative answers are scientifically useful: they show that the proposed cumulant order, memory length, or representation is insufficient.
+
+\subsection{What transfers to TEMPEST---and what does not}
+
+The transferable contribution is the \emph{experimental logic}: declare the hierarchy, identify the classical limit, expose the discarded correlations or moments, measure the exact closure defect, sweep a validity parameter, and test both asymptotic recovery and controlled breakdown. The common computational evaluation harness can carry that logic unchanged.
+
+The physical equations and theorem assumptions do not transfer unchanged. TEMPEST applications may be magnetized, driven, bounded, multispecies, anisotropic, nonlocal, shock forming, or coupled across several physics packages. Their correlations need not be small, their memory may remain order one, and their natural reduced operator may be Braginskii, extended MHD, radiation hydrodynamics, or another application-specific model rather than Boltzmann or the homogeneous wave kinetic equation.
+
+\begin{warningbox}[The correct role of Hani's work in the bake-off]
+The canonical tracks validate whether the harness can detect, represent, and score closure in regimes where the reduction is mathematically understood. They do not claim that a hard-sphere or homogeneous-wave closure is an MTF closure. Each TEMPEST application must replace the equations, state, scaling parameters, constraints, observables, and coefficients while retaining the validated diagnostic and evaluation protocol.
+\end{warningbox}
+
+\section{Neural networks as numerical approximation families}
+
+\subsection{The finite-element analogy}
+
+A traditional numerical method begins by choosing an approximation family. A finite-element method writes
+\begin{equation}
+ u_h(x,t)=\sum_{j=1}^{N}c_j\phi_j(x,t),
+\end{equation}
+where the basis functions \(\phi_j\) are prescribed and the coefficients \(c_j\) are determined from a discrete variational or algebraic problem. A spectral method uses Fourier modes or orthogonal polynomials. A radial-basis method uses translated kernels.
+
+A neural approximation instead chooses a nonlinear parameterized family
+\begin{equation}
+ u_\theta(x,t)
+= W_L\sigma\bigl(W_{L-1}\sigma(\cdots\sigma(W_1[x,t]+b_1)\cdots)+b_{L-1}\bigr)+b_L.
+\end{equation}
+The parameters \(\theta\) consist of weights and biases. The neural network is therefore not mysterious at this level: it is a large adaptive trial family built from compositions of affine maps and nonlinearities.
+
+The important novelty is not merely that this family can approximate a function \(u\). The same technology can parameterize an entire solver map, an unknown constitutive law, a vector field, an invariant coordinate system, or a transition kernel.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}P{0.23\textwidth}Y@{}}
+\toprule
+\textbf{Approximation technology} & \textbf{Typical representation} \\
+\midrule
+Finite differences & Values on a grid and local difference stencils \\
+Finite elements & Piecewise-polynomial trial and test spaces \\
+Spectral methods & Fourier, Chebyshev, or other global basis expansions \\
+Radial basis methods & Sums of translated kernels \\
+Neural methods & Compositions of affine maps and nonlinear activations, possibly with convolution, attention, integral kernels, recurrence, or geometric constraints \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The choice of learned object determines the training problem and the deployment model.
+
+\subsection{Approximating one function}
+
+A coordinate network may represent
+\[
+ u_\theta:(x,t)\longmapsto u_\theta(x,t).
+\]
+This is the basic PINN viewpoint. The network is a trial function for one solution. The parameters are selected so that this trial function fits observations, initial and boundary conditions, and a differential-equation residual.
+
+\subsection{Approximating a map between functions}
+
+A neural operator represents
+\[
+ \G_\theta:a(\cdot)\longmapsto u(\cdot).
+\]
+The input may be an initial condition, forcing, coefficient field, boundary function, geometry encoding, or a collection of parameters. The output is a full function. The goal is not one solution but a reusable approximation to a whole solution operator.
+
+\subsection{Approximating a missing term}
+
+A learned closure represents
+\[
+ \C_\theta:
+ \text{resolved state and features}
+ \longmapsto
+ \text{unresolved flux, stress, or moment}.
+\]
+The known equations remain in place. A conventional numerical method solves them after the network supplies the missing relation.
+
+\subsection{Approximating a vector field or flow map}
+
+A neural ODE learns
+\[
+ \dot z=F_\theta(z),
+\]
+and then an ODE solver integrates the learned vector field. A learned flow map instead predicts
+\[
+ z^{n+1}=\Phi_\theta(z^n),
+\]
+thereby replacing one time step or a finite-time evolution map directly.
+
+These are not interchangeable. Learning \(F\) asks for an infinitesimal generator; learning \(\Phi_{\Delta t}\) asks for a finite-time map. Their stability, data requirements, and dependence on the chosen time increment differ.
+
+\subsection{Approximating geometry or latent state}
+
+A network can learn a coordinate transformation
+\[
+ z\longmapsto(z_{\mathrm{slow}},z_{\mathrm{fast}}),
+\]
+an invariant manifold
+\[
+ z_{\mathrm{fast}}=h_\theta(z_{\mathrm{slow}}),
+\]
+or an encoder from observation history to latent state
+\[
+ z_t=E_\theta(o_0,a_0,\ldots,o_t).
+\]
+Here the network is not merely predicting the next physical field. It is constructing the state variables in which prediction or control becomes feasible.
+
+\section{Classical physics-informed neural networks}
+
+\subsection{The narrow, original meaning}
+
+For a PDE
+\begin{equation}
+ \N_\lambda[u]=f
+ \quad\text{in }\Omega,
+ \qquad
+ \mathcal{B}[u]=g
+ \quad\text{on }\partial\Omega,
+\end{equation}
+a classical PINN chooses a coordinate network \(u_\theta(x,t)\) and minimizes a loss of the form
+\begin{equation}
+\begin{aligned}
+ \mathcal{L}(\theta)
+ ={}&
+ \lambda_{\mathrm{PDE}}
+ \frac1{N_r}\sum_{j=1}^{N_r}
+ \left|
+ \N_\lambda[u_\theta](x_j,t_j)-f(x_j,t_j)
+ \right|^2\\
+ &+\lambda_{\mathrm{BC}}\mathcal{L}_{\mathrm{BC}}
+ +\lambda_{\mathrm{IC}}\mathcal{L}_{\mathrm{IC}}
+ +\lambda_{\mathrm{data}}\mathcal{L}_{\mathrm{data}}.
+\end{aligned}
+\end{equation}
+Automatic differentiation evaluates derivatives of \(u_\theta\). The network parameters are optimized so that one neural trial function approximately satisfies the equation, constraints, and data \citep{raissi2019pinn}.
+
+\begin{bigidea}[The right mental model for a classical PINN]
+A classical PINN replaces a conventional discrete PDE solve by a nonlinear optimization problem over a neural trial space. It ordinarily learns \emph{one solution} for one problem instance.
+\end{bigidea}
+
+The same residual-based idea can be used for ODEs, differential-algebraic equations, kinetic equations, and some integro-differential or stochastic problems. Thus the phrase ``PINN'' need not literally require a partial differential equation. What it requires in its classical form is a known governing equation whose residual can be evaluated.
+
+\subsection{Forward and inverse problems}
+
+For a forward problem, the equation and coefficients are known and \(u\) is unknown. For an inverse problem, one may learn both \(u_\theta\) and unknown parameters \(\lambda\), for example
+\[
+ \partial_tu+\lambda u\partial_xu-\nu\partial_{xx}u=0.
+\]
+Sparse observations can inform \(\lambda\) and \(\nu\) while the residual regularizes the inferred state.
+
+This is one of the most natural uses of PINNs: the unknown state and unknown physical parameters are fitted jointly from incomplete observations under a known equation form.
+
+\subsection{Where the physics enters}
+
+In a vanilla PINN, the physics is primarily a \emph{soft penalty}:
+\[
+ \N[u_\theta]\approx0.
+\]
+The optimizer may trade residual accuracy against initial conditions, boundary conditions, and data fit. A small sampled residual does not automatically imply
+\[
+\begin{gathered}
+\text{exact conservation},\qquad
+\text{positivity},\qquad
+\text{hyperbolicity},\\
+\text{entropy stability},\qquad
+\text{correct long-time dynamics}.
+\end{gathered}
+\]
+
+Many refined PINN methods add hard boundary parameterizations, weak or variational forms, domain decomposition, adaptive sampling, conservative formulations, causal training, and special architectures. Consequently, one should not reduce all PINNs to the simplest squared-residual implementation. Nevertheless, the defining learned object remains a solution function, and the governing equation is normally used directly in training.
+
+\subsection{Why PINNs can be difficult}
+
+The PDE residual, boundary residual, initial residual, and data residual can operate on different scales and generate conflicting gradients. High frequencies, sharp fronts, stiffness, chaotic dynamics, and long time intervals can make the optimization poorly conditioned.
+
+There is also a distinction between an approximation error and an optimization error. The network family may be expressive enough to represent a good solution, yet gradient-based training may not find it. Classical numerical analysis often studies consistency and stability of a specified discretization. PINNs add a large nonconvex optimization layer between the approximation family and the computed answer.
+
+\section{Neural operators}
+
+\subsection{From one solution to a family of solutions}
+
+Suppose \(a\) denotes problem data:
+\[
+ a=
+ \{\text{coefficient field, initial condition, forcing, boundary data, geometry, parameters}\}.
+\]
+A PDE or another process defines a map
+\begin{equation}
+ \G^\dagger:a(\cdot)\longmapsto u(\cdot).
+\end{equation}
+A neural operator learns
+\[
+ \G_\theta\approx\G^\dagger
+\]
+from many input-output pairs
+\[
+ \{a_j,u_j\}_{j=1}^{N},
+ \qquad
+ u_j=\G^\dagger(a_j).
+\]
+DeepONet, Fourier neural operators, graph neural operators, kernel neural operators, wavelet constructions, and operator transformers are architectural families for representing maps between functions \citep{lu2021deeponet,li2021fno,kovachki2023neuraloperator}.
+
+\begin{bigidea}[The right mental model for a neural operator]
+A neural operator pays a potentially large offline training cost to build an amortized solver for an entire distribution of problem instances. Once trained, a new input function can be mapped to an output function very quickly.
+\end{bigidea}
+
+A standard supervised objective is
+\begin{equation}
+ \min_\theta
+ \frac1N\sum_{j=1}^{N}
+ \left\|\G_\theta(a_j)-u_j\right\|_{\mathcal{U}}^2.
+\end{equation}
+The network is shared across many instances, unlike a classical PINN that is normally reoptimized for one instance.
+
+\subsection{A standard neural operator does not require knowing a PDE}
+
+The operator-learning problem is mathematically
+\[
+ \text{input function}\longmapsto\text{output function}.
+\]
+Paired data are sufficient. The outputs could come from a PDE solver, laboratory measurements, molecular dynamics, a different simulator, or any reproducible function-to-function transformation. A PDE may have generated the data, but the training algorithm need not evaluate or even know it.
+
+This yields an important distinction:
+\begin{align*}
+\text{PDE as training constraint:}&\quad
+\N[\G_\theta(a)]\text{ is evaluated};\\
+\text{PDE as data source:}&\quad
+\text{only pairs }(a,u)\text{ are used};\\
+\text{PDE as architectural inspiration:}&\quad
+\begin{gathered}
+\text{conservation, locality, or multiscale structure}\\
+\text{shapes the model.}
+\end{gathered}
+\end{align*}
+
+\subsection{Fourier neural operators and discretization}
+
+An FNO alternates pointwise nonlinearities with global Fourier-domain integral operators. In simplified form,
+\begin{equation}
+ v_{\ell+1}(x)
+ =\sigma\left(W_\ell v_\ell(x)
+ +\mathcal{F}^{-1}\bigl(R_\ell(k)\mathcal{F}v_\ell(k)\bigr)(x)\right).
+\end{equation}
+The operator viewpoint is intended to separate the learned map from one fixed grid, although actual performance still depends on sampling, truncation, architecture, and the input distribution.
+
+The attractive computational economics are
+\[
+\text{expensive data generation and training}
+\quad\longrightarrow\quad
+\text{very cheap repeated inference}.
+\]
+This is particularly useful for uncertainty quantification, inverse design, optimization, data assimilation, control, and parameter sweeps requiring many related solves.
+
+\subsection{PINO: the bridge between PINNs and neural operators}
+
+A physics-informed neural operator combines operator regression with equation constraints:
+\begin{equation}
+\mathcal{L}_{\mathrm{PINO}}
+=\mathcal{L}_{\mathrm{operator\ data}}
++\lambda_{\mathrm{PDE}}
+\E_{a\sim\mu}
+\left[
+\left\|\N_a[\G_\theta(a)]\right\|^2
+\right].
+\end{equation}
+It learns over many problem instances, but uses the PDE residual as supervision or regularization \citep{li2021pino}.
+
+Thus:
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}P{0.18\textwidth}Y Y@{}}
+\toprule
+& \textbf{Learned object} & \textbf{Training scope} \\
+\midrule
+PINN & One solution \(u_\theta\) & One instance, usually equation-constrained optimization \\
+Neural operator & Operator \(\G_\theta\) & Many input-output instances, often supervised \\
+PINO & Operator \(\G_\theta\) & Many instances with data and/or PDE constraints \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{Neural operators are not automatically physical}
+
+A neural operator can have low one-step or fieldwise error while violating conservation, positivity, causality, symmetry, or stability. Recursive rollouts may amplify small errors. The operator can also fail under distribution shift: a new coefficient field, initial condition, forcing, or geometry may lie outside the training measure.
+
+The phrase ``operator learning'' therefore identifies the learned object. It does not by itself certify physical admissibility or long-time reliability.
+
+\section{Soft physics and hard physics}
+
+The contrast between residual PINNs and much structure-preserving scientific machine learning can be summarized as follows.
+
+\subsection{Soft physics}
+
+A loss term says
+\[
+\text{``Please make this violation small on sampled training states.''}
+\]
+For example, one might penalize nonreal characteristic speeds by
+\begin{equation}
+\mathcal{L}_{\mathrm{hyp}}
+=\sum_q
+\left|\operatorname{Im}\lambda_q(A_\theta)\right|^2.
+\end{equation}
+The optimizer can trade this penalty against other objectives, and the condition is checked only where training samples or collocation points are supplied.
+
+\subsection{Hard physics}
+
+An architectural parameterization says
+\[
+\text{``Every model produced by this architecture belongs to an admissible class.''}
+\]
+Examples include
+\begin{align*}
+ A_\theta(m)&\text{ is hyperbolic by construction},\\
+ (D\Phi_\theta)^TJ(D\Phi_\theta)&=J\text{ by composition of symplectic layers},\\
+ \M_\theta&\text{ is an attracting invariant manifold by design},\\
+ \sum_i(u_i^{n+1}-u_i^n)&=0\text{ through a conservative projection}.
+\end{align*}
+
+Hard structure does not guarantee predictive accuracy. A perfectly hyperbolic closure can be quantitatively wrong; a perfectly symplectic map can approximate the wrong dynamics. What it guarantees is that the learned model will not fail in that particular prohibited way.
+
+\begin{takeaway}[The Christlieb--Tang methodological theme]
+Retain trusted mathematical structure, isolate the unknown or expensive component, parameterize only an admissible class for that component, and learn the remaining degrees of freedom from data.
+\end{takeaway}
+
+\section{Andrew Christlieb's program: learned kinetic closures inside admissible PDE models}
+
+Christlieb's work is the most direct continuation of the classical closure story. The network ordinarily does not represent the full kinetic solution and does not replace the entire reduced PDE solver. It supplies a carefully chosen missing relation in a moment system.
+
+\subsection{The kinetic moment problem}
+
+In one spatial and velocity dimension, let
+\begin{equation}
+ m_k(x,t)=\int_{\R}v^k f(x,v,t)\dd v.
+\end{equation}
+Taking moments of a transport or kinetic equation produces a hierarchy resembling
+\begin{equation}
+ \partial_t m_k+\partial_xm_{k+1}=S_k,
+ \qquad k=0,1,\ldots.
+\end{equation}
+If one retains \(m_0,\ldots,m_N\), the last equation contains the unknown \(m_{N+1}\). A closure is needed.
+
+A straightforward learned closure would predict
+\[
+ m_{N+1}=\C_\theta(m_0,\ldots,m_N).
+\]
+Christlieb and collaborators instead developed a gradient-based relation of the form
+\begin{equation}
+ \partial_xm_{N+1}
+ \approx
+ \sum_{j=0}^{N}a_{j,\theta}(m_0,\ldots,m_N)\,\partial_xm_j.
+ \label{eq:gradientclosure}
+\end{equation}
+The network predicts the coefficients \(a_{j,\theta}\), and the closed moment PDE is advanced by a numerical method.
+
+\begin{bigidea}[What the neural network is approximating]
+In this program the network approximates neither \(f(x,v,t)\) nor the full input-to-solution map. It approximates the missing high-moment flux contribution needed by the last retained moment equation.
+\end{bigidea}
+
+This is a genuine constitutive closure:
+\[
+\boxed{
+\text{known moment equations}
++
+\text{learned top-order closure}
++
+\text{conventional hyperbolic solver}.
+}
+\]
+
+\subsection{Radiative-transfer closure I: learn the gradient relation}
+
+The first paper in the radiative-transfer series proposes learning the gradient of the unclosed moment rather than learning the moment itself \citep{huang2021rte1}. This choice is motivated by the exact free-streaming structure and by the role the missing derivative plays in the retained PDE.
+
+The conceptual move is important. A generic regression problem would ask the network to approximate an available target. A closure-oriented design asks a more structural question:
+\begin{quote}
+Which unresolved quantity appears in the reduced equation, and what is the smallest learned relation needed to make that reduced equation executable?
+\end{quote}
+
+The gradient closure can also be normalized in ways adapted to the moment variables. Numerical comparisons in the series show that predicting the derivative relation can outperform learning the high moment pointwise and can improve over conventional low-order moment closure in the tested transport regimes.
+
+\subsection{Radiative-transfer closure II: global hyperbolicity}
+
+A learned coefficient vector \(a_\theta\) changes the principal matrix of the moment system. A generic network may produce a matrix with complex eigenvalues. The resulting PDE can lose hyperbolicity, so even a good offline regression fit may generate an ill-behaved time evolution.
+
+The second paper seeks a symmetric positive-definite symmetrizer and derives restrictions under which the learned closure system is globally symmetrizable hyperbolic \citep{huang2021rte2}. The construction is also arranged to retain dissipative structure and the correct diffusion limit as the Knudsen number tends to zero.
+
+This is stronger than adding a loss term that penalizes complex eigenvalues on the training set. Hyperbolicity is encoded in the admissible parameterization of the closed PDE.
+
+\subsection{Radiative-transfer closure III: characteristic-speed parameterizations}
+
+A later construction exploits the lower-Hessenberg structure of the closure matrix. The network predicts spectral or polynomial information, and algebraic relations convert that information into closure coefficients \citep{huang2021rte3}.
+
+The work makes a useful tradeoff explicit:
+\begin{itemize}
+  \item one architecture guarantees characteristic speeds in the physical interval but only weak hyperbolicity;
+  \item another guarantees strict hyperbolicity but does not automatically bound all characteristic speeds by the physical speed limit.
+\end{itemize}
+
+This illustrates a general lesson in structure-preserving learning. Different desirable properties need not be simultaneously achievable through one simple parameterization. A mathematically serious model should state exactly which guarantee it provides.
+
+\subsection{Nonlinear BGK moment closure}
+
+The BGK kinetic model is nonlinear because the relaxation equilibrium depends on moments of \(f\). Christlieb, Ding, Huang, and Krupansky extend the gradient-closure strategy to a Grad moment expansion of BGK \citep{christlieb2025bgk}.
+
+The network is trained on moment data from kinetic solutions and predicts coefficients in a relation of the form \eqref{eq:gradientclosure}. Its output layers are designed to enforce
+\[
+\boxed{\text{hyperbolicity}}
+\qquad\text{and}\qquad
+\boxed{\text{Galilean invariance}}.
+\]
+Galilean invariance means that a uniform shift of inertial frame does not change the physical content of the closure. A generic fully connected network acting on raw moments would not satisfy this automatically.
+
+The model is coupled to a path-conservative numerical treatment because the highest retained moment equation is not conservative under the gradient closure. This is a revealing detail: the learned closure and the numerical PDE method must be designed together. One cannot assess the network independently of the closed system in which it will operate.
+
+A schematic training loss is
+\begin{equation}
+ \mathcal{L}(\theta)
+ =\sum_{\text{samples}}
+ \left|
+ \partial_xm_{N+1}
+ -\sum_{j=0}^{N}a_{j,\theta}(m)\partial_xm_j
+ \right|^2.
+\end{equation}
+The target is not a complete solution field. It is the unresolved differential relation.
+
+\subsection{Learning a collision operator from molecular dynamics}
+
+A later project moves further down the modeling hierarchy. At the particle level, molecular dynamics contains many-body interactions and correlations. At the kinetic level these effects are compressed into a collision operator
+\begin{equation}
+ \partial_t f+v\cdot\nabla_xf=\mathcal{Q}(f).
+\end{equation}
+Rather than selecting a classical Landau- or Boltzmann-type form and calibrating a few coefficients, the model learns a generalized anisotropic collision operator directly from molecular-dynamics data \citep{zhao2025collision}.
+
+The operator is placed in a generalized metriplectic form designed to preserve
+\begin{align*}
+ \int \mathcal{Q}(f)\dd v&=0,
+ &&\text{mass},\\
+ \int v\,\mathcal{Q}(f)\dd v&=0,
+ &&\text{momentum},\\
+ \int |v|^2\mathcal{Q}(f)\dd v&=0,
+ &&\text{energy},
+\end{align*}
+together with nonnegative entropy production. The learning procedure uses a weak formulation so that it need not estimate a high-dimensional probability density pointwise.
+
+This is again closure modeling. The unknown object is larger than a moment relation, but it is still one component of a retained kinetic equation.
+
+\subsection{Why this is not a classical PINN}
+
+A classical PINN for BGK might represent
+\[
+ f_\theta(x,v,t)\approx f(x,v,t)
+\]
+and minimize
+\begin{equation}
+ \left\|
+ \partial_tf_\theta+v\partial_xf_\theta
+ -\frac1\tau\bigl(f_M[f_\theta]-f_\theta\bigr)
+ \right\|^2.
+\end{equation}
+Christlieb's closure program instead retains the kinetic or moment modeling hierarchy and learns only the missing relation needed by a low-dimensional reduced system.
+
+The difference is not cosmetic:
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}P{0.22\textwidth}Y Y@{}}
+\toprule
+& \textbf{Classical PINN} & \textbf{Christlieb-style closure} \\
+\midrule
+Learned object & Full solution \(f_\theta\) or \(m_\theta\) & Missing moment-gradient or collision relation \\
+Equation use & Residual in training loss & Determines hierarchy, closure location, admissibility, and deployed PDE \\
+Solver & Neural optimization produces solution & Conventional solver advances closed equations \\
+Structure & Often soft unless specially designed & Hyperbolicity, invariance, or conservation built into closure class \\
+New initial condition & Usually new optimization & Reuse closure and solve reduced PDE again \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{Why this is not ordinarily called a neural operator}
+
+Abstractly, every closure is an operator. But in current scientific-ML usage, a neural operator usually denotes a discretization-aware map between functions, such as
+\[
+ f_0(x,v)\longmapsto f(x,v,t)
+\]
+or
+\[
+ m(x,0)\longmapsto m(x,t).
+\]
+The Christlieb closure more typically learns a local or semilocal constitutive rule
+\[
+ (m,\partial_xm)\longmapsto\partial_xm_{N+1}.
+\]
+Its role is to complete a PDE, not to replace the entire PDE solution map.
+
+\subsection{The strengths and limits of the program}
+
+The strongest feature is structural control. The retained variables, missing term, characteristic matrix, invariances, and numerical method are identified explicitly. The model is modular and interpretable as a closure.
+
+The price is specialization. One must know
+\begin{enumerate}
+  \item which variables to retain;
+  \item where the hierarchy fails to close;
+  \item what functional form is plausible;
+  \item which conditions make the resulting PDE admissible;
+  \item how to solve the closed system robustly.
+\end{enumerate}
+
+Hard constraints prevent specified pathologies but do not guarantee extrapolation accuracy. A hyperbolic model can remain well posed while being quantitatively wrong outside the training regime.
+
+\section{Qi Tang's program: structure-preserving learned dynamics, reduction, and operators}
+
+Tang's work occupies several categories. Some projects learn vector fields, some learn invariant manifolds, some learn symplectic flow maps, and some are genuine neural operators. The common thread is that dynamical or geometric structure is encoded in the model rather than left entirely to a regression loss.
+
+\subsection{Stabilized neural ODEs}
+
+A neural ODE learns a finite-dimensional vector field
+\[
+ \dot u=F_\theta(u).
+\]
+In spatiotemporal systems, high-wavenumber behavior can be poorly captured by a generic dense network even when short-time state errors are small. Tang and collaborators propose a stabilized architecture
+\begin{equation}
+ \dot u=L_\theta u+N_\theta(u),
+ \label{eq:snode}
+\end{equation}
+where a sparse linear convolutional component and a dense nonlinear component are learned separately \citep{linot2023stabilized}.
+
+The split gives the model a more transparent mechanism for representing dissipative or high-frequency dynamics. Tests on viscous Burgers and Kuramoto--Sivashinsky emphasize not only one-step fit but shocks, high-wavenumber spectra, robustness to perturbed initial conditions, and whether long trajectories remain on the correct attractor.
+
+This is best classified as data-driven system identification:
+\[
+\boxed{
+\text{trajectory data}
+\longmapsto
+\text{learned vector field}
+\longmapsto
+\text{ODE integration}.
+}
+\]
+The original PDE may have generated the training trajectories, but the learning method need not evaluate its residual.
+
+\subsection{Fast-slow neural networks}
+
+Consider a singularly perturbed system
+\begin{equation}
+ \dot x=g(x,y,\varepsilon),
+ \qquad
+ \varepsilon\dot y=f(x,y,\varepsilon),
+ \qquad 0<\varepsilon\ll1.
+\end{equation}
+Under dissipative fast dynamics, trajectories approach a slow manifold
+\[
+ y=h(x,\varepsilon).
+\]
+The reduced dynamics are approximately
+\[
+ \dot x=g(x,h(x,\varepsilon),\varepsilon).
+\]
+The closure problem is to identify the manifold and the dynamics on it.
+
+The fast-slow neural network learns an invertible transformation into fast-slow coordinates and a structured vector field in a modified Fenichel normal form \citep{serino2025fastslow}. Schematically,
+\begin{equation}
+ z\stackrel{H_\theta}{\longmapsto}(x,y),
+ \qquad
+ \dot y=A_\theta(x,y,\varepsilon)y,
+ \qquad
+ \dot x=\varepsilon g_\theta(x,y,\varepsilon),
+\end{equation}
+with the fast dynamics parameterized so that the manifold \(y=0\) is invariant and attracting.
+
+The architecture therefore imposes the existence of a trainable attracting slow manifold as a hard constraint. Restricting to that manifold yields a learned reduced model. The examples include a Grad moment system, two-scale Lorenz--96, and Abraham--Lorentz dynamics.
+
+\begin{bigidea}[Closure by learned coordinates]
+A traditional closure chooses reduced variables first and then models their missing flux. A fast-slow network can instead learn coordinates in which the slow variables and the attracting closure manifold become explicit.
+\end{bigidea}
+
+This places the method conceptually near inertial-manifold reduction, equation-free modeling, and Mori--Zwanzig ideas, rather than near a residual PINN.
+
+\subsection{Symplectic H\'enon networks and Poincar\'e maps}
+
+Hamiltonian flow maps preserve a symplectic form. In canonical coordinates, a map \(\Phi\) is symplectic when
+\begin{equation}
+ (D\Phi)^TJ(D\Phi)=J.
+\end{equation}
+A generic neural map does not satisfy this identity, and small geometric violations can produce artificial damping, energy drift, or incorrect phase-space structure under repeated iteration.
+
+Tang and collaborators use H\'enon-network layers whose composition is exactly symplectic. In the toroidal magnetic-field application, the network learns a Poincar\'e map from observations of a conventional field-line-following algorithm \citep{burby2021poincare}. The architecture exactly preserves the relevant flux constraint while evaluating much faster than repeated field-line integration.
+
+The network is learning
+\[
+ z_{n+1}=\Phi_\theta(z_n),
+\]
+not a PDE solution. The primary input is map data, and the primary prior is symplecticity.
+
+Later work constructs a symplectic gyroceptron for nearly periodic maps. The architecture is nearly periodic and symplectic and supports a discrete adiabatic invariant, improving long-time behavior by design \citep{duruisseaux2022gyro}.
+
+Recent reduced-order Hamiltonian work combines a symplectic encoder-decoder with symplectic latent dynamics, so both dimension reduction and time evolution preserve the underlying geometric class \citep{chen2025symplecticrom}.
+
+One should distinguish symplecticity from exact conservation of the original Hamiltonian. A symplectic integrator or map preserves phase-space geometry and often exhibits excellent long-time energy behavior, but it need not keep the original Hamiltonian exactly constant at every step.
+
+\subsection{Energetic variational learning}
+
+Many dissipative systems possess an energy-dissipation law
+\begin{equation}
+ \frac{\dd}{\dd t}\mathcal{E}[u]
+ =-\mathcal{D}[u],
+ \qquad
+ \mathcal{D}[u]\ge0.
+\end{equation}
+Tang and collaborators use energetic variational structure to infer unknown laws from probability-density or particle data \citep{lu2026energetic}. The governing information enters through an energy-dissipation principle rather than only through a pointwise strong-form PDE residual.
+
+This is an instructive intermediate case. The method is physics-informed, but the ``physics'' is a variational law that organizes the admissible dynamics. It need not be presented as a standard PINN loss for the full PDE solution.
+
+\subsection{Local-global neural operator for conservation laws}
+
+Tang's local-global neural operator is a genuine neural-operator project. It learns a one-step flow map
+\begin{equation}
+ \G_{\Delta t}:u^n\longmapsto u^{n+1}
+\end{equation}
+for hyperbolic conservation laws \citep{wang2026lgno}.
+
+The architecture combines
+\[
+ \G_\theta
+ =\G_\theta^{\mathrm{global}}
+ +\G_\theta^{\mathrm{local}}.
+\]
+A Fourier branch models large-scale, long-range, relatively smooth interactions; a local multiresolution branch targets shocks, contacts, and localized nonsmooth features. The training objective combines physical-space prediction error with a high-frequency spectral term. As of August 2026, this work is a recent preprint and should be evaluated as such.
+
+LGNO is much closer to FNO than to a PINN. It is supervised on high-order numerical solution data and learns a discrete state-transition operator. Its physics enters through the chosen flow-map target, local-global decomposition, conservation-oriented parameterization, boundary treatment, and spectral objective rather than primarily through a continuous PDE residual.
+
+\subsection{A classification of Tang's projects}
+
+\begin{longtable}{@{}P{0.215\textwidth}P{0.235\textwidth}P{0.25\textwidth}P{0.22\textwidth}@{}}
+\toprule
+\textbf{Project} & \textbf{Learned object} & \textbf{Hard or structural prior} & \textbf{Best classification} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Project} & \textbf{Learned object} & \textbf{Hard or structural prior} & \textbf{Best classification} \\
+\midrule
+\endhead
+Stabilized neural ODE & Vector field \(L_\theta u+N_\theta(u)\) & Linear/nonlinear split adapted to scale behavior & Data-driven system identification \\
+Fast-slow network & Coordinate map, full vector field, and slow manifold & Attracting invariant slow manifold & Dynamical closure and model reduction \\
+H\'enonNet Poincar\'e map & Discrete flow or section map & Exact symplecticity/flux preservation & Structure-preserving map surrogate \\
+Symplectic latent ROM & Encoder, decoder, and latent flow map & Symplectic full-to-latent geometry & Geometric reduced-order modeling \\
+Energetic variational learning & Unknown potential, mobility, or dissipative law & Energy-dissipation formulation & Structure-aware model discovery \\
+LGNO & Function-to-function time-step map & Local-global decomposition and conservation-law inductive bias & Neural operator \\
+\bottomrule
+\end{longtable}
+
+\subsection{The common methodological pattern}
+
+Across these projects the workflow is approximately
+\begin{enumerate}
+  \item identify the unknown, expensive, or unstable component;
+  \item derive the mathematical structure that a usable approximation should possess;
+  \item parameterize a neural class satisfying as much of that structure as possible;
+  \item learn the remaining degrees of freedom from high-fidelity data;
+  \item evaluate the result inside long-time dynamics, not only by offline regression error.
+\end{enumerate}
+
+This is more specialized than writing down a universal residual loss, but it exposes failure modes and aligns the learned object with the eventual numerical computation.
+
+\section{Side-by-side comparison: PINNs, neural operators, closures, and structured dynamics}
+
+\begin{longtable}{@{}P{0.13\textwidth}P{0.175\textwidth}P{0.185\textwidth}P{0.18\textwidth}P{0.22\textwidth}@{}}
+\toprule
+\textbf{Feature} & \textbf{Classical PINN} & \textbf{Standard neural operator} & \textbf{Christlieb closure} & \textbf{Tang structured models} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Feature} & \textbf{Classical PINN} & \textbf{Standard neural operator} & \textbf{Christlieb closure} & \textbf{Tang structured models} \\
+\midrule
+\endhead
+Learned object & One solution \(u(x,t)\) & Solution or transition operator & Missing flux, moment relation, or collision operator & Vector field, slow manifold, coordinate map, or flow map \\
+Typical data & Collocation points, BC/IC, sparse observations & Many input-output function pairs & High-fidelity kinetic moment or particle data & Trajectories, map pairs, or numerical solution pairs \\
+Equation required in training? & Usually yes & No, unless physics-informed & The known hierarchy is structurally essential & Varies; often no residual is evaluated \\
+Conventional solver retained? & Usually not for the represented solution & Usually replaced at inference & Yes & Sometimes: ODE integration for vector fields; no for direct flow maps \\
+Cross-instance reuse & Limited in classical form & Central purpose & Reuse closure across reduced solves & Reuse learned dynamics or map within training regime \\
+Typical hard guarantee & Few unless specially added & Few unless specially added & Hyperbolicity, invariance, conservation, entropy structure & Symplecticity, attracting manifold, scale structure, or conservation \\
+Main economy & Avoid dense solution data; useful for inverse problems & Amortize many forward solves & Replace only expensive unresolved physics & Stable or geometry-aware long-time surrogate \\
+Main risk & Nonconvex optimization and residual imbalance & Distribution shift and rollout instability & Incorrect closure ansatz or extrapolation & Wrong structural class or accumulated dynamical error \\
+\bottomrule
+\end{longtable}
+
+\subsection{The computational economics}
+
+A classical PINN solves, for each instance \(a\),
+\begin{equation}
+ \theta^\star(a)=\arg\min_\theta\mathcal{L}_{\pinn}(\theta;a).
+\end{equation}
+The online solve is itself a potentially expensive optimization.
+
+A neural operator solves an expensive population-level training problem
+\begin{equation}
+ \theta^\star
+ =\arg\min_\theta
+ \E_{a\sim\mu}
+ \left\|\G_\theta(a)-\G^\dagger(a)\right\|^2,
+\end{equation}
+then evaluates \(\G_{\theta^\star}(a)\) cheaply for new inputs drawn from a similar distribution.
+
+A learned closure trains \(\C_\theta\) offline, then still solves a reduced equation for each new instance:
+\begin{equation}
+ \partial_tm+\nabla\cdot F\bigl(m,\C_\theta(m,\nabla m)\bigr)=S(m).
+\end{equation}
+Inference is not one network call; it is a cheaper PDE solve than the original kinetic, molecular, or fully resolved model.
+
+A learned vector field similarly requires numerical integration, while a learned flow map can be iterated directly. The latter is often faster but places more responsibility on the learned map's recursive stability.
+
+\subsection{Which approach is natural for which task?}
+
+\subsubsection{PINNs}
+
+PINNs are especially natural when the main goal is an inverse problem: sparse or irregular observations, unknown physical coefficients, and a reasonably trusted governing equation. They can also be attractive when complete training-solution ensembles are unavailable.
+
+\subsubsection{Neural operators}
+
+Neural operators are natural when many related forward solves are required, a representative training ensemble can be generated, and very fast online evaluation matters. Typical settings include optimization, uncertainty quantification, control, and digital twins.
+
+\subsubsection{Learned closures}
+
+A closure approach is natural when the full model is known but expensive, a meaningful reduced model already exists, and the precise unresolved term can be isolated. It preserves a mature solver and often permits more direct enforcement of well-posedness and asymptotic structure.
+
+\subsubsection{Structure-preserving learned dynamics}
+
+A structured vector field or flow map is natural when long-time behavior is controlled by geometry, invariant manifolds, stiffness, or attractors, and when ordinary one-step regression produces unstable rollouts.
+
+\section{Do these methods require a PDE?}
+
+The answer is no. They all require assumptions and information, but a partial differential equation is only one possible source of structure.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}P{0.28\textwidth}P{0.18\textwidth}Y@{}}
+\toprule
+\textbf{Method} & \textbf{Must know a PDE?} & \textbf{What is actually required?} \\
+\midrule
+Classical PINN & Usually yes, more generally a governing equation & Residual that can be evaluated, plus initial/boundary constraints and possibly data \\
+Standard neural operator & No & Paired input and output functions from simulations, experiments, or another process \\
+PINO & Usually yes & Operator-learning setup plus a known equation used in the physics loss \\
+Christlieb moment closure & Yes, structurally & Known kinetic/moment hierarchy, a specific closure location, and admissibility conditions \\
+Stabilized neural ODE & No & Trajectory data and the assumption that a useful continuous-time vector field exists \\
+Fast-slow network & No & A dynamical system with dissipative fast variables and an attracting slow manifold \\
+Symplectic H\'enonNet & No & Map observations plus the assumption that the target map is symplectic or flux-preserving \\
+Supervised PDE neural operator & Not during training & State-transition or input-solution pairs, often generated by a PDE solver \\
+World model & No & Sequential observations, actions, and enough state or memory to predict decision-relevant futures \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{Three distinct ways a PDE can enter}
+
+\paragraph{The PDE is evaluated during training.}
+For a PINN or PINO,
+\[
+ \N[u_\theta]
+ \quad\text{or}\quad
+ \N_a[\G_\theta(a)]
+\]
+is explicitly computed. The equation is operationally required.
+
+\paragraph{The PDE determines the architecture and deployed model.}
+For a learned moment closure, the equation determines the moments, the missing term, the principal matrix, the hyperbolicity conditions, and the solver. Even if training uses only high-fidelity data, the PDE is structurally essential.
+
+\paragraph{The PDE merely generated the data.}
+A neural ODE or supervised neural operator can train only on arrays
+\[
+ u(t_0),u(t_1),\ldots,u(t_N)
+\]
+or pairs \((a,u)\). Experimental observations could replace simulation data without changing the core training formulation.
+
+\subsection{No PDE does not mean no model assumption}
+
+A neural ODE assumes the observed state is approximately Markovian in continuous time:
+\[
+ \dot z=F(z).
+\]
+A one-step operator assumes
+\[
+ z_{n+1}=\Phi(z_n)
+\]
+contains enough information for prediction. A fast-slow network assumes an attracting manifold. A symplectic network assumes the relevant map lies in a symplectic class. A world model assumes its latent state summarizes the history relevant to future consequences.
+
+If coarse variables omit important hidden state, exact dynamics may require
+\begin{equation}
+ \dot z(t)
+ =F(z(t))
+ +\int_0^tK(z(t-s),s)\dd s
+ +\eta(t).
+\end{equation}
+A Markovian neural model is then itself a closure approximation, even if it never mentions the original PDE.
+
+\begin{takeaway}[Better question]
+Instead of asking only, ``Does this method use a PDE?'', ask:
+\begin{quote}
+What information about the governing dynamics is supplied to the learner: an equation, solution data, a closure location, a variational law, a geometric class, trajectories, actions, or observation history?
+\end{quote}
+\end{takeaway}
+
+\section{The high-level numerical-approximation view}
+
+The preceding discussion can be condensed without losing its conceptual content.
+
+\subsection{A PINN approximates a function obeying an equation}
+
+\[
+ (x,t)\longmapsto u_\theta(x,t),
+ \qquad
+ \N[u_\theta]\approx0.
+\]
+The network is a nonlinear trial function analogous in role, though not in training, to a finite-element or spectral ansatz.
+
+\subsection{A neural operator approximates an input-output map}
+
+\[
+ a(\cdot)\longmapsto\G_\theta(a)(\cdot).
+\]
+The network approximates the behavior of a solver over a family of inputs.
+
+\subsection{A learned closure approximates a missing relation}
+
+\[
+ \text{resolved variables}
+ \longmapsto
+ \text{unresolved stress, flux, moment, or collision effect}.
+\]
+The learned object is inserted into retained equations.
+
+\subsection{A neural ODE approximates a differential law}
+
+\[
+ z\longmapsto F_\theta(z),
+ \qquad
+ \dot z=F_\theta(z).
+\]
+A numerical integrator then constructs trajectories.
+
+\subsection{A learned flow map approximates finite-time evolution}
+
+\[
+ z_t\longmapsto z_{t+\Delta t}.
+\]
+The map is recursively composed. Stability of composition is central.
+
+\subsection{A structure-preserving network approximates within a restricted class}
+
+\[
+ \Phi_\theta\in\{\text{symplectic maps}\},
+ \qquad
+ A_\theta\in\{\text{hyperbolic systems}\},
+ \qquad
+ \M_\theta\in\{\text{attracting manifolds}\}.
+\]
+The approximation family is narrowed so that every candidate respects a chosen mathematical property.
+
+\begin{bigidea}[The simplest accurate summary]
+The neural network is playing the role of a numerical approximation: sometimes of a function that obeys an equation, sometimes of a map that takes input to output, sometimes of a missing term inside an equation, and sometimes of the coordinates or geometry in which the dynamics become simple.
+\end{bigidea}
+
+\section{World models}
+
+\subsection{The internal-simulator viewpoint}
+
+A world model extends the same approximation idea to an agent interacting with an environment. At its simplest, the physical or abstract state \(x_t\) evolves under an action \(a_t\):
+\begin{equation}
+ x_{t+1}=F(x_t,a_t).
+\end{equation}
+A learned world model approximates
+\begin{equation}
+ \widehat x_{t+1}=F_\theta(\widehat x_t,a_t).
+\end{equation}
+Repeated application generates hypothetical futures:
+\begin{align*}
+ \widehat x_{t+1}&=F_\theta(x_t,a_t),\\
+ \widehat x_{t+2}&=F_\theta(\widehat x_{t+1},a_{t+1}),\\
+ &\vdots\\
+ \widehat x_{t+H}&=F_\theta(\widehat x_{t+H-1},a_{t+H-1}).
+\end{align*}
+The agent can compare alternative action sequences before acting in the real environment.
+
+\begin{bigidea}[World model at gross level]
+A world model is a learned numerical model of a controlled dynamical system, packaged for state estimation, counterfactual prediction, planning, or policy learning.
+\end{bigidea}
+
+\subsection{The state is usually hidden}
+
+An agent typically observes
+\[
+ o_t=H(x_t)
+\]
+rather than the complete state. A single image may reveal position but not velocity; a sensor may omit important environmental variables. The model therefore constructs a latent state from history:
+\begin{equation}
+ z_t=E_\theta(o_0,a_0,o_1,a_1,\ldots,o_t).
+\end{equation}
+A typical latent world model contains
+\begin{align}
+ z_{t+1}&\sim P_\theta(\cdot\mid z_t,a_t),\\
+ \widehat o_t&\sim D_\theta(\cdot\mid z_t),\\
+ \widehat r_t&=R_\theta(z_t,a_t),
+\end{align}
+where \(E_\theta\) is an encoder or state estimator, \(P_\theta\) is latent dynamics, \(D_\theta\) is an observation decoder, and \(R_\theta\) predicts reward, cost, danger, or another decision-relevant quantity.
+
+The transition may be probabilistic because the environment is stochastic or because the latent state is incomplete.
+
+\subsection{What makes it a world model?}
+
+The term describes the \emph{role} of the model more than one fixed architecture. A world model is expected to support some combination of
+\[
+\boxed{
+\begin{gathered}
+\text{state estimation}
++
+\text{action-conditioned prediction}\\
++
+\text{counterfactual rollout}
++
+\text{planning or policy learning}
+\end{gathered}
+}
+\]
+
+A passive predictor learns
+\[
+ o_t\longmapsto o_{t+1}.
+\]
+An interactive model learns
+\[
+ (o_t,a_t)\longmapsto o_{t+1}
+\]
+or the corresponding latent transition. The action input makes alternative futures available.
+
+A world model can be implemented by a recurrent network, transformer, neural ODE, neural operator, diffusion or video model, state-space model, conventional simulator, or hybrid combination. The term says what the model does for an agent.
+
+\subsection{Planning with a world model}
+
+Suppose the latent dynamics and cost are
+\[
+ z_{t+1}=F_\theta(z_t,a_t),
+ \qquad
+ c_t=C_\theta(z_t,a_t).
+\]
+For a candidate action sequence \(a_t,\ldots,a_{t+H-1}\), the model predicts
+\begin{equation}
+ \widehat J
+ =\sum_{k=0}^{H-1}\gamma^k
+ C_\theta(\widehat z_{t+k},a_{t+k}).
+\end{equation}
+A model-predictive controller chooses
+\begin{equation}
+ (a_t^\star,\ldots,a_{t+H-1}^\star)
+ \in\arg\min\widehat J,
+\end{equation}
+executes the first action, observes the real world again, updates the latent state, and replans.
+
+Alternatively, imagined rollouts train a policy \(\pi_\phi(a\mid z)\) and a value function. The Dreamer family follows this broad pattern, learning latent dynamics and improving behavior through imagined trajectories \citep{hafner2023dreamerv3}.
+
+The early \emph{World Models} work learned a compressed visual representation and recurrent dynamics, then trained a compact controller partly inside generated trajectories \citep{ha2018worldmodels}.
+
+\subsection{A world model need not reconstruct everything}
+
+A model used for decision-making need not reproduce every pixel or microscopic detail. It may retain only information needed for reward prediction, value estimation, or planning.
+
+MuZero is a central example. It learns a representation, dynamics, and prediction model that recursively produces rewards, policy information, and values useful for tree search without reconstructing the full observed environment or being given the environment rules \citep{schrittwieser2020muzero}.
+
+This is analogous to closure modeling. A closure does not reproduce every molecular trajectory; it preserves the unresolved influence needed by the coarse equations. A task-oriented world model need not reproduce the whole world; it needs a state and dynamics sufficient for the decisions under consideration.
+
+\subsection{Generative interactive environments}
+
+The phrase ``world model'' has expanded to include action-conditioned generative simulators. A model may approximate
+\begin{equation}
+ P_\theta
+ \left(
+ o_{t+1:t+H}
+ \mid
+ o_{\le t},a_{t:t+H-1}
+ \right),
+\end{equation}
+the distribution of future observations conditioned on history and proposed actions.
+
+Genie combines a spatiotemporal tokenizer, an autoregressive dynamics model, and a learned latent-action model to generate controllable interactive visual environments from video data \citep{bruce2024genie}. Such systems are much larger and less explicitly physical than a PDE time-step operator, but mathematically they remain approximations to action-conditioned transition operators or probability kernels.
+
+\subsection{A neural operator can function as a world model}
+
+Consider a controlled fluid
+\begin{equation}
+ \partial_tu=\N(u,a),
+\end{equation}
+where \(a\) is a boundary control, body force, valve setting, or other intervention. The exact finite-time flow operator is
+\begin{equation}
+ \Phi_{\Delta t}:(u_t,a_t)\longmapsto u_{t+\Delta t}.
+\end{equation}
+A neural operator may learn
+\[
+ \Phi_{\theta,\Delta t}(u_t,a_t)
+ \approx
+ \Phi_{\Delta t}(u_t,a_t).
+\]
+Used only for fast simulation, it is a neural time-step operator. Used by an agent to compare alternative control sequences and choose actions, it is the dynamics component of a world model.
+
+Thus the categories overlap:
+\[
+\boxed{
+\text{A neural operator can be the transition model inside a world model.}
+}
+\]
+Likewise, a Christlieb-style closure plus a moment solver and an observation model could form a world model for a controlled kinetic system.
+
+\subsection{World models and closure models}
+
+The analogy is deeper than terminology.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}P{0.22\textwidth}Y Y@{}}
+\toprule
+& \textbf{Closure model} & \textbf{World model} \\
+\midrule
+Retained representation & Coarse variables or moments & Latent state or belief state \\
+Discarded information & Fine scales, high moments, particles & Unobserved world state and irrelevant detail \\
+Learned object & Missing effect on retained equations & Transition and consequence model \\
+Purpose & Predict coarse dynamics & Predict action-conditioned futures and support decisions \\
+Exact complication & Memory and stochastic orthogonal dynamics & Partial observability, memory, uncertainty, and policy-dependent data \\
+Typical simplification & Local deterministic constitutive law & Markovian latent transition \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Both seek a representation that is smaller than the full underlying system but sufficient for a specified predictive task.
+
+\subsection{The controlled transition-operator viewpoint}
+
+From a numerical-analysis perspective, the fundamental object is often
+\begin{equation}
+ \Pcal_{\Delta t}:(z,a)
+ \longmapsto
+ \text{distribution of }z'.
+\end{equation}
+For deterministic dynamics this reduces to
+\[
+ z'=F_{\Delta t}(z,a).
+\]
+For stochastic or partially observed systems, the correct object is a Markov kernel
+\[
+ P(\dd z'\mid z,a).
+\]
+The world model approximates this kernel and composes it repeatedly.
+
+This is closely related to system identification, state-space modeling, data assimilation, surrogate simulation, reduced-order modeling, and model-predictive control. The distinctive AI framing emphasizes that the learned model is used internally by an agent to imagine and evaluate consequences.
+
+\subsection{Why world modeling is harder than ordinary supervised approximation}
+
+\subsubsection{Compounding error}
+
+A small one-step error does not imply a small rollout error:
+\[
+ F_\theta(z,a)\approx F(z,a)
+ \quad\nRightarrow\quad
+ F_\theta^{H}(z)\approx F^{H}(z).
+\]
+This is the learned analogue of consistency and stability in numerical time integration.
+
+\subsubsection{Distribution shift under planning}
+
+The model is trained on actions that were taken. A planner evaluates actions that may be very different. It can push the model into regions with little training support and may even exploit model errors rather than discover genuinely good actions.
+
+\subsubsection{Hidden state and memory}
+
+If \(z_t\) does not contain enough information, no transition
+\[
+ z_{t+1}=F(z_t,a_t)
+\]
+can be exact. One may need recurrence, a richer belief state, a window of past observations, latent stochastic variables, or an explicit memory kernel.
+
+\subsubsection{Multiple possible futures}
+
+A deterministic average may be meaningless when futures branch. The model should represent
+\[
+ z_{t+1}\sim P_\theta(\cdot\mid z_t,a_t)
+\]
+or a distribution over future observation sequences.
+
+\subsubsection{Task relevance versus physical fidelity}
+
+A task-oriented latent model can make good decisions while representing the physical world incompletely. Conversely, a visually convincing video model may fail to preserve the causal consequences of actions. Prediction quality must be judged relative to the model's intended use.
+
+\subsection{The grossest possible world-model summary}
+
+\begin{bigidea}[One-line definition]
+A world model is a learned numerical approximation of enough state, dynamics, observations, and action consequences to act as an internal simulator for an agent.
+\end{bigidea}
+
+In the same notation used throughout this chapter,
+\begin{equation}
+\begin{aligned}
+\text{PINN:}
+&\quad (x,t)\longmapsto u(x,t),\\
+\text{neural operator:}
+&\quad \text{problem data}\longmapsto\text{solution},\\
+\text{closure:}
+&\quad \text{resolved variables}\longmapsto\text{missing term},\\
+\text{world model:}
+&\quad (\text{latent state},\text{action})
+\longmapsto
+(\text{next latent state},\text{predicted consequences}).
+\end{aligned}
+\end{equation}
+The additional ingredient is not a fundamentally new kind of approximation. It is recursive, action-conditioned use of the approximation for imagination, planning, and control.
+
+\section{A single conceptual ladder}
+
+The methods discussed here can be organized by how much of the mathematical model the network replaces.
+
+\begin{enumerate}
+  \item \textbf{Approximate one coefficient or constitutive scalar.}
+  \[
+  \mu_{\mathrm{eff}}=\mu_\theta(\text{local state}).
+  \]
+
+  \item \textbf{Approximate one closure tensor or missing flux.}
+  \[
+  \tau=\C_\theta(\overline u,\nabla\overline u,\ldots).
+  \]
+
+  \item \textbf{Approximate a reduced vector field.}
+  \[
+  \dot z=F_\theta(z).
+  \]
+
+  \item \textbf{Approximate a finite-time map.}
+  \[
+  z_{n+1}=\Phi_\theta(z_n).
+  \]
+
+  \item \textbf{Approximate a solution operator over a family.}
+  \[
+  a(\cdot)\longmapsto\G_\theta(a)(\cdot).
+  \]
+
+  \item \textbf{Approximate a latent controlled simulator.}
+  \[
+  (z_t,a_t)\longmapsto P_\theta(\dd z_{t+1},\dd r_t,\dd o_{t+1}\mid z_t,a_t).
+  \]
+\end{enumerate}
+
+Moving down this list generally increases the fraction of the simulator delegated to the learned model. It may increase speed and flexibility, but it also makes it harder to retain classical guarantees and to diagnose errors.
+
+\section{Practical questions for reading a scientific-ML paper}
+
+When confronted with a new ``physics-informed,'' ``operator-learning,'' ``closure,'' or ``world-model'' paper, the following questions usually reveal what is actually happening.
+
+\subsection{What is the target object?}
+
+Is the network approximating
+\[
+ u,
+ \quad
+ \G,
+ \quad
+ \C,
+ \quad
+ F,
+ \quad
+ \Phi,
+ \quad
+ h,
+ \quad\text{or}\quad
+ P(\dd z'\mid z,a)?
+\]
+This is the first and most important classification.
+
+\subsection{Where does the supervision come from?}
+
+Possible answers include
+\begin{itemize}
+  \item a strong-form differential-equation residual;
+  \item a weak or variational identity;
+  \item simulated input-output pairs;
+  \item trajectories or state-transition pairs;
+  \item high-fidelity closure targets;
+  \item particle data;
+  \item experimental observations;
+  \item rewards, values, or planning targets.
+\end{itemize}
+
+\subsection{What structure is hard, and what structure is soft?}
+
+Does the architecture guarantee conservation, hyperbolicity, positivity, symplecticity, invariance, or an attracting manifold? Or are these properties merely penalized on training samples?
+
+\subsection{What remains of the conventional solver?}
+
+Does the network replace the complete solve? Does it provide one flux inside a finite-volume method? Does an ODE solver integrate a learned right-hand side? Is a learned map simply iterated?
+
+\subsection{What is the relevant notion of generalization?}
+
+Generalization may mean a new initial condition, coefficient field, Knudsen number, forcing, geometry, action policy, time horizon, mesh, or physical regime. These are not interchangeable claims.
+
+\subsection{Is the model tested in closed loop?}
+
+For a closure, one wants an a posteriori PDE test. For a learned vector field, one wants long-time attractor and spectral tests. For a flow map, one wants recursive rollout. For a world model, one wants planning or policy performance under actions that may differ from the data-collection policy.
+
+\subsection{What failure is ruled out mathematically?}
+
+A useful guarantee is specific:
+\begin{itemize}
+  \item eigenvalues remain real;
+  \item covariance remains positive semidefinite;
+  \item mass is conserved;
+  \item a symplectic form is preserved;
+  \item an invariant manifold exists;
+  \item entropy production is nonnegative.
+\end{itemize}
+It should not be confused with a universal accuracy guarantee.
+
+\section{Final synthesis}
+
+Closure theory, PINNs, neural operators, structured learned dynamics, and world models belong to one broad landscape of numerical approximation, but they occupy different locations in a computational pipeline.
+
+\begin{takeaway}[Closure theory]
+Closure begins when information is discarded. The reduced equations retain the effects of discarded scales through stresses, fluxes, correlations, memory, or stochastic terms. A closure supplies a tractable approximation to those effects.
+\end{takeaway}
+
+\begin{takeaway}[PINNs]
+A classical PINN uses a neural network as a trial function for one solution and uses the governing equation primarily through a residual-based optimization problem. It normally requires a known governing equation, although that equation need not literally be a PDE.
+\end{takeaway}
+
+\begin{takeaway}[Neural operators]
+A neural operator approximates a map between functions and amortizes a family of solves. It does not inherently require knowledge of a PDE; paired function data are enough. A PINO adds equation constraints to operator learning.
+\end{takeaway}
+
+\begin{takeaway}[Christlieb]
+Christlieb's characteristic program learns missing kinetic closures inside retained moment or kinetic equations. The governing hierarchy identifies what is missing, while architecture and algebra enforce properties such as hyperbolicity, Galilean invariance, conservation, or entropy production.
+\end{takeaway}
+
+\begin{takeaway}[Tang]
+Tang's work spans learned vector fields, attracting slow manifolds, symplectic maps, energetic variational laws, and neural operators. Its unifying feature is structure-preserving learning for reliable dynamics rather than one universal PINN recipe.
+\end{takeaway}
+
+\begin{takeaway}[World models]
+A world model is an internal simulator for an agent. It approximates latent state evolution and action consequences, then uses recursive counterfactual rollouts for planning or policy learning. A neural operator, learned closure plus solver, or structured flow map can serve as a component of a world model.
+\end{takeaway}
+
+At the highest level, all of these methods use neural networks as numerical approximation devices. The intellectually important distinctions are the identity of the approximated object, the source of supervision, the mathematical structure imposed on the approximation, and the way the learned object is composed with the rest of the model.
+
+\appendix
+
+\section{Compact glossary}
+
+\begin{description}[style=nextline,leftmargin=1.5em,labelsep=0.5em]
+\item[Closure]
+A model for unresolved terms that appear after averaging, filtering, taking moments, projecting modes, or otherwise discarding information.
+
+\item[Constitutive relation]
+A relation specifying material response, such as stress versus strain rate or heat flux versus temperature gradient. It is a form of closure.
+
+\item[RANS]
+Reynolds-averaged Navier--Stokes; a mean-flow model in which all turbulent fluctuations are represented through modeled stresses and fluxes.
+
+\item[LES]
+Large-eddy simulation; a filtered model that resolves large eddies and closes transfer across a selected spatial scale.
+
+\item[Moment closure]
+A relation expressing an unresolved high-order moment or its flux in terms of retained lower moments.
+
+\item[Mori--Zwanzig reduction]
+A projection formalism showing that exact reduced dynamics generally contain an instantaneous term, memory, and fluctuating or orthogonal dynamics.
+
+\item[PINN]
+In the narrow classical sense, a coordinate neural network trained as a solution ansatz using differential-equation residuals, initial and boundary conditions, and possibly observations.
+
+\item[Neural operator]
+A parameterized map between function spaces, usually trained to approximate a family of solution or transition operators.
+
+\item[PINO]
+A physics-informed neural operator that combines operator learning with equation-based constraints.
+
+\item[Neural ODE]
+A model in which a neural network parameterizes the right-hand side of an ODE and a numerical integrator constructs trajectories.
+
+\item[Flow map]
+A finite-time state-transition map \(\Phi_{\Delta t}:z_t\mapsto z_{t+\Delta t}\).
+
+\item[Hard constraint]
+A property guaranteed for every model in the parameterized class, rather than encouraged by a finite penalty term.
+
+\item[World model]
+A learned representation of state, dynamics, observations, and action consequences used as an internal simulator for prediction, planning, or policy learning.
+
+\item[Latent state]
+An internal representation intended to summarize the observation history relevant to future prediction or control.
+
+\item[Transition kernel]
+A conditional probability law \(P(\dd z'\mid z,a)\) for the next state given current state and action.
+\end{description}
+
+\section{One-page comparison table}
+
+\begin{longtable}{@{}P{0.145\textwidth}P{0.18\textwidth}P{0.18\textwidth}P{0.18\textwidth}P{0.21\textwidth}@{}}
+\toprule
+\textbf{Paradigm} & \textbf{Approximated object} & \textbf{Equation knowledge} & \textbf{What remains numerical?} & \textbf{Characteristic question} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Paradigm} & \textbf{Approximated object} & \textbf{Equation knowledge} & \textbf{What remains numerical?} & \textbf{Characteristic question} \\
+\midrule
+\endhead
+RANS/LES closure & Stress or flux & Known resolved PDE & Full reduced PDE solve & How do discarded scales act on resolved scales? \\
+Kinetic moment closure & High moment or gradient relation & Known hierarchy & Closed moment PDE solve & How can a finite moment set remain predictive and well posed? \\
+Classical PINN & One solution function & Residual normally known & Nonlinear optimization over network parameters & Can one neural trial function fit equation and observations? \\
+Neural operator & Function-to-function map & Optional & Mostly one learned inference call & Can one model amortize a family of solves? \\
+PINO & Function-to-function map & Known residual & Operator inference, possibly fine-tuning & Can operator learning combine data and equation supervision? \\
+Neural ODE & Vector field & Optional & ODE integration & Can trajectories identify a stable continuous-time law? \\
+Symplectic map network & Finite-time map & No PDE required & Recursive map evaluation & Can long-time geometry be preserved exactly? \\
+Fast-slow network & Coordinates, vector field, manifold & No PDE required & Full or reduced ODE integration & Can an attracting closure manifold be learned by design? \\
+World model & Latent controlled transition kernel & No PDE required & Rollout, planning, policy optimization & Can an agent imagine useful action-conditioned futures? \\
+\bottomrule
+\end{longtable}
+
+\bibliographystyle{plainnat}
+\bibliography{closure_pinns_operators_world_models}
+
+\end{document}

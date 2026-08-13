@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# Environments and local settings
+.venv/
+.env
+.env.*
+!.env.example
+
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/
+*~
+
+# Generated scientific data; keep manifests and documentation
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+
+# Large or generated results; keep manifests, metrics, and final figures
+results/checkpoints/*
+!results/checkpoints/.gitkeep
+
+# Notebook execution artifacts
+.ipynb_checkpoints/
+
+# LaTeX build products
+docs/report/*.aux
+docs/report/*.bbl
+docs/report/*.bcf
+docs/report/*.blg
+docs/report/*.fdb_latexmk
+docs/report/*.fls
+docs/report/*.log
+docs/report/*.out
+docs/report/*.run.xml
+docs/report/*.synctex.gz
+docs/report/*.toc
+docs/report/main.pdf
+
+# Generated LaTeX build products in reference bundles
+references/*.aux
+references/*.bbl
+references/*.blg
+references/*.fdb_latexmk
+references/*.fls
+references/*.log
+references/*.out
+references/*.toc

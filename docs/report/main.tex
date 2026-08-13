@@ -1,0 +1,106 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,booktabs,graphicx,hyperref}
+
+\title{TEMPEST Model Bake-Off}
+\author{TEMPEST Model Bake-Off contributors}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report will document a mathematical and computational closure program
+spanning particle-to-kinetic, wave-to-kinetic, kinetic-to-fluid, and
+application-scale reductions motivated by TEMPEST.  It will compare classical
+Markov closures, explicit cumulant and memory models, physics-informed neural
+networks, neural operators, physics-informed neural operators, learned
+closures, structured learned dynamics, and action-conditioned world models.
+The first application profile is nonlocal magnetized heat transport for
+magnetic target fusion.
+\end{abstract}
+
+\setcounter{tocdepth}{1}
+\tableofcontents
+
+\section{Introduction}
+The organizing question is not which architecture wins in the abstract, but
+what information is required to close a reduced model reliably and how that
+requirement changes across asymptotic and breakdown regimes.
+
+We built an evaluation harness for computational closure methods: a fixed
+suite of test problems and forcing regimes, a common interface through which
+any closure model---analytic, learned, or hybrid---is invoked, and a
+standardized battery of accuracy, stability, and cost metrics computed
+uniformly across candidates. The harness separates the science (the closures)
+from the scaffolding (data handling, integration, scoring), so that adding a
+new method requires implementing one interface, and every reported comparison
+is reproducible and fair by construction.
+
+\section{Mathematical closure framework}
+This section will define scale transitions and exact hierarchy defects,
+connected correlations and cumulants, interaction histories and finite memory,
+and the decomposition of numerical, statistical, asymptotic, closure, and
+learning error.
+
+For a representative hierarchy,
+\begin{equation}
+  f_2=f_1f_1+g_2,
+  \qquad
+  \partial_t f_1=\mathcal L f_1+\mathcal C[f_1]
+  +\mathcal R[g_2,g_3,\ldots],
+\end{equation}
+where the closure problem is to approximate the residual $\mathcal R$ from a
+declared information set while preserving the required mathematical structure.
+
+\section{Canonical scale-limit benchmarks}
+The canonical track is motivated by the long-time scale-limit program of
+Zaher Hani and collaborators. It contains hard-particle dynamics to
+Boltzmann, nonlinear wave dynamics to the wave kinetic equation, and
+Boltzmann dynamics to Euler and Navier--Stokes--Fourier. These are not
+ready-made TEMPEST closures. They are benchmark regimes in which the
+microscopic and reduced equations, asymptotic coordinates, expected limit,
+and discarded information are all explicit.
+
+This makes them the validation layer for the computational evaluation
+harness. The particle track exposes connected cumulants, recollisions, and
+collision ancestry; the wave track exposes spectral cumulants and resonant
+interaction histories; and the kinetic-to-fluid track exposes
+non-Maxwellian moments and constitutive remainders. Each benchmark will test
+the trusted asymptotic regime, controlled breakdown outside its assumptions,
+long-time behavior, and separation of numerical, ensemble, asymptotic, and
+closure-model errors. TEMPEST applications retain this diagnostic protocol
+but replace the equations, states, constraints, observables, and coefficients.
+
+\section{TEMPEST application profiles}
+The flagship profile will study magnetic-target-fusion nonlocal heat
+transport, including an explicit canonical-to-application translation. A
+dusty-plasma transfer profile remains a candidate second application.
+
+\section{Methods and information budgets}
+Methods will include classical, cumulant, and memory closures; PINNs, neural
+operators, and PINOs; learned closures and structured dynamics; and
+action-conditioned world models. Privileged information and matched
+comparisons will be reported explicitly.
+
+\section{Experimental protocol}
+The protocol will cover reference-solver verification, ensemble and estimator
+uncertainty, a-priori closure tests, a-posteriori embedded-solver tests, and
+transfer and failure-boundary experiments.
+
+\section{Results}
+Results will report recovery of classical limits; cumulant and memory
+diagnostics; predictive and embedded closure performance; MTF
+application-profile performance; and compute and information efficiency.
+
+\section{Discussion}
+The discussion will ask which closure information is necessary, what transfers
+from canonical systems to MTF, and where negative results limit
+generalization.
+
+\section{Reproducibility statement}
+The reproducibility record will link data and result manifests, code,
+configurations, environments, claim levels, and retained failures.
+
+\end{document}
