@@ -148,36 +148,39 @@ The notebook runs from committed small fixtures, regenerates its figures, and
 contains an automated check preventing unsupported claims when uncertainty is
 larger than the reported effect.
 
-## D6. MTF mathematical translation specification
+## D6. Core-collapse-supernova mathematical translation specification
 
 ### Required mapping
 
-| Canonical mathematical object | MTF slab counterpart |
+| Canonical mathematical object | Supernova 3D-to-1D counterpart |
 |---|---|
-| Microscopic interacting system | Particle/MD or PIC description with species and fields |
-| One-particle kinetic state | Species Vlasov-Fokker-Planck or Landau distributions |
-| Connected particle cumulants | Species correlations and selected pair/history statistics |
-| Local-equilibrium manifold | Magnetized Maxwellian or stated reference manifold |
-| Hydrodynamic variables | Grad moments, two-fluid variables, and radiation-MHD state |
-| Classical closure | Braginskii heat flux and associated transport tables |
-| Closure defect | \(\Delta q_{\mathrm{NL}}\), stress/relaxation corrections, or augmented moments |
-| Scaling parameters | Knudsen number, magnetization, coupling, beta, composition, and gradient scales |
-| History state | Heat-front, species, collision, or kinetic-tail memory variables |
+| High-fidelity state | 3D radiation-hydrodynamic or (M)HD core-collapse simulation |
+| Reduced state | Angle- or volume-averaged 1D radial carrier state |
+| Connected/fluctuating information | Favre/Reynolds fluctuations, Reynolds stresses, turbulent pressure/energy, fluxes, and filtered cumulants |
+| Projection | Declared angular/volume average, radial binning, shock alignment, and filter |
+| Classical baseline | Unaugmented 1D model and a declared local RANS/mixing-length or STIR-like closure |
+| Closure defect | Projected 3D tendency minus the declared 1D operator, decomposed into stress, flux, production, dissipation, mixing, and memory terms |
+| Regime parameters | Progenitor structure, post-bounce time, shock strength, turbulence intensity/scale, heating, resolution/filter width, and magnetic field where relevant |
+| History state | Shock-relative, production/dissipation, forcing, and turbulent-memory variables |
 
 ### Required decisions
 
-- Exact kinetic reference equation and numerical owner.
-- First learned target and retained moment set.
-- Definition of the Braginskii recovery limit.
-- Available particle, kinetic, and experimental data.
-- Time-dependent action protocol, if the world-model track remains in scope.
-- Integrated observable and uncertainty metric relevant to target design.
+- Exact 3D reference ensemble, numerical owner, and resolution/filter ladder.
+- Reduced 1D carrier, projection/Favre convention, shock alignment, and first
+  learned turbulent target.
+- Definition of the zero-turbulence and declared local-baseline recovery tests.
+- Available 3D simulations, 1D carrier runs, and any laboratory or
+  observation-linked validation quantities.
+- Time-dependent intervention protocol, only if the world-model track remains
+  scientifically real.
+- Shock, explosion, conservation, and nucleosynthesis-sensitive observables
+  with uncertainty metrics.
 
 ### Acceptance gate
 
-Every term in the first reduced MTF closure equation has a dimensional
-definition, reference-data estimator, numerical implementation path, and
-physical validity test.
+Every term in the first reduced supernova closure equation has a dimensional
+definition, 3D-reference estimator, projection convention, numerical
+implementation path, uncertainty budget, and physical validity test.
 
 ## D7. Predeclared success and stop criteria
 
@@ -201,7 +204,8 @@ physical validity test.
 - The learned correction violates conservation, entropy, positivity,
   realizability, or hyperbolicity and cannot be repaired without losing its
   benefit.
-- The MTF target cannot be estimated from available reference data.
+- The supernova closure target cannot be separated from projection and
+  reference-simulation uncertainty.
 - Apparent gains rely on information unavailable at inference time.
 
 ### Acceptance gate
@@ -209,11 +213,48 @@ physical validity test.
 Threshold values, confidence intervals, resource limits, and decision owners
 are approved before large-scale data generation.
 
+## D8. Dusty-plasma linked-pipeline design and activation packet
+
+### Purpose
+
+Make the B1 dusty-plasma profile concrete enough for the TEMPEST team to
+accept, revise, or reject without allowing it to delay the canonical and
+supernova pilots.
+
+### Required contents
+
+- Scientific owner and reference-data or simulator path.
+- Retained particle state and eliminated ion, electron, wake, field, collision,
+  or sub-time-step variables.
+- Reference force, confinement, drag, screening, nonreciprocity, and optional
+  dynamical wake/field definitions with units.
+- A predeclared sweep over density/coupling, particle number, screening,
+  heterogeneity, wake or field relaxation time, and forcing history.
+- Nested candidates: analytic pair law, learned pair kernel, instantaneous
+  many-particle graph model, finite-memory graph or auxiliary-state model, and
+  black-box control.
+- Particle-to-kinetic and kinetic-to-moment projections, closure defects,
+  cumulant estimators, and history summaries derived from the same verified
+  ensembles.
+- Independent physical validation quantities and explicit criteria for
+  identifying pairwise, contextual, memory, and collective regimes.
+- Target-specific scorecards and information budgets for all three stages.
+
+### Acceptance gate
+
+The team can state which physical variables are retained and eliminated at
+each B1 stage; the proposed observables distinguish force-fitting success from
+kinetic and moment closure success; the reference and estimators have owners;
+and the first small sweep can reveal whether pairwise, contextual, or memory
+information is necessary. If those conditions fail, B1 remains a documented
+candidate rather than a production benchmark.
+
 ## Suggested first 90 days
 
 ### Weeks 1-3: mathematical specification
 
 - Complete D1 and the first draft of D6.
+- Complete the design-only portions of D8 and hold its activation review.
 - Select projected observables and cumulant estimators.
 - Select canonical solver implementations and owners.
 
@@ -233,15 +274,18 @@ are approved before large-scale data generation.
 
 - Run D5 on small verified datasets.
 - Approve, narrow, or stop each canonical track.
-- Fix the MTF pilot target and reference solver only if the estimator and data
-  path are credible.
+- Fix the supernova pilot target, 3D ensemble, projection, and 1D carrier only
+  if the estimator and data path are credible.
+- Activate, narrow, defer, or reject the B1 particle-to-kinetic-to-moment pilot
+  without changing the canonical and supernova gates.
 
 ## Ownership needed
 
 - Mathematical analysis and hierarchy definitions.
 - Microscopic and kinetic numerical methods.
-- MTF application physics and experimental observables.
+- Dusty-plasma application physics and experimental observables.
+- Core-collapse-supernova turbulence, reference simulations, reduced carrier,
+  and application observables.
 - Statistical estimation and uncertainty.
 - Structure-preserving ML and reduced dynamics.
 - Data engineering, testing, and reproducibility.
-

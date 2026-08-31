@@ -48,7 +48,34 @@ Suppose a model accurately recovers \(F_{ij}\) in \cref{eq:classical-many-body}.
 where \(u=\Pi X\) retains only a marginal, moment, spectrum, or coarse observable. The map \(F_{ij}\) becomes a closure only after the eliminated variables, projection \(\Pi\), and reduced operator \(\mathcal F_0\) are specified. The same particle data can support both tasks, but the targets and validation tests are not interchangeable.
 \end{bigidea}
 
-This distinction gives a natural hierarchy:
+\subsection{How many-body learning becomes closure: a summary strategy}
+
+A many-body learning method becomes a closure method when it is attached to a declared reduction. Let \(X\) be the higher-fidelity state, \(u=\Pi X\) the retained state, and \(\mathcal F_0\) the baseline reduced operator. The closure target is
+\begin{equation}
+\mathcal C^\star[X]
+=
+\Pi\mathcal F(X)-\mathcal F_0(\Pi X).
+\label{eq:many-body-closure-target}
+\end{equation}
+The learned model receives a declared information set \(I[u]\) and approximates \(\mathcal C^\star\), not an unspecified notion of missing physics:
+\begin{equation}
+\partial_t u
+=
+\mathcal F_0(u)
++\mathcal C_\theta\!\left(I[u]\right).
+\label{eq:many-body-learned-closure}
+\end{equation}
+
+\begin{takeaway}[Four-step closure strategy for a many-body method]
+\begin{enumerate}
+  \item \textbf{Declare the retained state.} Is the model advancing every particle, a one-particle distribution, a few moments, or fluid fields?
+  \item \textbf{Name the discarded information.} This may be a mediating field or bath, particle identities, connected correlations, higher moments, fast coordinates, or interaction history.
+  \item \textbf{Identify the learned object.} State whether the model estimates an effective pair force, graph message, mean force, memory kernel, collision operator, cumulant correction, stress, or heat flux.
+  \item \textbf{Validate at the reduced level.} Test the learned component directly where possible, then embed it in the reduced solver and measure stability, long-time statistics, structure, and recovery of the trusted limit.
+\end{enumerate}
+\end{takeaway}
+
+The resulting scale ladder is
 \[
 \begin{gathered}
 \text{particle tracks}
@@ -64,6 +91,21 @@ This distinction gives a natural hierarchy:
 \end{gathered}
 \]
 Errors can enter at every arrow. The evaluation harness should therefore preserve intermediate diagnostics rather than score only the final macroscopic output.
+
+The same dusty-plasma experiment supports two distinct closure questions. If the retained state consists of dust-particle positions and velocities, then ions, electrons, fields, and wake dynamics are eliminated; a learned directed effective force is a \emph{particle-level closure}. If the retained state is instead a dust distribution or a small set of collective moments, then particle identities, pair correlations, and non-equilibrium velocity structure are also eliminated; the required object is a \emph{kinetic or moment closure}.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}P{0.20\textwidth}P{0.25\textwidth}P{0.24\textwidth}Y@{}}
+\toprule
+\textbf{Retained state} & \textbf{Discarded information} & \textbf{Learned closure object} & \textbf{Decisive validation} \\
+\midrule
+Dust-particle state & Ions, electrons, plasma fields, and wakes & Directed pair force, environmental force, drag, or finite-memory state & Independent masses, charges, screening lengths, and particle rollouts \\
+Dust distribution or moments & Particle identity, correlations, high moments, and particle histories & Correlation, collision, stress, transport, or memory correction & Distribution evolution, cumulants, transport, balance laws, and stable reduced rollouts \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Thus, learning interactions and learning closure are not competing descriptions. Interaction learning can supply the first effective reduction, generate controlled particle ensembles, and expose the correlation and memory defects that must be closed at the next scale.
 
 \subsection{Structure-first nonparametric interaction-kernel inference}
 

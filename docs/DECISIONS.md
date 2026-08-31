@@ -39,12 +39,13 @@ relevant design document until accepted.
 
 ## 2026-08-08 — Proposed application profile
 
-- Use nonlocal magnetized heat transport beyond Braginskii as the leading
-  candidate for Application Profile 1.
-- The 1D2V MTF slab, exact kinetic reference, learned target, action protocol,
-  and success thresholds remain subject to design-meeting approval.
-- Retain dusty plasma as a candidate Application Profile 2 for testing transfer
-  to strongly correlated particle-resolved physics.
+- Use dusty plasma as Application Profile 1, organized as a linked
+  effective-interaction, particle-to-kinetic, and kinetic-to-moment ladder.
+- Use core-collapse supernovae as Application Profile 2, centered on
+  shock-turbulence interaction and the self-consistent transfer of 3D
+  turbulence effects into a reduced 1D model.
+- Reference simulators, exact closure targets, rollout observables, action
+  protocols, and success thresholds remain subject to design-meeting approval.
 
 ## 2026-08-09 — Common evaluation harness
 
@@ -59,11 +60,37 @@ relevant design document until accepted.
 - Treat reproducibility and comparison fairness as properties enforced by the
   harness, configurations, manifests, and information budgets.
 
+## 2026-08-31 — Linked experimental pipeline and scorecards
+
+- Organize the bake-off as linked retained-state transitions rather than a flat
+  architecture contest: effective interaction discovery,
+  particle-to-kinetic reduction, kinetic-to-moment closure, and TEMPEST
+  application transfer.
+- Preserve Track A as theorem-faithful validation and B1 as a dusty-plasma
+  many-body ladder that uses one verified particle ensemble for
+  effective-force, kinetic, and moment closure questions.
+- Specify B2 as a core-collapse-supernova 3D-to-1D closure profile. Its
+  high-fidelity reference, reduced carrier, projection, and application-facing
+  metrics require scientific-owner approval before production runs.
+- Use wake or field relaxation, density/coupling, and forcing history to test
+  when pairwise, many-particle contextual, finite-memory, and collective
+  descriptions become necessary.
+- Produce target-specific scorecards. Do not collapse force inference,
+  solution approximation, operator learning, embedded closure, structured
+  dynamics, and world-model rollout into one universal leaderboard.
+- Treat diagnostic logic, state-selection rules, structural
+  parameterizations, and evaluation procedures as candidates for transfer;
+  coefficients, learned weights, states, and theorem assumptions require
+  profile-specific validation.
+
 ## Open decisions
 
 - Canonical solver choices for hard-sphere/Boltzmann and NLS/wave-kinetic
   tracks.
-- Version-0 MTF profile and reference kinetic equation.
+- Dusty-plasma scientific owner, reference particle/wake/field physics,
+  independent validation quantities, and first small parameter sweep.
+- Version-0 supernova 3D reference ensemble, angle/volume projection, reduced
+  1D carrier, turbulent closure target, and rollout observables.
 - Projected cumulant basis, estimator, maximum order, and uncertainty method.
 - Interaction-history representation and time-layer definition.
 - Nondimensionalization and parameter ranges.

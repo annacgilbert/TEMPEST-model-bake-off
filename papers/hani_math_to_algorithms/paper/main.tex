@@ -1,0 +1,72 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,booktabs}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+
+\title{From Collision Histories to Computable Closure:\\
+Proof-Guided Cumulants and Temporal Interaction Graphs}
+\author{Working paper}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Rigorous long-time kinetic limits propagate more than a smallness estimate for
+correlations: they retain structured, time-oriented information about the
+interaction histories that create those correlations. We formulate a
+computational program that converts this proof mechanism into measurable
+finite-scale closure diagnostics. The retained kinetic state is augmented by
+projected connected cumulants and compressed temporal interaction graphs, while
+the classical kinetic equation remains an explicit baseline. The principal
+test is whether this augmented state predicts one-layer closure defect and
+improves stable long-time rollout beyond models based only on the retained state
+or unordered cumulant magnitudes. This document is a paper scaffold; its claims
+remain hypotheses until the prescribed scaling, reversal, and ablation tests are
+completed.
+\end{abstract}
+
+\section{Introduction}
+State the computational closure problem, the arrow-of-time obstruction, and
+the finite-scale research question.
+
+\section{Mathematical blueprint}
+Describe factorization, connected cumulants, time layering, partial expansion,
+collision-history molecules, canonical layered gardens, and hydrodynamic
+projection.
+
+\section{Computational closure state}
+For layer $\ell$, use
+\[
+S_\ell=(y_\ell,c_\ell,h_\ell,d_\ell,\sigma_\ell),
+\]
+where $y_\ell$ is the retained state, $c_\ell$ contains projected cumulants,
+$h_\ell$ is a temporal history sketch, $d_\ell$ is closure defect, and
+$\sigma_\ell$ quantifies uncertainty.
+
+\section{Nonlinear waves to wave kinetics}
+Specify the cubic NLS ensemble, four-wave kinetic baseline, cumulant estimators,
+resonant hypergraph, and kinetic scaling sweep.
+
+\section{Arrow-of-time tests and ablations}
+Compare retained-state, cumulant-only, and oriented-history models on
+forward/reverse pairs and history-shuffled controls.
+
+\section{Hard-sphere transfer study}
+Specify event-driven dynamics, weak marginal/cumulant estimators, collision
+ancestry graphs, circuit rank, recollisions, and weak Boltzmann residuals.
+
+\section{Results}
+Report detectability, calibration, scaling, rollout stability, invariants,
+uncertainty, and cost. This section is intentionally empty before experiments.
+
+\section{Relation to the rigorous analysis}
+Separate exact theorem objects from finite-scale estimators and graph proxies.
+Explain why abstract cutting is used as a guide or certificate rather than as
+the physical time integrator.
+
+\section{Discussion}
+Discuss negative results, application transfer, and the next kinetic-to-fluid
+step.
+
+\end{document}

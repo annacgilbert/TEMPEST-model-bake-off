@@ -1,248 +1,237 @@
-# Design-Meeting Memo: A Mathematical Closure Program with an MTF Flagship
+# Design-Meeting Memo: Mathematical Closure with Dusty-Plasma and Supernova Applications
 
 **To:** TEMPEST benchmark design group  
 **From:** TEMPEST Model Bake-Off planning team  
-**Date:** August 8, 2026  
-**Subject:** Joining rigorous scale-limit diagnostics, an AI/ML closure bake-off, and the magnetic-target-fusion line of sight
+**Date:** August 31, 2026
+
+**Subject:** A common closure program for dusty-plasma many-body physics and
+core-collapse-supernova turbulence
 
 ## Decision requested
 
-Approve a two-layer program:
+Approve the following program architecture:
 
-1. a **canonical mathematical closure track** that turns ideas from rigorous
-   particle-to-kinetic, wave-to-kinetic, and kinetic-to-fluid limits into
-   numerical experiments; and
-2. a **TEMPEST application track**, with nonlocal magnetized heat transport in
-   magnetic target fusion (MTF) as proposed Application Profile 1.
+1. **Track A - canonical mathematical validation:** hard particles to
+   Boltzmann, nonlinear waves to wave kinetics, and Boltzmann to fluid.
+2. **Track B1 - dusty-plasma many-body closure:** effective interactions,
+   particle-to-kinetic reduction, and kinetic-to-moment closure using one
+   verified ensemble family.
+3. **Track B2 - core-collapse-supernova turbulence:** project 3D
+   radiation-hydrodynamic or (M)HD reference simulations into a reduced 1D
+   carrier and close the missing turbulent stresses, fluxes, sources, and
+   memory.
 
-Authorize a 90-day specification and pilot phase. Do not yet authorize a
-full-model bake-off. The immediate decisions are which reference solvers and
-scientific owners support the canonical pilots and MTF profile, which
-correlation/history quantities are estimable, and what evidence will justify
-moving from diagnostics to learned closures.
+Authorize a 90-day specification and pilot phase, not a full model sweep. The
+immediate decisions are the scientific and numerical owners, the version-0
+reference hierarchy for each profile, estimable correlation/history or
+turbulence targets, application observables, and the gates that justify moving
+from diagnostics to learned closures.
 
 ## Bottom line
 
-Andrew Christlieb's slides give TEMPEST a concrete line of sight: retain
-radiation-MHD as the engineering carrier, identify where local Braginskii
-transport fails, learn a constrained nonlocal correction from kinetic data,
-validate it in a controlled slab, and test whether it improves an MTF design
-quantity. That is an excellent flagship application.
+The foundational question remains:
 
-It is not, by itself, the general foundational experiment originally intended
-for the bake-off. The new mathematical idea supplies that missing foundation.
-The three motivating papers study when complicated microscopic or field
-dynamics genuinely reduce to kinetic or fluid equations. Their useful
-computational lesson is not simply "use a neural network." It is that closure
-quality is controlled by connected correlations, interaction histories,
-scaling regimes, and carefully accumulated remainder terms. Those objects can
-become diagnostics, state variables, and correction targets in a numerical
-program.
+> What is the smallest observable state - pairwise, contextual, cumulant,
+> moment, or memory-bearing - that closes the retained dynamics over the
+> required horizon?
 
-The combined program asks a sharper question:
+Dusty plasma and supernovae test this question in complementary ways.
+Dusty-plasma data expose eliminated fields and wake dynamics at the particle
+level, making pairwise failure, many-body context, strong correlation, and
+finite memory measurable. Core-collapse supernovae expose a different closure
+failure: a 1D model discards nonradial 3D turbulence, shock corrugation,
+anisotropic Reynolds stress, turbulent transport, intermittent mixing, and
+their history.
 
-> Can we measure when a reduced model is valid, identify the smallest
-> correlation or memory state that predicts its failure, and learn a
-> structure-preserving correction that remains useful after solver embedding?
+The common computational/evaluative harness is the foundational layer. It
+declares the retained state and closure defect, versions the reference and
+projection, invokes every analytic, learned, or hybrid candidate through the
+same interface, embeds closures in the same carrier, and reports matched
+accuracy, physical validity, reliability, transfer, and cost scorecards.
 
-That question is general enough to support TEMPEST's foundational AI/ML goals
-and concrete enough to be tested in MTF.
+## Why supernovae fit the TEMPEST program
 
-## What Andrew's slides are actually proposing
+The TEMPEST proposal identifies under-resolved turbulence in multidimensional
+core-collapse-supernova simulations and proposes DNS, implicit LES, and LES of
+supernova shock-turbulence interactions. It also explicitly proposes
+augmenting a 1D supernova model with volume-averaged 3D turbulence transport
+effects through a self-consistent ML closure.
 
-The slides organize TEMPEST activity around an MTF application rather than an
-abstract model comparison. An axial current produces an azimuthal magnetic
-field and inward \(\mathbf J\!\times\!\mathbf B\) compression. During an
-implosion, temperature, density, ionization, collisionality, and magnetization
-cross regimes in which local, near-Maxwellian transport assumptions may fail.
-
-The trusted carrier is integrated radiation-MHD with equation-of-state,
-opacity, radiation, and reduced transport models. The initial missing physics
-is nonlocal electron heat transport beyond the Braginskii regime. The proposed
-learned object is approximately
+That gives the bake-off a concrete reduction:
 
 \[
-q=q_{\mathrm{Braginskii}}+\Delta q_{\mathrm{nonlocal}},
+C_{\mathrm{SN}}^\star[X]
+=\langle F_{3\mathrm D}(X)\rangle_\Omega
+-F_{1\mathrm D}(\langle X\rangle_\Omega).
 \]
 
-possibly mediated by an evolved Grad-moment state. A regime indicator should
-recover or fall back to Braginskii when local collisional assumptions hold.
-The closure must respect conservation, positivity/admissibility,
-hyperbolicity, stability, and appropriate entropy behavior.
+The target is not a generic supernova surrogate. It is a declared
+decomposition of this defect into Reynolds stress or turbulent pressure,
+turbulent energy/enthalpy flux, production, dissipation, mixing, and optional
+memory terms that can be embedded in a 1D carrier.
 
-The proposed pilot is a 1D-in-space, 2D-in-velocity plasma slab with a density
-or composition gradient and a boundary heat pulse or localized deposition.
-It sweeps from local collisional transport through the nonlocal transition
-toward free streaming. Candidate coordinates include Knudsen number,
-magnetization \(\omega_c\tau\), plasma beta, gradient scale, Mach number,
-composition, and ionization state. The intended progression is from a slab and
-kinetic reference, to a learned closure inside two-fluid/MHD, to higher
-dimensions, experimental validation, and a partner-relevant design study.
+The profile is scientifically demanding in exactly the right way. Published
+1D turbulence models such as STIR demonstrate the value of importing
+multidimensional turbulence into spherical models, while critical analyses
+show that apparent gains can be invalid if buoyant production and potential
+energy are not coupled conservatively. Energy accounting is therefore a
+benchmark requirement, not an optional metric.
 
-In plain terms, Andrew is proposing **an engineered kinetic-to-MHD closure
-program for fusion**, not a general contest among PINNs, neural operators, and
-world models. Our experiment should provide the general closure science and
-fair comparison machinery underneath that application program.
+## Proposed supernova profile
 
-## What the three mathematical papers add
+### High-fidelity and reduced models
 
-The papers motivate three canonical scale transitions:
+- **High fidelity:** 3D core-collapse-supernova radiation hydrodynamics or
+  (M)HD at multiple resolutions or filter widths, including declared neutrino,
+  gravity, equation-of-state, and progenitor assumptions.
+- **Projection:** angle or volume average with explicit Favre/Reynolds
+  convention, radial bins, shock alignment, filters, and time windows.
+- **Reduced carrier:** a scientifically accepted 1D supernova model with the
+  minimum thermodynamic, composition, gravity, and neutrino state needed by
+  the selected science question.
 
-- [Hard-particle dynamics to Boltzmann](https://arxiv.org/abs/2408.07818):
-  long-time kinetic behavior is controlled through cumulant/cluster structure,
-  interaction histories, exceptional events, and time-layered estimates.
-- [Hard particles through kinetic to hydrodynamic limits](https://arxiv.org/abs/2503.01800):
-  a chain from microscopic dynamics to Boltzmann and onward to Euler or
-  Navier-Stokes-Fourier exposes where errors enter at each reduction.
-- [Nonlinear Schrodinger dynamics to the wave kinetic equation](https://arxiv.org/abs/2311.10082):
-  spectral cumulants and organized resonant interaction histories play a role
-  analogous to particle correlations in a wave system.
+### Nested closure candidates
 
-These are not plug-and-play MTF closures. The proposal is to translate their
-analysis into falsifiable computational hypotheses:
+1. unaugmented 1D carrier;
+2. declared local RANS, mixing-length, or STIR-like baseline;
+3. explicit turbulent-energy or Reynolds-stress augmentation;
+4. structure-preserving learned residual at matched retained state;
+5. finite-memory augmentation; and
+6. an end-to-end operator surrogate as a labeled control.
 
-1. **Detectability:** projected connected correlations rise before the
-   classical reduced model develops large error.
-2. **Compressibility:** a low-order, low-rank cumulant state explains a useful
-   portion of the exact closure defect.
-3. **Finite memory:** time-layered interaction summaries outperform a purely
-   Markovian correction at comparable state dimension.
-4. **Transfer:** diagnostics validated on canonical systems can help select
-   closure state and identify failure regimes in MTF, even if coefficients and
-   architectures must be retrained.
+PINNs remain one-instance equation-informed solvers. Neural operators and
+PINOs target families of progenitor, forcing, and closure inputs. Learned
+closures must be embedded in the 1D carrier. A world model enters only if the
+benchmark supplies a genuine sequential intervention; a fixed progenitor or
+heating parameter does not by itself create an action-conditioned task.
 
-The proof machinery should guide the numerics without being copied literally.
-The first implementation should estimate projected cumulants, hierarchy
-residuals, and finite interaction-history summaries—not attempt to reproduce
-every combinatorial cutting or diagrammatic construction in the proofs.
+### Required observables and structure
 
-## Proposed benchmark architecture
+- mean shock-radius history;
+- shock revival or runaway classification and timing;
+- turbulent kinetic energy, Reynolds stress, and turbulent support;
+- total-energy and lepton-number accounting as represented by the carrier;
+- Reynolds-stress realizability, positivity, and stable shock capturing;
+- explosion energy and at least one nucleosynthesis-sensitive thermodynamic
+  history statistic;
+- recovery of the declared zero-turbulence or local-baseline limit; and
+- stable-run fraction and total cost.
 
-### Track A: canonical mathematical validation
+The version-0 subset of these observables must be chosen with the supernova
+science owners before data generation.
 
-**A1. Hard particles to Boltzmann.** Compare particle ensembles and a
-Boltzmann solver using one-particle observables, collision statistics,
-projected two- and three-particle cumulants, hierarchy residuals, and
-factorization-defect curves. Sweep both an expected kinetic regime and a
-correlated/recollision breakdown regime.
+## Dusty plasma remains a full closure application
 
-**A2. Nonlinear waves to wave kinetics.** Compare nonlinear-wave ensembles
-and a wave-kinetic solver using spectra, spectral cumulants, resonant-transfer
-rates, and layered interaction-history summaries. Sweep weak-nonlinearity and
-scale-separation coordinates and include coherent counterexamples.
+The dusty-plasma profile is retained intact. A controlled reference family
+varies density/coupling, particle number, screening, charge and mass
+heterogeneity, external forcing and forcing history, and a wake or field
+relaxation time. It nests an analytic pair law, learned pair kernel,
+instantaneous equivariant graph model, finite-memory graph or auxiliary-state
+model, and black-box control.
 
-**A3. Boltzmann to fluid.** Compare kinetic, Euler, and
-Navier-Stokes-Fourier descriptions. Measure hydrodynamic moments,
-non-equilibrium cumulant/moment coordinates, constitutive residuals, and
-convergence as Knudsen number decreases. Include shocks, steep gradients, and
-boundary layers as controlled failure cases.
+The first experiment locates where pairwise closure fails, where many-particle
+context becomes necessary, and where memory earns its cost. Projected
+cumulants and interaction-history complexity are tested as early warnings.
+The same verified ensembles then support particle-to-kinetic and
+kinetic-to-moment closures, so interaction learning feeds the next reductions
+rather than remaining an isolated trajectory exercise.
 
-### Track B: TEMPEST application profiles
+## What the Hani papers add
 
-**B1. MTF nonlocal heat transport.** Use the slab proposed in Andrew's deck.
-The first embedded closure target should be the heat-flux correction unless
-the scientific owners make a strong case for an evolved moment state first.
+The three motivating papers provide canonical scale transitions in which the
+hierarchy, small parameters, discarded correlations, and expected reduced
+limits are unusually explicit:
 
-**B2. Dusty plasma, candidate.** Retain the earlier dusty-plasma setting as a
-second profile for strongly correlated, non-Maxwellian, particle-resolved
-dynamics. It is valuable principally as a transfer test; it should not delay
-the first canonical and MTF pilots.
+- hard-particle dynamics to Boltzmann;
+- hard particles through kinetic to hydrodynamic limits; and
+- nonlinear Schrodinger dynamics to the wave kinetic equation.
+
+They do not provide dusty-plasma or supernova equations. They motivate four
+falsifiable computational hypotheses:
+
+1. projected connected correlations or fluctuation statistics detect closure
+   failure before large resolved-state error;
+2. the important closure defect is compressible;
+3. finite history improves long rollout when a Markov state is insufficient;
+4. diagnostic and state-selection principles survive physics-specific
+   refitting across the application profiles.
 
 ## Common evaluation harness
 
-We built an evaluation harness for computational closure methods: a fixed suite
-of test problems and forcing regimes, a common interface through which any
-closure model—analytic, learned, or hybrid—is invoked, and a standardized
-battery of accuracy, stability, and cost metrics computed uniformly across
-candidates. The harness separates the science (the closures) from the
-scaffolding (data handling, integration, scoring), so that adding a new method
-requires implementing one interface, and every reported comparison is
-reproducible and fair by construction.
+The harness separates science from scaffolding. Each method implements one
+interface; the shared system handles reference manifests, data projection,
+integration, scoring, uncertainty, failure retention, and report generation.
+Direct rankings are restricted to candidates approximating the same object
+with matched information and compute. Cross-family conclusions use separate
+scorecards rather than a universal leaderboard.
 
-## How the AI/ML bake-off fits
+Every application claim must pass both tests:
 
-The methods approximate different mathematical objects and must not be ranked
-by one undifferentiated score.
+1. **A priori:** predict a held-out closure target with uncertainty smaller
+   than the claimed effect.
+2. **A posteriori:** improve the retained solver without instability,
+   conservation failure, or unavailable inference-time information.
 
-| Model family | Natural role in the combined program |
-|---|---|
-| Numerical reduced model | Classical asymptotic baseline and solver carrier |
-| Markov closure | Instantaneous correction from the resolved state |
-| Cumulant/moment closure | Evolve selected connected or non-equilibrium coordinates |
-| Memory/Mori-Zwanzig model | Represent unresolved history through a kernel or augmented state |
-| PINN | Approximate one solution using equations plus declared observations |
-| Neural operator | Learn a family of solution maps from paired simulations |
-| PINO | Learn that operator with both data and equation residuals |
-| Learned closure | Predict the hierarchy, constitutive, heat-flux, or stress residual inside a solver |
-| Structured neural dynamics | Evolve a compact state with conservation, entropy, stability, or geometric constraints |
-| World model | Predict coarse dynamics conditioned on a real time-dependent intervention |
+For supernovae, projection and filter uncertainty are reported separately from
+closure-model error. For dusty plasma, ensemble/cumulant and effective-force
+identifiability uncertainty are reported separately from rollout error.
 
-For the MTF profile, a world model is justified only if heat deposition,
-current waveform, magnetic field, or another realizable control varies in
-time. A fixed pulse supplied as a parameter defines a conditional surrogate,
-not an action-conditioned world model.
+## First 90-day deliverables
 
-Every learned model should be compared with the simplest classical or explicit
-cumulant/memory model using the same information. Equation-generated data,
-direct closure labels, ensemble cumulants, histories, and inference-time solver
-calls must be counted separately.
+1. mathematical-to-computational object and estimator specification;
+2. minimal hard-particle/Boltzmann and NLS/WKE canonical pilots;
+3. common cumulant/history and closure-residual data schema;
+4. factorization and closure-failure diagnostic notebook;
+5. dusty-plasma activation packet and small pair/context/memory sweep;
+6. supernova 3D-to-1D translation specification;
+7. a small verified 3D projection data slice plus matching 1D carrier case;
+8. predeclared numerical, estimator, physical, embedded-rollout, and resource
+   gates.
 
-## First concrete deliverables
-
-The 90-day phase should produce seven reviewable artifacts:
-
-1. **Mathematical-to-computational translation specification:** common notation
-   for the high-fidelity state, reduced state, cumulants, history summaries,
-   closure defect, scaling variables, and error decomposition in all tracks.
-2. **Hard-particle/Boltzmann pilot:** a small converged ensemble data set and
-   matching kinetic runs, including a validity and a breakdown regime.
-3. **NLS/WKE pilot:** a matched wave ensemble with spectral-cumulant and
-   resonant-transfer estimators.
-4. **Common cumulant/history schema:** versioned data objects and uncertainty
-   metadata that both canonical pilots can write and the model code can read.
-5. **Closure-failure diagnostic notebook:** plots testing whether correlations
-   and memory predict reduced-model error, with negative results retained.
-6. **Canonical-to-MTF translation table:** defensible analogies and explicit
-   non-analogies between particle/wave diagnostics and MTF transport physics.
-7. **Predeclared gates:** numerical, estimator, scientific-signal, embedded
-   closure, and resource thresholds for continuing, revising, or stopping.
-
-Weeks 1-4 should freeze definitions and run very small convergence studies;
-weeks 5-8 should generate the two canonical pilot ensembles and estimators;
-weeks 9-12 should test the closure hypotheses and complete the MTF translation;
-week 13 should hold a gate review. Full PINN/operator/world-model sweeps should
-begin only after the reference and estimator gates pass.
+Weeks 1-3 freeze the objects, projections, owners, and observables. Weeks 4-10
+verify minimal reference generators and estimators. Weeks 11-13 run the first
+diagnostic and embedded-closure smoke tests, then hold a continue/narrow/stop
+gate review. Broad PINN/operator/world-model sweeps begin only after the
+reference and estimator gates pass.
 
 ## Questions the design meeting must resolve
 
-1. Who owns the hard-particle, NLS/WKE, kinetic-fluid, and MTF reference solvers?
-2. What is the smallest feasible canonical configuration for a 90-day pilot?
-3. Which cumulant order, projection basis, rank, ensemble size, and history
-   horizon are scientifically estimable within available compute?
-4. Which MTF kinetic or gyrokinetic solver is authoritative, and what
-   numerical/experimental data can be shared?
-5. Is the first MTF learned object \(\Delta q_{\mathrm{nonlocal}}\), an evolved
-   Grad state, or a staged combination?
-6. Which application-facing MTF observable and uncertainty define improvement?
-7. What time-dependent intervention, if any, makes the world-model comparison
-   physically meaningful?
-8. What compute, storage, wall-time, and personnel caps define the pilot?
-9. What evidence triggers continue, revise, merge, or stop decisions?
+1. Who owns the canonical, dusty-plasma, 3D supernova, and 1D supernova
+   reference solvers?
+2. Which 3D simulations can be shared, and what resolution/filter hierarchy is
+   adequate for a first projection study?
+3. What angle/volume and Favre/Reynolds convention defines the 1D closure
+   defect across the moving shock?
+4. Which turbulent term is the first learned target: Reynolds stress,
+   turbulent energy/enthalpy flux, production/dissipation, mixing, or a staged
+   combination?
+5. Which shock, explosion, and nucleosynthesis-sensitive observables define
+   improvement, with what uncertainty?
+6. Which dusty-plasma reference and independent quantities distinguish a
+   plausible force fit from a correct eliminated-environment closure?
+7. Which cumulants, histories, or fluctuation coordinates are estimable within
+   the compute budget?
+8. What evidence triggers continue, revise, merge, or stop decisions?
 
 ## Recommended meeting outcome
 
 Approve the program title and scope:
 
-> **TEMPEST Mathematical Closure and AI/ML Benchmark Framework**  
-> **Flagship Application Profile 1: Nonlocal Magnetized Heat Transport Beyond
-> Braginskii**
+> **TEMPEST Mathematical Closure and AI/ML Benchmark Framework**
+>
+> **Application 1: Dusty-Plasma Many-Body Closure**
+>
+> **Application 2: Core-Collapse-Supernova Turbulence Closure**
 
-Assign scientific owners for each reference model, the common statistical data
-schema, MTF validation, and benchmark evaluation. Approve the seven pilot
-deliverables and the week-13 gate review. Defer broad model implementation and
-ranking until the classical limits, cumulant/history estimators, information
-budgets, and application metric are fixed.
+Assign owners for the canonical references, dusty-plasma physics, the 3D
+supernova ensemble, the 1D carrier, the common statistical schema, and the
+evaluation harness. Approve the 90-day deliverables and week-13 gate review.
+Defer broad model ranking until the reference hierarchy, projections,
+information budgets, and application observables are fixed.
 
-*Basis: the TEMPEST Full Proposal; Andrew Christlieb's August 2026 “TEMPEST
-Line of Sight to Magnetic Target Fusion” preview deck; and the three
-mathematical scale-limit papers linked above.*
+*Basis: the TEMPEST Full Proposal; Couch, Warren, and O'Connor,
+[STIR](https://arxiv.org/abs/1902.01340); Müller,
+[critical assessment of 1D supernova turbulence models](https://arxiv.org/abs/1902.04270);
+Abdikamalov et al.,
+[shock-turbulence interaction](https://arxiv.org/abs/1605.09015); and the three
+mathematical scale-limit papers listed in the project references.*

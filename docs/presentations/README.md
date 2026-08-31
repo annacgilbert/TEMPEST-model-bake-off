@@ -1,22 +1,13 @@
 # Presentations
 
-## Mathematical closure bake-off overview
+## Full TEMPEST closure-model talk
 
-`TEMPEST_mathematical_closure_bakeoff.pptx` is a nine-slide design-discussion
-deck covering:
-
-1. the mathematical-object view of PINNs, neural operators, closures,
-   structured dynamics, and world models;
-2. the numerical closure idea motivated by the three Deng-Hani-Ma/Deng-Hani
-   scale-limit papers;
-3. why the canonical mathematical regimes and TEMPEST application regimes are
-   physically distinct, so the diagnostic logic transfers but the theorem
-   equations and assumptions do not;
-4. the computational evaluation harness: fixed tests, a common closure
-   interface, and uniform accuracy, stability, reliability, structure, and
-   cost metrics;
-5. matched-information and matched-compute comparison rules; and
-6. the physics-specific application-adapter pattern, illustrated by Andrew
-   Christlieb's MTF nonlocal heat-transport profile.
-
-Claim and visual sources are recorded in the speaker notes for each slide.
+`TEMPEST_closure_models_full_talk.pptx` is a 22-slide, 30--45 minute
+presentation that develops the complete research program: closure as a
+mathematical object; canonical and TEMPEST physical regimes; the
+Deng--Hani--Ma cumulant and history program; non-quantum many-body interaction
+learning; four linked bake-offs; the common computational/evaluative harness;
+matched-information scorecards; the dusty-plasma closure ladder; the supernova
+3D-to-1D turbulence transfer test; and a 90-day pilot. The closing slide gives
+a SWOT analysis. The website closure-model diagram is used on slide 2, and
+each slide includes speaker notes and source links.

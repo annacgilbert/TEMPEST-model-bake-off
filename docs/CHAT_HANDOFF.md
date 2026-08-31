@@ -52,9 +52,10 @@ closures. It translates their organizing variables into numerical questions:
 The selected architecture has two layers. Canonical benchmarks verify these
 ideas on particle-to-Boltzmann, NLS-to-WKE, and Boltzmann-to-fluid transitions.
 TEMPEST application profiles then test whether the diagnostics and closure
-design rules remain useful in application physics. Nonlocal magnetized heat
-transport for magnetic target fusion is the proposed first profile; dusty
-plasma remains a candidate transfer profile.
+design rules remain useful in application physics. Dusty plasma supplies the
+particle-resolved many-body closure ladder. Core-collapse supernovae supply
+the second science application: unresolved 3D shock-turbulence effects must be
+represented self-consistently in a reduced 1D carrier.
 
 ## Repository strategy
 
@@ -65,8 +66,10 @@ checkpoints stay outside Git, with manifests committed here.
 
 ## Inputs still needed
 
-- Scientific owners and reference solvers for the canonical and MTF pilots.
-- A decision on the first MTF closure object and application-facing metric.
+- Scientific owners and reference solvers for the canonical, dusty-plasma,
+  and supernova pilots.
+- A decision on the first supernova 3D-to-1D closure object, projection, and
+  application-facing metric.
 - Feasible ensemble size, cumulant basis/order, and history horizon.
 - Available compute, wall-time, storage, and experimental-data constraints.
 

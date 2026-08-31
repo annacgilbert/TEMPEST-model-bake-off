@@ -13,9 +13,11 @@ evidence:
 2. TEMPEST application profiles in which the assumptions behind those limits
    fail and an augmented closure is needed.
 
-The first proposed application profile is nonlocal magnetized heat transport
-beyond Braginskii in a 1D2V plasma slab. Dusty plasma is a candidate second
-profile for testing transfer to strongly correlated, particle-resolved data.
+The application layer contains two complementary profiles. Dusty plasma makes
+eliminated fields, strong correlations, context, and memory observable in
+particle-resolved data. Core-collapse supernovae test a different reduction:
+whether unresolved 3D shock-turbulence dynamics can be represented
+self-consistently in a reduced 1D carrier.
 
 ## Mathematical foundations
 
@@ -119,9 +121,9 @@ The program tests four falsifiable hypotheses:
    low-dimensional or otherwise tractable representation.
 3. **Finite memory:** a bounded history state materially improves long-time
    prediction over a Markov closure without growing indefinitely.
-4. **Transfer:** the representation and diagnostics learned in canonical
-   systems remain useful, after physics-specific adaptation, in at least two
-   TEMPEST application profiles.
+4. **Transfer:** the representation and diagnostics learned in canonical and
+   dusty-plasma systems remain useful, after physics-specific adaptation, for
+   a core-collapse-supernova turbulence closure.
 
 Failure of any hypothesis is a reportable scientific outcome and triggers a
 stop, pivot, or restriction of scope.
@@ -162,42 +164,88 @@ stop, pivot, or restriction of scope.
 
 ### Track B: TEMPEST application profiles
 
-#### B1. MTF nonlocal heat transport
-
-- Hierarchy: particle/MD or PIC to Vlasov-Fokker-Planck/Landau to Grad or
-  two-fluid MHD to radiation-MHD.
-- Trusted limit: Braginskii transport in the collisional, near-Maxwellian,
-  small-Knudsen regime.
-- Initial target:
-  \[
-  q=q_{\mathrm{Braginskii}}+\Delta q_{\mathrm{NL}}.
-  \]
-- Candidate augmented state: non-Maxwellian moments, projected species
-  correlations, pressure anisotropy, and a heat-front memory state.
-- Required constraints: conservation, admissibility, positivity,
-  hyperbolicity, entropy behavior, symmetry, and recovery of the Braginskii
-  limit.
-
-#### B2. Dusty-plasma transfer profile
+#### B1. Dusty-plasma many-body closure ladder
 
 - Hierarchy: particle tracking or DRIAD to kinetic statistics to moment or
   coarse collective dynamics.
 - Purpose: test transfer to strong correlations, anomalous transport, and
   experimentally observable particle cumulants.
-- Status: candidate; not part of the first implementation milestone.
+- Proposed internal ladder:
+  1. infer effective pair, environment, graph, or memory-dependent forces after
+     eliminating plasma and wake degrees of freedom;
+  2. test the particle-to-kinetic factorization and correlation closure;
+  3. test kinetic-to-moment stress, flux, production, and memory closures; and
+  4. compare which diagnostics persist across the two reductions.
+- Decisive coordinates: coupling and density, screening, charge/mass
+  heterogeneity, forcing history, and the ratio of wake or field relaxation
+  time to resolved particle time.
+- Status: retained TEMPEST application profile; production runs remain gated
+  on a scientific owner, reference model, independent validation quantities,
+  and approved parameter sweep.
+
+#### B2. Core-collapse-supernova turbulence closure
+
+- High-fidelity reference: 3D radiation-hydrodynamic or (M)HD
+  DNS/implicit-LES/LES simulations that resolve or quantify shock-turbulence
+  interaction over a declared filter and resolution hierarchy.
+- Reduced carrier: a 1D spherically symmetric supernova model with the
+  minimum thermodynamic, composition, gravity, and neutrino-transport state
+  required by the selected science case.
+- Projection: angle or volume averaging of the 3D state onto radial profiles,
+  with Favre/Reynolds conventions and shock tracking declared before data
+  generation.
+- Initial target:
+  \[
+  C_{\mathrm{SN}}^\star[X]
+  =\langle F_{3\mathrm D}(X)\rangle_\Omega
+   -F_{1\mathrm D}(\langle X\rangle_\Omega),
+  \]
+  decomposed into Reynolds stress/turbulent pressure, turbulent energy or
+  enthalpy flux, production, dissipation, mixing, and optional finite-memory
+  terms.
+- Candidate augmented state: turbulent kinetic energy, anisotropy or
+  Reynolds-stress coordinates, shock-relative features, filtered cumulants,
+  and a bounded history state.
+- Required constraints: total-energy and lepton-number accounting as provided
+  by the carrier, positivity and realizability, stable shock-capturing rollout,
+  causal memory, and recovery of the declared zero-turbulence or calibrated
+  local baseline.
+- Application observables: mean shock-radius history, shock revival or runaway
+  classification and timing, turbulent support behind the shock, explosion
+  energy, and nucleosynthesis-sensitive thermodynamic histories, with the
+  version-0 subset fixed by the supernova science owners.
+- Status: selected second TEMPEST science application; exact reference
+  simulations, carrier, projections, and acceptance thresholds remain open.
+
+Within B1, the proposed decisive experiment nests an analytic instantaneous pair law, a
+learned pair kernel, an instantaneous many-particle graph model, and a
+finite-memory graph or auxiliary-state model. Sweeping wake relaxation,
+density, and forcing history reveals where pairwise closure fails, where
+many-particle context is required, and where memory earns its inference cost.
+Projected cumulants and interaction-history complexity are tested as early
+warnings of these boundaries. The same ensembles then define kinetic and
+moment closure defects, converting interaction learning into an input to the
+next two scale transitions rather than an isolated trajectory-prediction task.
+
+The complete cross-track execution sequence is maintained in
+[`experimental_pipeline.md`](experimental_pipeline.md).
 
 ## Closure models to compare
 
-1. Classical Markov kinetic or fluid closure.
-2. Explicit finite-cumulant or finite-moment closure.
-3. Finite-memory closure using kernels or auxiliary variables.
-4. Structure-preserving learned cumulant/memory correction.
-5. Direct black-box surrogate as a diagnostic control, not the default model.
+1. Analytic and statistically identifiable effective interaction laws.
+2. Contextual or finite-memory graph particle models.
+3. Classical Markov kinetic or fluid closure.
+4. Explicit finite-cumulant or finite-moment closure.
+5. Finite-memory closure using kernels or auxiliary variables.
+6. Structure-preserving learned cumulant/memory correction.
+7. Direct black-box surrogate as a diagnostic control, not the default model.
 
 PINNs, neural operators, PINOs, structured neural dynamics, and world models
 remain in the broader bake-off, but they approximate different mathematical
 objects. The closure and structured-dynamics tracks are the center of this
-mathematical program.
+mathematical program. No single scalar ranking should combine force inference,
+solution approximation, operator learning, closure prediction, and controlled
+rollout; each is scored against its own declared object and information budget.
 
 ## Required numerical evidence
 
@@ -218,4 +266,3 @@ Those algorithms establish mathematical bounds and are not automatically
 efficient numerical closures. First instrument canonical simulators so that
 cumulants and interaction histories are measurable. Only then test which proof
 structures are computationally predictive and compressible.
-

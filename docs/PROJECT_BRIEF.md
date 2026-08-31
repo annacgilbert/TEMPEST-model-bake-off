@@ -23,9 +23,41 @@ measurable:
 ### TEMPEST application profiles
 
 Adapt the mathematical organization—not unmodified theorem assumptions—to
-noncanonical physics. The first proposed profile is nonlocal magnetized heat
-transport beyond Braginskii in a 1D2V slab. A dusty-plasma profile is a
-candidate transfer test.
+noncanonical physics. The first profile is a dusty-plasma closure ladder
+organized as linked effective-interaction, particle-to-kinetic, and
+kinetic-to-moment experiments. The second profile is core-collapse-supernova
+turbulence: extract unresolved turbulent stresses, fluxes, and memory from 3D
+DNS/implicit-LES/LES references and close a reduced 1D supernova carrier.
+
+## Experimental pipeline
+
+The bake-off is a sequence of closure experiments rather than a flat contest
+among architectures. For every transition it declares the high-fidelity state,
+projection, retained state, discarded information, classical reduced operator,
+and measurable closure defect. Verified ensembles are projected into
+marginals, moments, cumulants, interaction histories, and residual targets;
+matched analytic, learned, and hybrid candidates are then tested first on those
+targets and then after solver embedding. Separate scorecards report target
+accuracy, identifiability, long-rollout behavior, physical validity,
+classical-limit recovery, failure detection, out-of-distribution transfer, and
+total cost.
+
+The linked stages are:
+
+1. effective interaction discovery at the retained-particle level;
+2. particle-to-kinetic reduction and correlation closure;
+3. kinetic-to-moment reduction and constitutive closure; and
+4. transfer of validated diagnostics and design principles to a TEMPEST
+   application, initially the supernova 3D-to-1D turbulence closure.
+
+Track A supplies theorem-faithful tests of the scale-limit logic. The
+dusty-plasma B1 profile supplies a controlled many-body setting in which
+pairwise, contextual, and finite-memory descriptions can be separated. B2
+tests whether the resulting principles remain useful when unresolved 3D
+shock-turbulence physics is represented in a reduced 1D supernova model.
+Coefficients, trained weights, and theorem assumptions do not transfer without
+a new validation. The full execution sequence and stage gates are specified in
+[`experimental_pipeline.md`](experimental_pipeline.md).
 
 ## Evaluation harness
 
@@ -37,6 +69,11 @@ candidates. The harness separates the science (the closures) from the
 scaffolding (data handling, integration, scoring), so that adding a new method
 requires implementing one interface, and every reported comparison is
 reproducible and fair by construction.
+
+Because different families approximate different mathematical objects, the
+harness does not produce one universal leaderboard. Direct rankings are made
+within a declared target and information budget; cross-family conclusions use
+the stage scorecards and claim ladder.
 
 ## Model families in scope
 
@@ -87,13 +124,17 @@ For every scale transition, also ask:
 ## Deliverables
 
 - A versioned benchmark specification and information-budget matrix.
+- A canonical end-to-end experimental-pipeline specification with activation
+  gates and target-specific scorecards.
 - A mathematical-to-computational translation of the hierarchy, cumulants,
   memory variables, and closure residuals.
 - Canonical particle/Boltzmann and NLS/wave-kinetic ensemble benchmarks.
 - A common cumulant and interaction-history data schema.
 - A factorization and closure-failure diagnostic workflow.
-- An MTF translation specification connecting canonical objects to the
-  Braginskii and nonlocal heat-flux hierarchy.
+- A supernova translation specification connecting filtered or angle-averaged
+  3D dynamics to 1D turbulent stress, flux, production, and dissipation terms.
+- A versioned supernova application contract covering projection, target
+  estimators, physical constraints, rollout observables, and activation gates.
 - Predeclared success, pivot, and stop criteria.
 - Reproducible reference data generation.
 - A reusable evaluation harness with common model interfaces, controlled test
@@ -105,5 +146,7 @@ For every scale transition, also ask:
 ## Current phase
 
 Mathematical-program and benchmark design. The two-layer architecture is a
-binding project direction; canonical solvers, MTF reference physics, parameter
-ranges, and model architectures remain open decisions.
+binding project direction, as are the linked scale-transition pipeline and
+target-specific scorecards. Canonical solvers, dusty-plasma reference physics,
+supernova reference simulations and reduced carrier, parameter ranges, and
+model architectures remain open decisions.

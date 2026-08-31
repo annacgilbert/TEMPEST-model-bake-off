@@ -21,8 +21,9 @@ section summarizes the hard-particle-to-Boltzmann, Boltzmann-to-fluid, and
 nonlinear-wave-to-wave-kinetic results; explains why these controlled regimes
 form the canonical validation layer of the computational evaluation harness;
 and states explicitly which diagnostic logic transfers to TEMPEST and which
-physical equations and theorem assumptions do not. The rebuilt document is 47
-pages. The preserved source archive listed above was not modified.
+physical equations and theorem assumptions do not. The application comparison
+now identifies dusty plasma and core-collapse-supernova turbulence as the two
+TEMPEST profiles. The preserved source archive listed above was not modified.
 
 ## Still expected
 
@@ -35,14 +36,6 @@ Overleaf project export at `TEMPEST_Full_Proposal/main.pdf`. PDF metadata
 identifies it as *TEMPEST: NSF STC Full Proposal* by Michael Murillo. The
 verified file contains 31 letter-size pages, ending with the bibliography.
 
-## Magnetic-target-fusion line-of-sight deck
-
-`TEMPEST_Line_of_Sight_to_Magnetic_Target_Fusion_Andrew.pdf` was imported on
-2026-08-08 from the user-supplied preview deck
-`TEMPEST_Line_of_Sight_to_Magnetic_Target_Fusion-2-Andrew.pdf`. It is the
-source for the proposed MTF application profile and the revised design-meeting
-memo.
-
 ## External mathematical foundations
 
 - Deng, Hani, and Ma, [Long time derivation of the Boltzmann equation from hard
@@ -54,6 +47,25 @@ memo.
 
 Versions were checked on 2026-08-08. If local PDFs are later added, record
 their retrieval dates and checksums here.
+
+## Supernova closure foundations
+
+- Couch, Warren, and O'Connor,
+  [Simulating Turbulence-aided Neutrino-driven Core-collapse Supernova
+  Explosions in One Dimension](https://arxiv.org/abs/1902.01340), STIR and
+  3D-calibrated turbulence in a 1D carrier.
+- Müller,
+  [A Critical Assessment of Turbulence Models for 1D Core-Collapse Supernova
+  Simulations](https://arxiv.org/abs/1902.04270), emphasizing conservative
+  coupling and thermodynamic consistency.
+- Abdikamalov et al.,
+  [Shock-Turbulence Interaction in Core-Collapse
+  Supernovae](https://arxiv.org/abs/1605.09015), a controlled analysis of
+  upstream perturbations and post-shock turbulence amplification.
+
+The TEMPEST proposal remains the primary source for the project's proposed 3D
+DNS/implicit-LES/LES supernova work and the self-consistent augmentation of a
+1D supernova model with volume-averaged 3D turbulence transport effects.
 
 Do not silently replace or edit source documents. Record provenance, version,
 and retrieval date when a reference is added.

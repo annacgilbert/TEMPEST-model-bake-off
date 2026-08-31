@@ -2,6 +2,7 @@
 
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amssymb,booktabs,graphicx,hyperref}
+\hypersetup{hidelinks}
 
 \title{TEMPEST Model Bake-Off}
 \author{TEMPEST Model Bake-Off contributors}
@@ -17,8 +18,11 @@ application-scale reductions motivated by TEMPEST.  It will compare classical
 Markov closures, explicit cumulant and memory models, physics-informed neural
 networks, neural operators, physics-informed neural operators, learned
 closures, structured learned dynamics, and action-conditioned world models.
-The first application profile is nonlocal magnetized heat transport for
-magnetic target fusion.
+The experiment is organized as a linked sequence of effective-interaction,
+particle-to-kinetic, kinetic-to-moment, and application-transfer tests rather
+than a single architecture leaderboard. The application profiles are a
+dusty-plasma many-body closure ladder and a core-collapse-supernova turbulence
+closure that transfers unresolved 3D effects into a reduced 1D carrier.
 \end{abstract}
 
 \setcounter{tocdepth}{1}
@@ -73,31 +77,145 @@ long-time behavior, and separation of numerical, ensemble, asymptotic, and
 closure-model errors. TEMPEST applications retain this diagnostic protocol
 but replace the equations, states, constraints, observables, and coefficients.
 
+\section{Experimental pipeline}
+For every transition the experiment declares a high-fidelity state $X$, a
+projection $\Pi$, a retained state $u=\Pi X$, and a trusted reduced operator
+$F_0$. The exact or estimable closure defect is
+\begin{equation}
+  C^\star[X]=\Pi F(X)-F_0(\Pi X).
+\end{equation}
+The specification names the discarded particles, fields, correlations,
+moments, and histories whose effect appears in $C^\star$, together with the
+information available to each candidate during training and inference.
+
+The complete execution sequence is:
+\begin{enumerate}
+  \item predeclare states, scaling coordinates, forcing regimes, splits,
+    observables, information budgets, uncertainty estimators, and gates;
+  \item verify high-fidelity and reduced references under numerical refinement
+    and mandatory physical checks;
+  \item generate versioned ensembles and project them into marginals, moments,
+    cumulants, interaction histories, and closure defects;
+  \item fit matched analytic, learned, and hybrid candidates through the common
+    model interface;
+  \item test the learned object a priori on held-out targets and then embed
+    closures in the carrier solver for a-posteriori stability and feedback
+    tests;
+  \item run predeclared asymptotic, controlled-breakdown,
+    out-of-distribution, and cross-profile experiments without test-time
+    retuning; and
+  \item audit every claim, retain failed runs, decompose numerical, sampling,
+    estimator, asymptotic, model, and rollout error, and generate the report
+    from machine-readable results.
+\end{enumerate}
+
+\subsection{Four linked bake-offs}
+The first stage learns an effective force at the retained-particle level after
+ions, electrons, wakes, fields, collisions, or faster dynamics have been
+eliminated. It compares analytic interaction laws, identifiable pair kernels,
+physics-tailored force decompositions, contextual graph models, and
+finite-memory auxiliary-state models. This is a closure when the force
+represents eliminated environmental degrees of freedom; it is not yet a
+kinetic or fluid closure.
+
+The second stage projects verified particle ensembles to a one-particle
+distribution. It compares classical mean-field or kinetic operators, explicit
+correlation and cumulant corrections, weak-form discovered operators, learned
+kinetic residuals, memory models, and neural operators or PINOs when paired
+solution families are available. Particle cumulants, factorization error,
+hierarchy residuals, collective modes, transport, and long kinetic rollouts
+define the evidence.
+
+The third stage projects kinetic solutions to density, momentum, energy, and a
+predeclared set of additional moments. Classical constitutive laws, Grad or
+maximum-entropy closures, hyperbolic learned moment closures, explicit
+cumulant and memory states, and structure-preserving learned residuals are
+tested on stress and heat flux, realizability, hyperbolicity, conservation,
+entropy behavior, classical-limit recovery, and embedded-solver stability.
+
+The fourth stage transfers only validated diagnostic logic, state-selection
+rules, structural parameterizations, uncertainty procedures, and stopping
+criteria to a TEMPEST application. Coefficients, weights, state variables, and
+theorem assumptions remain application-specific unless a separate experiment
+justifies their transfer.
+
+\subsection{Cross-cutting pair, context, and memory experiment}
+The proposed dusty-plasma reference family contains heterogeneous particles,
+confinement, drag, screened repulsion, nonreciprocal wake effects, external
+forcing, and an optional dynamical wake or field coordinate $\zeta_j$:
+\begin{equation}
+  m_i\dot v_i=F_i^{\mathrm{conf}}+F_i^{\mathrm{ext}}-\gamma_i v_i
+  +\sum_{j\ne i}F_{ij}(r_i,r_j,\zeta_j;\mu)+\eta_i,
+  \qquad
+  \tau_w\dot\zeta_j=\zeta_{\mathrm{eq}}(\mathcal E_j)-\zeta_j.
+\end{equation}
+The actual reference physics must be selected with the scientific owner. The
+design sweeps wake relaxation $\tau_w$, density or coupling, screening,
+heterogeneity, and forcing history. The same data compare an analytic pair
+law, learned pair kernel, instantaneous many-particle graph model,
+finite-memory graph or auxiliary-state model, and unrestricted black-box
+control. The experiment locates where pairwise information stops being
+sufficient, where many-particle context becomes necessary, and where explicit
+memory earns its cost. Projected cumulants and interaction-history complexity
+are tested as early warnings of those boundaries. The resulting ensembles
+then feed the particle-to-kinetic and kinetic-to-moment stages.
+
 \section{TEMPEST application profiles}
-The flagship profile will study magnetic-target-fusion nonlocal heat
-transport, including an explicit canonical-to-application translation. A
-dusty-plasma transfer profile remains a candidate second application.
+The dusty-plasma profile retains observed particles while eliminating plasma,
+wake, field, and sub-observation-time degrees of freedom. Its nested pair,
+contextual graph, and finite-memory candidates locate when each information
+class becomes necessary. The same verified ensembles then supply
+particle-to-kinetic and kinetic-to-moment closure targets.
+
+The second science application is core-collapse-supernova turbulence. A 3D
+radiation hydrodynamics or (M)HD reference is projected by a declared angular
+or volume average, Favre/Reynolds convention, radial binning, filter, and shock
+alignment into a reduced 1D carrier. The exact closure defect is
+\begin{equation}
+  C_{\mathrm{SN}}^\star[X]
+  =\langle F_{3\mathrm D}(X)\rangle_\Omega
+  -F_{1\mathrm D}(\langle X\rangle_\Omega),
+\end{equation}
+decomposed into Reynolds stress or turbulent pressure, turbulent energy and
+enthalpy flux, production, dissipation, mixing, and optional finite-memory
+terms. The initial candidates are an unaugmented 1D carrier, a declared local
+RANS/mixing-length or STIR-like baseline, explicit turbulent-state
+augmentations, structure-preserving learned residuals, and finite-memory
+corrections. Each is tested after embedding on shock-radius evolution,
+revival/runaway timing, turbulent support, conservative energy and lepton
+accounting, realizability, explosion energy, and nucleosynthesis-sensitive
+thermodynamic histories.
 
 \section{Methods and information budgets}
 Methods will include classical, cumulant, and memory closures; PINNs, neural
 operators, and PINOs; learned closures and structured dynamics; and
 action-conditioned world models. Privileged information and matched
-comparisons will be reported explicitly.
+comparisons will be reported explicitly. PINNs are evaluated as
+equation-informed approximations of particular forward or inverse solutions;
+neural operators and PINOs target parameterized solution maps; learned
+closures target an identified residual inside a retained solver; and a world
+model is admitted only for a genuine sequential intervention. Direct rankings
+are restricted to candidates approximating the same object.
 
 \section{Experimental protocol}
 The protocol will cover reference-solver verification, ensemble and estimator
 uncertainty, a-priori closure tests, a-posteriori embedded-solver tests, and
-transfer and failure-boundary experiments.
+transfer and failure-boundary experiments. Separate scorecards report target
+accuracy and identifiability, dynamics and reliability, closure diagnosis,
+physical and mathematical validity, limit recovery and transfer, and total
+information and computational cost. Unlike tasks are not averaged into one
+overall winner.
 
 \section{Results}
 Results will report recovery of classical limits; cumulant and memory
-diagnostics; predictive and embedded closure performance; MTF
-application-profile performance; and compute and information efficiency.
+diagnostics; predictive and embedded closure performance; dusty-plasma and
+supernova application-profile performance; and compute and information
+efficiency.
 
 \section{Discussion}
 The discussion will ask which closure information is necessary, what transfers
-from canonical systems to MTF, and where negative results limit
-generalization.
+from canonical and dusty-plasma systems to the supernova profile, and where
+negative results limit generalization.
 
 \section{Reproducibility statement}
 The reproducibility record will link data and result manifests, code,

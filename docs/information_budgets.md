@@ -10,17 +10,57 @@ histories, targets, and solver calls a method receives.
 
 Complete this ledger for every benchmark profile.
 
-| Information object | Particle/Boltzmann | NLS/WKE | Boltzmann/fluid | MTF profile |
+| Information object | Particle/Boltzmann | NLS/WKE | Boltzmann/fluid | Supernova profile |
 |---|---|---|---|---|
-| High-fidelity equations | Particle flow and collision law | Nonlinear wave equation | Kinetic equation | Selected kinetic/gyrokinetic model |
-| Reduced equations | Boltzmann equation | Wave kinetic equation | Euler or NSF | Fluid/transport model |
-| Ensemble definition | Initial particle law and samples | Random-field law and samples | Kinetic initial/boundary family | Drive, boundary, and uncertainty ensemble |
-| One-point state | One-particle marginal | Spectrum/mode occupations | Hydrodynamic moments | Density, temperature, flow, magnetic state |
-| Higher connected statistics | Particle cumulants | Spectral cumulants | Non-equilibrium moments/cumulants | Nonlocal flux, stress, or learned latent statistics |
-| History information | Collision/recollision summaries | Resonant interaction summaries | Relaxation history | Compression, drive, and transport history |
-| Classical limit | Boltzmann collision operator | WKE collision integral | Euler/NSF constitutive law | Braginskii/local transport |
-| Correction target | Hierarchy residual | Spectral-transfer residual | Constitutive residual | Nonlocal heat-flux correction |
-| Asymptotic coordinates | Diluteness and kinetic time | Weak nonlinearity and scale separation | Knudsen number | Collisionality, magnetization, gradient scale |
+| High-fidelity equations | Particle flow and collision law | Nonlinear wave equation | Kinetic equation | 3D radiation-hydrodynamics or (M)HD |
+| Reduced equations | Boltzmann equation | Wave kinetic equation | Euler or NSF | 1D supernova carrier with declared turbulence model |
+| Ensemble definition | Initial particle law and samples | Random-field law and samples | Kinetic initial/boundary family | Progenitor, perturbation, heating, resolution/filter, and uncertainty ensemble |
+| One-point state | One-particle marginal | Spectrum/mode occupations | Hydrodynamic moments | Angle/volume-averaged radial thermodynamic, composition, gravity, and neutrino state |
+| Higher connected statistics | Particle cumulants | Spectral cumulants | Non-equilibrium moments/cumulants | Reynolds stress, turbulent pressure/energy, fluxes, and filtered cumulants |
+| History information | Collision/recollision summaries | Resonant interaction summaries | Relaxation history | Shock-relative, production/dissipation, and turbulent-memory histories |
+| Classical limit | Boltzmann collision operator | WKE collision integral | Euler/NSF constitutive law | Unaugmented 1D carrier and declared local turbulence baseline |
+| Correction target | Hierarchy residual | Spectral-transfer residual | Constitutive residual | Projected 3D-to-1D turbulent stress/flux/source residual |
+| Asymptotic coordinates | Diluteness and kinetic time | Weak nonlinearity and scale separation | Knudsen number | Progenitor structure, shock strength, turbulence intensity, heating, resolution/filter width |
+
+## Dusty-plasma linked-stage ledger
+
+For B1, complete this additional ledger before generating
+production data.
+
+| Information object | Effective interaction | Particle to kinetic | Kinetic to moment |
+|---|---|---|---|
+| High-fidelity equations | Particles plus selected plasma/wake/field reference | Verified particle ensemble | Verified kinetic or empirical-distribution evolution |
+| Retained state | Observed particle positions, velocities, labels, external conditions | One-particle distribution or compressed kinetic state | Density, momentum, energy, declared higher moments |
+| Discarded information | Ions, electrons, wakes, unresolved fields/collisions | Particle identities, connected correlations, interaction histories | Velocity-space detail, tails, higher moments, relaxation history |
+| Direct target | Effective force/acceleration decomposition | Correlation, collision, or kinetic residual | Stress, heat flux, production/relaxation, or moment residual |
+| Connected statistics | Local geometric and graph statistics | Particle cumulants and factorization defect | Non-Maxwellian moments and cumulants |
+| History | Wake/field and forcing history | Interaction graph and projected cumulant history | Relaxation and transport history |
+| Regime coordinates | Density, screening, heterogeneity, wake time, forcing | Coupling, scale separation, particle count, observation scale | Knudsen/relaxation coordinate and gradient/forcing scale |
+| Classical baseline | Instantaneous screened pair law | Mean-field or declared kinetic operator | Grad, maximum entropy, or declared constitutive law |
+| Independent validation | Mass/charge/screening, mode response, force decomposition | Distributions, correlations, modes, transport | Fluxes, realizability, hyperbolicity, balance laws |
+
+Stage handoffs are versioned data products, not automatic privileges. For
+example, a Stage 2 model may consume forces or particle ensembles generated by
+a Stage 1 candidate only in a separately labeled propagated-model experiment;
+its reference comparison must use the verified high-fidelity generator. Test
+cumulants, hidden wake variables, or future histories remain unavailable at
+inference unless the deployment scenario measures them.
+
+## Supernova 3D-to-1D ledger
+
+Complete this B2 ledger before generating training data.
+
+| Information object | Required declaration |
+|---|---|
+| High-fidelity state | 3D radiation-hydrodynamic or (M)HD state, numerical method, progenitor, neutrino treatment, grid, and subgrid assumptions |
+| Projection | Angle/volume and Favre/Reynolds conventions, radial bins, shock alignment, filtering, and time windows |
+| Reduced carrier | 1D equations, thermodynamic/composition/gravity/neutrino state, shock capturing, and baseline turbulence closure |
+| Discarded information | Nonradial fluctuations, Reynolds-stress anisotropy, shock corrugation, cascade, intermittency, mixing, and unresolved history |
+| Direct targets | Turbulent stress/pressure, energy or enthalpy flux, production, dissipation, mixing, and declared memory terms |
+| Regime coordinates | Progenitor structure, post-bounce time, shock strength, upstream turbulence, heating/forcing, resolution/filter width, and magnetic field where relevant |
+| Application observables | Shock-radius history, revival/runaway event and timing, turbulent support, explosion energy, and nucleosynthesis-sensitive histories |
+| Mandatory structure | Conservative coupling, positivity, realizability, causal memory, shock stability, and baseline recovery |
+| Uncertainty | 3D discretization/filter error, ensemble variability, projection error, target-estimator uncertainty, learned error, and rollout error |
 
 ## Model-family ledger
 
@@ -30,6 +70,8 @@ than leaving cells implicit.
 | Model | Mathematical target | Equations | Paired fields | Ensembles/cumulants | Histories | Direct closure target | Structural prior | Actions | Train-time solver | Inference-time solver |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Numerical baseline | Discrete solution | Full | No | No | No | Analytic/classical | Discretization | Optional | Yes | Yes |
+| Interaction-kernel method | Effective pair/directed force law | Optional/partial | Trajectories or accelerations | Occupancy measure | Optional | Force label or weak form | Pair structure, geometry | Optional | Usually | Particle integrator |
+| Graph particle model | Contextual force, vector field, or flow map | Optional | Trajectories | Optional graph statistics | Optional/required | Direct/indirect | Equivariance, locality, graph structure | Optional | Usually | Integrator or step map |
 | Classical Markov closure | Constitutive operator | Reduced | No | Optional diagnostics | No | Yes | Analytic physics | Optional | Calibration only | Yes |
 | Explicit cumulant closure | Augmented hierarchy | Reduced/hierarchy | Often | Required | Optional | Yes | Truncation/realizability | Optional | Usually | Yes |
 | Finite-memory closure | Memory kernel/augmented state | Reduced/projected | Often | Often | Required | Direct/indirect | Causality/stability | Optional | Usually | Yes |
@@ -67,6 +109,11 @@ Report at least the following comparisons:
 - matched uncertainty in the closure targets;
 - matched inference accuracy target and resulting total cost;
 - an unrestricted best-effort comparison, labeled separately.
+
+For the decisive B1 dusty-plasma experiment, also report matched nested comparisons across
+the analytic pair law, learned pair kernel, instantaneous graph model, and
+finite-memory graph model. Incremental performance must be reported against
+the incremental state, history, storage, and online-estimation cost.
 
 ## Required manifest fields
 
