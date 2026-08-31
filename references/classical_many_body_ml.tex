@@ -1,0 +1,422 @@
+\section{Machine learning for classical many-body systems}
+
+\subsection{Scope: many-body, classical, and deliberately non-quantum}
+
+Many-body learning is sometimes treated as a single subject because all of its examples contain many interacting degrees of freedom. That grouping is too coarse for closure science. A method that identifies a radial pair force from particle tracks, a graph network that predicts the next particle state, a force-matched coarse potential, and a model that closes a kinetic moment hierarchy all use many-body data, but they approximate different mathematical objects and support different scientific claims.
+
+This section is restricted to \emph{classical} systems: interacting particles or agents, classical molecular and coarse-grained dynamics, granular and active matter, collective motion, point particles on manifolds, and laboratory dusty plasmas. It excludes wavefunction and density-matrix models, quantum Monte Carlo, quantum-state tomography, electronic-structure prediction, and machine-learned interatomic potentials whose target is a quantum Born--Oppenheimer energy surface. Classical molecular dynamics remains in scope when the learned object is a classical coarse free energy, stochastic reduced dynamics, or an interaction law inferred from classical trajectories.
+
+A useful starting point is a heterogeneous second-order particle system
+\begin{equation}
+m_i\ddot x_i
+=
+F_i^{\mathrm{env}}(x_i,v_i,s_i;\mu)
++\sum_{j\ne i}F_{ij}(x_i,x_j,v_i,v_j,s_i,s_j;\mu)
+-\Gamma_i(v_i,s_i;\mu)
++\eta_i(t),
+\label{eq:classical-many-body}
+\end{equation}
+where \(s_i\) denotes particle type or latent attributes, \(\mu\) denotes environmental parameters, and \(\eta_i\) represents unresolved forcing or thermal noise. Depending on the physics, \(F_{ij}\) may be reciprocal or nonreciprocal, conservative or dissipative, pairwise or effectively many-body, isotropic or anisotropic, instantaneous or history dependent. The state may live in Euclidean space, on a periodic domain, or on a manifold.
+
+Even \cref{eq:classical-many-body} is already a model reduction. Plasma particles may interact through an evolving wake or field; colloids through a solvent; active particles through a driven medium; coarse molecular beads through degrees of freedom that have been integrated out. The apparent force law can therefore be state dependent, stochastic, non-Markovian, and thermodynamic-state dependent. That observation is the first connection to closure: a learned effective force is often a closure for eliminated media or internal coordinates, not a microscopic fundamental law.
+
+\subsection{The learned object determines the scientific claim}
+
+The most important taxonomy is not neural network versus kernel method. It is the object being estimated.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}P{0.16\textwidth}P{0.19\textwidth}P{0.19\textwidth}Y@{}}
+\toprule
+\textbf{Learned object} & \textbf{Typical supervision} & \textbf{What success establishes} & \textbf{What it does not establish by itself} \\
+\midrule
+Interaction kernel \(\phi(r)\) & Positions, velocities, or trajectory increments & A specified pairwise law is identifiable on sampled separations & Correct coarse statistics or validity outside the sampled occupancy measure \\
+Force decomposition \(F_{ij},F_i^{\mathrm{env}},\Gamma_i\) & Particle tracks plus physical roles and descriptors & Interpretable effective forces under a declared decomposition & Uniqueness when components share inputs or compensating errors are possible \\
+Latent interaction graph & Multivariate trajectories & Which components appear coupled under a graph model & A unique physical force law or causal mechanism \\
+Vector field or time-step map & State-transition pairs & Predictive microscopic or mesoscopic dynamics & A closed reduced equation for moments or distributions \\
+Coarse free energy or mean force & Fine-scale configurations and projected forces & Equilibrium coarse statistics under a stated mapping & Correct kinetics unless memory and fluctuating forces are also modeled \\
+Kinetic or moment closure & Marginals, moments, cumulants, or closure defects & Evolution of a declared reduced state & Particle-level identifiability or faithful microscopic trajectories \\
+Ensemble density or sampler & Equilibrium or stationary samples, possibly energies & A distribution over configurations or states & Dynamical fidelity, transport coefficients, or time correlations \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\begin{bigidea}[Interaction discovery is not automatically closure]
+Suppose a model accurately recovers \(F_{ij}\) in \cref{eq:classical-many-body}. It has learned a law for advancing the retained particle state. A kinetic or fluid closure asks a different question:
+\[
+\partial_t u=\mathcal F_0(u)+\mathcal C(u,\text{history},\text{statistics}),
+\]
+where \(u=\Pi X\) retains only a marginal, moment, spectrum, or coarse observable. The map \(F_{ij}\) becomes a closure only after the eliminated variables, projection \(\Pi\), and reduced operator \(\mathcal F_0\) are specified. The same particle data can support both tasks, but the targets and validation tests are not interchangeable.
+\end{bigidea}
+
+This distinction gives a natural hierarchy:
+\[
+\begin{gathered}
+\text{particle tracks}
+\longrightarrow
+\text{effective interactions}
+\longrightarrow
+\text{particle simulator}
+\\[-0.15em]
+\longrightarrow
+\text{kinetic statistics}
+\longrightarrow
+\text{moment or fluid closure}.
+\end{gathered}
+\]
+Errors can enter at every arrow. The evaluation harness should therefore preserve intermediate diagnostics rather than score only the final macroscopic output.
+
+\subsection{Structure-first nonparametric interaction-kernel inference}
+
+\subsubsection{Why the apparent high dimension can be misleading}
+
+For \(N\) particles in \(\R^d\), the full configuration lies in \(\R^{Nd}\). Directly learning an unconstrained vector field on that space confronts both a large input dimension and a changing state dimension when \(N\) changes. In many classical systems, however, the governing law has repeated low-dimensional structure. A canonical first-order model is
+\begin{equation}
+\dd x_i(t)
+=
+\frac{1}{N}\sum_{j=1}^{N}
+\phi\!\left(\lVert x_j(t)-x_i(t)\rVert\right)
+\bigl(x_j(t)-x_i(t)\bigr)\dd t
++\sigma\,\dd B_i(t).
+\label{eq:stochastic-kernel-model}
+\end{equation}
+The unknown is the one-dimensional radial function \(\phi(r)\), not a generic function on \(\R^{Nd}\). Permutation symmetry, shared interactions, and radial dependence are therefore not cosmetic architectural preferences. They convert a high-dimensional regression problem into a structured inverse problem.
+
+\citet{lu2019interactionlaws} developed this nonparametric viewpoint for deterministic systems, and \citet{lu2021heterogeneous} extended it to multiple agent types and potentially non-symmetric cross-type kernels. The stochastic theory in \citet{lu2022stochasticinteractions}, one of the three anchor papers for this survey, treats multiple independent trajectories of \cref{eq:stochastic-kernel-model}. Because the drift is linear in \(\phi\), the likelihood objective becomes a quadratic functional, so a regularized maximum-likelihood estimate can be computed as a structured least-squares problem over a data-adaptive hypothesis space.
+
+\subsubsection{The occupancy measure is part of the answer}
+
+The natural error norm is weighted by the distribution of pairwise distances actually visited by the dynamics. Schematically,
+\begin{equation}
+\rho_T(A)
+=
+\frac{1}{T}\int_0^T
+\E\!\left[
+\frac{1}{N(N-1)}
+\sum_{i\ne j}
+\mathbf 1_{\{\lVert x_j(t)-x_i(t)\rVert\in A\}}
+\right]\dd t .
+\label{eq:occupancy-measure}
+\end{equation}
+An estimate can be excellent in \(L^2(\rho_T)\) while unconstrained on distances that never occur. This is not a technical nuisance: it precisely states where the experiment identifies the force law. A train/test split over trajectories does not test extrapolation in separation if both splits have nearly the same \(\rho_T\). A serious benchmark should therefore report coverage in separation, relative speed, particle type, height, field strength, or whichever variables parameterize the candidate interaction.
+
+The associated coercivity condition says, roughly, that distinct candidate kernels produce detectably distinct collective drifts over the observed ensemble. For a hypothesis space \(\mathcal H\), it takes the schematic form
+\begin{equation}
+\E\!\left[
+\frac{1}{N}\sum_{i=1}^{N}
+\left|
+\frac{1}{N}\sum_{j=1}^{N}
+\varphi(r_{ij})(x_j-x_i)
+\right|^2
+\right]
+\ge
+c_{\mathcal H}
+\lVert \varphi(\cdot)\,\cdot\rVert_{L^2(\rho_T)}^2 .
+\label{eq:coercivity-many-body}
+\end{equation}
+The constant \(c_{\mathcal H}>0\) measures identifiability and conditioning. Small values mean that particle-wise contributions cancel or that the observed configurations do not sufficiently excite the candidate modes. This gives a more useful experimental-design question than asking only how many frames are available: do the trajectories explore configurations that distinguish the interaction laws of interest?
+
+Under regularity and coercivity assumptions, the estimator in \citet{lu2022stochasticinteractions} attains the one-dimensional nonparametric rate
+\begin{equation}
+\left(\frac{\log M}{M}\right)^{s/(2s+1)}
+\end{equation}
+for \(M\) independent trajectories and smoothness \(s\), independent of the ambient configuration dimension \(Nd\). The dimension independence is purchased by the correctness of the structural ansatz. If the true dynamics contain angular dependence, three-body terms, hidden types, or memory that the ansatz omits, the theorem does not make those discrepancies disappear.
+
+\subsubsection{Time resolution is an information budget}
+
+The stochastic paper also isolates an error that is easy to bury inside a generic data-noise category. When only discrete-time positions are available and an Euler--Maruyama likelihood approximation is used, the estimator incurs a bias of order
+\begin{equation}
+\sigma\,O(\Delta t^{1/2}).
+\end{equation}
+Once this term dominates sampling and approximation errors, adding more trajectories no longer improves the observed learning curve. The numerical experiments show this flattening explicitly. For the bake-off, temporal resolution must therefore be reported alongside trajectory count, and synthetic data should distinguish simulator time step from observation gap.
+
+The paper's numerical results also connect kernel error in \(L^2(\rho_T)\) to trajectory discrepancy and show good collective predictions beyond the training interval in its tested stochastic opinion and Lennard--Jones systems. This is valuable evidence, but it does not eliminate the need for an embedded long-time test: stable collective behavior can be more forgiving than pointwise particle paths, and both should be measured.
+
+\subsection{Geometry is part of the physics}
+
+The second anchor paper, \citet{maggioni2021manifold}, considers particles constrained to a connected, smooth, geodesically complete Riemannian manifold \(\M\). The Euclidean distance and displacement in \cref{eq:stochastic-kernel-model} are replaced by geodesic distance and the tangent direction of a shortest geodesic:
+\begin{equation}
+\dot x_i
+=
+\frac{1}{N}\sum_{j=1}^{N}
+\phi\!\left(d_{\M}(x_i,x_j)\right)
+w(x_i,x_j),
+\qquad
+\dot x_i\in T_{x_i}\M .
+\label{eq:manifold-kernel}
+\end{equation}
+Here \(w(x_i,x_j)\) is a tangent vector at \(x_i\) pointing locally toward \(x_j\). The estimator, coercivity condition, occupancy measure, and trajectory error are all defined using the manifold geometry.
+
+The examples include opinion and predator--swarm dynamics on the two-sphere and the Poincare disk. The estimator again achieves a convergence rate independent of \(Nd\), and a kernel learned at one particle number can be reused at another because the object being learned is shared rather than tied to a fixed-dimensional state vector. This is a concrete form of structural transfer.
+
+The lesson extends well beyond curved surfaces. Periodic coordinates, constrained rigid bodies, magnetic field-line geometry, conservation manifolds, and quotienting out translations or center-of-mass motion all change the admissible state and the metric used to compare trajectories. Projecting a generic neural output back onto a constraint surface after each step is not always equivalent to learning a tangent vector field. Geometry must be specified in the model interface, the loss, and the evaluation metric.
+
+\begin{takeaway}[What the kernel-inference papers contribute]
+The Lu--Maggioni program provides more than an estimator. It supplies a template for mathematically auditable many-body learning:
+\begin{enumerate}
+  \item identify a shared low-dimensional interaction object;
+  \item state the symmetry and geometry that make it shared;
+  \item define the dynamics-adapted occupancy measure;
+  \item test a coercivity or excitation condition;
+  \item separate sampling, approximation, observation-gap, and rollout errors; and
+  \item state explicitly where the assumed interaction family can fail.
+\end{enumerate}
+\end{takeaway}
+
+\subsection{Physics-tailored neural force discovery in dusty plasma}
+
+\subsubsection{Why this is a stronger experimental test}
+
+The third anchor paper moves from controlled simulated systems to laboratory trajectories. \citet{yu2025dusty} study micron-scale charged dust particles levitated in a weakly ionized argon plasma. The background ions and electrons mediate effective particle interactions. Ion flow creates wakes below the particles, so the horizontal interaction can depend on vertical ordering, can be attractive in some configurations, and need not satisfy reciprocity \(F_{ij}=-F_{ji}\). Particle sizes are heterogeneous, the confining environment is spatially varying, and only noisy trajectory observations are available.
+
+These features make dusty plasma unusually relevant to TEMPEST. It is classical and particle resolved, yet its effective interactions already encode eliminated plasma degrees of freedom. It supports controlled laboratory validation, non-equilibrium and nonreciprocal physics, heterogeneous particles, variable particle counts, and a natural route from individual interactions to collective statistics.
+
+\subsubsection{The decomposition is the main inductive bias}
+
+The measured horizontal dynamics are organized as
+\begin{equation}
+\ddot{\bm\rho}_i
+=
+\sum_{j\ne i}
+f_{ij}\,\widehat{\bm\rho}_{ij}
++\bm f_i^{\mathrm{env}}
+-\gamma_i\dot{\bm\rho}_i,
+\label{eq:dusty-decomposition}
+\end{equation}
+where \(\bm\rho_i=(x_i,y_i)\), while the learned pair force may depend on the horizontal separation \(\rho_{ij}\), the two vertical positions \(z_i,z_j\), and particle descriptors \(s_i,s_j\). Three networks are trained jointly but assigned different physical roles:
+\begin{align}
+f_{ij}
+&=
+g_{\mathrm{int}}(\rho_{ij},z_i,z_j,s_i,s_j),\\
+\bm f_i^{\mathrm{env}}
+&=
+g_{\mathrm{env}}(x_i,y_i,z_i,s_i),\\
+\gamma_i
+&=
+g_{\gamma}(s_i).
+\end{align}
+The descriptor \(s_i=\langle z_i\rangle_t\) acts as a proxy for particle size and mass because heavier particles settle lower in the sheath. The pair network preserves horizontal translation symmetry while allowing broken vertical translation symmetry; its directed inputs allow nonreciprocal interactions. The environmental and damping networks have different input sets because otherwise the three terms in \cref{eq:dusty-decomposition} would be free to compensate for one another and the decomposition would be poorly identifiable.
+
+This is a particularly clear example of a physics-tailored neural architecture. The network is flexible where the force law is unknown, but the decomposition, symmetries, direction of the horizontal pair force, drag form, and role-specific inputs are declared in advance. The model also accepts varying particle number because pair contributions are shared and aggregated.
+
+\subsubsection{Weak-form learning and independent validation}
+
+Directly differentiating noisy position tracks twice is ill conditioned. The dusty-plasma model instead uses a weak-form loss: trajectories are integrated against compact test functions, and integration by parts moves derivatives away from the data. This is the same numerical principle that motivates weak-form system identification such as WSINDy \citep{messenger2021wsindy}, although the hypothesis class and loss construction differ. The weak form reduces derivative noise without manufacturing information that is absent from the observations.
+
+The model attains held-out acceleration coefficients of determination above \(0.99\) across experiments. Crucially, the authors do not treat that score as proof that every force component is correct. The total acceleration is a sum of three learned contributions, so compensating errors could produce an excellent aggregate fit. They therefore estimate particle mass in two independent ways, using learned interaction forces and learned drag, and compare the inferred values with particle sizes. For approximately coplanar pairs they also fit a screened Coulomb form to infer masses, charges, and screening lengths.
+
+Those secondary tests turn a predictor into a scientific instrument. The analysis supports nonreciprocal and attractive interactions, finds that the effective screening length changes with the average particle size rather than depending only on nominal plasma conditions, and finds a charge--mass exponent that varies with gas pressure instead of remaining at the simplest \(1/3\) scaling. The lesson is general:
+\[
+\begin{gathered}
+\text{fit of total acceleration}
+\;<\;
+\text{component validation}
+\\[-0.15em]
+\;<\;
+\text{independent physical recovery}
+\;<\;
+\text{intervention or new-regime prediction}.
+\end{gathered}
+\]
+
+\subsubsection{Limits of the result}
+
+The model learns horizontal reduced forces in the experimental regime occupied by systems of roughly ten to twenty tracked particles. Pair evaluation scales quadratically with particle count. The assumed radial horizontal direction, role decomposition, descriptor sufficiency, and instantaneous pairwise form remain hypotheses. A plasma-mediated interaction that depends on collective wake state, delayed response, or three-body configuration could be absorbed into an effective pair network over the training distribution and fail under a new particle density or forcing history.
+
+The appropriate next step is therefore not simply a larger network. It is a hierarchy of falsification tests: vary particle count and density, hold out vertical-ordering regimes, compare pairwise and message-passing models, add finite memory, test force reciprocity only where theory predicts it, and ask whether inferred parameters remain consistent across independent experimental protocols.
+
+\subsection{Graph and message-passing models}
+
+\subsubsection{Particles as nodes and interactions as messages}
+
+Graph neural networks replace a fixed-size state vector by nodes, edges, and permutation-equivariant aggregation. A generic message-passing layer has the form
+\begin{align}
+m_{ij}^{(\ell)}
+&=
+\psi_e^{(\ell)}
+\bigl(h_i^{(\ell)},h_j^{(\ell)},e_{ij},x_i-x_j\bigr),\\
+\bar m_i^{(\ell)}
+&=
+\sum_{j\in\mathcal N(i)}m_{ij}^{(\ell)},\\
+h_i^{(\ell+1)}
+&=
+\psi_v^{(\ell)}
+\bigl(h_i^{(\ell)},\bar m_i^{(\ell)}\bigr).
+\end{align}
+Shared edge functions express repeated interactions; summation gives permutation equivariance and variable particle number. Neighbor lists, cutoff graphs, or learned edges determine computational cost and locality.
+
+Neural relational inference places a latent graph between observed trajectories and a graph-based decoder \citep{kipf2018nri}. It is useful when the interaction topology or edge types are unknown, but an inferred edge label should not automatically be read as a physical bond or causal mechanism. Latent relations can absorb unmodeled common forcing, observation artifacts, and multi-step correlations.
+
+Graph Network-based Simulators train on one-step particle accelerations and roll the predictions forward \citep{sanchezgonzalez2020gns}. The reported framework handles fluids, deformable materials, and rigid objects, and generalizes in its tests to longer rollouts and more particles than used in training. Training-time noise corruption reduces the train--rollout distribution mismatch. This is an important numerical point: a small one-step error is repeatedly fed back as a new input, so long-rollout stability is a property of the learned model plus integrator, not of the regression score alone.
+
+\subsubsection{Equivariance beyond permutation symmetry}
+
+Standard message passing is permutation equivariant but not automatically rotation or translation equivariant in geometric outputs. \(E(n)\)-equivariant graph networks construct coordinate and feature updates that commute with Euclidean translations, rotations, and reflections \citep{satorras2021egnn}. For force and dynamics problems, the desired group must be chosen rather than assumed. Reflections may or may not be a symmetry; magnetic fields, chirality, walls, gravity, or driven media can select orientations. Dusty plasma, for example, has horizontal translation structure but a distinguished vertical direction and nonreciprocal directed interactions.
+
+Equivariance restricts the hypothesis space and can improve data efficiency, but it does not guarantee conservation, stability, correct asymptotics, or correct interactions. A model can be perfectly rotation equivariant and learn the wrong radial function. Symmetry is one structural test, not a substitute for physics-specific validation.
+
+\subsection{Sparse and symbolic discovery}
+
+Sparse identification of nonlinear dynamics assumes that the governing vector field is a sparse combination of candidate functions \citep{brunton2016sindy}. For many-body systems, a naive library over all particle coordinates grows rapidly and obscures shared structure. A better construction builds the library from invariant or equivariant quantities such as distances, relative velocities, types, local densities, and field-aligned components.
+
+Weak-form SINDy replaces pointwise derivative estimates by integrals against test functions and can remain effective under substantial measurement noise \citep{messenger2021wsindy}. At the particle-to-continuum level, \citet{messenger2022meanfield} combine mean-field theory with weak sparse identification to learn candidate mean-field equations directly from particle data. Their method targets a population-level equation rather than each microscopic force and demonstrates \(O(N^{-1/2})\) convergence of a least-squares component with particle number under stated assumptions. This is especially relevant to closure because it crosses a scale rather than only emulating particle dynamics.
+
+A complementary strategy first fits an expressive graph model and then applies symbolic regression to its learned messages or energy \citep{cranmer2020symbolic}. The graph provides a structured high-capacity intermediate representation; symbolic regression seeks a compact analytic law. This can improve interpretability and extrapolation when the distilled expression is correct. It also introduces a second selection problem: the symbolic search can recover an attractive expression that fits the network rather than the physical data. The final expression must be re-evaluated directly on held-out trajectories, invariants, parameter sweeps, and rollouts.
+
+Sparse and symbolic methods are strongest when the relevant coordinates and candidate operations are approximately known. Failure to recover a compact formula can mean insufficient data, a poor library, hidden variables, or a genuinely nonlocal or history-dependent closure. Those possibilities should not be collapsed into a claim that the dynamics are not interpretable.
+
+\subsection{Structure-preserving learned dynamics}
+
+For an isolated conservative system in canonical coordinates \(z=(q,p)\), a Hamiltonian model writes
+\begin{equation}
+\dot z=J\nabla_z H_\theta(z),
+\qquad
+J=
+\begin{bmatrix}
+0&I\\-I&0
+\end{bmatrix}.
+\end{equation}
+Hamiltonian neural networks learn the scalar \(H_\theta\) and obtain the vector field through this antisymmetric structure \citep{greydanus2019hnn}. Lagrangian neural networks instead learn \(L_\theta(q,\dot q)\) and use the Euler--Lagrange equations, avoiding a requirement for observed canonical momenta \citep{cranmer2020lnn}. Graph versions decompose energy into shared particle and interaction contributions.
+
+These are hard structural priors only relative to their assumptions. They are appropriate for closed conservative mechanics, but not for a driven dusty plasma with drag, environmental forcing, and energy supplied through nonreciprocal wake interactions. Applying a conservative architecture there would force nonconservative effects into state dependence or model error. More suitable structures include conservative-plus-dissipative splits, port-Hamiltonian forms, metriplectic or GENERIC constructions, constrained tangent dynamics, or explicit forcing and bath variables.
+
+The numerical integrator remains part of the method. A continuous Hamiltonian vector field integrated by a generic solver need not preserve a discrete symplectic form exactly; conversely, a learned symplectic time-step map may preserve discrete geometry without identifying the underlying force. Benchmark reports should name both the learned object and the stepping scheme.
+
+\subsection{Classical coarse-graining, memory, and closure}
+
+\subsubsection{Coarse free energies}
+
+Let \(X\) be a fine classical state and \(z=\xi(X)\) a coarse coordinate. Bottom-up coarse-graining seeks an effective free energy \(U_{\mathrm{cg}}(z)\) or mean force whose equilibrium distribution matches the projected fine system. Force matching trains on projected fine-scale forces. CGnets use neural potentials with translation and rotation structure, conservative forces, and prior energies that discourage unphysical configurations outside the data support \citep{wang2019cgnet}.
+
+This is genuine closure: eliminated coordinates contribute a potential of mean force that is generally many-body even if the microscopic forces were pairwise. Yet equilibrium representability and dynamical fidelity are different. A coarse potential can reproduce the equilibrium marginal while producing incorrect rates, time correlations, and transport because eliminated variables also generate friction, memory, and fluctuating forces.
+
+\subsubsection{Memory is expected, not exceptional}
+
+For a projection \(z=\Pi X\), Mori--Zwanzig theory organizes exact reduced dynamics into a Markov term, a memory convolution, and an orthogonal or fluctuating contribution. Data-driven model reduction can therefore fit finite-memory, autoregressive, auxiliary-variable, or generalized Langevin representations rather than pretending the coarse process is Markovian. \citet{lin2021kmz} connect Wiener projection, Koopman operators, Mori--Zwanzig reduction, and NARMAX models for deterministic chaotic and randomly forced systems.
+
+In a many-body benchmark, the Markov-versus-memory comparison should be explicit:
+\begin{align}
+\dot z(t)
+&=
+F_\theta(z(t)),
+\\
+\dot z(t)
+&=
+F_0(z(t))
++\int_0^t K_\theta(z(t-s),s)\dd s
++\eta_\theta(t),
+\\
+\dot z(t)
+&=
+F_0(z(t))+C_\theta(z(t),h(t)),
+\qquad
+\dot h=G_\theta(z,h).
+\end{align}
+The auxiliary state \(h\) is often the most practical finite-dimensional realization of memory. It should be justified by improved long-time statistics or prediction at fixed information and compute budgets, not merely by a lower training loss.
+
+\subsection{Learning ensembles rather than trajectories}
+
+Some scientific questions concern configuration distributions, rare states, or equilibrium expectations rather than time-ordered paths. Normalizing flows learn an invertible map from a simple base density to a many-body distribution. Equivariant flows build symmetries of the target density into this map and can improve sampling and generalization in symmetric classical particle systems \citep{kohler2020equivariantflows}.
+
+An ensemble model can supply equilibrium samples, likelihoods, free-energy estimates, or initial conditions for rare-event studies. It is not a dynamics model unless additional temporal structure is learned. Two simulators can have the same stationary distribution and different kinetics; two dynamics models can produce similar short trajectories and different invariant measures. The harness should therefore keep configuration-distribution metrics separate from trajectory and transport metrics.
+
+\subsection{A validation ladder for classical many-body learning}
+
+Many published demonstrations stop at one-step error, acceleration \(R^2\), or visual plausibility. Closure applications require a stricter ladder.
+
+\begin{enumerate}
+  \item \textbf{Observation fit.} Held-out position-increment, velocity, acceleration, or weak-residual error.
+  \item \textbf{Component recovery.} Error in pair forces, environment forces, drag, graph edges, or energy when ground truth exists.
+  \item \textbf{Independent physical validation.} Recovery of masses, charges, screening lengths, friction, equation coefficients, or controlled-response curves not used directly as labels.
+  \item \textbf{Short rollout.} Trajectory error with the model embedded in the declared numerical integrator.
+  \item \textbf{Long-time behavior.} Stability, collisions, boundedness, invariant measure, correlations, transport, and collective modes.
+  \item \textbf{Structural tests.} Symmetry or equivariance, constraints, conservation or balance laws, dissipation, reciprocity where applicable, and dimensional consistency.
+  \item \textbf{Scale transfer.} Held-out particle number, density, geometry, types, sampling interval, or domain size.
+  \item \textbf{Regime transfer.} Held-out forcing, field strength, pressure, temperature, collisionality, wake strength, or scale-separation parameter.
+  \item \textbf{Closure test.} Accuracy of the induced reduced operator, cumulants, constitutive fluxes, and macroscopic observables after projection.
+\end{enumerate}
+
+The uncertainty record should separate at least
+\begin{equation}
+\begin{aligned}
+&\text{tracking error}
++\text{derivative or weak-window error}
++\text{finite-ensemble error}
+\\
+&\qquad
++\text{time-discretization error}
++\text{model-form error}
++\text{rollout error}.
+\end{aligned}
+\end{equation}
+For experiments, particle identity mistakes and missing tracks are additional structured errors. For stochastic systems, pathwise divergence is not by itself failure; distributional and statistical metrics must accompany particle-wise errors.
+
+\subsection{Common failure modes}
+
+\begin{description}[style=nextline]
+\item[Pairwise misspecification]
+An effective pair model can absorb three-body, density-dependent, field-mediated, or collective effects within one training regime and then fail when density or geometry changes. Compare pairwise kernels with local-density corrections and multi-message graph models.
+
+\item[Hidden heterogeneity]
+Treating nonidentical particles as exchangeable can broaden a learned force law and create false stochasticity. Type labels or identifiable descriptors may be required, but a descriptor correlated with location can also confound particle and environmental effects.
+
+\item[Unobserved state and memory]
+If wakes, solvent modes, internal orientations, or fields evolve on comparable time scales, an instantaneous function of visible positions and velocities is not closed. Lag tests and auxiliary-state models should be predeclared.
+
+\item[Cancellation and non-identifiability]
+Accurate total acceleration does not guarantee accurate force components. Role-specific inputs, interventions, excitation design, coercivity diagnostics, and independent parameter recovery are remedies.
+
+\item[Symmetry mismatch]
+Hard-coding reciprocity, isotropy, reflection symmetry, or energy conservation where the driven environment breaks it produces systematic bias. Omitting a true symmetry wastes data and permits inconsistent predictions.
+
+\item[Derivative amplification]
+Finite differences amplify tracking noise, especially for acceleration. Weak forms reduce this amplification but introduce window and test-function choices that must be reported and swept.
+
+\item[Quadratic cost and long-range interactions]
+All-pairs evaluation costs \(O(N^2)\). Cutoffs, neighbor lists, multipole summaries, hierarchical graphs, or learned field representations can reduce cost, but each changes the information available to the model.
+
+\item[Rollout distribution shift]
+Training states come from the reference dynamics; rollout states increasingly come from the learned dynamics. Noise injection, multi-step losses, invariant penalties, stable integration, and recovery mechanisms address different parts of this problem.
+\end{description}
+
+\subsection{A concrete many-body ladder for the TEMPEST bake-off}
+
+The dusty-plasma profile can turn this literature into a controlled experiment rather than a collection of architectures. The common computational evaluation harness supplies fixed data products, splits, integration, scoring, and cost accounting. Each candidate implements one declared interface and receives only its predeclared information set.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}P{0.12\textwidth}P{0.22\textwidth}P{0.22\textwidth}Y@{}}
+\toprule
+\textbf{Rung} & \textbf{Candidate} & \textbf{Learned object} & \textbf{Decisive test} \\
+\midrule
+0 & Screened analytic pair law plus drag and confinement & Calibrated coefficients & Trusted-regime recovery and transparent failure boundary \\
+1 & Nonparametric structured kernel estimator & Directed type- and state-dependent pair kernels & Identifiability, occupancy coverage, and kernel recovery on synthetic controls \\
+2 & Yu-style physics-tailored networks & Pair force, environment force, and drag & Independent mass/charge validation and held-out experimental regimes \\
+3 & Equivariant or field-aware graph model & Multi-particle vector field or acceleration & Benefit of higher-order context at matched data and compute \\
+4 & Finite-memory graph or auxiliary-state model & Non-Markovian particle dynamics & Improvement under forcing-history and wake-memory tests \\
+5 & Mean-field or kinetic equation discovery & Population-level operator & Recovery of density evolution, pair correlations, and transport across \(N\) \\
+6 & Learned cumulant or moment closure & Correction to an explicit reduced operator & A priori closure-defect accuracy and a posteriori stable reduced simulation \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The primary comparison should not ask which rung wins a single scalar metric. It should ask how much structure and information are required for each scientific objective. Rungs 1--3 test interaction discovery and particle simulation. Rungs 5--6 test scale transition and closure. Rung 4 tests whether visible particle state is Markovian. Rung 0 anchors interpretability and sample efficiency.
+
+Recommended split axes are particle identity, particle count, pressure, magnetic field, vertical separation and ordering, pair-distance occupancy, initial condition, trajectory segment, and forcing history. Synthetic data with a known force decomposition should precede experimental fitting so that identifiability and component recovery can be measured. Experimental conclusions should require at least one validation quantity not used in training.
+
+\begin{takeaway}[How this serves the broader TEMPEST program]
+The many-body survey supplies a reusable front end for any particle-resolved TEMPEST application:
+\[
+\boxed{
+\begin{gathered}
+\text{structured interaction discovery}
+\;\to\;
+\text{particle or kinetic model}
+\\[-0.15em]
+\;\to\;
+\text{measured closure defect}
+\;\to\;
+\text{structure-preserving reduced closure}.
+\end{gathered}
+}
+\]
+The application physics determines the state, symmetries, interactions, reduced operator, and validation quantities. The computational/evaluative harness determines the interfaces, information budgets, matched comparisons, uncertainty decomposition, and reproducibility rules. Dusty plasma is therefore both a science application and a test of whether particle-level ML can be translated honestly into closure.
+\end{takeaway}
