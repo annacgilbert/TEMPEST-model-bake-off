@@ -18,7 +18,12 @@ measurable:
 
 1. hard-sphere or hard-disk dynamics to the Boltzmann equation;
 2. nonlinear Schrödinger dynamics to the wave kinetic equation; and
-3. Boltzmann dynamics to Euler or Navier-Stokes-Fourier limits.
+3. Boltzmann dynamics to Euler or Navier-Stokes limits.
+
+Note that Yu Deng and Zaher Hani have recent work proving rigorously these
+scale-limit results but these results are incredibly complicated and
+mathematical rather than computational. Part of this program is to turn the
+canonical mathematical validation into a computational one.
 
 ### TEMPEST application profiles
 

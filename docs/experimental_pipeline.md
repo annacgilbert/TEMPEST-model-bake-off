@@ -199,12 +199,12 @@ A useful controlled family contains heterogeneous dust particles with
 confinement, drag, screened repulsion, nonreciprocal wake effects, external
 forcing, and an optional dynamical wake variable. A schematic reference is
 
-\[
+$$
 m_i \dot v_i = F_i^{\mathrm{conf}} + F_i^{\mathrm{ext}}
 - \gamma_i v_i + \sum_{j\ne i}F_{ij}(r_i,r_j,\zeta_j;\mu)+\eta_i,
 \qquad
 \tau_w \dot\zeta_j = \zeta_{\mathrm{eq}}(\mathcal E_j)-\zeta_j,
-\]
+$$
 
 where $\mathcal E_j$ summarizes the local plasma environment. The family
 should vary particle count, density/coupling, screening, charge and mass

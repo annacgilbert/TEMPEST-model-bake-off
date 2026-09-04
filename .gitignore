@@ -22,6 +22,7 @@ dist/
 .idea/
 .vscode/
 *~
+~$*.pptx
 
 # Generated scientific data; keep manifests and documentation
 data/raw/*
@@ -37,6 +38,10 @@ results/checkpoints/*
 .ipynb_checkpoints/
 
 # LaTeX build products
+docs/.texpadtmp/
+docs/PROJECT_BRIEF.tex
+docs/experimental_pipeline.tex
+docs/mathematical_closure_program.tex
 docs/report/*.aux
 docs/report/*.bbl
 docs/report/*.bcf
