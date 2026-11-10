@@ -62,8 +62,8 @@ Limits the paper states about itself, which the sprint builds on:
 
 ## Questions for Justin Burton
 
-To be asked before day 1. The answers gate parts of the plan. Record each
-answer here with its date.
+Sent to Justin by Slack on 2026-11-09, with a link to this plan. The answers
+gate parts of the plan. Record each answer here with its date.
 
 1. **The TIFF stack.** Is it the raw camera data behind the five published
    runs, or new experiments? Which runs does it cover, how many frames, what
