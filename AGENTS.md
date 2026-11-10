@@ -46,12 +46,22 @@ application profiles.
     only an identified unresolved correction unless an experiment is explicitly
     designated as a black-box control.
 
+## Repository layout
+
+The repository holds three independent projects (`model-bakeoff/`,
+`hani-to-algorithms/`, `burton-sprint/`) and a `shared/` folder of common
+references. Each project has its own package, tests, and `pyproject.toml`;
+projects do not import one another's code.
+
 ## Workflow
 
 For substantial changes:
 
-1. Read `docs/PROJECT_BRIEF.md`, `docs/mathematical_closure_program.md`,
-   `docs/benchmark_specification.md`, and `docs/DECISIONS.md`.
+1. Read `shared/docs/PROJECT_BRIEF.md`,
+   `shared/docs/mathematical_closure_program.md`,
+   `model-bakeoff/docs/benchmark_specification.md`, and
+   `model-bakeoff/docs/DECISIONS.md`, plus the `README.md` of the project
+   being changed.
 2. Produce or update a written plan before implementation.
 3. Make the smallest coherent implementation.
 4. Run unit tests and at least one inexpensive end-to-end smoke test.

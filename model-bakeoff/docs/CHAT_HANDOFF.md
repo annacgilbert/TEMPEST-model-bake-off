@@ -74,9 +74,10 @@ checkpoints stay outside Git, with manifests committed here.
 - Available compute, wall-time, storage, and experimental-data constraints.
 
 The TEMPEST proposal PDF and the prior LaTeX chapter bundle were added to
-`references/` on 2026-08-08.
+`references/` on 2026-08-08 (now `shared/references/`).
 
-The active program documents are `mathematical_closure_program.md`,
+The active program documents are
+`../../shared/docs/mathematical_closure_program.md` and, in this directory,
 `first_concrete_deliverables.md`, `benchmark_specification.md`,
 `information_budgets.md`, `evaluation_protocol.md`, and the revised
 `benchmark_options_memo.md` in this directory.

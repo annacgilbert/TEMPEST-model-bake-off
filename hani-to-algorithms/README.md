@@ -1,7 +1,7 @@
 # Hani Math-to-Algorithms Program
 
 This directory is a standalone research program and prospective paper inside
-the TEMPEST bake-off repository. It asks a narrower and more mathematical
+the TEMPEST repository, alongside `model-bakeoff/` and `burton-sprint/`. It asks a narrower and more mathematical
 question than the bake-off itself:
 
 > Can the history-bearing cumulant structures used by Deng, Hani, and Ma to
@@ -63,7 +63,7 @@ estimators and negative controls are stable.
 ## Immediate commands
 
 ```bash
-cd papers/hani_math_to_algorithms
+cd hani-to-algorithms
 python -m unittest discover -s tests -v
 ```
 

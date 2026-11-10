@@ -3,7 +3,7 @@
 ## Objective
 
 Add a substantial, self-contained section to
-`references/closure_pinns_operators_world_models.tex` surveying machine
+`shared/references/closure_pinns_operators_world_models.tex` surveying machine
 learning for classical many-body systems. The section will begin from the
 three supplied papers by Lu, Maggioni, and Tang; Maggioni, Miller, Qiu, and
 Zhong; and Yu, Abdelaleem, Nemenman, and Burton. It will connect interaction

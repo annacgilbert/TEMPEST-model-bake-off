@@ -67,5 +67,20 @@ The TEMPEST proposal remains the primary source for the project's proposed 3D
 DNS/implicit-LES/LES supernova work and the self-consistent augmentation of a
 1D supernova model with volume-averaged 3D turbulence transport effects.
 
+## Downloaded papers
+
+Moved here on 2026-11-09 from the sibling Drive folder `Research/TEMPEST refs/`
+(files downloaded April--May 2025). Filenames are unchanged. Publisher PDFs
+are local copies and are not committed to the public repository.
+
+| File | Paper | SHA-256 (first 12) |
+|---|---|---|
+| `2503.01800v1.pdf` | Deng, Hani, and Ma, *Hilbert's sixth problem: derivation of fluid equations via Boltzmann's kinetic theory*, arXiv:2503.01800v1 | `43eb2ba85d1c` |
+| `21m1401759.pdf` | Lin, Tian, Livescu, and Anghel, *Data-Driven Learning for the Mori--Zwanzig Formalism: A Generalization of the Koopman Learning Framework*, SIAM J. Appl. Dyn. Syst. 20(4), 2558--2601 (2021) | `62709e5c911b` |
+| `22m1506146.pdf` | Lin, Tian, Perez, and Livescu, *Regression-Based Projection for Learning Mori--Zwanzig Operators*, SIAM J. Appl. Dyn. Syst. 22(4), 2890--2926 (2023) | `0f8770b5681e` |
+| `attention_for_turbulence.pdf` | Peng, Yuan, et al., *Attention-enhanced neural network models for turbulence simulation*, Phys. Fluids 34, 025111 (2022), doi:10.1063/5.0079302 | `73fe49d9c80b` |
+| `generalizability_transformer.pdf` | Drikakis, Kokkinakis, Fung, and Spottswood, *Generalizability of transformer-based deep learning for multidimensional turbulent flow data*, Phys. Fluids 36, 026102 (2024), doi:10.1063/5.0189366 | `aa73f44b747c` |
+| `Transformers0512.pdf` | Geshkovski, Letrouit, Polyanskiy, and Rigollet, *A Mathematical Perspective on Transformers* (preprint) | `8669c72f7112` |
+
 Do not silently replace or edit source documents. Record provenance, version,
 and retrieval date when a reference is added.

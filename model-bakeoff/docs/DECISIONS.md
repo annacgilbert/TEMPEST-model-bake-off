@@ -83,6 +83,21 @@ relevant design document until accepted.
   coefficients, learned weights, states, and theorem assumptions require
   profile-specific validation.
 
+## 2026-11-09 — Three-project repository layout
+
+- Split the repository into three independent projects with top-level
+  folders: `model-bakeoff/`, `hani-to-algorithms/`, and `burton-sprint/`.
+- Keep TEMPEST-wide material (proposal, literature surveys, project brief,
+  mathematical closure program, talk deck) in `shared/`.
+- Each project keeps its own package, tests, and `pyproject.toml`; no
+  cross-project imports.
+- Justin Burton's image stacks are not stored in Git. They will be reached
+  through an MCP server specified in `burton-sprint/mcp/SPEC.md`; a few local
+  samples may sit in the git-ignored `burton-sprint/data/samples/`.
+- This supersedes the 2026-08-08 "shared data pipeline" bullet only in scope:
+  that pipeline is shared across model families inside `model-bakeoff/`, not
+  across the three projects.
+
 ## Open decisions
 
 - Canonical solver choices for hard-sphere/Boltzmann and NLS/wave-kinetic
