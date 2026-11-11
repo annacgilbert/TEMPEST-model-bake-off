@@ -7,6 +7,8 @@ Background used by all three projects. Nothing here is project-specific code.
   Provenance is recorded in `references/README.md`.
 - `docs/`: `PROJECT_BRIEF` and `mathematical_closure_program` (Markdown and
   PDF).
+  Also `dusty_plasma_data_sources.md`, a running list of datasets offered
+  to the collaboration.
 - `presentations/`: the full TEMPEST closure-models talk.
 - `assets/`: figures reused across documents and the talk.
 

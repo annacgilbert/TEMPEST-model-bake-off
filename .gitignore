@@ -78,3 +78,7 @@ shared/references/2503.01800v1.pdf
 shared/references/attention_for_turbulence.pdf
 shared/references/generalizability_transformer.pdf
 shared/references/Transformers0512.pdf
+
+# Burton lab code provided privately: never commit
+burton-sprint/external/*
+!burton-sprint/external/README.md

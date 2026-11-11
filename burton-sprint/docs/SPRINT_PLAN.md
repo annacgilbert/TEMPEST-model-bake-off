@@ -62,25 +62,66 @@ Limits the paper states about itself, which the sprint builds on:
 
 ## Questions for Justin Burton
 
-Sent to Justin by Slack on 2026-11-09, with a link to this plan. The answers
-gate parts of the plan. Record each answer here with its date.
+Sent to Justin by Slack on 2026-11-09, with a link to this plan. He replied
+by 2026-11-11; answers are paraphrased below. A follow-up discussion with his
+students was proposed for a Wednesday meeting.
 
 1. **The TIFF stack.** Is it the raw camera data behind the five published
    runs, or new experiments? Which runs does it cover, how many frames, what
    bit depth and pixel scale, how large is it in total, and where is it
    hosted?
-   - Answer: _pending_
+   - Answer (2026-11-11): the lab can provide either the original data or
+     new data it is currently working on. Start with the raw version of the
+     published data. New data is also on offer and could come with complete
+     metadata.
+   - Still open: frame counts, bit depth, pixel scale, total size, hosting,
+     and how the data will be transferred.
 2. **Tracking code.** Can the lab share its image-tracking and
    3D-reconstruction code? In what language is it, and under what license?
    The public repository does not include it.
-   - Answer: _pending_
+   - Answer (2026-11-11): the lab's code has been cleaned up substantially
+     since the PNAS submission and Justin will provide an updated version
+     directly. A new public release waits on a further paper.
+   - Still open: whether the version provided includes the tracking and
+     3D-reconstruction code or only force inference; language and license.
 3. **Force-inference code.** Is it OK to use and redistribute `ForceInfer.py`
    from `wyu54/many-body-force-infer`? That repository has no license file.
-   - Answer: _pending_
+   - Answer (2026-11-11): use the updated version the lab will provide, not
+     the public one. It is not yet public, so it must not be redistributed.
+     Justin also noted that not all authors of the force-inference work are
+     part of TEMPEST, and asked that the sprint pursue questions orthogonal
+     to that work.
+   - Still open: which questions count as orthogonal. See "Consequences of
+     Justin's answers" below.
 4. **Metadata.** What acquisition metadata exists for each run: pressure,
    power, particle sizes, laser-sheet phase per frame, and spatial
    calibration?
-   - Answer: _pending_
+   - Answer (2026-11-11): pressure, power, and particle sizes are known. The
+     laser sheet was calibrated, but its phase was not recorded per frame; it
+     is derived from the calibration. The student who took the published data
+     has since left, so new data is the route to complete metadata.
+
+### Consequences of Justin's answers
+
+- **Lab code stays out of this public repository.** Anything the lab
+  provides goes in `external/`, which is git-ignored apart from its README.
+- **Workstream C waits for the lab's version.** The pairwise baseline should
+  use the code Justin provides, not the public `ForceInfer.py`.
+- **Workstream D needs to be re-scoped with Justin.** As drafted, it extends
+  the lab's force-inference model with density, three-body, and memory
+  terms. That may be too close to the published force-inference work. To
+  settle at the Wednesday meeting: whether beyond-pairwise tests count as
+  orthogonal, whether they should avoid the lab's architecture and rely on
+  model-free diagnostics (residual structure, three-particle correlations),
+  or whether a different question should replace them.
+- **Workstreams A and B are unaffected and are clearly orthogonal.** Data
+  access and a tracking benchmark do not overlap with force inference.
+- **The laser-sheet phase is inferred, not recorded.** The forward image
+  model and any 3D reconstruction in workstream B must take the sheet
+  position from the calibration, and should treat its uncertainty as a
+  source of z error. Ask for the calibration procedure and data.
+- **New data is an option for the tracking benchmark**, since it could carry
+  full metadata and current lab members can answer questions about it.
 
 If the TIFFs are not available by day 3, workstreams B and C proceed on
 synthetic images and the published trajectories, and the report says so.
@@ -251,8 +292,37 @@ so its scope is held to a small number of methods done carefully.
 | Lab tracking code is not shareable | Baseline is a TrackPy configuration reconstructed from the papers, labeled as such |
 | Synthetic images are unrealistic | Calibrate the forward model to real frames; report the gap |
 | Too little data to detect many-body effects | Report an upper bound and the data a follow-on would need |
-| `ForceInfer.py` has no license | Ask the lab; until then keep it outside the repository and call it, do not copy it |
+| Lab code is unpublished | Use the version Justin provides; keep it in git-ignored `external/`; never commit or redistribute it |
+| Beyond-pairwise work overlaps the lab's force-inference line | Re-scope workstream D with Justin before week 1; fall back to model-free diagnostics |
+| Laser-sheet phase was not recorded per frame | Use the calibration; carry its uncertainty into z error |
 | MCP work overruns | The plain loader keeps everything else moving |
+
+## Additional datasets offered on 2026-11-11
+
+Eva reported that Auburn and Baylor can provide PK-4 particle
+tracks (2D, and lower-resolution 3D), DRIAD simulations of dust and ions
+under PK-4 conditions, and velocimetry data. Details are in
+`shared/docs/dusty_plasma_data_sources.md`. Proposed handling, not yet
+agreed:
+
+- **Core scope is unchanged.** The three weeks stay centered on the Burton
+  data. PK-4 is a different regime (microgravity, external field, lower 3D
+  resolution) and its formats are not yet known.
+- **DRIAD as an external control (stretch, workstream D).** DRIAD resolves
+  the ions, so the true dust interaction is known and comes from physics the
+  sprint did not write. If data arrive by the end of week 1, run the
+  beyond-pairwise tests on it alongside the in-house simulator. Overlapping
+  anisotropic ion clouds are a physically motivated source of the
+  non-pairwise effects the tests look for.
+- **Design data access for more than one source (workstream A).** The MCP
+  server and manifests should use a trajectory schema that PK-4 and DRIAD
+  data could also fit, so they can be added later without redesign.
+- **Coordinate on methods.** Auburn and Baylor students are applying sparse
+  regression (SINDy) to learn the interaction potential. Share the controls
+  and scoring from workstream D so results are comparable, and avoid
+  duplicating their work.
+- **Join the proposed data-standards meeting** with the draft schema and the
+  MCP spec as input.
 
 ## Out of scope
 

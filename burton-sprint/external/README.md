@@ -14,11 +14,16 @@
 The repository has no license file, and it does not contain the lab's image
 tracking or 3D reconstruction code, or any raw images.
 
-## Undecided
+## Lab-provided code (2026-11-11)
 
-How lab code is brought in (pinned submodule, vendored snapshot, or reference
-only) waits on the lab's answer about licensing and on what tracking code
-they can share. Until then, do not copy their code into this repository.
+Justin Burton will provide an updated, cleaned-up version of the lab's code
+directly. It is not public and will not be until a further paper is out.
+
+- Put it in this folder. Everything here except this README is git-ignored.
+- Never commit it, push it, or redistribute it.
+- Use it, not the public `ForceInfer.py`, for any baseline.
+- Not yet known: whether it includes the tracking and 3D-reconstruction
+  code, its language, and its license.
 
 When code is added, record here: source, commit or date, authors, license,
 language and dependencies, and any local modifications.
