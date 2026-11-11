@@ -8,7 +8,8 @@ A short, focused project built on three inputs from Justin Burton's lab:
 
 The sprint design is in [`docs/SPRINT_PLAN.md`](docs/SPRINT_PLAN.md): three weeks,
 six people, covering automated data access, a tracking-method benchmark, and
-a test for forces beyond the paper's pairwise model.
+a test for forces beyond the paper's pairwise model, framed as a test of the
+pairwise closure.
 
 ## Directory map
 

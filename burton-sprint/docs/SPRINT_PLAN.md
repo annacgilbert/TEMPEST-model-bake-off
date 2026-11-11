@@ -18,7 +18,9 @@ The sprint goes beyond the paper in three ways:
    are scored against the lab's TrackPy-based pipeline.
 3. **Beyond-pairwise test.** The paper's model assumes pairwise forces. The
    sprint asks whether the data show many-body or history-dependent forces
-   that a pairwise model cannot represent.
+   that a pairwise model cannot represent. In TEMPEST's terms this is a
+   closure test: the pairwise force law is the lowest-order closure of the
+   dust dynamics, and the sprint measures its defect.
 
 Deliverable: a working pipeline from TIFFs to trajectories to a
 beyond-pairwise verdict, a tracking scorecard, and a short report that
@@ -46,8 +48,8 @@ Facts taken from the paper and the lab's public repository.
 - **Public code and data.** `github.com/wyu54/many-body-force-infer` (Zenodo
   DOI 10.5281/zenodo.15866619) holds `ForceInfer.py`, a demonstration
   notebook, and the five tracked trajectories as CSV files (frame, particle,
-  x, y, z, brightness). It has no license file, no tracking code, and no raw
-  images.
+  x, y, z, brightness). It has no license file, no tracking code, no raw
+  images, and no simulator or simulated trajectories (checked 2026-11-11).
 
 Limits the paper states about itself, which the sprint builds on:
 
@@ -59,6 +61,21 @@ Limits the paper states about itself, which the sprint builds on:
   "does not necessarily indicate that each component is fit correctly."
 - Non-reciprocity appears at separations below about 0.6 mm, which is the
   regime where tracking closely spaced particles is hardest.
+
+What the paper does not do, from a reading of the article and supporting
+information on 2026-11-11:
+
+- It does not test the pairwise assumption. The introduction states that
+  forces "are expected to be pairwise to leading order," and the model sums
+  pair forces linearly, so a third particle's position never enters and no
+  many-body term can be learned.
+- Its validation simulation is also pairwise ("a pairwise, non-reciprocal
+  repulsive force"), so the method was never checked on a system with
+  many-body effects.
+- It reports no residual analysis against a third particle or local
+  density, and no bound on the size of a many-body contribution. The high
+  total R² limits the unexplained force overall, but a many-body effect
+  could be absorbed into the environment or pair force.
 
 ## Questions for Justin Burton
 
@@ -84,6 +101,13 @@ students was proposed for a Wednesday meeting.
      directly. A new public release waits on a further paper.
    - Still open: whether the version provided includes the tracking and
      3D-reconstruction code or only force inference; language and license.
+   - To ask (added 2026-11-11): can the lab share the molecular-dynamics
+     simulation it used to validate the method in the paper, or its output?
+     The public repository contains no simulator and no simulated
+     trajectories (checked 2026-11-11). Their simulator would make the
+     sprint's controls directly comparable to the paper's validation. It
+     would not provide image-level ground truth for the tracking benchmark,
+     which still needs a forward image model.
 3. **Force-inference code.** Is it OK to use and redistribute `ForceInfer.py`
    from `wyu54/many-body-force-infer`? That repository has no license file.
    - Answer (2026-11-11): use the updated version the lab will provide, not
@@ -93,6 +117,15 @@ students was proposed for a Wednesday meeting.
      to that work.
    - Still open: which questions count as orthogonal. See "Consequences of
      Justin's answers" below.
+   - To ask (added 2026-11-11): what does he mean by orthogonal? Possible
+     readings to put to him: (a) do not use or extend the lab's
+     force-inference code; (b) do not do force inference on this data at
+     all; (c) do not duplicate what the lab's next paper covers. Under (a),
+     a model-free beyond-pairwise test is fine; under (b) or (c) it may not
+     be. Point to raise: the paper assumes pairwise forces in the model and
+     in its validation simulation, and does not test for or bound many-body
+     effects, so the beyond-pairwise question examines an assumption of the
+     published work and does not repeat it.
 4. **Metadata.** What acquisition metadata exists for each run: pressure,
    power, particle sizes, laser-sheet phase per frame, and spatial
    calibration?
@@ -203,6 +236,30 @@ interactions, with switchable additions:
 **Question.** After the best pairwise-plus-environment model is fit, is there
 structure left that depends on more than two particles, or on history?
 
+**Closure framing (added 2026-11-11).** This is a closure test in the sense
+used across TEMPEST, and can be stated in the bake-off's terms:
+
+- *Retained state:* dust particle positions and velocities.
+- *Eliminated information:* ions, electrons, and neutrals.
+- *Classical reduced operator:* pairwise effective force plus environment
+  force and linear damping, which is the paper's model.
+- *Closure defect:* whatever the true force on a dust particle contains
+  beyond that, such as many-body terms from overlapping ion clouds and
+  memory from finite wake relaxation.
+
+The pairwise assumption is the lowest-order closure, and workstream D
+measures its defect. This corresponds to the effective-interaction stage of
+the dusty-plasma ladder in `model-bakeoff/`. Two cautions:
+
+- The force-level closure above is distinct from closing the correlation
+  hierarchy (pair versus three-particle statistics). Test 3 below addresses
+  the second; tests 1 and 2 address the first. Report them separately.
+- Any augmented model must recover the pairwise model where it is trusted,
+  at low density and large separation.
+
+DRIAD is the natural reference: it resolves the ions, so the closure defect
+can be computed directly and not only inferred.
+
 **Tests, in order of cost.**
 
 1. *Residual structure.* Fit the pairwise model, then test whether held-out
@@ -310,7 +367,8 @@ agreed:
   resolution) and its formats are not yet known.
 - **DRIAD as an external control (stretch, workstream D).** DRIAD resolves
   the ions, so the true dust interaction is known and comes from physics the
-  sprint did not write. If data arrive by the end of week 1, run the
+  sprint did not write. In closure terms, it lets the defect of the pairwise
+  closure be computed directly. If data arrive by the end of week 1, run the
   beyond-pairwise tests on it alongside the in-house simulator. Overlapping
   anisotropic ion clouds are a physically motivated source of the
   non-pairwise effects the tests look for.

@@ -21,7 +21,9 @@ See `burton-sprint/README.md` and `burton-sprint/docs/SPRINT_PLAN.md`.
 - Published trajectories: five runs with 9 to 18 particles, as CSV files in
   `github.com/wyu54/many-body-force-infer`. Ground-based experiment with
   particles levitated in the sheath; forces are non-reciprocal at short
-  range.
+  range. The published analysis assumes pairwise forces and does not test
+  for many-body effects. The repository contains no simulator and no
+  simulated trajectories.
 - Raw image stacks: Justin offered the raw version of the published data
   first, and new data with complete metadata later (2026-11-11). To be
   served through the MCP server specified in `burton-sprint/mcp/SPEC.md`.
@@ -56,6 +58,13 @@ Reported by Eva on 2026-11-11.
 - Because ions are simulated, the interaction potential among dust particles
   shielded by anisotropic ion clouds can be reconstructed explicitly.
 - 3D data can be provided.
+- Relevance to closure work: with ions resolved, the dust-only description
+  is a reduced model whose eliminated variables are available. The defect of
+  a pairwise force closure (many-body terms from overlapping ion clouds,
+  memory from wake relaxation) can therefore be computed directly, which
+  makes DRIAD a candidate reference case for the effective-interaction stage
+  of the dusty-plasma ladder in `model-bakeoff/` and for workstream D of the
+  Burton sprint.
 
 Not yet known: output format, parameter ranges available, whether ion-level
 data or only dust trajectories and reconstructed potentials are shared, and
