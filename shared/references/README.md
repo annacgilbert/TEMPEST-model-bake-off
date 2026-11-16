@@ -82,5 +82,21 @@ are local copies and are not committed to the public repository.
 | `generalizability_transformer.pdf` | Drikakis, Kokkinakis, Fung, and Spottswood, *Generalizability of transformer-based deep learning for multidimensional turbulent flow data*, Phys. Fluids 36, 026102 (2024), doi:10.1063/5.0189366 | `aa73f44b747c` |
 | `Transformers0512.pdf` | Geshkovski, Letrouit, Polyanskiy, and Rigollet, *A Mathematical Perspective on Transformers* (preprint) | `8669c72f7112` |
 
+## Draft note: tournament benchmark for heat-flux closures
+
+Added to the repository on 2026-11-16. *A Tournament Benchmark for Learned
+Nonlocal Heat-Flux Closures* is a six-page draft note for discussion (v0.1).
+It proposes Vlasov--Lenard--Bernstein as the ground truth for learned
+nonlocal electron heat-flux closures, with non-local electron transport in
+ICF/IFE as the target application, and a tournament in which submitted
+closures are scored by a shared automated harness. The files carry no author
+line; the author is not recorded here.
+
+| File | Modified | SHA-256 (first 12) |
+|---|---|---|
+| `a_tournament_benchmark_for_learned_nonlocal_heat-flux_closures.md` | 2026-09-02 | `879368d491cb` |
+| `a_tournament_benchmark_for_learned_nonlocal_heat-flux_closures.tex` | 2026-11-12 | `6641909bbdb3` |
+| `a_tournament_benchmark_for_learned_nonlocal_heat-flux_closures.pdf` | 2026-11-12 | `981dc8624506` |
+
 Do not silently replace or edit source documents. Record provenance, version,
 and retrieval date when a reference is added.
