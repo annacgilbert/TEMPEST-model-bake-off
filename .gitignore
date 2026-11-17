@@ -82,3 +82,6 @@ shared/references/Transformers0512.pdf
 # Burton lab code provided privately: never commit
 burton-sprint/external/*
 !burton-sprint/external/README.md
+
+# Cached collision matrices for the Landau closure scripts
+shared/scripts/landau_closure/cache/
