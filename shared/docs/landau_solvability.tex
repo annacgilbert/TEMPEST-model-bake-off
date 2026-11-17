@@ -1,0 +1,353 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cQ}{\mathcal{Q}}
+\newcommand{\avg}[1]{\langle #1\rangle}
+\newcommand{\jap}[1]{\langle #1\rangle}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Solvability of the Chapman--Enskog problems and of the stationary
+problem for the linearized Landau--Coulomb operator}
+\author{Working note}
+\date{16 November 2026}
+
+\begin{document}
+\maketitle
+
+\noindent\emph{Summary.} The note \texttt{landau\_3d\_closure.tex} proved its
+theorems for the Landau operator under two assumptions: (R), solvability of
+two second-order Chapman--Enskog problems, and (S), existence of the
+stationary kinetic solution together with its identification as the
+quasi-static limit. This note proves (R), and the existence half of (S).
+\begin{itemize}
+  \item \textbf{Theorem~\ref{thm:solv}}: for the linearized like-particle
+    Landau operator with Coulomb interaction, $\Lambda f=\sigma$ has a unique
+    solution orthogonal to the conserved quantities whenever $\sigma$ is, and
+    the solution inherits every polynomial moment of $\sigma$, with a fixed
+    loss.
+  \item \textbf{Corollary~\ref{cor:R}}: assumption (R) holds, and the
+    constants $\kappa_{\mathrm F}$, $\eta$, $C_*$, $X_0$, $B$ are finite.
+  \item \textbf{Theorem~\ref{thm:exist}}: for every $k\ne0$ the stationary
+    problem has a solution, obtained variationally, for which every
+    conclusion of the earlier theorems holds.
+\end{itemize}
+The proofs rest on published estimates for the Landau operator, listed in
+Section~\ref{sec:cited} with what was and was not read. They do not reprove
+those estimates. \textbf{Still open:} that the quasi-static limit of the
+time-dependent problem is given by this stationary solution. No second
+reader has checked the proofs.
+
+\section{Setting and the cited estimates}
+\label{sec:cited}
+
+$M$ is the unit Maxwellian on $\mathbb{R}^3$, $\avg{\cdot}$ its average,
+$w=\jap{v}=(1+|v|^2)^{1/2}$, $H$ is the span of $1,v_1,v_2,v_3,|v|^2$,
+and $\Pi$ is the orthogonal projection onto $H$ in $L^2(M)$. $\cD$ is the
+Dirichlet form of the linearized like-particle Landau operator with Coulomb
+kernel,
+\[
+  \cD(g,h)=c_0\iint M(v)M(v')\,(\nabla g-\nabla'g')\cdot U(v-v')\,
+  (\nabla h-\nabla'h')\,\dd v\,\dd v',\qquad
+  U(z)=\frac{|z|^2I-zz^{\mathsf T}}{|z|^3}.
+\]
+The literature works with the Maxwellian $\mu=e^{-|v|^2}$, or with
+$(2\pi)^{-3/2}e^{-|v|^2/2}$, and with $g=\sqrt\mu\,h\in L^2$ in place of
+$h\in L^2(M)$; these differ from the present setting by a dilation of $v$ and
+positive constants, which do not affect any statement below.
+
+For $\theta\in\mathbb{R}$ let $\|h\|_{\sigma,\theta}$ denote Guo's weighted
+norm $|g|_{\sigma,\theta}$ of $g=\sqrt M\,h$,
+\[
+  |g|^2_{\sigma,\theta}=\int w^{2\theta}\bigl[\sigma^{ij}\partial_ig\,\partial_jg
+  +\sigma^{ij}v_iv_j\,g^2\bigr]\dd v,\qquad \sigma^{ij}=U^{ij}*\mu,
+\]
+$\cH_\theta=\{h:\|h\|_{\sigma,\theta}<\infty\}$, $\cH=\cH_0$,
+$\|\cdot\|_\sigma=\|\cdot\|_{\sigma,0}$. The following are used.
+
+\begin{enumerate}
+  \item[(C1)] \emph{Structure of $\sigma$.} $\sigma^{ij}(v)$ has eigenvalue
+    $\lambda_1(v)\sim(1+|v|)^{-3}$ in the direction of $v$ and
+    $\lambda_2(v)\sim(1+|v|)^{-1}$ on $v^\perp$
+    \cite[Lemma~2.3]{KGH}.
+  \item[(C2)] \emph{Lower bound on the norm.} For every $\theta$,
+    $\int M\,w^{2\theta-1}h^2\,\dd v\le C_\theta\|h\|^2_{\sigma,\theta}$,
+    together with the corresponding gradient terms
+    \cite[Lemma~2.5]{KGH}.
+  \item[(C3)] \emph{Coercivity.} $\cD[h]\ge\delta\,\|h-\Pi h\|^2_\sigma$ for
+    some $\delta>0$ \cite[Lemma~2.6]{KGH}. A constructive version, with the
+    slightly weaker norm
+    $\|h-\Pi h\|^2_{H^1(\jap v^{-3}M)}+\|\jap v^{-1/2}(h-\Pi h)\|^2_{L^2(M)}$,
+    is \cite[Theorem~1.3]{Mouhot}.
+  \item[(C4)] \emph{Weighted estimate.} For every $\theta\in\mathbb{R}$ there
+    are a constant $C_\theta$ and a positive Gaussian $\rho$ such that
+    \[
+      \cD(h,w^{2\theta}h)\ \ge\ \tfrac12\|h\|^2_{\sigma,\theta}
+      -C_\theta\int M\rho\,h^2\,\dd v .
+    \]
+    This follows from the two inequalities for the operators $A$ and $K$ in
+    \cite[Lemma~2.7]{KGH}, with the remainder $C_\delta|\mu g|_2^2$; the
+    same estimate with a compactly supported remainder is
+    \cite[Lemma~9]{StrainGuo}.
+  \item[(C5)] \emph{Continuity.}
+    $|\cD(h_1,w^{2\theta}h_2)|\le C_\theta\|h_1\|_{\sigma,\theta}\|h_2\|_{\sigma,\theta}$.
+\end{enumerate}
+(C5) is not quoted from a single lemma. With $L=-A-K$ in the notation of
+\cite{KGH}, the $K$ part and the $\partial_i\sigma^i$ part are bounded by
+\cite[Lemmas~2.6, 2.7]{KGH}; the principal part of $A$ is bounded by the
+Cauchy--Schwarz inequality for the non-negative matrix $\sigma$; and the
+term in which the derivative falls on the weight is bounded by
+$C\int w^{2\theta-1}\lambda_1|P_v\nabla g_1||g_2|$, which is controlled by
+(C1) and (C2) because $w^{-2}\lambda_1\lesssim w^{-1}$.
+
+\paragraph{What was read.} \cite{Mouhot}, \cite{StrainGuo} and the cited
+lemmas of \cite{KGH} were read in full text. The lemmas of \cite{KGH} are
+restatements of Lemma~3, Corollary~1, Lemma~5 and Lemma~6 of Guo
+\cite{Guo02}, which was not available and was not consulted directly. That
+the linearized Landau--Coulomb operator has no spectral gap in $L^2(M)$, so
+that these weighted estimates are needed, is stated in \cite{CM}.
+
+\paragraph{Consequences used below.} By (C3) and (C5), $\cD$ is a bounded
+form on $\cH$, vanishes exactly on $H$, and is an inner product equivalent to
+$\|\cdot\|^2_\sigma$ on $\cH^\perp=\{h\in\cH:\Pi h=0\}$. Polynomials lie in
+every $\cH_\theta$. By (C2), for a polynomial $p$ and $h\in\cH$,
+$|\avg{ph}|\le\avg{w\,p^2}^{1/2}\avg{w^{-1}h^2}^{1/2}<\infty$.
+
+\section{Solvability with moments}
+
+\begin{theorem}\label{thm:solv}
+Let $\sigma$ be orthogonal to $H$ in $L^2(M)$ with
+$\avg{w^{2\theta+1}\sigma^2}<\infty$ for some $\theta\ge0$. Then there is a
+unique $f\in\cH^\perp$ with
+\begin{equation}
+  \cD(f,\varphi)=\avg{\sigma\varphi}\qquad\text{for all }\varphi\in\cH ,
+  \label{eq:weak}
+\end{equation}
+and $f\in\cH_\theta$, with
+\[
+  \|f\|_{\sigma,\theta}\le C_\theta\bigl(\avg{w^{2\theta+1}\sigma^2}^{1/2}
+  +\|f\|_\sigma\bigr).
+\]
+In particular $\avg{w^{2\theta-1}f^2}<\infty$.
+\end{theorem}
+
+\begin{proof}
+\emph{Existence and uniqueness.} For $\varphi\in\cH$,
+$\avg{\sigma\varphi}=\avg{\sigma(\varphi-\Pi\varphi)}$, so by (C2)
+\[
+  |\avg{\sigma\varphi}|\le\avg{w\sigma^2}^{1/2}
+  \avg{w^{-1}(\varphi-\Pi\varphi)^2}^{1/2}\le C\,\|\varphi-\Pi\varphi\|_\sigma .
+\]
+The Riesz theorem in $(\cH^\perp,\cD)$ gives a unique $f\in\cH^\perp$ with
+\eqref{eq:weak} for $\varphi\in\cH^\perp$; both sides vanish for
+$\varphi\in H$.
+
+\emph{Moments.} On $\cH_\theta$ define
+\[
+  b(g,\varphi)=\cD(g,w^{2\theta}\varphi)+C_\theta\int M\rho\,g\,\varphi\,\dd v,
+  \qquad
+  \ell(\varphi)=\avg{\sigma\,w^{2\theta}\varphi}
+  +C_\theta\int M\rho\,f\,\varphi\,\dd v .
+\]
+By (C5) $b$ is bounded, and by (C4) $b(g,g)\ge\tfrac12\|g\|^2_{\sigma,\theta}$.
+By (C2),
+\[
+  |\avg{\sigma w^{2\theta}\varphi}|\le\avg{w^{2\theta+1}\sigma^2}^{1/2}
+  \avg{w^{2\theta-1}\varphi^2}^{1/2}\le C\|\varphi\|_{\sigma,\theta},
+\]
+so $\ell$ is bounded. The Lax--Milgram theorem gives $f_\theta\in\cH_\theta$ with
+$b(f_\theta,\varphi)=\ell(\varphi)$ for all $\varphi\in\cH_\theta$.
+
+Let $d=f_\theta-f\in\cH$. Since $\theta\ge0$, multiplication by $w^{-2\theta}$
+maps $\cH$ into $\cH_\theta$ (the derivative of the weight gains a factor
+$w^{-1}$ and is handled as in (C5)). Take $\varphi=w^{-2\theta}d$:
+\[
+  \cD(f_\theta,d)+C_\theta\int M\rho\,w^{-2\theta}f_\theta\,d
+  =\avg{\sigma d}+C_\theta\int M\rho\,w^{-2\theta}f\,d .
+\]
+By \eqref{eq:weak}, $\cD(f,d)=\avg{\sigma d}$. Subtracting,
+$\cD[d]+C_\theta\int M\rho\,w^{-2\theta}d^2=0$, so $d=0$. Hence
+$f=f_\theta\in\cH_\theta$, and the bound follows from
+$\tfrac12\|f\|^2_{\sigma,\theta}\le b(f,f)=\ell(f)$.
+\end{proof}
+
+\begin{remark}
+Each application loses a fixed amount of weight: the source needs
+$w^{2\theta+1}$ and the solution is controlled with $w^{2\theta-1}$. This is
+the trace of the missing spectral gap. It is harmless for sources with all
+polynomial moments. For polynomial sources a stronger, pointwise statement
+is in the literature: $\Lambda^{-1}$ of a polynomial decays, relative to the
+Maxwellian, slower than any inverse Gaussian power
+\cite[Lemma~6.2]{DYY}.
+\end{remark}
+
+\section{Assumption (R)}
+
+Write $\cH_\infty=\bigcap_{\theta\ge0}\cH_\theta$. By
+Theorem~\ref{thm:solv}, if $\sigma\perp H$ has all polynomial moments then
+$\Lambda^+\sigma:=f\in\cH_\infty\cap\cH^\perp$. Notation as in
+\texttt{landau\_3d\_closure.tex}: $Q=\tfrac12v_x(|v|^2-5)$,
+$\vartheta=v_\perp^2-2v_x^2$.
+
+\begin{corollary}\label{cor:R}
+For the linearized Landau--Coulomb operator:
+\begin{enumerate}
+  \item[(a)] $\Xi=\Lambda^+Q$ exists in $\cH_\infty$, is odd in $v_x$,
+    satisfies $\avg{v_x\Xi}=0$, and
+    $\kappa_{\mathrm F}=\cD[\Xi]\in(0,\infty)$; likewise
+    $\Lambda^+\vartheta\in\cH_\infty$ and $\eta<\infty$.
+  \item[(b)] $\chi_*=1-v_x^2+v_x\Xi/\kappa_{\mathrm F}$ is orthogonal to $H$
+    and has all polynomial moments; $G=\Lambda^+\chi_*\in\cH_\infty$, and
+    $C_*=\cD[G]$, $X_0=\avg{\vartheta G}$ are finite.
+  \item[(c)] With $\tilde G=G+h$, $h\in\operatorname{span}\{1,|v|^2\}$ such
+    that $\avg{\tilde G}=\avg{v_x^2\tilde G}=0$, the function $v_x\tilde G$ is
+    orthogonal to $H$ and has all polynomial moments;
+    $\Upsilon=\Lambda^+(v_x\tilde G)\in\cH_\infty$ and $B=\cD[\Upsilon]<\infty$.
+\end{enumerate}
+So assumption (R) holds, and (A3) holds with form domain $\cH$.
+\end{corollary}
+
+\begin{proof}
+(a) $Q$ and $\vartheta$ are polynomials orthogonal to $H$. $\Lambda$
+commutes with $v_x\to-v_x$, so by uniqueness $\Xi$ is odd;
+$\Xi\in\cH^\perp$ gives $\avg{v_x\Xi}=0$; $\cD[\Xi]>0$ because $Q\ne0$.
+
+(b) $\chi_*$ is even in $v_x$, hence orthogonal to $v_j$; orthogonality to
+$1$ and $|v|^2$ was computed in the earlier note. Since $\Xi\in\cH_\infty$,
+(C2) gives $\avg{w^{p}v_x^2\Xi^2}<\infty$ for every $p$.
+
+(c) $v_x\tilde G$ is odd in $v_x$, so it is orthogonal to $1$, $|v|^2$,
+$v_y$, $v_z$; and $\avg{v_x\cdot v_x\tilde G}=0$ by the choice of $h$.
+Moments as in (b).
+\end{proof}
+
+\section{Existence of the stationary solution}
+
+Fix $k\ne0$. Let $X^\infty$ be the space of $\varphi\in\cH_\infty$, even in
+$v_x$ and axisymmetric, with $\avg{v_x^2\varphi}=0$. For
+$\varphi\in X^\infty$, $v_x\varphi$ is orthogonal to $H$ with all moments, so
+$f_\varphi=\Lambda^+(v_x\varphi)\in\cH_\infty$ and
+\[
+  \cQ(\varphi,\varphi')=\cD(\varphi,\varphi')+k^2\cD(f_\varphi,f_{\varphi'})
+\]
+is a symmetric non-negative form on $X^\infty$.
+
+\begin{theorem}\label{thm:exist}
+\begin{enumerate}
+  \item[(i)] $\cQ$ is positive definite on $X^\infty$, and
+    $\avg{\varphi}^2\le\bigl(1/(k^2\kappa_{\mathrm F})+C_*\bigr)\cQ[\varphi]$.
+  \item[(ii)] The completion $\bar X$ of $(X^\infty,\cQ)$ is a space of
+    functions contained in $\cH$, and there is a unique $g_e\in\bar X$ with
+    $\cQ(g_e,\varphi)=\avg{\varphi}$ for all $\varphi\in\bar X$.
+  \item[(iii)] There is $w\in\cH$, odd in $v_x$, such that the pair
+    $(g_e,w)$ solves the stationary problem
+    $ikv_x(g_e+iw)+\Lambda(g_e+iw)=1$ in the sense that
+    \begin{align}
+      \cD(g_e,\varphi)-k\avg{v_xw\,\varphi}&=\avg{\varphi}
+        &&\text{for even }\varphi\in\cH_\infty, \label{eq:E1}\\
+      \cD(w,\zeta)+k\avg{v_xg_e\,\zeta}&=0
+        &&\text{for odd }\zeta\in\cH_\infty. \label{eq:E2}
+    \end{align}
+  \item[(iv)] For this solution, all conclusions of Theorem~1 (structure and
+    two-sided bounds) and of the leading-coefficient theorem of
+    \texttt{landau\_3d\_closure.tex} hold, with
+    $n_1=\avg{g_e}=\cQ[g_e]$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) If $\cQ[\varphi]=0$ then $\varphi\in H$ and $f_\varphi\in H$, so
+$v_x\varphi=\Lambda f_\varphi=0$ and $\varphi=0$. For the inequality let
+$\psi_*=(v_x-\Xi/\kappa_{\mathrm F})/k\in\cH_\infty$, so
+$1-kv_x\psi_*=\chi_*$ and $\cD[\psi_*]=1/(k^2\kappa_{\mathrm F})$. Then
+$\avg{\varphi}=\avg{\varphi\chi_*}+k\avg{v_x\varphi\,\psi_*}
+=\cD(G,\varphi)+k\,\cD(f_\varphi,\psi_*)$, and the Cauchy--Schwarz inequality
+for $\cD$ and in $\mathbb{R}^2$ gives the claim.
+
+(ii) Let $(\varphi_n)$ be $\cQ$-Cauchy. Then $\varphi_n-\Pi\varphi_n$
+converges in $\cH^\perp$, $\avg{\varphi_n}$ converges by (i), and
+$f_{\varphi_n}$ converges in $\cH^\perp$. Writing
+$\Pi\varphi_n=a_n+b_n|v|^2$, the numbers $a_n+3b_n=\avg{\varphi_n}$ and
+$a_n+5b_n=-\avg{v_x^2(\varphi_n-\Pi\varphi_n)}$ converge, the second because
+$\avg{v_x^2\,\cdot\,}$ is continuous on $\cH$ by (C2). So $\varphi_n$
+converges in $\cH$ to an even function with $\avg{v_x^2\varphi}=0$, and the
+limit determines the Cauchy sequence up to $\cQ$-null sequences. The mean is
+a bounded functional on $\bar X$ by (i); apply the Riesz theorem.
+
+(iii) Let $\varphi_n\in X^\infty$ converge to $g_e$ in $\bar X$ and put
+$w_0=-k\lim f_{\varphi_n}\in\cH^\perp$, $w=w_0+\beta v_x$. For odd
+$\zeta\in\cH_\infty$, $\cD(f_{\varphi_n},\zeta)=\avg{v_x\varphi_n\zeta}$ and
+$v_x\zeta$ has all moments, so in the limit
+$\cD(w,\zeta)=-k\avg{v_xg_e\zeta}$, which is \eqref{eq:E2}. For
+$\varphi\in X^\infty$,
+$\cQ(g_e,\varphi)=\cD(g_e,\varphi)-k\,\cD(w_0,f_\varphi)
+=\cD(g_e,\varphi)-k\avg{v_xw_0\,\varphi}$, and $\avg{v_x\cdot v_x\varphi}=0$,
+so \eqref{eq:E1} holds on $X^\infty$ for every $\beta$. Every even
+axisymmetric $\varphi\in\cH_\infty$ is $c\cdot1$ plus an element of
+$X^\infty$, and \eqref{eq:E1} for $\varphi=1$ reads $-k\avg{v_xw}=1$, which
+fixes $\beta$.
+
+(iv) The proofs in \texttt{landau\_3d\_closure.tex} use only the following,
+all of which hold here. From \eqref{eq:E1} with $\varphi=1$ and
+$\varphi=\varphi_0=\tfrac12(5-|v|^2)$: $-k\avg{v_xw}=1$ and
+$k\avg{Qw}=1$, hence $q_1=i/k$; and $\avg{v_x^2g_e}=0$ by (ii). The energy
+identity is $\cQ[g_e]=\avg{g_e}$, with $k^2\lim\cD[f_{\varphi_n}]=\cD[w]$.
+The second equation was tested only with $\psi_*$ and $\Xi$, which are in
+$\cH_\infty$. The first was tested only with trial functions in $X^\infty$,
+where it is the identity $\cQ(g_e,\varphi)=\avg{\varphi}$.
+\end{proof}
+
+\begin{remark}
+Uniqueness is within $\bar X$. Uniqueness among all pairs in $\cH$ satisfying
+\eqref{eq:E1}--\eqref{eq:E2} would require testing the equations with the
+solution itself, and the pairing $\avg{v_xg_ew}$ is not controlled in the
+energy space for the Coulomb operator. Weighted estimates for the stationary
+kinetic solution would settle it; they are not proved here.
+\end{remark}
+
+\section{What remains open}
+
+\begin{enumerate}
+  \item \textbf{The quasi-static limit.} That the $\omega\to0$ limit of the
+    potential-driven response of the time-dependent equation equals the
+    moments of this stationary solution. For operators with a spectral gap
+    this followed from continuity of the resolvent; here it would need a
+    limiting-absorption argument.
+  \item \textbf{Dependence on unread sources.} (C1)--(C4) are quoted from a
+    paper that restates Guo's lemmas; the original was not consulted.
+  \item \textbf{Scope.} Like-particle collisions only; the results on
+    positivity at all wavenumbers and on the collisionless limit are
+    unchanged and still open.
+\end{enumerate}
+
+\begin{thebibliography}{9}
+\bibitem{Guo02} Y.~Guo, \emph{The Landau equation in a periodic box}, Comm.\
+Math.\ Phys.\ \textbf{231} (2002) 391--434 (not consulted directly).
+\bibitem{KGH} J.~Kim, Y.~Guo, H.~J. Hwang, \emph{A $L^2$ to $L^\infty$
+approach for the Landau equation}, arXiv:1610.05346 (Lemmas 2.3, 2.5, 2.6,
+2.7 read).
+\bibitem{Mouhot} C.~Mouhot, \emph{Explicit coercivity estimates for the
+linearized Boltzmann and Landau operators}, Comm.\ Partial Differential
+Equations \textbf{31} (2006) 1321--1348, arXiv:math/0607538 (read).
+\bibitem{StrainGuo} R.~M. Strain, Y.~Guo, \emph{Exponential decay for soft
+potentials near Maxwellian}, Arch.\ Ration.\ Mech.\ Anal.\ \textbf{187}
+(2008) 287--339 (read).
+\bibitem{CM} K.~Carrapatoso, S.~Mischler, \emph{Landau equation for very
+soft and Coulomb potentials near Maxwellians}, Ann.\ PDE \textbf{3} (2017),
+arXiv:1512.01638 (Sections 1--3 read).
+\bibitem{DYY} R.-J. Duan, D.~Yang, H.~Yu, \emph{Asymptotics toward viscous
+contact waves for solutions of the Landau equation}, arXiv:2103.12929
+(statement of Lemma 6.2 read; it cites Duan and Yu, Adv.\ Math.\ 362 (2020),
+not consulted).
+\end{thebibliography}
+
+\end{document}

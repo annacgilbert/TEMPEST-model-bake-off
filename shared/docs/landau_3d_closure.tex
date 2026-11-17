@@ -51,8 +51,10 @@ the argument goes.
     closed form.
 \end{itemize}
 \textbf{Not proved for Landau:} positivity at all $k$, the inequality
-$\chi<\kappa_{\mathrm F}$, the collisionless limit, and Assumption~(S)
-itself. The Landau numbers are numerical, not certified. Electron--ion
+$\chi<\kappa_{\mathrm F}$, the collisionless limit, and the half of
+Assumption~(S) that identifies the quasi-static limit with the stationary
+solution. Assumption (R) and existence of the stationary solution are proved
+in \texttt{landau\_solvability.tex}. The Landau numbers are numerical, not certified. Electron--ion
 collisions are not included. No second reader has checked the proofs.
 
 \section{Setting}
@@ -87,8 +89,10 @@ $T_1=\tfrac13\avg{(|v|^2-3)g}$.
 
 \medskip
 (S) was proved for the BGK and Dougherty operators. For the Landau operator
-with Coulomb interaction the linearized operator has no spectral gap, and
-(S) is not verified here.
+with Coulomb interaction the linearized operator has no spectral gap.
+Existence of a stationary solution for which all the conclusions below hold
+is proved in \texttt{landau\_solvability.tex}; the identification of the
+quasi-static limit with it remains open.
 
 \paragraph{Chapman--Enskog quantities.} Let $\Xi$ solve $\Lambda\Xi=Q$ with
 $\avg{v_x\Xi}=0$. Define
@@ -199,8 +203,8 @@ $\avg{\tilde G}=\avg{v_x^2\tilde G}=0$. Put
   B=\cD[\Upsilon]=\avg{v_x\tilde G,\Lambda^+v_x\tilde G}.
 \end{equation}
 For the BGK and Dougherty operators all of these are polynomials. For the
-Landau operator (R) is a solvability statement of Spitzer type and is
-assumed.
+Landau operator (R) is proved in \texttt{landau\_solvability.tex}, from
+published coercivity estimates.
 
 \begin{theorem}[Leading coefficient]\label{prop:K}
 Assume (A3), (S) and (R), and write $\varepsilon=k^2\kappa_{\mathrm F}$.
@@ -398,13 +402,13 @@ the conductivity: with $\vt=1$, write
 $1-\chi/\kappa_{\mathrm F}\approx c\,(k\,\kappa_{\mathrm F})^2$.
 \begin{center}
 \renewcommand{\arraystretch}{1.25}
-\begin{tabular}{lll}
+\begin{tabular}{llp{5.2cm}}
   Operator & $c = K/\kappa_{\mathrm F}^2$ & Status of $K$ \\ \hline
   BGK, constant $\nu$, 1D & $0.444$ & proved, sharp \\
   Dougherty, 1D & $0.333$ & proved, sharp \\
   BGK, $\nu_0/(1+|v|^3)$, 1D & $6.78$ & proved, sharp \\
   Dougherty, 3D & $0.192$ & proved (asymptotic) \\
-  Landau, like-particle, 3D & $1.43$ & proved formula (under (S), (R)); numerical value \\
+  Landau, like-particle, 3D & $1.43$ & proved formula; numerical value \\
 \end{tabular}
 \end{center}
 At equal conductivity the Landau operator departs from Fourier's law about
@@ -425,9 +429,11 @@ $k\lambda\ge0.5$ and the unproved limit, treat this as indicative.
 
 \begin{enumerate}
   \item \textbf{Assumption (S) for Landau.} Existence of the stationary
-    solution and of the quasi-static limit is assumed. The Coulomb operator
-    has no spectral gap, so the Fredholm argument of the earlier notes does
-    not apply.
+    solution is proved in the note \texttt{landau\_solvability.tex}. That
+    the
+    quasi-static limit of the time-dependent problem equals it is still
+    assumed: the Coulomb operator has no spectral gap, so the Fredholm
+    argument of the earlier notes does not apply.
   \item \textbf{All wavenumbers.} Positivity of $\chi$, and
     $\chi<\kappa_{\mathrm F}$, are proved only in the Dougherty case in
     three dimensions. For a general operator the theorem covers
@@ -437,8 +443,8 @@ $k\lambda\ge0.5$ and the unproved limit, treat this as indicative.
     numerically.
   \item \textbf{Certification.} The Landau constants come from a Galerkin
     truncation. They are converged to the digits shown, but there is no
-    error bound. Theorem~\ref{prop:K} is proved under (R), which is assumed
-    for Landau.
+    error bound. Theorem~\ref{prop:K} is proved under (R), which holds
+    for Landau by \texttt{landau\_solvability.tex}.
   \item \textbf{Physics.} One species, like-particle collisions, no
     electron--ion scattering, no magnetic field, linear, quasi-static,
     single drive.
