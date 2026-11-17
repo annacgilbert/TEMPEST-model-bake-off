@@ -132,15 +132,20 @@ and $y=\nu/|k|$.
   \item \textbf{Consequently} the results for a general operator in the
     previous section hold for the Landau operator, apart from the item on
     the time-dependent solution below.
+  \item \textbf{Collisionless limit}
+    (\texttt{landau\_collisionless\_limit.tex}). $\theta(k)\to3\sqrt{2/\pi}$
+    as $|k|\to\infty$, the same value as for the Dougherty operator; the
+    perpendicular temperature response vanishes relative to the parallel
+    one. The proof gives no rate.
 \end{itemize}
 
 \section{Not proved}
 
 \begin{itemize}
-  \item \textbf{Landau:} positivity at every wavenumber,
-    $\chi<\kappa_{\mathrm F}$ at every wavenumber, and the collisionless
-    limit. Positivity is proved for $k\lambda<0.89$, with the computed
-    constants.
+  \item \textbf{Landau:} positivity at every wavenumber and
+    $\chi<\kappa_{\mathrm F}$ at every wavenumber. Positivity is proved for
+    $k\lambda<0.89$, with the computed constants, and for all sufficiently
+    large $k\lambda$, with no explicit threshold.
   \item \textbf{Landau:} existence of the time-dependent weak solution in
     the weighted class is taken from a standard method and not written out;
     approach to zero frequency along the real axis is not covered.
@@ -199,6 +204,7 @@ harmonic-mean closures.
     solution \\
   \texttt{landau\_quasistatic\_limit.tex} & Landau: quasi-static limit \\
   \texttt{landau\_positivity.tex} & Positivity in 3D \\
+  \texttt{landau\_collisionless\_limit.tex} & Landau: collisionless limit \\
   \texttt{../scripts/landau\_closure/} & Code for the Landau numbers \\
   \texttt{hani-to-algorithms/docs/plasma\_extension.tex} & Strategy for the
     collisional kinetic limit \\

@@ -1,0 +1,413 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cQ}{\mathcal{Q}}
+\newcommand{\cJ}{\mathcal{J}}
+\newcommand{\fa}{\mathfrak{a}}
+\newcommand{\avg}[1]{\langle #1\rangle}
+\newcommand{\nstar}[1]{\|#1\|_*}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The collisionless limit of the heat-flux closure\\
+for the linearized Landau--Coulomb operator}
+\author{Working note}
+\date{17 November 2026}
+
+\begin{document}
+\sloppy
+\maketitle
+
+\noindent\emph{Summary.} For the like-particle Landau operator with Coulomb
+interaction, in three velocity dimensions, the quasi-static closure
+$\hat q=-i\,\mathrm{sgn}(k)\,\theta(k)\,\hat T$ satisfies
+\[
+  \theta(k)\;\longrightarrow\;3\sqrt{2/\pi}\qquad(|k|\to\infty),
+\]
+the same value as for the Dougherty operator, and $\tfrac32$ times the
+one-dimensional Hammett--Perkins value. Along the way: $k\,n_1\to\sqrt{\pi/2}$,
+the perpendicular temperature response satisfies $k\,T_{\perp1}\to0$, and the
+closure is positive for all sufficiently large $|k|$.
+
+The proof is by matching upper and lower variational bounds, with trial
+functions built from the Airy-type boundary layer of width
+$(d(v_\perp)/k)^{1/3}$, where $d$ is the local velocity diffusion
+coefficient. The limit does not depend on $d$.
+
+\emph{Level of rigour.} The argument is complete in structure. The
+asymptotic evaluation of the trial functionals is by dominated convergence;
+the dominating bounds are stated, and the lower-order terms are estimated by
+scaling with the reason given, but not every such term is written out. The
+proof uses the cited estimates for the Landau operator, one more than
+before (Section~\ref{sec:prop}). No second reader has checked it.
+
+\section{Setting and properties used}
+\label{sec:prop}
+
+Notation is that of \texttt{landau\_solvability.tex} and
+\texttt{landau\_quasistatic\_limit.tex}. $M(v)=M_1(v_x)M_\perp(v_\perp)$ is
+the unit Maxwellian, $M_1(0)=(2\pi)^{-1/2}$, $\avg{\cdot}_\perp$ is the
+average in $v_\perp$, and $m=(1+|v|^2)^{1/2}$. Take $k>0$. $\cD$ is the
+Dirichlet form of the linearized Landau--Coulomb operator and
+$g=\sqrt M\,h$. Besides (C1)--(C3):
+
+\begin{enumerate}
+  \item[(C6)] \emph{Local form plus a small remainder.} Let
+    \[
+      \fa[h]=\int\Bigl[S^{ij}\partial_ig\,\partial_jg
+      +S^{ij}\tfrac{v_i}{2}\tfrac{v_j}{2}\,g^2\Bigr]\dd v ,
+    \]
+    with $S(v)$ the diffusion matrix (the matrix $\sigma^{ij}$ of the cited
+    papers, up to the normalization of $\cD$). For every $\eta>0$ there are
+    $C_\eta$, $R_\eta$ with
+    \[
+      (1-\eta)\,\fa[h]-C_\eta\!\int_{|v|\le R_\eta}\!Mh^2
+      \ \le\ \cD[h]\ \le\
+      (1+\eta)\,\fa[h]+C_\eta\!\int_{|v|\le R_\eta}\!Mh^2 .
+    \]
+    This is $L=-A-K$ with $-\langle Ag,g\rangle=|g|_\sigma^2
+    -\langle\partial_i\sigma^ig,g\rangle$ and the bound on the
+    $\partial_i\sigma^i$ and $K$ terms in \cite[Lemma~7]{StrainGuo}
+    (equivalently \cite[Lemma~2.6]{KGH}).
+  \item[(C7)] \emph{The diffusion matrix.} $S$ is smooth, with eigenvalue
+    $\lambda_1(|v|)$ along $v$ and $\lambda_2(|v|)$ on $v^\perp$,
+    $\lambda_1\sim m^{-3}$, $\lambda_2\sim m^{-1}$, and
+    $|\nabla S|\le C m^{-2}$ \cite[Lemma~4]{StrainGuo}. Hence
+    \[
+      S^{xx}(v)\to d(v_\perp):=\lambda_2(|v_\perp|),\qquad
+      (S^{-1})_{xx}(v)\to\frac{1}{d(v_\perp)}\qquad(v_x\to0),
+    \]
+    with $c\,m^{-1}\le d\le C$, $|\nabla d|\le Cd$, $S^{xx}\le C$,
+    $(S^{-1})_{xx}\le C\,m^3$, and $S^{x\perp}=O(|v_x|)$.
+\end{enumerate}
+
+\paragraph{The dual seminorm.} For a function $\chi$ put
+\[
+  \nstar{\chi}=\sup\bigl\{\avg{\chi f}/\cD[f]^{1/2}:\ f\in\cH,\ \Pi f=0\bigr\}.
+\]
+It is a seminorm; functions in $H$ have $\nstar{\cdot}=0$; if $\chi\perp H$
+then $\nstar{\chi}^2=\avg{\chi,\Lambda^+\chi}$; and by (C2), (C3),
+$\nstar{\chi}\le C\avg{m\,\chi^2}^{1/2}$.
+
+\paragraph{Variational quantities.} For even $\varphi\in\cH_\infty$ let
+$\cQ_k[\varphi]=\cD[\varphi]+k^2\nstar{v_x\varphi}^2$. For an even polynomial
+$\sigma=\sigma(v_\perp)$ define
+\[
+  N_k(\sigma)=\sup\Bigl\{\frac{\avg{\sigma\varphi}^2}{\cQ_k[\varphi]}:\
+  \varphi\in\cH_\infty\text{ even},\ \avg{v_x^2\varphi}=0\Bigr\}.
+\]
+By the earlier notes $N_k(1)=n_1$, attained at $g_e$, and
+$\cQ_k[g_e-\varphi]=n_1-(2\avg{\varphi}-\cQ_k[\varphi])$ for admissible
+$\varphi$.
+
+\begin{lemma}[Two-sided bounds]\label{lem:two}
+Let $\sigma=\sigma(v_\perp)$ be an even polynomial.
+\begin{enumerate}
+  \item[(a)] For every even $\varphi\in\cH_\infty$, with
+    $\tau=\avg{v_x^2\varphi}$,
+    \[
+      N_k(\sigma)\ \ge\ \frac{(\avg{\sigma\varphi}-\tau\avg{\sigma})^2}
+      {\cD[\varphi]+k^2\nstar{v_x\varphi}^2}.
+    \]
+  \item[(b)] For every odd $\psi\in\cH_\infty$ such that
+    $\sigma-kv_x\psi$ is orthogonal to $1$ and $|v|^2$,
+    \[
+      N_k(\sigma)\ \le\ \cD[\psi]+\nstar{\sigma-kv_x\psi}^2 .
+    \]
+  \item[(c)] For admissible $e$, $\avg{\sigma e}^2\le N_k(\sigma)\,\cQ_k[e]$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) $\varphi-\tau$ is admissible, $\cD[\varphi-\tau]=\cD[\varphi]$, and
+$\nstar{v_x(\varphi-\tau)}=\nstar{v_x\varphi}$ because $v_x\in H$.
+(b) For admissible $\varphi$ and $\chi=\sigma-kv_x\psi$,
+$\avg{\sigma\varphi}=\avg{\chi\varphi}+k\avg{v_x\varphi\,\psi}$. Since
+$\chi\perp\Pi\varphi$ and $v_x\varphi\perp\Pi\psi$, the two terms are at most
+$\nstar{\chi}\cD[\varphi]^{1/2}$ and $k\nstar{v_x\varphi}\cD[\psi]^{1/2}$;
+apply the Cauchy--Schwarz inequality in $\mathbb{R}^2$. (c) is the
+definition.
+\end{proof}
+
+\section{The boundary-layer profile}
+
+\begin{lemma}\label{lem:airy}
+Let $\gamma(u)=\int_0^\infty e^{-iut-t^3/3}\,\dd t=F(u)+iW(u)$. Then:
+\begin{enumerate}
+  \item[(a)] $iu\gamma-\gamma''=1$; that is, $-uW-F''=1$ and $uF-W''=0$.
+  \item[(b)] $F$ is even and $W$ odd; as $|u|\to\infty$,
+    $F=-2u^{-4}+O(u^{-7})$, $W=-u^{-1}+O(u^{-4})$, with corresponding
+    bounds for derivatives.
+  \item[(c)] $\int F\,\dd u=\pi$, and
+    $\int_u^\infty tF(t)\,\dd t=-W'(u)$.
+  \item[(d)] $\int F'^2\,\dd u+\int W'^2\,\dd u=\pi$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) Differentiate under the integral and integrate by parts:
+$\gamma''-iu\gamma=\int_0^\infty\frac{\dd}{\dd t}\bigl(e^{-iut}\bigr)
+e^{-t^3/3}\dd t-\int_0^\infty t^2e^{-iut-t^3/3}\dd t=-1$. (b) Parity is
+immediate; the expansion is repeated integration by parts, with
+$a(t)=e^{-t^3/3}$, $a(0)=1$, $a'(0)=a''(0)=0$, $a'''(0)=-2$:
+$\gamma=(iu)^{-1}-2(iu)^{-4}+\dots$. (c) $\int\gamma\,\dd u=\pi$ by Fourier
+inversion on the half-line. From $W''=uF$ and $W'\to0$ at both ends,
+$W'(u)=-\int_u^\infty tF$. (d) Multiply the first equation in (a) by $F$ and
+the second by $W$, integrate, and add: $\int F'^2+\int W'^2=\int F=\pi$; the
+boundary terms vanish by (b).
+\end{proof}
+
+These identities were also checked numerically.
+
+\section{A sharp upper bound for the dual seminorm}
+
+\begin{lemma}\label{lem:flux}
+Let $\chi_k$ be smooth functions of the form
+$\chi_k=-M^{-1}\partial_{v_x}(MJ_k)$, with $J_k$ decaying at infinity, and
+put $\cJ_k=\int MJ_k^2\,(S^{-1})_{xx}\,\dd v$. Suppose that, as $k\to\infty$,
+\[
+  \int M|J_k|\,\dd v=o(\cJ_k^{1/2}),\qquad
+  \int MJ_k^2\,v_x^2\,m\,\dd v=o(\cJ_k).
+\]
+Then $\nstar{\chi_k}^2\le(1+o(1))\,\cJ_k$.
+\end{lemma}
+
+\begin{proof}
+Write $s_k=\nstar{\chi_k}^2$ and assume $s_k>\cJ_k$ along a subsequence,
+otherwise there is nothing to prove. By the Riesz theorem there is
+$f_k\in\cH$, $\Pi f_k=0$, with $\cD(f_k,\zeta)=\avg{\chi_k\zeta}$ for
+$\zeta\perp H$ and $\cD[f_k]=\avg{\chi_kf_k}=s_k$. With $g_k=\sqrt M f_k$,
+\[
+  s_k=\int MJ_k\,\partial_xf_k
+     =\int\sqrt M\,J_k\,\partial_xg_k+\int MJ_k\,\tfrac{v_x}{2}\,f_k .
+\]
+The first term is at most
+$\cJ_k^{1/2}\bigl(\int S^{ij}\partial_ig_k\partial_jg_k\bigr)^{1/2}
+\le\cJ_k^{1/2}\fa[f_k]^{1/2}$. The second is at most
+$\bigl(\int MJ_k^2v_x^2m\bigr)^{1/2}\avg{m^{-1}f_k^2}^{1/2}
+=o(\cJ_k^{1/2})\,s_k^{1/2}$ by (C2), (C3).
+
+By (C6), $\fa[f_k]\le(1-\eta)^{-1}\bigl(s_k+C_\eta\int_{|v|\le R_\eta}Mf_k^2\bigr)$.
+Let $\tilde f_k=f_k/s_k^{1/2}$, bounded in $\cH^\perp$. For smooth compactly
+supported $\zeta$,
+$|\cD(\tilde f_k,\zeta-\Pi\zeta)|=|\int MJ_k\partial_x(\zeta-\Pi\zeta)|/s_k^{1/2}\to0$
+by the two hypotheses on $J_k$ (the second handles the term $2v_x$ coming
+from $\partial_x\Pi\zeta$), so $\tilde f_k\to0$ weakly in
+$\cH^\perp$. The norm of $\cH$ controls the $H^1$ norm on bounded sets, by
+(C2), so by Rellich's theorem $\int_{|v|\le R_\eta}M\tilde f_k^2\to0$.
+Therefore $\fa[f_k]\le(1-\eta)^{-1}(1+o(1))\,s_k$, and
+\[
+  s_k\le\cJ_k^{1/2}s_k^{1/2}\bigl((1-\eta)^{-1/2}+o(1)\bigr).
+\]
+Since $\eta$ is arbitrary, $s_k\le(1+o(1))\cJ_k$.
+\end{proof}
+
+\section{The theorem}
+
+\begin{theorem}\label{thm:main}
+For every even polynomial $\sigma=\sigma(v_\perp)$,
+\[
+  \lim_{k\to\infty}k\,N_k(\sigma)=\pi\,M_1(0)\,\avg{\sigma^2}_\perp .
+\]
+\end{theorem}
+
+Throughout, $\delta=\delta(v_\perp)=(d(v_\perp)/k)^{1/3}$ and
+$u=v_x/\delta$; by (C7), $c\,k^{-1/3}m^{-1/3}\le\delta\le Ck^{-1/3}$ and
+$|\nabla_\perp\delta|\le C\delta$. Integrals over $v_x$ are rescaled to $u$,
+and limits are taken under the integral in $(u,v_\perp)$ by dominated
+convergence; the Gaussian $M_\perp$ and the decay in Lemma~\ref{lem:airy}(b)
+supply the domination.
+
+\begin{proof}[Proof of the lower bound]
+Let $\varphi_k(v)=\sigma(v_\perp)\,\delta^{-1}F(v_x/\delta)$ and apply
+Lemma~\ref{lem:two}(a).
+
+\emph{Numerator.}
+$\avg{\sigma\varphi_k}=\int M_\perp\sigma^2\int M_1(\delta u)F(u)\,\dd u\,\dd v_\perp
+\to\pi M_1(0)\avg{\sigma^2}_\perp$, and
+$\tau_k=\int M_\perp\sigma\,\delta^2\int u^2F(u)M_1(\delta u)\,\dd u\,\dd v_\perp
+=O(k^{-2/3})$, since $u^2F$ is integrable.
+
+\emph{$\cD[\varphi_k]$.} The leading part of $\fa[\varphi_k]$ is
+\begin{align*}
+  \int MS^{xx}|\partial_x\varphi_k|^2
+  &=\int M_\perp\sigma^2\delta^{-3}\int S^{xx}(\delta u,v_\perp)M_1(\delta u)
+   F'(u)^2\,\dd u\,\dd v_\perp \\
+  &=k\,M_1(0)\avg{\sigma^2}_\perp\!\int F'^2\,(1+o(1)),
+\end{align*}
+because $\delta^{-3}d=k$. The remaining terms of $\fa$ are of lower order:
+the perpendicular derivatives of $\varphi_k$ are $O(\delta^{-1})$ on a layer
+of width $\delta$ and contribute $O(k^{1/3})$; the cross terms contribute
+$O(k^{2/3})$ by the Cauchy--Schwarz inequality; the terms without
+derivatives, and those in which the derivative falls on $\sqrt M$, are
+$O(k^{1/3})$ and $O(k^{2/3})$. Likewise $\int_{|v|\le R}M\varphi_k^2=O(k^{1/3})$.
+By (C6), $\cD[\varphi_k]\le(1+\eta)\,kM_1(0)\avg{\sigma^2}_\perp\int F'^2\,(1+o(1))$.
+
+\emph{$k^2\nstar{v_x\varphi_k}^2$.} $\chi_k=v_x\varphi_k=\sigma\,uF(u)$ is odd
+in $v_x$, so $\chi_k=-M^{-1}\partial_x(MJ_k)$ with
+\[
+  J_k(v)=\frac{1}{M_1(v_x)}\int_{v_x}^\infty\chi_k\,M_1\,\dd s
+        =\sigma\,\delta\,j_\delta(u),\qquad
+  j_\delta(u)=\frac{1}{M_1(\delta u)}\int_u^\infty tF(t)M_1(\delta t)\,\dd t .
+\]
+Oddness gives the same formula with $-\int_{-\infty}^{u}$, so
+$|j_\delta(u)|\le C(1+u^2)^{-1}$ uniformly, and $j_\delta\to-W'$ by
+Lemma~\ref{lem:airy}(c). Hence, using $(S^{-1})_{xx}\to1/d$ and
+$\delta^3/d=1/k$,
+\[
+  \cJ_k=\int M_\perp\sigma^2\delta^3\!\int M_1(\delta u)(S^{-1})_{xx}\,
+  j_\delta(u)^2\,\dd u\,\dd v_\perp
+  =\frac1k\,M_1(0)\avg{\sigma^2}_\perp\!\int W'^2\,(1+o(1)).
+\]
+(The factor $m^3$ in the bound for $(S^{-1})_{xx}$ is harmless: for
+$|v_x|\le1$ it is bounded by a polynomial in $v_\perp$, and for $|v_x|>1$ the
+contribution is $O(\delta^6)$.) The hypotheses of Lemma~\ref{lem:flux} hold:
+$\int M|J_k|=O(\delta^2)=o(k^{-1/2})$, and
+$\int MJ_k^2v_x^2m=O(\delta^5)=o(k^{-1})$. So
+$k^2\nstar{v_x\varphi_k}^2\le kM_1(0)\avg{\sigma^2}_\perp\int W'^2\,(1+o(1))$.
+
+\emph{Conclusion.} By Lemma~\ref{lem:airy}(d),
+$\cQ_k[\varphi_k]\le(1+\eta)\,\pi M_1(0)\avg{\sigma^2}_\perp k\,(1+o(1))$, so
+$\liminf kN_k(\sigma)\ge\pi M_1(0)\avg{\sigma^2}_\perp/(1+\eta)$ for every
+$\eta>0$.
+\end{proof}
+
+\begin{proof}[Proof of the upper bound]
+Let
+$\psi_k=-\sigma\,(k\delta)^{-1}W(v_x/\delta)+k^{-1}(\alpha_kv_x+\beta_kv_x|v|^2)$
+and $\chi_k=\sigma-kv_x\psi_k$. By Lemma~\ref{lem:airy}(a),
+$\sigma(1+uW)=-\sigma F''(u)$, so
+\[
+  \chi_k=-\sigma\,F''(v_x/\delta)-\alpha_kv_x^2-\beta_kv_x^2|v|^2 .
+\]
+Two integrations by parts in $v_x$ give
+$\int F''(v_x/\delta)M_1\,\dd v_x=\delta^2\!\int F(v_x/\delta)M_1''\,\dd v_x
+=O(\delta^3)$, so the moments of $-\sigma F''$ against $1$ and $|v|^2$ are
+$O(k^{-1})$, and $\alpha_k,\beta_k=O(k^{-1})$ can be chosen to make $\chi_k$
+orthogonal to $1$ and $|v|^2$. Apply Lemma~\ref{lem:two}(b).
+
+\emph{$\cD[\psi_k]$.} The leading part of $\fa[\psi_k]$ is
+\begin{align*}
+  \int MS^{xx}|\partial_x\psi_k|^2
+  &=\frac{1}{k^2}\int M_\perp\sigma^2\delta^{-3}\!\int S^{xx}M_1(\delta u)
+   W'(u)^2\,\dd u\,\dd v_\perp \\
+  &=\frac1k\,M_1(0)\avg{\sigma^2}_\perp\!\int W'^2\,(1+o(1)).
+\end{align*}
+$W'^2$ is integrable. The slowly decaying tail $W\sim-1/u$ means
+$\psi_k\approx\sigma/(kv_x)$ away from the layer; there every term of
+$\fa[\psi_k]$ is $O(k^{-2})$. In the layer the remaining terms are
+$O(k^{-2}\delta^{-1})=O(k^{-5/3})$, as is $\int_{|v|\le R}M\psi_k^2$, since
+$W^2$ is integrable. The corrections with $\alpha_k,\beta_k$ contribute
+$O(k^{-4})$. So $\cD[\psi_k]\le(1+\eta)\,k^{-1}M_1(0)\avg{\sigma^2}_\perp
+\int W'^2\,(1+o(1))$.
+
+\emph{$\nstar{\chi_k}$.} Let
+$\mu_k(v_\perp)=-\sigma\int F''(s/\delta)M_1(s)\,\dd s=O(\delta^3)$ and
+split $\chi_k=\chi_k^0+r_k$, where $\chi_k^0=-\sigma F''(v_x/\delta)-\mu_k$
+has zero $M_1$-mean in $v_x$ for every $v_\perp$, and
+$r_k=\mu_k-\alpha_kv_x^2-\beta_kv_x^2|v|^2$. Then
+$\nstar{r_k}\le C\avg{m\,r_k^2}^{1/2}=O(k^{-1})$. For $\chi_k^0$,
+\[
+  J_k^0(v)=\frac{1}{M_1(v_x)}\int_{v_x}^\infty\chi_k^0M_1\,\dd s
+  =\sigma\,\delta\,F'(u)\,(1+o(1))+O(\delta^3),
+\]
+bounded by $C\sigma\delta(1+|u|)^{-5}+C\delta^3$ using the zero mean on
+either side. Hence
+$\cJ_k^0=k^{-1}M_1(0)\avg{\sigma^2}_\perp\int F'^2\,(1+o(1))$, the hypotheses
+of Lemma~\ref{lem:flux} hold as before, and
+\[
+  \nstar{\chi_k}^2\le\bigl(\nstar{\chi_k^0}+\nstar{r_k}\bigr)^2
+  \le\frac1k\,M_1(0)\avg{\sigma^2}_\perp\!\int F'^2\,(1+o(1)).
+\]
+
+\emph{Conclusion.} By Lemma~\ref{lem:airy}(d),
+$\limsup kN_k(\sigma)\le(1+\eta)\,\pi M_1(0)\avg{\sigma^2}_\perp$ for every
+$\eta>0$.
+\end{proof}
+
+\section{Consequences}
+
+\begin{corollary}\label{cor:theta}
+For the linearized Landau--Coulomb operator, as $k\to\infty$,
+\[
+  k\,n_1\to\sqrt{\pi/2},\qquad
+  k\,T_{\perp1}\to0,\qquad
+  -k\,T_1\to\tfrac13\sqrt{\pi/2},\qquad
+  \theta(k)\to3\sqrt{2/\pi}.
+\]
+In particular $\chi(k)>0$ for all sufficiently large $k$, and
+$\chi(k)\sim3\sqrt{2/\pi}\,/k$.
+\end{corollary}
+
+\begin{proof}
+$n_1=N_k(1)$ and $\pi M_1(0)=\sqrt{\pi/2}$. Let $\varphi_k$ be the trial
+function of the lower bound with $\sigma=1$,
+$\varphi_k'=\varphi_k-\tau_k$, and $t_k=\avg{\varphi_k'}/\cQ_k[\varphi_k']$.
+The two bounds of Theorem~\ref{thm:main} force
+$\cQ_k[\varphi_k']/k\to\pi M_1(0)$, so $kt_k\to1$, and by the gap identity,
+\[
+  \cQ_k[g_e-t_k\varphi_k']
+  =n_1-\frac{\avg{\varphi_k'}^2}{\cQ_k[\varphi_k']}=o(k^{-1}).
+\]
+By Lemma~\ref{lem:two}(c) and Theorem~\ref{thm:main} for
+$\sigma=v_\perp^2$,
+$|\avg{v_\perp^2(g_e-t_k\varphi_k')}|\le
+\bigl(N_k(v_\perp^2)\,\cQ_k[g_e-t_k\varphi_k']\bigr)^{1/2}=o(k^{-1})$.
+Also $\avg{v_\perp^2\varphi_k'}\to\pi M_1(0)\avg{v_\perp^2}_\perp
+=2\sqrt{\pi/2}$. Hence $kX=k\avg{v_\perp^2g_e}\to2\sqrt{\pi/2}$. Since
+$X=2(n_1+T_{\perp1})$ and $-T_1=n_1-\tfrac13X$, the remaining limits follow,
+and $\theta=-1/(kT_1)$.
+\end{proof}
+
+\begin{remark}[Universality]
+The proof uses only (C2), (C3), (C6), (C7): coercivity, a local diffusion
+form plus a relatively compact remainder, and a continuous positive
+diffusion coefficient at $v_x=0$. The limit depends on none of the
+constants. For the Dougherty operator $S=\nu I$ and the theorem recovers the
+value obtained from the closed form.
+\end{remark}
+
+\begin{remark}[What this does and does not give]
+The convergence has no rate, so there is no explicit $k_1$ beyond which
+positivity holds. Together with the earlier result, positivity is proved for
+$k\lambda<0.89$ and for $k\lambda>k_1$ with $k_1$ unknown; the intermediate
+range is covered only numerically. A rate would follow from quantitative
+versions of the dominated-convergence steps and of the compactness step in
+Lemma~\ref{lem:flux}, which is the one non-constructive point.
+\end{remark}
+
+\section{Checks}
+
+\begin{itemize}
+  \item Lemma~\ref{lem:airy} was verified numerically: the residual of the
+    differential equation is below $10^{-4}$, $\int F=3.14160$,
+    $\int F'^2+\int W'^2=3.1415927$, $u^4F\to-2.0000$, $uW\to-1.0000$.
+  \item The limit agrees with the Dougherty closed form, where
+    $\theta_3\to3\sqrt{2/\pi}=2.3937$ and the computed values are $2.3825$
+    and $2.3899$ at $\nu/k=0.003$ and $0.001$.
+  \item The Landau limit itself is not checked numerically: the polynomial
+    Galerkin method does not reach large $k$. At $k\lambda=5$ it gives
+    $-T_1/n_1=0.396$, against the limiting value $\tfrac13$, and
+    $T_{\perp1}/n_1=-0.094$, against $0$.
+\end{itemize}
+
+\begin{thebibliography}{9}
+\bibitem{StrainGuo} R.~M. Strain, Y.~Guo, \emph{Exponential decay for soft
+potentials near Maxwellian}, Arch.\ Ration.\ Mech.\ Anal.\ \textbf{187}
+(2008) 287--339 (Lemmas 4 and 7 read).
+\bibitem{KGH} J.~Kim, Y.~Guo, H.~J. Hwang, \emph{A $L^2$ to $L^\infty$
+approach for the Landau equation}, arXiv:1610.05346 (Lemmas 2.3, 2.5, 2.6
+read; these restate lemmas of Guo, Comm.\ Math.\ Phys.\ 231 (2002), which was
+not consulted directly).
+\end{thebibliography}
+
+\end{document}

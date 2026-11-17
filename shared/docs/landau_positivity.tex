@@ -228,9 +228,12 @@ Here $N_\vartheta=\avg{\vartheta,(ikv_x+\Lambda)^{-1}\vartheta}$.
     past zero. This is proved above for BGK and Dougherty. I do not have an
     argument for a general operator, and I do not know whether it is true
     for every conserving, isotropic, non-negative operator.
-  \item \textbf{Large wavenumber.} Any proof at all $k$ also needs the
-    collisionless regime, where neither the theory in these notes nor the
-    polynomial computation applies to the Landau operator.
+  \item \textbf{Large wavenumber.} The collisionless limit is now proved
+    in \texttt{landau\_collisionless\_limit.tex}:
+    $T_{\perp1}/n_1\to0$ and $\chi>0$ for all sufficiently large $k$, without
+    a rate. So positivity holds for $k\lambda<0.89$ and for $k\lambda>k_1$
+    with $k_1$ not explicit; the range in between is covered only
+    numerically.
 \end{enumerate}
 
 \section{Status}
