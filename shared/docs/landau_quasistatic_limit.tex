@@ -1,0 +1,330 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cQ}{\mathcal{Q}}
+\newcommand{\avg}[1]{\langle #1\rangle}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The quasi-static limit for the linearized Landau--Coulomb operator}
+\author{Working note}
+\date{17 November 2026}
+
+\begin{document}
+\sloppy
+\maketitle
+
+\noindent\emph{Summary.} The earlier notes defined the linear heat-flux
+closure as the slow-forcing limit of the potential-driven response, and for
+the Landau operator assumed that this limit is given by the stationary
+kinetic solution. This note proves it.
+\begin{itemize}
+  \item \textbf{Theorem~\ref{thm:res}}: for every complex frequency $\omega$
+    with $\Im\omega\ge0$ in a sector, the resolvent problem
+    $(-i\omega+ikv_x+\Lambda)g=1$ has a unique solution with all polynomial
+    moments, bounded uniformly in $\omega$.
+  \item \textbf{Corollary~\ref{cor:stat}}: at $\omega=0$ this is the
+    variational stationary solution of \texttt{landau\_solvability.tex},
+    which is therefore unique in a natural class and has all moments.
+  \item \textbf{Theorem~\ref{thm:limit}}: as $\omega\to0$ within the sector,
+    every polynomial moment of the solution converges to that of the
+    stationary solution. Hence $\hat q/\hat T\to q_1/T_1$.
+  \item \textbf{Proposition~\ref{prop:time}}: the Laplace transform of any
+    weak solution of the time-dependent problem in a weighted energy class
+    is given by this resolvent solution.
+\end{itemize}
+The proofs use the published estimates (C1)--(C5) listed in
+\texttt{landau\_solvability.tex}, with the same caveat about sources.
+\textbf{Not written out:} existence of the time-dependent weak solution in
+the class of Proposition~\ref{prop:time}; it follows by the same
+regularization, and is standard in the weighted framework of the cited
+papers, but is not proved here. No second reader has checked the proofs.
+
+\section{Setting}
+
+Notation and the estimates (C1)--(C5) are those of
+\texttt{landau\_solvability.tex}, except that the velocity weight is written
+$m(v)=(1+|v|^2)^{1/2}$, to free the letter $w$. Functions are complex valued
+and axisymmetric about the $x$ axis; $\cD$ is extended sesquilinearly, so
+$\cD[g]=\cD[\Re g]+\cD[\Im g]$. The spaces $\cH_\theta$ and
+$\cH_\infty=\bigcap_\theta\cH_\theta$ are as before. Recall:
+\begin{itemize}
+  \item $\cD[g]\ge\delta\|g-\Pi g\|^2_\sigma$ and
+    $\avg{m^{2\theta-1}|g|^2}\le C_\theta\|g\|^2_{\sigma,\theta}$;
+  \item $\Re\cD(g,m^{2\theta}g)\ge\tfrac12\|g\|^2_{\sigma,\theta}
+    -C_\theta\int M\rho\,|g|^2$ with $\rho$ a fixed Gaussian;
+  \item $|\cD(g_1,m^{2\theta}g_2)|\le C_\theta\|g_1\|_{\sigma,\theta}\|g_2\|_{\sigma,\theta}$.
+\end{itemize}
+Fix $k\ne0$ and a constant $\Gamma\ge1$, and let
+\[
+  S_\Gamma=\{\omega\in\mathbb{C}:\ \Im\omega\ge0,\ |\omega|\le1,\
+  |\omega|^2\le\Gamma\,\Im\omega\}.
+\]
+This contains $0$, the segment $\omega=i\varepsilon$, and every non-tangential
+approach to $0$ from the upper half-plane.
+
+\paragraph{Weak solutions.} $g\in\cH_1$ is a weak solution of
+\begin{equation}
+  (-i\omega+ikv_x+\Lambda)\,g=1
+  \label{eq:res}
+\end{equation}
+if $-i\omega\avg{g\bar\varphi}+ik\avg{v_xg\bar\varphi}+\cD(g,\varphi)
+=\avg{\bar\varphi}$ for all $\varphi\in\cH_\infty$. All terms are finite: for
+$g\in\cH_1$, $\avg{m|g|^2}<\infty$.
+
+\section{The resolvent problem}
+
+\begin{theorem}\label{thm:res}
+For every $\omega\in S_\Gamma$ there is a unique weak solution
+$g_\omega\in\cH_1$ of \eqref{eq:res}. It lies in $\cH_\infty$, and for every
+$\theta\ge0$
+\begin{equation}
+  \|g_\omega\|_{\sigma,\theta}+(\Im\omega)^{1/2}\avg{m^{2\theta}|g_\omega|^2}^{1/2}
+  \le C_\theta ,
+  \label{eq:unif}
+\end{equation}
+with $C_\theta$ depending on $k$, $\Gamma$ and $\theta$ but not on $\omega$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: uniqueness.} Let $d\in\cH_1$ solve the homogeneous equation.
+The weak formulation extends by density and continuity to test functions in
+$\cH_1$, so $\varphi=d$ is admissible. The real part gives
+$\Im\omega\avg{|d|^2}+\cD[d]=0$, since $ik\avg{v_x|d|^2}$ is imaginary and
+finite. So $d\in H$, and then $(-i\omega+ikv_x)d=0$ forces $d=0$.
+
+\emph{Step 2: a regularized problem.} For $\eta\in(0,1]$ consider
+\begin{equation}
+  (-i\omega+\eta\,m^2+ikv_x+\Lambda)\,g=1 .
+  \label{eq:reg}
+\end{equation}
+Let $V_\theta=\{g:\|g\|^2_{\sigma,\theta}+\avg{m^{2\theta+2}|g|^2}<\infty\}$
+and, on $V=V_0$,
+\[
+  a(g,\varphi)=-i\omega\avg{g\bar\varphi}+\eta\avg{m^2g\bar\varphi}
+  +ik\avg{v_xg\bar\varphi}+\cD(g,\varphi).
+\]
+$a$ is bounded on $V$ because $|v_x|\le m$. It is coercive:
+$\Re a(g,g)=\Im\omega\avg{|g|^2}+\eta\avg{m^2|g|^2}+\cD[g]$, and
+$\|g\|^2_\sigma\le2\|g-\Pi g\|^2_\sigma+C\avg{|g|^2}$. The Lax--Milgram theorem
+gives a unique $g=g_{\omega,\eta}\in V$ with $a(g,\varphi)=\avg{\bar\varphi}$
+on $V$.
+
+\emph{Step 3: $g_{\omega,\eta}\in V_\theta$ for every $\theta\ge0$.} On
+$V_\theta$ let
+$b(g',\varphi)=a(g',m^{2\theta}\varphi)+C_\theta\int M\rho\,g'\bar\varphi$ and
+$\ell(\varphi)=\avg{m^{2\theta}\bar\varphi}+C_\theta\int M\rho\,g\,\bar\varphi$.
+$b$ is bounded on $V_\theta$, using
+$|\avg{v_xm^{2\theta}g'\bar\varphi}|\le\avg{m^{2\theta+1}|g'|^2}^{1/2}
+\avg{m^{2\theta+1}|\varphi|^2}^{1/2}$ and (C5). It is coercive, because the
+streaming term is imaginary on the diagonal and by (C4):
+$\Re b(g',g')\ge\Im\omega\avg{m^{2\theta}|g'|^2}+\eta\avg{m^{2\theta+2}|g'|^2}
++\tfrac12\|g'\|^2_{\sigma,\theta}$. So there is $g'\in V_\theta$ with
+$b(g',\varphi)=\ell(\varphi)$. Put $d=g'-g\in V$ and take
+$\varphi=m^{-2\theta}d\in V_\theta$:
+$a(g',d)+C_\theta\int M\rho\,m^{-2\theta}g'\bar d
+=\avg{\bar d}+C_\theta\int M\rho\,m^{-2\theta}g\,\bar d$, while
+$a(g,d)=\avg{\bar d}$. Subtracting and taking the real part,
+$\eta\avg{m^2|d|^2}\le0$, so $g=g'\in V_\theta$.
+
+\emph{Step 4: energy bound, uniform in $\eta$ and $\omega$.} Testing
+\eqref{eq:reg} with $g$ and taking the real part,
+\begin{equation}
+  \Im\omega\avg{|g|^2}+\eta\avg{m^2|g|^2}+\cD[g]=\Re\avg{g}=:n .
+  \label{eq:en}
+\end{equation}
+Let $\Xi$, $\kappa_{\mathrm F}$, $\chi_*$, $G$, $C_*$ and
+$\psi_*=(v_x-\Xi/\kappa_{\mathrm F})/k$ be as in the earlier notes; all are
+real and in $\cH_\infty$, $1-kv_x\psi_*=\chi_*$,
+$\cD[\psi_*]=1/(k^2\kappa_{\mathrm F})$, and $\avg{\psi_*}=0$. Then
+\[
+  \avg{g}=\avg{g\chi_*}+k\avg{v_xg\,\psi_*},\qquad
+  |\avg{g\chi_*}|=|\cD(g,G)|\le C_*^{1/2}\cD[g]^{1/2}.
+\]
+Testing \eqref{eq:reg} with $\psi_*$:
+$ik\avg{v_xg\psi_*}=i\omega\avg{g\psi_*}-\eta\avg{m^2g\psi_*}-\cD(g,\psi_*)$,
+so
+\[
+  |k\avg{v_xg\psi_*}|\le|\omega|\avg{|g|^2}^{1/2}\avg{\psi_*^2}^{1/2}
+  +\eta\avg{m^2|g|^2}^{1/2}\avg{m^2\psi_*^2}^{1/2}
+  +\cD[g]^{1/2}(k^2\kappa_{\mathrm F})^{-1/2}.
+\]
+By \eqref{eq:en}, $\avg{|g|^2}\le n/\Im\omega$,
+$\eta\avg{m^2|g|^2}\le n$ and $\cD[g]\le n$. Since
+$|\omega|^2\le\Gamma\Im\omega$ and $\eta\le1$,
+\[
+  n\le|\avg{g}|\le n^{1/2}\Bigl(C_*^{1/2}+(k^2\kappa_{\mathrm F})^{-1/2}
+  +\Gamma^{1/2}\avg{\psi_*^2}^{1/2}+\avg{m^2\psi_*^2}^{1/2}\Bigr)
+  =:n^{1/2}N_0 .
+\]
+Hence $n\le N_0^2$ and $|\avg{g}|\le N_0^2$. (For $\omega=0$ the term with
+$\avg{|g|^2}$ is absent.)
+
+\emph{Step 5: the component in $H$.} Within the axisymmetric class,
+$\Pi g=a+b|v|^2+\beta v_x$. Testing \eqref{eq:reg} with $1$ and with $v_x$,
+\[
+  ik\avg{v_xg}=1+i\omega\avg{g}-\eta\avg{m^2g},\qquad
+  ik\avg{v_x^2g}=i\omega\avg{v_xg}-\eta\avg{m^2v_xg}.
+\]
+By Step 4, $|\eta\avg{m^2g}|\le\eta\avg{m^2|g|^2}^{1/2}\avg{m^2}^{1/2}\le CN_0$
+and similarly for the other term, so $\avg{g}$, $\avg{v_xg}$, $\avg{v_x^2g}$
+are bounded. These three numbers, together with $g-\Pi g$, determine
+$(a,b,\beta)$ continuously, because $\avg{v_x^2(g-\Pi g)}$ is bounded by
+$C\|g-\Pi g\|_\sigma$. Hence $\|g\|_\sigma\le C$ and
+$\int M\rho|g|^2\le C$, uniformly.
+
+\emph{Step 6: weighted bound.} By Step 3 the test function $m^{2\theta}g$ is
+admissible in \eqref{eq:reg}. The real part, with (C4), gives
+\[
+  \Im\omega\avg{m^{2\theta}|g|^2}+\eta\avg{m^{2\theta+2}|g|^2}
+  +\tfrac12\|g\|^2_{\sigma,\theta}
+  \le C_\theta\int M\rho|g|^2+|\avg{m^{2\theta}g}|,
+\]
+and $|\avg{m^{2\theta}g}|\le\avg{m^{2\theta+1}}^{1/2}\avg{m^{2\theta-1}|g|^2}^{1/2}
+\le C\|g\|_{\sigma,\theta}$. With Step 5 this is \eqref{eq:unif} for
+$g_{\omega,\eta}$, uniformly in $\eta$.
+
+\emph{Step 7: $\eta\to0$.} By \eqref{eq:unif} a subsequence converges weakly
+in every $\cH_\theta$ to some $g_\omega\in\cH_\infty$ satisfying the same
+bound. For $\varphi\in\cH_\infty$ each term of the weak form passes to the
+limit: $g\mapsto\avg{v_xg\bar\varphi}$ and $g\mapsto\avg{g\bar\varphi}$ are
+continuous on $\cH$ because $m^{1/2}v_x\varphi\in L^2(M)$; $\cD(\cdot,\varphi)$
+is continuous on $\cH$; and
+$\eta|\avg{m^2g\bar\varphi}|\le\eta\,C\to0$. So $g_\omega$ is a weak solution
+of \eqref{eq:res}, unique by Step 1.
+\end{proof}
+
+\begin{corollary}\label{cor:stat}
+Write $g_0=g_e+iw$ for the solution at $\omega=0$. Then $g_e$ is real and
+even in $v_x$, $w$ is real and odd, and $g_e$ is the variational solution of
+\texttt{landau\_solvability.tex}. Consequently that solution lies in
+$\cH_\infty$, and the stationary problem has exactly one weak solution in
+$\cH_1$.
+\end{corollary}
+
+\begin{proof}
+The map $g(v)\mapsto\overline{g(-v_x,v_\perp)}$ sends weak solutions at
+$\omega=0$ to weak solutions, so by uniqueness $g_0$ has the stated parity.
+Testing with $v_x$ gives $\avg{v_x^2g_e}=0$, so $g_e\in X^\infty$; the
+imaginary part of the equation says $f_{g_e}=-w/k$ up to a multiple of
+$v_x$. For $\varphi\in X^\infty$ the real part gives
+$\cQ(g_e,\varphi)=\cD(g_e,\varphi)-k\avg{v_xw\varphi}=\avg{\varphi}$. Since
+$X^\infty$ is dense in $\bar X$, $g_e$ is the unique solution of the
+variational problem.
+\end{proof}
+
+\section{The limit}
+
+\begin{theorem}\label{thm:limit}
+As $\omega\to0$ in $S_\Gamma$, $g_\omega\to g_0$ weakly in $\cH_\theta$ for
+every $\theta$, and $\avg{p\,g_\omega}\to\avg{p\,g_0}$ for every polynomial
+$p$. In particular, with $Q=\tfrac12v_x(|v|^2-5)$ and
+$\zeta=\tfrac13(|v|^2-3)$,
+\[
+  \avg{Q\,g_\omega}\to q_1=\frac{i}{k},\qquad
+  \avg{\zeta\,g_\omega}\to T_1 ,
+\]
+and whenever $T_1\ne0$, which holds for
+$\kappa_{\mathrm F}X_{\max}k^2<3$,
+\[
+  \frac{\hat q(k,\omega)}{\hat T(k,\omega)}
+  =\frac{\avg{Qg_\omega}}{\avg{\zeta g_\omega}}\;\longrightarrow\;
+  \frac{q_1}{T_1}=-\,i\,\operatorname{sgn}(k)\,\theta(k).
+\]
+\end{theorem}
+
+\begin{proof}
+Let $\omega_j\to0$ in $S_\Gamma$. By \eqref{eq:unif} a subsequence of
+$g_{\omega_j}$ converges weakly in every $\cH_\theta$ to some
+$g_*\in\cH_\infty$. In the weak form, $|\omega_j\avg{g_{\omega_j}\bar\varphi}|
+\le|\omega_j|(\Im\omega_j)^{-1/2}C\avg{|\varphi|^2}^{1/2}
+\le\Gamma^{1/4}|\omega_j|^{1/2}C\to0$, using \eqref{eq:unif} and
+$|\omega|\le(\Gamma\Im\omega)^{1/2}$; the other terms converge as in Step 7.
+So $g_*$ is a weak solution at $\omega=0$, hence $g_*=g_0$ by
+Theorem~\ref{thm:res}. The limit being independent of the subsequence, the
+whole family converges. Polynomials define continuous functionals on $\cH$,
+since $|\avg{pg}|\le\avg{m\,p^2}^{1/2}\avg{m^{-1}|g|^2}^{1/2}$. The values of
+$q_1$ and $T_1$, and the sign of $T_1$ for small $k$, are from
+\texttt{landau\_3d\_closure.tex}. The identity
+$\hat q/\hat T=\avg{Qg_\omega}/\avg{\zeta g_\omega}$ is
+Proposition~\ref{prop:time}.
+\end{proof}
+
+\section{Link to the time-dependent problem}
+
+\begin{proposition}\label{prop:time}
+Let $a\in L^\infty(0,\infty)$ and let $h(t,v)$ be the amplitude of the
+Fourier mode $k$ of a solution of
+$\partial_th+ikv_xh+\Lambda h=a(t)\,v_x$, $h(0)=0$, in the following weak
+sense: $h\in L^\infty_{\mathrm{loc}}([0,\infty);L^2(m\,M))\cap
+L^2_{\mathrm{loc}}([0,\infty);\cH_1)$, with at most polynomial growth in $t$
+of these norms, and the equation holds when tested against
+$\cH_\infty$-valued smooth functions of $t$. Then for $\Im\omega>0$ the
+Laplace transform $\hat h(\omega)=\int_0^\infty e^{i\omega t}h(t)\,\dd t$ is
+\[
+  \hat h(\omega)=\frac{\hat a(\omega)}{ik}
+  +\frac{\omega\,\hat a(\omega)}{k}\,g_\omega ,
+\]
+and therefore $\hat T=(\omega\hat a/k)\avg{\zeta g_\omega}$,
+$\hat q=(\omega\hat a/k)\avg{Qg_\omega}$.
+\end{proposition}
+
+\begin{proof}
+By the growth assumption $\hat h(\omega)\in\cH_1$ for $\Im\omega>0$, and
+integrating the weak form against $e^{i\omega t}$ shows that it is a weak
+solution of $(-i\omega+ikv_x+\Lambda)\hat h=\hat a\,v_x$. Since
+$(ikv_x+\Lambda)1=ikv_x$, the function
+$r=\hat h-\hat a/(ik)$ is a weak solution in $\cH_1$ of
+$(-i\omega+ikv_x+\Lambda)r=(\omega\hat a/k)\cdot1$. Uniqueness (Step 1 of
+Theorem~\ref{thm:res}, which holds for every $\Im\omega\ge0$) gives
+$r=(\omega\hat a/k)g_\omega$; for $\omega$ outside $S_\Gamma$, $g_\omega$ is
+defined by the same construction with constants depending on $\omega$.
+Constants have $T=q=0$.
+\end{proof}
+
+\begin{remark}[What is not written out]
+Existence of a time-dependent solution in the class of
+Proposition~\ref{prop:time} is obtained by the method of
+Theorem~\ref{thm:res}: add $\eta m^2$, solve by Galerkin or semigroup
+methods, derive the energy and weighted bounds, which are the time-dependent
+versions of Steps 4 and 6, and let $\eta\to0$. Weighted energy estimates of
+exactly this type are the basis of the nonlinear theory in the cited papers.
+I have not written this argument out, so the statement ``the quasi-static
+limit of the time-dependent problem equals the stationary solution'' is
+proved here for every weak solution in the stated class, with existence of
+such a solution taken from that standard method.
+\end{remark}
+
+\section{Summary of status for the Landau operator}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{8.2cm}p{6.2cm}}
+  Statement & Status \\ \hline
+  Chapman--Enskog problems solvable, constants finite & proved \\
+  Stationary solution exists, unique in $\cH_1$, all moments & proved \\
+  Two-sided bound on $\chi(k)$ at small $k$; exact $k^2$ coefficient & proved \\
+  Resolvent solution exists, uniform bounds in a sector & proved \\
+  Slow-forcing limit of the resolvent equals the stationary solution & proved \\
+  Laplace transform of a weak time-dependent solution is the resolvent solution & proved \\
+  Existence of the weak time-dependent solution in the weighted class & standard method, not written out \\
+  Positivity and $\chi<\kappa_{\mathrm F}$ at all $k$; collisionless limit & open \\
+  Tangential approach $\omega\to0$ along the real axis & not covered \\
+\end{tabular}
+\end{center}
+All ``proved'' entries rest on the cited coercivity estimates, one of which
+was used through a later restatement.
+
+\end{document}

@@ -25,6 +25,7 @@ for a general conserving collision operator, with numbers for Landau}
 \date{16 November 2026}
 
 \begin{document}
+\sloppy
 \maketitle
 
 \noindent\emph{Summary.} The previous notes left the Landau operator open
@@ -51,10 +52,10 @@ the argument goes.
     closed form.
 \end{itemize}
 \textbf{Not proved for Landau:} positivity at all $k$, the inequality
-$\chi<\kappa_{\mathrm F}$, the collisionless limit, and the half of
-Assumption~(S) that identifies the quasi-static limit with the stationary
-solution. Assumption (R) and existence of the stationary solution are proved
-in \texttt{landau\_solvability.tex}. The Landau numbers are numerical, not certified. Electron--ion
+$\chi<\kappa_{\mathrm F}$, and the collisionless limit. Assumptions (R) and (S) are proved in
+\texttt{landau\_solvability.tex} and
+\texttt{landau\_quasistatic\_limit.tex}, from published coercivity
+estimates. The Landau numbers are numerical, not certified. Electron--ion
 collisions are not included. No second reader has checked the proofs.
 
 \section{Setting}
@@ -91,8 +92,8 @@ $T_1=\tfrac13\avg{(|v|^2-3)g}$.
 (S) was proved for the BGK and Dougherty operators. For the Landau operator
 with Coulomb interaction the linearized operator has no spectral gap.
 Existence of a stationary solution for which all the conclusions below hold
-is proved in \texttt{landau\_solvability.tex}; the identification of the
-quasi-static limit with it remains open.
+is proved in \texttt{landau\_solvability.tex}, and the identification of
+the quasi-static limit with it in \texttt{landau\_quasistatic\_limit.tex}.
 
 \paragraph{Chapman--Enskog quantities.} Let $\Xi$ solve $\Lambda\Xi=Q$ with
 $\avg{v_x\Xi}=0$. Define
@@ -429,11 +430,10 @@ $k\lambda\ge0.5$ and the unproved limit, treat this as indicative.
 
 \begin{enumerate}
   \item \textbf{Assumption (S) for Landau.} Existence of the stationary
-    solution is proved in the note \texttt{landau\_solvability.tex}. That
-    the
-    quasi-static limit of the time-dependent problem equals it is still
-    assumed: the Coulomb operator has no spectral gap, so the Fredholm
-    argument of the earlier notes does not apply.
+    solution is proved in the note \texttt{landau\_solvability.tex}, and
+    the quasi-static limit in \texttt{landau\_quasistatic\_limit.tex}.
+    Existence of the time-dependent weak solution in the weighted class used
+    there is taken from a standard method and is not written out.
   \item \textbf{All wavenumbers.} Positivity of $\chi$, and
     $\chi<\kappa_{\mathrm F}$, are proved only in the Dougherty case in
     three dimensions. For a general operator the theorem covers

@@ -22,6 +22,7 @@ problem for the linearized Landau--Coulomb operator}
 \date{16 November 2026}
 
 \begin{document}
+\sloppy
 \maketitle
 
 \noindent\emph{Summary.} The note \texttt{landau\_3d\_closure.tex} proved its
@@ -43,8 +44,8 @@ quasi-static limit. This note proves (R), and the existence half of (S).
 \end{itemize}
 The proofs rest on published estimates for the Landau operator, listed in
 Section~\ref{sec:cited} with what was and was not read. They do not reprove
-those estimates. \textbf{Still open:} that the quasi-static limit of the
-time-dependent problem is given by this stationary solution. No second
+those estimates. That the quasi-static limit of the time-dependent problem is given by this
+stationary solution is proved in \texttt{landau\_quasistatic\_limit.tex}. No second
 reader has checked the proofs.
 
 \section{Setting and the cited estimates}
@@ -317,11 +318,12 @@ kinetic solution would settle it; they are not proved here.
 \section{What remains open}
 
 \begin{enumerate}
-  \item \textbf{The quasi-static limit.} That the $\omega\to0$ limit of the
-    potential-driven response of the time-dependent equation equals the
-    moments of this stationary solution. For operators with a spectral gap
-    this followed from continuity of the resolvent; here it would need a
-    limiting-absorption argument.
+  \item \textbf{The quasi-static limit} is now proved in
+    \texttt{landau\_quasistatic\_limit.tex}, which also shows that the
+    stationary solution has all moments and is unique among weak solutions
+    in $\cH_1$. Existence of the time-dependent weak solution in the
+    weighted class is taken there from a standard method and is not written
+    out.
   \item \textbf{Dependence on unread sources.} (C1)--(C4) are quoted from a
     paper that restates Guo's lemmas; the original was not consulted.
   \item \textbf{Scope.} Like-particle collisions only; the results on
