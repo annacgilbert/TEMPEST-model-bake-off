@@ -6,14 +6,15 @@ Builds the linearized like-particle Landau matrix for each truncation degree (ca
 .npy files in ./cache, which is not tracked by git), validates it, and prints
   1. the Dougherty check of the same machinery (expected kF = 5/6, eta = 1/2, Kexact = 2/15);
   2. the Landau Chapman-Enskog constants per degree (Braginskii: kappa = 3.906, eta0 = 0.96);
-  3. the quasi-static closure chi/kappa_F versus k*lambda with the proved bounds.
+  3. the quasi-static closure chi/kappa_F versus k*lambda with the proved bounds;
+  4. the two-sided estimates of the leading-coefficient theorem.
 Units: n = m = v_t = 1 with v_t = sqrt(T/m); Braginskii like-particle collision time tau = 1.
 Deterministic: no random numbers are used."""
 import os, sys, time
 import numpy as np
 from scipy.integrate import quad
 from landau3d import landau_matrix
-from closure3d import constants, theta, dougherty
+from closure3d import constants, theta, dougherty, second_order
 
 HERE = os.path.dirname(os.path.abspath(__file__)); CACHE = os.path.join(HERE, "cache")
 
@@ -58,6 +59,17 @@ def main(dmax):
         lo = 1 / (1 + kF * (Cs + Xm / 3) * k * k); up = 1 / (1 - kF * Xm * k * k / 3) if kF * Xm * k * k / 3 < 1 else np.inf
         n1ok = 1 / (k * k * kF) - 1e-9 <= r[-1][1] <= 1 / (k * k * kF) + Cs + 1e-9
         print(f"   {k:5.3f}   " + "  ".join(f"{t[0]/k/kF:.5f}" for t in r) + f"      {1-Kex*k*k:8.5f}   {lo:.5f}   {up:.5f}   {lo <= x <= up and n1ok and abs(r[-1][4]) <= Xm}")
+
+    print("\n4. Leading-coefficient theorem: C* - B k^2 <= n1 - 1/(k^2 kF) <= C*  and  |X - t eps X0| <= sqrt(12 eta B) k")
+    for name, dd, L in (("Dougherty", min(14, degs[-1]), None), ("Landau", degs[-1], Ls[degs[-1]])):
+        L = dougherty(dd) if L is None else L; o = second_order(L, dd)
+        print(f"   {name} d={dd}: C*={o['Cs']:.4f} X0={o['X0']:.4f} B={o['B']:.4f} Kexact={o['kF']*(o['Cs']-o['X0']/3):.5f}")
+        for k in (0.003, 0.01, 0.03, 0.1):
+            t = theta(L, dd, k); eps = k * k * o["kF"]; dn = t[1] - 1 / eps
+            te = 1 / (1 - eps * o["Cs"] + eps * k * k * o["B"])
+            ok1 = o["Cs"] - o["B"] * k * k - 1e-4 <= dn <= o["Cs"] + 1e-4      # 1e-4: rounding in n1 - 1/eps
+            ok2 = abs(t[4] - te * o["X0"]) <= np.sqrt(12 * o["eta"] * o["B"]) * k
+            print(f"      k={k:5.3f}  n1-1/eps={dn:9.5f}  {ok1}   |X-t eps X0|={abs(t[4]-te*o['X0']):.5f}  {ok2}")
 
 if __name__ == "__main__":
     main(int(sys.argv[1]) if len(sys.argv) > 1 else 16)

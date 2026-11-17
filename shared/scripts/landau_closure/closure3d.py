@@ -36,3 +36,11 @@ def theta(L, d, k):
     g = np.linalg.solve(1j * k * Vx + L, one.astype(complex))
     n1 = one @ g; T1 = (E2 @ g) / 3; q1 = Q @ g
     return (-1 / (k * T1)).real, n1.real, abs(1j * k * (vx @ g) - 1), abs(q1 - 1j / k), (th @ g).real
+def second_order(L, d):
+    """Quantities of the leading-coefficient theorem: kF, C*, X0, B, eta."""
+    B_, ix, one, vx, E2, th, Q, Vx = vecs(d); Lp = pinv_on_complement(L, [one, vx, E2])
+    Xi = Lp @ Q; kF = Q @ Xi; vx2 = Vx @ Vx @ one
+    chis = one - vx2 + Vx @ Xi / kF; G = Lp @ chis
+    Gt = G - 0.5 * (vx2 @ G) * E2                      # <Gt> = 0 and <v_x^2 Gt> = 0
+    u = Vx @ Gt
+    return dict(kF=kF, Cs=chis @ G, X0=th @ G, B=u @ Lp @ u, eta=th @ Lp @ th / 12)

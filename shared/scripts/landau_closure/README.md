@@ -27,6 +27,8 @@ in `cache/`, which is ignored by git; delete it to rebuild.
 - Conductivity and viscosity against Braginskii's `3.906` and `0.96`.
 - With the Dougherty operator, `kappa_F = 5/6`, `eta = 1/2`, and the
   leading coefficient `2/15`; the Galerkin closure against the closed form.
+- The two-sided estimates used in the proof of the leading-coefficient
+  theorem, for both operators.
 
 ## Limits
 

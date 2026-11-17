@@ -39,9 +39,11 @@ the argument goes.
     $K$ given explicitly by three Chapman--Enskog-type quantities. The
     Landau operator is covered, conditionally on the existence statement in
     Assumption~(S).
-  \item \textbf{Derived formally and checked} (Proposition~\ref{prop:K}):
-    the exact coefficient of $k^2$, for any such operator. It reproduces
-    $\tfrac{2}{15}$ for the Dougherty operator.
+  \item \textbf{Proved} (Theorem~\ref{prop:K}): the exact coefficient of
+    $k^2$ in the departure from Fourier's law, for any such operator, under
+    a solvability assumption on two Chapman--Enskog problems. It gives
+    $\tfrac{2}{15}$ for the Dougherty operator, and in one velocity
+    dimension it shows that the constants of the earlier notes are exact.
   \item \textbf{Computed} for the like-particle Landau operator: the
     conductivity, the viscosity, the exact $k^2$ coefficient, and the
     closure itself up to $k\lambda\approx1$, with a polynomial Galerkin
@@ -185,21 +187,122 @@ upper bound are obtained only for $k^2<3/(\kappa_{\mathrm F}X_{\max})$. For
 the Dougherty operator both hold at every $k$, by the closed form.
 \end{remark}
 
-\begin{proposition}[Leading coefficient; formal]\label{prop:K}
-As $k\to0$,
+\section{The exact coefficient of $k^2$}
+
+\paragraph{Assumption (R).} The following second-order Chapman--Enskog
+problems have solutions in the form domain: $\Lambda G=\chi_*$, and
+$\Lambda\Upsilon=v_x\tilde G$, where $\tilde G=G+h$ with
+$h\in\operatorname{span}\{1,|v|^2\}$ chosen so that
+$\avg{\tilde G}=\avg{v_x^2\tilde G}=0$. Put
 \begin{equation}
-  1-\frac{\chi(k)}{\kappa_{\mathrm F}}=K_{\mathrm{ex}}\,k^2+o(k^2),\qquad
-  K_{\mathrm{ex}}=\kappa_{\mathrm F}\,
+  X_0=\avg{\vartheta\,G}=\avg{\vartheta,\Lambda^+\chi_*},\qquad
+  B=\cD[\Upsilon]=\avg{v_x\tilde G,\Lambda^+v_x\tilde G}.
+\end{equation}
+For the BGK and Dougherty operators all of these are polynomials. For the
+Landau operator (R) is a solvability statement of Spitzer type and is
+assumed.
+
+\begin{theorem}[Leading coefficient]\label{prop:K}
+Assume (A3), (S) and (R), and write $\varepsilon=k^2\kappa_{\mathrm F}$.
+Then
+\begin{align}
+  \frac1\varepsilon+C_*-B\,k^2\;&\le\;n_1\;\le\;\frac1\varepsilon+C_*,
+  \label{eq:n1two}\\
+  |X-t\varepsilon\,X_0|\;&\le\;(12\,\eta\,B)^{1/2}\,|k|,\qquad
+  t\varepsilon=\bigl(1-\varepsilon C_*+\varepsilon k^2B\bigr)^{-1},
+  \label{eq:Xclose}
+\end{align}
+and consequently, as $k\to0$,
+\begin{equation}
+  1-\frac{\chi(k)}{\kappa_{\mathrm F}}=K_{\mathrm{ex}}\,k^2+O(|k|^3),\qquad
+  K_{\mathrm{ex}}=\kappa_{\mathrm F}\bigl(C_*-\tfrac13X_0\bigr)
+  =\kappa_{\mathrm F}\,
   \bigl\langle\chi_*-\tfrac13\vartheta,\;\Lambda^+\chi_*\bigr\rangle .
 \end{equation}
-\end{proposition}
+\end{theorem}
 
-\noindent\emph{Derivation.} To leading order $-w=\psi_*$, so
-$1+kv_xw\to\chi_*$ and, by the first equation of \eqref{eq:sys}, the part of
-$g_e$ outside $H$ tends to $\Lambda^+\chi_*$. Then
-$n_1-1/(k^2\kappa_{\mathrm F})\to C_*$ and
-$X\to\avg{\vartheta,\Lambda^+\chi_*}$. This is not proved: it assumes the
-expansion is uniform. It is checked in Section~\ref{sec:num}.
+\begin{proof}
+For even $\varphi$ with $\avg{v_x^2\varphi}=0$ such that
+$\Lambda f_\varphi=v_x\varphi$ is solvable in the form domain, define
+\[
+  \mathcal{Q}(\varphi,\varphi')=\cD(\varphi,\varphi')+k^2\cD(f_\varphi,f_{\varphi'}),
+  \qquad \mathcal{Q}[\varphi]=\mathcal{Q}(\varphi,\varphi).
+\]
+By the second equation of \eqref{eq:sys}, $f_{g_e}=-w/k$.
+
+\emph{Step 1: $\mathcal{Q}(g_e,\varphi)=\avg{\varphi}$ and
+$\mathcal{Q}[g_e]=n_1$.} Testing the first equation of \eqref{eq:sys} with
+$\varphi$ gives $\cD(g_e,\varphi)=\avg{\varphi}+k\avg{v_xw\,\varphi}$.
+Testing $\Lambda f_\varphi=v_x\varphi$ with $w$ gives
+$k^2\cD(-w/k,f_\varphi)=-k\avg{v_xw\,\varphi}$. Adding gives the first
+claim; the second is \eqref{eq:energy}. Hence, for every such $\varphi$,
+\begin{equation}
+  \mathcal{Q}[g_e-\varphi]=n_1-\bigl(2\avg{\varphi}-\mathcal{Q}[\varphi]\bigr).
+  \label{eq:gap}
+\end{equation}
+
+\emph{Step 2: a trial function.} Let $\varphi_0=\tfrac12(5-|v|^2)$, so
+$\avg{\varphi_0}=1$, $\avg{v_x^2\varphi_0}=0$, $\cD[\varphi_0]=0$,
+$v_x\varphi_0=-Q$ and $f_{\varphi_0}=-\Xi$. Let
+$\varphi'=\varphi_0+\varepsilon\tilde G$; then $\avg{\varphi'}=1$,
+$f_{\varphi'}=-\Xi+\varepsilon\Upsilon$, and
+\[
+  \mathcal{Q}[\varphi']=\varepsilon^2\cD[G]
+  +k^2\bigl(\cD[\Xi]-2\varepsilon\,\cD(\Xi,\Upsilon)+\varepsilon^2B\bigr).
+\]
+Here $\cD[G]=C_*$, $\cD[\Xi]=\kappa_{\mathrm F}$, and
+$\cD(\Xi,\Upsilon)=\avg{v_x\Xi\,\tilde G}$. Since
+$v_x\Xi=\kappa_{\mathrm F}(\chi_*-1+v_x^2)$ and $\chi_*$ is orthogonal to
+$h$,
+$\avg{v_x\Xi\,\tilde G}=\kappa_{\mathrm F}\bigl(\avg{\chi_*G}-\avg{\tilde G}
++\avg{v_x^2\tilde G}\bigr)=\kappa_{\mathrm F}C_*$. With
+$k^2\kappa_{\mathrm F}=\varepsilon$,
+\begin{equation}
+  \mathcal{Q}[\varphi']=\varepsilon\bigl(1-\varepsilon C_*+\varepsilon k^2B\bigr).
+\end{equation}
+
+\emph{Step 3: \eqref{eq:n1two}.} The upper bound is
+Theorem~\ref{thm:3d}(ii). Take $\varphi=t\varphi'$ in \eqref{eq:gap} with
+$t=1/\mathcal{Q}[\varphi']$, so that
+$2\avg{\varphi}-\mathcal{Q}[\varphi]=1/\mathcal{Q}[\varphi']$. Since the
+left side of \eqref{eq:gap} is non-negative and $1/(1-x)\ge1+x$,
+\[
+  n_1\ge\frac{1}{\mathcal{Q}[\varphi']}
+  \ge\frac1\varepsilon\bigl(1+\varepsilon C_*-\varepsilon k^2B\bigr)
+  =\frac1\varepsilon+C_*-Bk^2
+\]
+for $k$ small enough that $\mathcal{Q}[\varphi']>0$ and
+$\varepsilon(C_*-k^2B)<1$.
+
+\emph{Step 4: \eqref{eq:Xclose}.} By \eqref{eq:gap} and Step 3,
+$\cD[g_e-t\varphi']\le\mathcal{Q}[g_e-t\varphi']
+=n_1-1/\mathcal{Q}[\varphi']\le Bk^2$. Since $\vartheta$ is orthogonal to
+$H$, $\avg{\vartheta\,t\varphi'}=t\varepsilon\avg{\vartheta\tilde G}
+=t\varepsilon X_0$, and
+$|\avg{\vartheta(g_e-t\varphi')}|\le(12\eta)^{1/2}\cD[g_e-t\varphi']^{1/2}$.
+
+\emph{Step 5.} By Theorem~\ref{thm:3d}(i),
+$-T_1=n_1-\tfrac13X=\varepsilon^{-1}+C_*-\tfrac13X_0+O(|k|)$, using
+$t\varepsilon=1+O(k^2)$. Hence
+$\chi/\kappa_{\mathrm F}=1/(\varepsilon(-T_1))
+=1-\varepsilon(C_*-\tfrac13X_0)+O(|k|^3)$.
+\end{proof}
+
+\begin{remark}[One velocity dimension]
+The same proof, with $\varphi_0=\tfrac12(3-v^2)$,
+$\varepsilon=\tfrac12k^2\kappa_{\mathrm F}$ and no cross term, gives
+$2/(k^2\kappa_{\mathrm F})+C_*-Bk^2\le n_1\le2/(k^2\kappa_{\mathrm F})+C_*$
+and therefore
+$1-\chi/\kappa_{\mathrm F}=\tfrac12C_*\kappa_{\mathrm F}\,k^2+O(k^4)$. So the
+constant $K_2$ of the earlier notes is the exact coefficient, which was
+there only observed for velocity-dependent $\nu$.
+\end{remark}
+
+\begin{remark}
+The error term in three dimensions is stated as $O(|k|^3)$ because $X$ is
+controlled only to $O(|k|)$. Numerically the error is $O(k^4)$, with
+coefficient close to $-\kappa_{\mathrm F}B$ for the Landau operator.
+\end{remark}
 
 \section{Numerical method and validation}
 \label{sec:num}
@@ -234,7 +337,13 @@ matrix is computed by Gauss quadrature that is exact for it.
     returns $\kappa_{\mathrm F}=5/6$, $\eta=1/2$ and
     $K_{\mathrm{ex}}=0.133333=\tfrac{2}{15}$, and the Galerkin closure agrees
     with the closed form of the previous note to six digits for
-    $k\lambda\le2$. This is the check of Proposition~\ref{prop:K}.
+    $k\lambda\le2$.
+  \item The estimates \eqref{eq:n1two} and \eqref{eq:Xclose} hold at
+    $k\lambda=0.003$, $0.01$, $0.03$, $0.1$ for the Dougherty operator
+    ($B=0.365$) and the Landau operator ($B\approx578\,\tau^3$), except that
+    for Dougherty at $k\lambda=0.003$ the upper bound in \eqref{eq:n1two} is
+    exceeded by $10^{-5}$, which is rounding in the subtraction of
+    $1/\varepsilon\approx10^5$.
 \end{itemize}
 
 \section{Results for the Landau operator}
@@ -293,9 +402,9 @@ $1-\chi/\kappa_{\mathrm F}\approx c\,(k\,\kappa_{\mathrm F})^2$.
   Operator & $c = K/\kappa_{\mathrm F}^2$ & Status of $K$ \\ \hline
   BGK, constant $\nu$, 1D & $0.444$ & proved, sharp \\
   Dougherty, 1D & $0.333$ & proved, sharp \\
-  BGK, $\nu_0/(1+|v|^3)$, 1D & $6.78$ & proved bound; equality numerical \\
+  BGK, $\nu_0/(1+|v|^3)$, 1D & $6.78$ & proved, sharp \\
   Dougherty, 3D & $0.192$ & proved (asymptotic) \\
-  Landau, like-particle, 3D & $1.43$ & formal formula, numerical value \\
+  Landau, like-particle, 3D & $1.43$ & proved formula (under (S), (R)); numerical value \\
 \end{tabular}
 \end{center}
 At equal conductivity the Landau operator departs from Fourier's law about
@@ -328,7 +437,8 @@ $k\lambda\ge0.5$ and the unproved limit, treat this as indicative.
     numerically.
   \item \textbf{Certification.} The Landau constants come from a Galerkin
     truncation. They are converged to the digits shown, but there is no
-    error bound; Proposition~\ref{prop:K} is formal.
+    error bound. Theorem~\ref{prop:K} is proved under (R), which is assumed
+    for Landau.
   \item \textbf{Physics.} One species, like-particle collisions, no
     electron--ion scattering, no magnetic field, linear, quasi-static,
     single drive.
