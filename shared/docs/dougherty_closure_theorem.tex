@@ -1,0 +1,416 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{array}
+\usepackage{hyperref}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\He}{\mathrm{He}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\avg}[1]{\langle #1\rangle}
+\newcommand{\vt}{v_t}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The exact linear heat-flux closure for the conserving\\
+Lenard--Bernstein (Dougherty) operator, in one and three velocity dimensions}
+\author{Working note}
+\date{16 November 2026}
+
+\begin{document}
+\maketitle
+
+\noindent\emph{Summary.} The argument of
+\texttt{bgk\_velocity\_dependent\_closure.tex} is carried over to the
+conserving Lenard--Bernstein (Dougherty) operator, which is a Fokker--Planck
+operator and is the ground truth of the tournament note. Three things are
+proved.
+\begin{enumerate}
+  \item The dual variational principles hold for any conserving, symmetric,
+    non-negative linearized collision operator in one velocity dimension
+    (Theorem~\ref{thm:abs}).
+  \item For the Dougherty operator in one velocity dimension the
+    quasi-static closure has a closed form, with sharp bounds
+    (Theorem~\ref{thm:1d}).
+  \item For the Dougherty operator in three velocity dimensions, which is
+    the tournament's operator, the closure also has a closed form
+    (Theorem~\ref{thm:3d}). It is positive, strictly below the
+    Chapman--Enskog conductivity $\tfrac56\,n_0T_0/(m\nu)$, departs from it
+    as $\tfrac{2}{15}(k\lambda)^2$, and tends to the collisionless value.
+\end{enumerate}
+The Landau (Coulomb) operator is not treated; Section~\ref{sec:landau} says
+what stands in the way. A consequence for the benchmark is stated in
+Section~\ref{sec:impl}: with a velocity-independent collision frequency the
+local closure does not fail until $k\lambda$ is of order one. No second
+reader has checked the proofs.
+
+\section{Abstract variational theorem (one velocity dimension)}
+
+Units and notation as in the previous notes: $M$ the unit Maxwellian,
+$\avg{\cdot}$ its average, $H = \operatorname{span}\{1,v,v^2\}$.
+
+\paragraph{Assumption (A).} $\Lambda$ is a self-adjoint, non-negative
+operator on $L^2(M\,\dd v)$ that is real, preserves parity, and has kernel
+$H$; and for $k\ne0$ the operator $\cA_k = ikv+\Lambda$ is invertible, with
+$(-i\omega+\cA_k)^{-1}$ continuous in $\omega$ near $0$ in $\Im\omega\ge0$.
+
+For a real function $\chi$ put
+$\avg{\chi,\Lambda^+\chi} = \sup_f\bigl[2\avg{\chi f}-\avg{f\Lambda f}\bigr]
+\in[0,\infty]$, the supremum over real $f$ in the form domain of $\Lambda$.
+Then $\avg{\chi f}^2\le\avg{\chi,\Lambda^+\chi}\,\avg{f\Lambda f}$, and if
+$\Lambda f_0=\chi$ then $\avg{\chi,\Lambda^+\chi} = \avg{f_0\Lambda f_0}$.
+
+\begin{theorem}\label{thm:abs}
+Assume (A), and let $g = \cA_k^{-1}1 = g_e+iw$.
+\begin{enumerate}
+  \item[(i)] $\avg{v^2g}=0$, $n_1=\avg{g}>0$, and the quasi-static limit of
+    the potential-driven response is
+    $\hat q = -i\,\sgn(k)\,\theta\,\hat T$ with $\theta = 2/(|k|n_1)$.
+  \item[(ii)] For even $\varphi$ with $\avg{v^2\varphi}=0$ and odd $\psi$
+    with $k\avg{v\psi}=k\avg{v^3\psi}=1$,
+    \[
+      \frac{\avg{\varphi}^2}
+           {\avg{\varphi\Lambda\varphi}+k^2\avg{v\varphi,\Lambda^+v\varphi}}
+      \;\le\; n_1 \;\le\;
+      \avg{\psi\Lambda\psi}+\avg{(1-kv\psi),\Lambda^+(1-kv\psi)},
+    \]
+    with equality at $\varphi=g_e$, $\psi=-w$.
+  \item[(iii)] With $\xi$ a solution of $\Lambda\xi=\He_3$ normalized by
+    $\avg{v\xi}=0$,
+    $\kappa_{\mathrm F} = \tfrac12\avg{\He_3\,\xi}$,
+    $\chi_* = 1-v^2+v\xi/\kappa_{\mathrm F}$ and
+    $K_2 = \tfrac12\kappa_{\mathrm F}\avg{\chi_*,\Lambda^+\chi_*}$,
+    \[
+      \frac{\kappa_{\mathrm F}}{1+K_2k^2}\;\le\;\frac{\theta}{|k|}
+      \;\le\;\kappa_{\mathrm F}.
+    \]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) and the equality cases of (ii) are proved exactly as in the previous
+note, which used only (A): pairing $\cA_kg=1$ with $1,v,v^2$; the real system
+$-kvw+\Lambda g_e=1$, $kvg_e+\Lambda w=0$; and
+$n_1=\avg{g_e\Lambda g_e}+\avg{w\Lambda w}$, where now
+$\avg{w\Lambda w} = k^2\avg{vg_e,\Lambda^+vg_e}$ and
+$\avg{g_e\Lambda g_e} = \avg{(1+kvw),\Lambda^+(1+kvw)}$.
+
+Weak duality: with $\chi=1-kv\psi$,
+\begin{align*}
+  \avg{\varphi} &= \avg{\varphi\chi}+k\avg{v\varphi\,\psi} \\
+  &\le\avg{\chi,\Lambda^+\chi}^{1/2}\avg{\varphi\Lambda\varphi}^{1/2}
+  + \bigl(k^2\avg{v\varphi,\Lambda^+v\varphi}\bigr)^{1/2}
+    \avg{\psi\Lambda\psi}^{1/2},
+\end{align*}
+and the Cauchy--Schwarz inequality in $\mathbb{R}^2$ finishes it.
+
+(iii) Upper bound: $\varphi_0=(3-v^2)/2$ has $\Lambda\varphi_0=0$,
+$v\varphi_0=-\He_3/2$, so the left side of (ii) is
+$1/(\tfrac14k^2\avg{\He_3\xi}) = 2/(k^2\kappa_{\mathrm F})$. Lower bound:
+$\psi_*=(v-\xi/\kappa_{\mathrm F})/k$ satisfies $k\avg{v\psi_*}=1$ and
+$k\avg{v^3\psi_*} = 3-\avg{\He_3\xi}/\kappa_{\mathrm F}=1$, with
+$\avg{\psi_*\Lambda\psi_*} = \avg{\xi\He_3}/(k\kappa_{\mathrm F})^2
+= 2/(k^2\kappa_{\mathrm F})$ and $1-kv\psi_*=\chi_*$.
+\end{proof}
+
+\section{The Dougherty operator in one velocity dimension}
+
+Let $N=-\partial_v^2+v\,\partial_v$, so $N\He_n=n\He_n$. The linearized
+conserving Lenard--Bernstein operator is
+\begin{equation}
+  \Lambda h = \nu\bigl(Nh-\avg{vh}\,v-\avg{\He_2h}\,\He_2\bigr),
+\end{equation}
+that is, $\Lambda\He_n=\nu n\He_n$ for $n\ge3$ and $\Lambda\He_n=0$ for
+$n\le2$. It satisfies (A): $\cA_k$ is a finite-rank perturbation of
+$\cA^0_k = ikv+\nu N$, which has compact resolvent and trivial kernel, and
+$\cA_k$ is injective by the argument of the previous note.
+
+For $a>0$ let
+\begin{equation}
+  E_a(s) = \bigl[(1-s)\,e^{s}\bigr]^{a},\qquad 0\le s\le1 .
+\end{equation}
+$E_a$ decreases from $1$ to $0$ and $E_a(s)\le e^{-as^2/2}$.
+
+\begin{theorem}\label{thm:1d}
+For the Dougherty operator in one velocity dimension, with $y=\nu/|k|$ and
+$a=1/y^2$,
+\begin{equation}
+  \theta_1(y) = \frac{2}{y}\;
+  \frac{\int_0^1 s\,E_a(s)\,\dd s}{\int_0^1E_a(s)\,\dd s} .
+  \label{eq:th1}
+\end{equation}
+Moreover, with $\kappa_{\mathrm F}=1/\nu$, $\lambda=1/\nu$ and
+$\chi=\theta_1/|k|$:
+\begin{enumerate}
+  \item[(a)] $0<\chi(k)<\kappa_{\mathrm F}$ for all $k\ne0$;
+  \item[(b)] $\chi(k)\ge\kappa_{\mathrm F}/(1+\tfrac13(k\lambda)^2)$, and the
+    constant $\tfrac13$ is sharp:
+    $1-\chi/\kappa_{\mathrm F} = \tfrac13(k\lambda)^2+O((k\lambda)^4)$;
+  \item[(c)] $\theta_1(y)\to\sqrt{8/\pi}$ as $y\to0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{lemma}\label{lem:semi}
+Let $\cA^0_k=ikv+\nu N$ and $\sigma\ge0$. Then
+$f_\sigma=(\cA^0_k+\sigma\nu)^{-1}1$ satisfies
+\[
+  \nu\avg{f_\sigma} = \int_0^1(1-s)^{a-1+\sigma}e^{as}\,\dd s,
+  \qquad a=k^2/\nu^2 .
+\]
+For $\sigma=0$: $\nu\avg{f_0}=\tfrac1a+\int_0^1E_a$,
+$\avg{vf_0}=1/(ik)$ and $\avg{v^2f_0}=\nu/k^2$.
+\end{lemma}
+
+\begin{proof}
+Let $c=ik/\nu$, $A(t)=-c\,(1-e^{-\nu t})$ and $B(t)=\nu\int_0^tA^2$. Then
+$h(t,v)=e^{A(t)v+B(t)}$ solves $\partial_th+\cA^0_kh=0$, $h(0)=1$, since
+$A'+ik+\nu A=0$ and $B'=\nu A^2$. $A$ is imaginary, so $|h|=e^{B}$, and
+$B=c^2[\nu t-2(1-e^{-\nu t})+\tfrac12(1-e^{-2\nu t})]$ tends to $-\infty$
+linearly; hence $f_\sigma=\int_0^\infty e^{-\sigma\nu t}h\,\dd t$ converges
+in $L^2(M)$ and solves $(\cA^0_k+\sigma\nu)f_\sigma=1$. Also
+$\avg{h}=e^{B+A^2/2}=\exp\bigl(-a(\nu t-1+e^{-\nu t})\bigr)$. Substituting
+$s=1-e^{-\nu t}$ gives the formula. For $\sigma=0$, integrate by parts:
+$\int_0^1(1-s)^{a-1}e^{as}\dd s=\tfrac1a+\int_0^1(1-s)^ae^{as}\dd s$. The
+last two identities follow by pairing $\cA^0_kf_0=1$ with $1$ and $v$:
+$ik\avg{vf_0}=1$ and $ik\avg{v^2f_0}+\nu\avg{vf_0}=0$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:1d}]
+Write $S=\int_0^1E_a$. By Theorem~\ref{thm:abs}(i),
+$\avg{vg}=1/(ik)$ and $\avg{\He_2g}=-n_1$, so $\cA_kg=1$ reads
+\[
+  \cA^0_kg = 1+\frac{\nu}{ik}\,v-\nu n_1\He_2 .
+\]
+$\cA^0_k$ is symmetric for the bilinear pairing $\avg{fh}$, so
+$\avg{(\cA^0_k)^{-1}\varrho} = \avg{\varrho f_0}$. By Lemma~\ref{lem:semi},
+$\avg{vf_0}=1/(ik)$ and $\avg{\He_2f_0}=\nu/k^2-\avg{f_0}$. Hence
+\[
+  n_1 = \avg{f_0}-\frac{\nu}{k^2}-\nu n_1\Bigl(\frac{\nu}{k^2}-\avg{f_0}\Bigr),
+  \qquad\text{so}\qquad \nu n_1 = \frac{S}{1-S},
+\]
+using $\nu\avg{f_0}-\nu^2/k^2=S$. Thus $\theta_1=2y(1-S)/S$. Finally
+$E_a' = -a\,s\,E_a/(1-s)$, and integrating by parts,
+$1-S=\int_0^1(1-E_a) = -\int_0^1(1-s)E_a'\,\dd s = a\int_0^1sE_a$, which
+gives \eqref{eq:th1}.
+
+(a) Positivity is evident. Since $\int_0^1(s-\tfrac12)\dd s=0$ and $E_a$ is
+strictly decreasing,
+$\int_0^1(s-\tfrac12)E_a = \int_0^1(s-\tfrac12)(E_a(s)-E_a(\tfrac12))\dd s<0$,
+so $\theta_1<1/y$.
+
+(b) Apply Theorem~\ref{thm:abs}(iii): $\xi=\He_3/(3\nu)$,
+$\kappa_{\mathrm F}=\tfrac12\avg{\He_3^2}/(3\nu)=1/\nu$,
+$\chi_*=1-v^2+v\He_3/3=\He_4/3$, and
+$\avg{\chi_*,\Lambda^+\chi_*}=\avg{\He_4^2}/(9\cdot4\nu)=2/(3\nu)$, so
+$K_2=1/(3\nu^2)$. Sharpness: with $L(s)=s+\ln(1-s)\le0$,
+$\int_0^1L=-\tfrac12$ and $\int_0^1L^2=\tfrac56$, so
+$S=1-\tfrac a2+\tfrac{5}{12}a^2+O(a^3)$ and
+$y\theta_1=2(1-S)/(aS)=1-\tfrac a3+O(a^2)$.
+
+(c) Substituting $s=u/\sqrt a$ and using dominated convergence with the
+bound $E_a\le e^{-as^2/2}$: $\sqrt a\int_0^1E_a\to\sqrt{\pi/2}$ and
+$a\int_0^1sE_a\to1$. Hence
+$\theta_1\to(2/y)\,a^{-1}\sqrt{2a/\pi}=\sqrt{8/\pi}$.
+\end{proof}
+
+\section{The Dougherty operator in three velocity dimensions}
+
+This is the operator of the tournament note, linearized about a uniform
+Maxwellian. With $v=(v_x,v_y,v_z)$, $M$ the unit Maxwellian on
+$\mathbb{R}^3$, $N=-\Delta_v+v\cdot\nabla_v$, and
+$\mathcal{E}=(|v|^2-3)/\sqrt6$,
+\begin{equation}
+  \Lambda h = \nu\Bigl(Nh-\sum_{j}\avg{v_jh}\,v_j
+     -2\avg{\mathcal{E}h}\,\mathcal{E}\Bigr),
+\end{equation}
+with spatial dependence on $x$ only and force along $x$. The moments are
+\[
+  T=\tfrac13\avg{(|v|^2-3)h},\qquad
+  q=\tfrac12\avg{v_x(|v|^2-5)h},
+\]
+and the Chapman--Enskog conductivity is
+$\kappa_{\mathrm F}=\tfrac56\,n_0T_0/(m\nu)$.
+
+\begin{theorem}\label{thm:3d}
+For the three-dimensional Dougherty operator the quasi-static limit of the
+potential-driven response is $\hat q=-i\,\sgn(k)\,\theta_3(\nu/|k|)\,\hat T$
+with
+\begin{equation}
+  \theta_3(y) = \frac1y\;
+  \frac{\int_0^1s\,(3-2s)\,E_a(s)\,\dd s}{\int_0^1E_a(s)\,\dd s},
+  \qquad a=1/y^2 .
+  \label{eq:th3}
+\end{equation}
+With $\lambda=\vt/\nu$ (here $\vt=1$) and $\chi=\theta_3/|k|$:
+\begin{enumerate}
+  \item[(a)] $0<\chi(k)<\kappa_{\mathrm F}$ for all $k\ne0$;
+  \item[(b)] $1-\chi/\kappa_{\mathrm F}
+     =\tfrac{2}{15}(k\lambda)^2+O((k\lambda)^4)$ as $k\lambda\to0$;
+  \item[(c)] $\theta_3(y)\to3\sqrt{2/\pi}$ as $y\to0$, which is
+    $\tfrac32$ times the one-dimensional Hammett--Perkins value, as it must
+    be when only the parallel temperature responds and $T=T_\parallel/3$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Reduction.} Let $\xi=(v_\perp^2-2)/2$ with $v_\perp^2=v_y^2+v_z^2$;
+$\avg{\xi}=0$, $\avg{\xi^2}=1$, $N\xi=2\xi$, and
+$|v|^2-3=\He_2(v_x)+2\xi$. Streaming acts on $v_x$ only, so $\cA_k$
+preserves the space of functions $c(v_x)+d(v_x)\,\xi$, on which
+$\cA^0_k=ikv_x+\nu N$ acts as $\cA^x_k$ on $c$ and as $\cA^x_k+2\nu$ on $d$,
+where $\cA^x_k=ikv_x+\nu N_x$ is the one-dimensional operator of
+Lemma~\ref{lem:semi}. Invertibility of $\cA_k$ on this space follows as in
+one dimension.
+
+\emph{Moment relations.} Let $g=\cA_k^{-1}1$ and $n_1=\avg{g}$. Pairing
+$\cA_kg=1$ with $1$, $v_x$ and $|v|^2$:
+$ik\avg{v_xg}=1$, $ik\avg{v_x^2g}=0$, $ik\avg{v_x|v|^2g}=3$. Hence
+$q_1=\tfrac12\avg{v_x(|v|^2-5)g}=(3-5)/(2ik)=i/k$,
+$\avg{\He_2(v_x)g}=-n_1$, and with $\epsilon_1=\avg{\xi g}$,
+\begin{equation}
+  3T_1 = -n_1+2\epsilon_1 .
+  \label{eq:T1}
+\end{equation}
+
+\emph{Solution.} Since
+$2\avg{\mathcal{E}g}\mathcal{E}=T_1(|v|^2-3)=T_1(\He_2(v_x)+2\xi)$,
+\[
+  \cA^0_kg = 1+\frac{\nu}{ik}\,v_x+\nu T_1\He_2(v_x)+2\nu T_1\,\xi .
+\]
+With $f_0$, $f_2$ as in Lemma~\ref{lem:semi} (for $\sigma=0,2$) and
+$S_j=\int_0^1(1-s)^jE_a$: $\nu\avg{f_0}-\nu^2/k^2=S_0$ and
+$\nu\avg{f_2}=S_1$. Taking the average, and the average against $\xi$,
+\[
+  \nu n_1 = S_0\,(1-\nu T_1),\qquad \epsilon_1 = 2\,T_1\,S_1 .
+\]
+Substituting into \eqref{eq:T1} with $\tau_1=\nu T_1$:
+$\tau_1\,(3-S_0-4S_1)=-S_0$. Therefore, for $k>0$,
+\[
+  \frac{q_1}{T_1} = \frac{i\nu}{k\,\tau_1}
+  = -\,i\,y\,\frac{3-S_0-4S_1}{S_0}.
+\]
+Finally $3-S_0-4S_1=\int_0^1(5-4s)(1-E_a)\,\dd s$, and integrating by parts
+with the antiderivative $-(1-s)(3-2s)$ of $5-4s$ gives
+$a\int_0^1s(3-2s)E_a$. This is \eqref{eq:th3}; the case $k<0$ follows by
+symmetry.
+
+(a) Positivity is evident. Let $p(s)=s(3-2s)$; $\int_0^1p=\tfrac56$, and
+$p-\tfrac56$ is negative on $[0,s_0)$ and positive on $(s_0,1]$, with
+$s_0=(9-\sqrt{21})/12$. Since $E_a$ is strictly decreasing,
+$\int_0^1(p-\tfrac56)E_a=\int_0^1(p-\tfrac56)(E_a-E_a(s_0))<0$. Hence
+$\theta_3<5/(6y)$, that is, $\chi<\kappa_{\mathrm F}$.
+
+(b) For $x\le0$, $|e^x-1-x|\le x^2/2$. With $L=s+\ln(1-s)$:
+$\int_0^1L=-\tfrac12$ and $\int_0^1pL=-\tfrac{19}{36}$, so
+$\int E_a=1-\tfrac a2+O(a^2)$,
+$\int pE_a=\tfrac56-\tfrac{19}{36}a+O(a^2)$, and
+$\tfrac65y\theta_3=1-\tfrac{2}{15}a+O(a^2)$.
+
+(c) As in Theorem~\ref{thm:1d}(c), $\sqrt a\int E_a\to\sqrt{\pi/2}$ and
+$a\int pE_a\to3$.
+\end{proof}
+
+\section{Numerical checks}
+
+Scratch runs on 16 November 2026, not part of the repository.
+\begin{itemize}
+  \item \textbf{Independent solves.} $\cA_kg=1$ was solved in a Hermite
+    basis (one channel in one dimension; two channels, for $1$ and $\xi$, in
+    three). For $y$ from $0.02$ to $30$ the result agrees with
+    \eqref{eq:th1} and \eqref{eq:th3} to nine digits.
+  \item \textbf{Bounds.} $0<\theta_1<1/y$ and $0<\theta_3<5/(6y)$ on grids
+    over several decades. $y^2(1-y\theta_1)$ rises to $0.3329$ at $y=20$ and
+    $y^2(1-\tfrac65y\theta_3)$ to $0.1332$, against $\tfrac13$ and
+    $\tfrac{2}{15}$.
+  \item \textbf{A numerical trap.} Evaluating $\theta_1$ from
+    $2y(1+y^2-\mu)/(\mu-y^2)$ with
+    $\mu=\int_0^1(1-s)^{a-1}e^{as}\dd s$, which is algebraically the same,
+    loses all accuracy for $y\gtrsim100$ and appeared to violate (b). The
+    forms \eqref{eq:th1} and \eqref{eq:th3} do not have this problem.
+\end{itemize}
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{rrrr}
+  $k\lambda$ & $\chi/\kappa_{\mathrm F}$ (3D) & $1-\tfrac{2}{15}(k\lambda)^2$
+     & $\chi/\kappa_{\mathrm F}$ (1D) \\ \hline
+  0.1 & 0.9987 & 0.9987 & 0.9967 \\
+  0.3 & 0.9883 & 0.9880 & 0.9715 \\
+  1   & 0.8946 & 0.8667 & 0.7844 \\
+  3   & 0.5940 & --- & 0.4165 \\
+  10  & 0.2467 & --- & 0.1484 \\
+\end{tabular}
+\end{center}
+
+\paragraph{Observed but not proved.} $\theta_1$ and $\theta_3$ are
+decreasing and stay below their collisionless values. In three dimensions
+$1-\chi/\kappa_{\mathrm F}\le\tfrac{2}{15}(k\lambda)^2$ on the grid; only the
+asymptotic statement (b) is proved. The harmonic-mean interpolant
+$(1/\theta(0)+|k|^{-1}\kappa_{\mathrm F}^{-1})^{-1}$ lies below the exact
+value by at most 22\% in one dimension and 19\% in three.
+
+\section{Consequences for the benchmark}
+\label{sec:impl}
+
+\begin{itemize}
+  \item \textbf{An exact reference for the tournament's ground truth.} For
+    linear, potential-driven, quasi-static tests, \eqref{eq:th3} is the
+    answer at every collisionality. It gives the three checks any submitted
+    closure should pass in that regime: the Chapman--Enskog limit with
+    deficit $\tfrac{2}{15}(k\lambda)^2$, the collisionless limit
+    $3\sqrt{2/\pi}$, and $\chi<\kappa_{\mathrm F}$ at every $k$.
+  \item \textbf{The local closure fails late in this model.} With $\nu$
+    independent of $v$, Fourier's law is within 1.2\% at $k\lambda=0.3$ and
+    within 11\% at $k\lambda=1$. The early failure of Spitzer--H\"arm
+    transport, at $k\lambda\sim10^{-2}$, is not present. The previous note
+    showed that a $|v|^{-3}$ tail in the collision frequency moves the
+    breakdown there, and reverses the sign of the error of harmonic-mean
+    closures. The tournament note motivates the benchmark by that early
+    failure; the Dougherty ground truth does not reproduce it. A
+    velocity-dependent collision frequency would.
+  \item \textbf{Sign of the interpolation error.} In all three
+    velocity-independent models (BGK, Dougherty in one and three dimensions)
+    the harmonic mean is too low; with the Coulomb-like tail it is too high,
+    as reported for the Landau operator. A closure tuned on Dougherty data
+    may therefore carry the wrong sign of error to a Coulomb plasma.
+\end{itemize}
+
+\section{What is not done: the Landau operator}
+\label{sec:landau}
+
+\begin{enumerate}
+  \item \textbf{Closed form.} The Dougherty result rests on the explicit
+    semigroup of Lemma~\ref{lem:semi}, which exists because the operator is
+    diagonal in Hermite functions. The linearized Landau operator is not,
+    and no closed form should be expected.
+  \item \textbf{Variational bounds in three dimensions.}
+    Theorem~\ref{thm:abs} is for one velocity dimension, where momentum
+    conservation gives $\avg{v^2g}=0$ and turns $T_1$ into the diagonal
+    resolvent element $-\avg{1,\cA_k^{-1}1}$. In three dimensions momentum
+    conservation gives $\avg{v_x^2g}=0$, which involves the parallel viscous
+    stress, and $T_1=\tfrac13\avg{(|v|^2-3)g}$ is an off-diagonal element.
+    Positivity and the dual bounds then do not follow from the argument
+    here. For the Dougherty operator they were recovered from the explicit
+    formula. For Landau one would need a variational principle for the
+    coupled heat-flux and stress response, which I have not found.
+  \item \textbf{Inverting the operator on trial functions.} The bounds need
+    $\Lambda^+$ applied to explicit functions. For BGK this is division by
+    $\nu$ and for Dougherty division by the Hermite index. For Landau it is
+    the Spitzer problem, solvable only numerically, although upper bounds on
+    $\avg{\chi,\Lambda^+\chi}$ can be had from trial fluxes.
+  \item \textbf{What is proved for a Coulomb-like collision frequency} is
+    the relaxation-model result of the previous note, in one velocity
+    dimension.
+\end{enumerate}
+Other limits are as before: linear response, a single drive, quasi-static,
+unbounded or periodic domain. No prior-art search was made for the Dougherty
+closed forms; exact solutions of Lenard--Bernstein models are classical and
+these formulas may be known.
+
+\end{document}

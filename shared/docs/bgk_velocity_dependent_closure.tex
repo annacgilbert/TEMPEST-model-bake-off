@@ -1,0 +1,465 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{array}
+\usepackage{hyperref}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\He}{\mathrm{He}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\avg}[1]{\langle #1\rangle}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The linear heat-flux closure at every collisionality\\
+for a velocity-dependent collision frequency}
+\author{Working note}
+\date{16 November 2026}
+
+\begin{document}
+\maketitle
+
+\noindent\emph{Summary.} This note extends the theorem of
+\texttt{plasma\_closure\_gaps\_and\_bgk\_theorem.tex} from a constant
+collision frequency to a general $\nu(v)$. The closed formula in the plasma
+dispersion function is lost, and is replaced by a pair of dual variational
+principles that bracket the exact quasi-static closure at every wavenumber.
+From them: the closure is dissipative; the exact conductivity is always
+below the Chapman--Enskog (Fourier) value; the departure from Fourier's law
+is bounded by an explicit constant times $k^2$; and the collisionless limit
+is the Hammett--Perkins value for every admissible $\nu$. For a
+Coulomb-like $\nu\propto|v|^{-3}$ tail the explicit constant is about
+$3.3\times10^4$ where the constant-$\nu$ model has $4$, which moves the
+breakdown of the local closure from $k\lambda\sim1$ to
+$k\lambda\sim10^{-2}$. The model is still a linear, one-dimensional
+relaxation operator; Section~\ref{sec:limits} states what that leaves out.
+No second reader has checked the proofs.
+
+\section{Model}
+
+Units: density, mass and thermal speed $\sqrt{T_0/m}$ equal to one.
+$M(v) = (2\pi)^{-1/2}e^{-v^2/2}$ and $\avg{\varphi} = \int\varphi M\,\dd v$.
+
+\paragraph{Assumption (N).} $\nu:\mathbb{R}\to(0,\infty)$ is even and
+continuous, with $c\,(1+|v|)^{-m}\le\nu(v)\le\nu_{\max}$ for some $c,m>0$.
+Then $\avg{|P|/\nu^j}<\infty$ for every polynomial $P$ and $j\ge0$.
+
+\medskip
+Let $H = \operatorname{span}\{1,v,v^2\}$ and let $\Pi_\nu$ be the orthogonal
+projection onto $H$ in $L^2(\nu M\,\dd v)$. Define
+\begin{equation}
+  \Lambda h = \nu\,(h - \Pi_\nu h).
+\end{equation}
+This is the linearization of the BGK model with velocity-dependent collision
+frequency \cite{Struchtrup}. For constant $\nu$ it is the operator of the
+previous note.
+
+\begin{lemma}\label{lem:Lambda}
+$\Lambda$ is bounded and self-adjoint on $L^2(M\,\dd v)$, with
+$\avg{h\,\Lambda h} = \avg{\nu\,(h-\Pi_\nu h)^2}\ge0$ for real $h$ and kernel
+$H$; in particular $\avg{\psi\,\Lambda h} = 0$ for $\psi\in H$, which is
+conservation of mass, momentum and energy. $\Lambda$ preserves parity:
+$\Pi_\nu$ maps even functions into $\operatorname{span}\{1,v^2\}$ and odd
+functions into $\operatorname{span}\{v\}$. If $\chi$ is orthogonal to $H$ in
+$L^2(M)$ and $\avg{\chi^2/\nu}<\infty$, then $\Pi_\nu(\chi/\nu) = 0$.
+\end{lemma}
+
+\begin{proof}
+$\Pi_\nu$ has finite rank with polynomial range and is bounded on $L^2(M)$
+because $\nu$ is bounded. For real $g,h$,
+$\avg{g\Lambda h} = \avg{\nu gh} - \avg{\nu\,\Pi_\nu g\,\Pi_\nu h}$, which is
+symmetric, and for $g=h$ equals $\avg{\nu(h-\Pi_\nu h)^2}$. This vanishes iff
+$h\in H$. Parity is preserved because $\nu$ is even. For the last claim,
+$\avg{\nu\,\psi\,(\chi/\nu)} = \avg{\psi\chi} = 0$ for $\psi\in H$.
+\end{proof}
+
+The kinetic equation, with acceleration $a(t,x)$, is
+\begin{equation}
+  \partial_th + v\,\partial_xh + \Lambda h = a\,v,\qquad h|_{t=0}=0 .
+  \label{eq:kin}
+\end{equation}
+Moments are $n=\avg{h}$, $u=\avg{vh}$, $T=\avg{\He_2h}$, $q=\avg{\He_3h}$
+with $\He_2 = v^2-1$, $\He_3 = v^3-3v$, $\He_4 = v^4-6v^2+3$. As before
+$\|h(t)\|\le\int_0^t\|a\|$, so the Fourier--Laplace transform exists for
+$\Im\omega>0$ and satisfies $(-i\omega+\cA_k)\hat h = \hat a\,v$, where
+\begin{equation}
+  \cA_k = ikv + \Lambda \quad\text{on}\quad
+  \mathcal{D} = \{g\in L^2(M): vg\in L^2(M)\}.
+\end{equation}
+
+\section{Results}
+
+\begin{theorem}[Exact transfer relation]\label{thm:exact}
+Assume (N), $k\ne0$.
+\begin{enumerate}
+  \item[(i)] For $\Im\omega\ge0$, $-i\omega+\cA_k:\mathcal{D}\to L^2(M)$ is
+    invertible, with inverse $R_\omega$ continuous in $\omega$.
+  \item[(ii)] For $\Im\omega>0$ every solution of \eqref{eq:kin} satisfies
+    \begin{equation}
+      \hat q\;\avg{\He_2\,R_\omega1} = \hat T\;\avg{\He_3\,R_\omega1}.
+      \label{eq:exact}
+    \end{equation}
+  \item[(iii)] Let $g = \cA_k^{-1}1$. Then $g = g_e + iw$ with $g_e$ real
+    and even, $w$ real and odd; $\avg{v^2g}=0$; and
+    $n_1 := \avg{g}$ is real and positive. As $\omega\to0$ the relation
+    \eqref{eq:exact} becomes
+    \begin{equation}
+      \hat q = -\,i\,\sgn(k)\,\theta(k)\,\hat T,\qquad
+      \theta(k) = \frac{2}{|k|\,n_1(k)} > 0 .
+      \label{eq:theta}
+    \end{equation}
+\end{enumerate}
+For constant $\nu$, \eqref{eq:exact} reduces to
+$\hat q = \sgn(k)\Phi((\omega+i\nu)/|k|)\hat T$ and \eqref{eq:theta} to
+$\theta(\nu/|k|)$ of the previous note.
+\end{theorem}
+
+Write $\chi(k) = \theta(k)/|k|$, so that the quasi-static closure is
+$\hat q = -\chi(k)\,ik\,\hat T$. For real even $\varphi$ and real odd $\psi$
+define
+\begin{align}
+  Q_k[\varphi] &= \avg{\nu\,(\varphi-\Pi_\nu\varphi)^2}
+     + k^2\,\avg{v^2\varphi^2/\nu}, \\
+  P_k[\psi] &= \avg{\nu\,(\psi-\Pi_\nu\psi)^2}
+     + \avg{(1-kv\psi)^2/\nu}.
+\end{align}
+Call $\varphi$ \emph{admissible} if $Q_k[\varphi]<\infty$ and
+$\avg{v^2\varphi}=0$, and $\psi$ admissible if $P_k[\psi]<\infty$,
+$k\avg{v\psi}=1$ and $k\avg{v^3\psi}=1$.
+
+\begin{theorem}[Dual variational principles]\label{thm:var}
+Assume (N), $k\ne0$. For all admissible $\varphi$ and $\psi$,
+\begin{equation}
+  \frac{\avg{\varphi}^2}{Q_k[\varphi]} \;\le\; n_1(k) \;\le\; P_k[\psi],
+  \label{eq:dual}
+\end{equation}
+with equality on the left for $\varphi = g_e$ and on the right for
+$\psi=-w$. Equivalently
+\begin{equation}
+  \frac{2}{k^2\,P_k[\psi]} \;\le\; \chi(k) \;\le\;
+  \frac{2\,Q_k[\varphi]}{k^2\,\avg{\varphi}^2}.
+\end{equation}
+Every trial function gives a rigorous one-sided bound on the exact closure.
+\end{theorem}
+
+\begin{theorem}[Bounds and limits]\label{thm:bounds}
+Assume (N). Let
+\begin{equation}
+  \kappa_{\mathrm F} = \tfrac12\avg{\He_3^2/\nu},\qquad
+  b = 1 + \frac{\avg{v\He_3/\nu}}{\kappa_{\mathrm F}},\qquad
+  C_* = \Bigl\langle\frac1\nu\Bigl(1 - b\,v^2
+        + \frac{v\,\He_3}{\kappa_{\mathrm F}\,\nu}\Bigr)^{\!2}\Bigr\rangle,
+  \qquad K_2 = \tfrac12\,C_*\,\kappa_{\mathrm F}.
+\end{equation}
+$\kappa_{\mathrm F}$ is the Chapman--Enskog heat conductivity of
+\eqref{eq:kin}. For every $k\ne0$:
+\begin{enumerate}
+  \item[(a)] \emph{Dissipativity.} $\chi(k)>0$.
+  \item[(b)] \emph{Below Fourier's law.} $\chi(k)<\kappa_{\mathrm F}$.
+  \item[(c)] \emph{Collisional limit.}
+    $\displaystyle \chi(k)\ \ge\ \frac{\kappa_{\mathrm F}}{1+K_2k^2}$, so
+    $0 < 1-\chi(k)/\kappa_{\mathrm F}\le K_2k^2$.
+  \item[(d)] \emph{Collisionless limit.}
+    $\theta(k)\to\sqrt{8/\pi}$ as $|k|\to\infty$, the Hammett--Perkins
+    value, for every $\nu$ satisfying (N).
+\end{enumerate}
+For constant $\nu$, $\kappa_{\mathrm F} = 3/\nu$, $b=1$,
+$C_* = \avg{\He_4^2}/(9\nu) = 8/(3\nu)$ and $K_2 = 4/\nu^2$, which is the
+sharp constant of the previous note.
+\end{theorem}
+
+\section{Proofs}
+
+\subsection{Theorem~\ref{thm:exact}}
+
+\emph{(i).} Let $\mu(v) = \nu(v)-i\omega+ikv$. Then
+$|\mu|^2 = (\nu+\Im\omega)^2 + (kv-\Re\omega)^2$ is continuous, positive, and
+tends to infinity, so $\inf|\mu|>0$ and multiplication by $\mu^{-1}$ is
+bounded from $L^2(M)$ onto $\mathcal{D}$. Now
+$-i\omega+\cA_k = \mu\,(1-\mathcal{K})$ with
+$\mathcal{K} = \mu^{-1}\nu\,\Pi_\nu$ of finite rank, so invertibility is
+equivalent to injectivity. If $(-i\omega+\cA_k)g=0$, taking the real part of
+the pairing with $\bar g$ gives
+$\Im\omega\,\|g\|^2 + \avg{\nu|g-\Pi_\nu g|^2} = 0$, since $ikv$ contributes
+an imaginary number. If $\Im\omega>0$ then $g=0$. If $\Im\omega=0$ then
+$g\in H$ and $(-i\omega+ikv)g=0$, so $g=0$. Continuity in $\omega$ follows
+from continuity of $\mathcal{K}$ in operator norm.
+
+\emph{(ii).} Since $\Lambda1=0$, $\cA_k1 = ikv$, hence
+$(-i\omega+\cA_k)(\hat a/ik) = -(\omega/k)\hat a + \hat a\,v$. Therefore
+$r = \hat h-\hat a/(ik)$ solves $(-i\omega+\cA_k)r = (\omega\hat a/k)\cdot1$,
+that is, $\hat h = \hat a/(ik) + (\omega\hat a/k)\,R_\omega1$. Constants have
+zero $T$ and $q$, so $\hat T = (\omega\hat a/k)\avg{\He_2R_\omega1}$ and
+$\hat q = (\omega\hat a/k)\avg{\He_3R_\omega1}$.
+
+\emph{(iii).} The antilinear map $(Jg)(v) = \overline{g(-v)}$ commutes with
+$\cA_k$ and fixes $1$, so by uniqueness $Jg=g$: the real part of $g$ is even
+and the imaginary part odd. Explicitly $g = (1+\nu p)/(\nu+ikv)$ with
+$p=\Pi_\nu g\in H$, so $g$ is bounded by a polynomial and all moments exist.
+Pairing $\cA_kg=1$ with $1$, $v$, $v^2$ and using Lemma~\ref{lem:Lambda},
+\begin{equation}
+  ik\avg{vg} = 1,\qquad ik\avg{v^2g} = 0,\qquad ik\avg{v^3g} = 1 .
+  \label{eq:mom}
+\end{equation}
+Hence $\avg{v^2g}=0$, $\avg{\He_2g} = -\avg{g} = -n_1$ and
+$\avg{\He_3g} = (1-3)/(ik) = 2i/k$. Since $g_e$ is real and $w$ odd,
+$n_1 = \avg{g_e}$ is real; it is positive by \eqref{eq:n1Q} below. By (i),
+$\avg{\He_2R_\omega1}\to-n_1\ne0$ and $\avg{\He_3R_\omega1}\to2i/k$ as
+$\omega\to0$, so $\hat q/\hat T\to-2i/(kn_1)$. Replacing $k$ by $-k$ leaves
+$g_e$ unchanged and reverses $w$, so $n_1$ is even in $k$ and
+\eqref{eq:theta} follows.
+
+\emph{Constant $\nu$.} Then $\Pi_\nu=\Pi$ and the algebra of the previous
+note applies; alternatively both sides are determined by the same linear
+problem. This reduction was also checked numerically
+(Section~\ref{sec:num}). \qed
+
+\subsection{Theorem~\ref{thm:var}}
+
+Separating real and imaginary parts of $\cA_k(g_e+iw)=1$:
+\begin{equation}
+  -kv\,w + \Lambda g_e = 1,\qquad kv\,g_e + \Lambda w = 0 .
+  \label{eq:sys}
+\end{equation}
+Thus $(1-\Pi_\nu)g_e = (1+kvw)/\nu$ and $(1-\Pi_\nu)w = -kvg_e/\nu$.
+
+\emph{The optimal values.} Multiply the first equation of \eqref{eq:sys} by
+$g_e$ and the second by $w$ and average:
+$\avg{g_e} = \avg{g_e\Lambda g_e} - k\avg{vg_ew}$ and
+$k\avg{vg_ew} = -\avg{w\Lambda w}$. Hence
+\begin{equation}
+  n_1 = \avg{g_e\Lambda g_e} + \avg{w\Lambda w}.
+  \label{eq:n1Q}
+\end{equation}
+Since $\avg{w\Lambda w} = \avg{\nu((1-\Pi_\nu)w)^2} = k^2\avg{v^2g_e^2/\nu}$,
+this says $n_1 = Q_k[g_e]$; and since
+$\avg{g_e\Lambda g_e} = \avg{(1+kvw)^2/\nu}$, also $n_1 = P_k[-w]$. If $n_1$
+were zero then $g_e\in H$ with $vg_e = 0$, so $g_e=0$, $\Lambda w=0$,
+$w=\beta v$, and \eqref{eq:sys} would read $-k\beta v^2=1$, which is
+impossible; so $n_1>0$. By \eqref{eq:mom}, $g_e$ and $-w$ are admissible,
+and $\avg{g_e}^2/Q_k[g_e] = n_1$.
+
+\emph{Weak duality.} Let $\varphi,\psi$ be admissible and
+$\chi = 1-kv\psi$. Then
+\[
+  \avg{\varphi} = \avg{\varphi\chi} + k\avg{v\varphi\,\psi}.
+\]
+The constraints on $\psi$ say $\avg{\chi}=\avg{v^2\chi}=0$, so $\chi$ is
+orthogonal in $L^2(M)$ to $\Pi_\nu\varphi\in\operatorname{span}\{1,v^2\}$ and
+\[
+  \avg{\varphi\chi} = \avg{\chi\,(\varphi-\Pi_\nu\varphi)}
+  \le \avg{\chi^2/\nu}^{1/2}\,\avg{\nu(\varphi-\Pi_\nu\varphi)^2}^{1/2}.
+\]
+The constraint on $\varphi$ says $v\varphi$ is orthogonal to
+$\Pi_\nu\psi\in\operatorname{span}\{v\}$, so
+\[
+  k\avg{v\varphi\,\psi} = k\avg{v\varphi\,(\psi-\Pi_\nu\psi)}
+  \le \bigl(k^2\avg{v^2\varphi^2/\nu}\bigr)^{1/2}\,
+      \avg{\nu(\psi-\Pi_\nu\psi)^2}^{1/2}.
+\]
+Adding and applying the Cauchy--Schwarz inequality in $\mathbb{R}^2$,
+$\avg{\varphi}\le P_k[\psi]^{1/2}Q_k[\varphi]^{1/2}$. Taking $\varphi=g_e$
+gives $n_1\le P_k[\psi]$; taking $\psi=-w$ gives
+$\avg{\varphi}^2/Q_k[\varphi]\le n_1$. \qed
+
+\subsection{Theorem~\ref{thm:bounds}}
+
+(a) is \eqref{eq:theta}.
+
+(b) Take $\varphi_0 = (3-v^2)/2\in H$. Then $\avg{\varphi_0}=1$,
+$\avg{v^2\varphi_0}=0$, $\varphi_0-\Pi_\nu\varphi_0=0$, and
+$v^2\varphi_0^2 = \He_3^2/4$, so $Q_k[\varphi_0] = \tfrac12k^2\kappa_{\mathrm F}$
+and \eqref{eq:dual} gives $\chi\le\kappa_{\mathrm F}$. Since $Q_k$ is a
+positive definite quadratic form, the maximizer of
+$\avg{\varphi}^2/Q_k[\varphi]$ is unique up to scaling, so equality would
+force $g_e$ proportional to $\varphi_0$, hence $\Lambda g_e=0$ and, by
+\eqref{eq:sys}, $w = -1/(kv)\notin L^2(M)$. So the inequality is strict.
+
+That $\kappa_{\mathrm F}$ is the Chapman--Enskog conductivity: the
+first-order correction solves $\Lambda h_1 = -\tfrac12\He_3\,\partial_xT$,
+so by Lemma~\ref{lem:Lambda} $h_1 = -\He_3\,\partial_xT/(2\nu)$ modulo $H$,
+and $q = \avg{\He_3h_1} = -\tfrac12\avg{\He_3^2/\nu}\,\partial_xT$.
+
+(c) Take
+\[
+  \psi_* = \frac1k\Bigl(b\,v - \frac{\He_3}{\kappa_{\mathrm F}\,\nu}\Bigr).
+\]
+Then $k\avg{v\psi_*} = b - \avg{v\He_3/\nu}/\kappa_{\mathrm F} = 1$ and
+$k\avg{v^3\psi_*} = 3b - \avg{v^3\He_3/\nu}/\kappa_{\mathrm F}
+= 3 - \avg{\He_3^2/\nu}/\kappa_{\mathrm F} = 1$. By
+Lemma~\ref{lem:Lambda}, $\Pi_\nu(\He_3/\nu) = 0$, so
+$\psi_*-\Pi_\nu\psi_* = -\He_3/(k\kappa_{\mathrm F}\nu)$ and
+$\avg{\nu(\psi_*-\Pi_\nu\psi_*)^2} = \avg{\He_3^2/\nu}/(k\kappa_{\mathrm F})^2
+= 2/(k^2\kappa_{\mathrm F})$. The second term of $P_k$ is $C_*$. Hence
+$n_1\le2/(k^2\kappa_{\mathrm F}) + C_*$ and
+$\chi = 2/(k^2n_1)\ge\kappa_{\mathrm F}/(1+\tfrac12C_*\kappa_{\mathrm F}k^2)$.
+For constant $\nu$, $1-v^2+v\He_3/3 = \He_4/3$ and $\avg{\He_4^2}=24$.
+
+(d) Let $k>0$, $\nu_0=\nu(0)$, $\delta=\nu_0/k$ and
+$L(v) = \delta^2/(v^2+\delta^2)$. Substituting $v=\delta u$ and using
+dominated convergence (with $\nu M$ bounded, and $M/\nu$ bounded on
+$|v|\le1$) gives, as $\delta\to0$,
+\begin{align*}
+  \avg{L} &= \delta\,(\pi M(0)+o(1)), &
+  \avg{\nu L^2} &= \delta\,\bigl(\tfrac\pi2\nu_0M(0)+o(1)\bigr),\\
+  \Bigl\langle\frac{\nu v^2}{(v^2+\delta^2)^2}\Bigr\rangle
+     &= \delta^{-1}\bigl(\tfrac\pi2\nu_0M(0)+o(1)\bigr), &
+  \avg{L^2/\nu} &= \delta\,\bigl(\tfrac{\pi M(0)}{2\nu_0}+o(1)\bigr),\\
+  \avg{v^2L^2/\nu} &= \delta^3\bigl(\tfrac{\pi M(0)}{2\nu_0}+o(1)\bigr),
+\end{align*}
+where in the last two the region $|v|>1$ contributes at most
+$\delta^4\avg{1/\nu}$. Below, $\eta = \delta^{1/2}$ and
+$(x+y)^2\le(1+\eta)x^2+(1+1/\eta)y^2$.
+
+\emph{Upper bound.} Let $\varphi = L-\tau\He_2$ with
+$\tau = \tfrac12\avg{v^2L}\le\tfrac12\delta^2$. Then $\avg{v^2\varphi}=0$,
+$\avg{\varphi}=\avg{L}$, and $\varphi-\Pi_\nu\varphi = L-\Pi_\nu L$, so
+\[
+  Q_k[\varphi]\le\avg{\nu L^2} + (1+\eta)k^2\avg{v^2L^2/\nu}
+     + (1+1/\eta)\,k^2\tau^2\avg{v^2\He_2^2/\nu}
+  = \pi\nu_0M(0)\,\delta\,(1+o(1)),
+\]
+using $k^2\delta^3/\nu_0 = \nu_0\delta$ and $k^2\tau^2 = O(\delta^2)$. Hence
+$\theta\le2Q_k[\varphi]/(k\avg{\varphi}^2)
+= 2\nu_0/(k\delta\,\pi M(0))\,(1+o(1)) = \sqrt{8/\pi}\,(1+o(1))$.
+
+\emph{Lower bound.} Let
+$\psi = k^{-1}\bigl[v/(v^2+\delta^2) + \alpha v + \beta v^3\bigr]$. The
+constraints read $\alpha+3\beta = \avg{L}$ and
+$3\alpha+15\beta = \delta^2(1-\avg{L})$, which determine
+$\alpha,\beta = O(\delta)$. Then $1-kv\psi = L-\alpha v^2-\beta v^4$ and
+$\psi-\Pi_\nu\psi = k^{-1}(1-\Pi_\nu)[v/(v^2+\delta^2)+\beta v^3]$, so
+\[
+  P_k[\psi]\le\frac{1+\eta}{k^2}
+     \Bigl\langle\frac{\nu v^2}{(v^2+\delta^2)^2}\Bigr\rangle
+   + (1+\eta)\avg{L^2/\nu} + O\bigl(\delta^{3/2}\bigr)
+  = \frac{\pi M(0)}{\nu_0}\,\delta\,(1+o(1)),
+\]
+using $1/(k^2\delta) = \delta/\nu_0^2$. Hence
+$\theta = 2/(kn_1)\ge2/(kP_k[\psi]) = \sqrt{8/\pi}\,(1-o(1))$. \qed
+
+\section{Numerical checks}
+\label{sec:num}
+
+Scratch runs on 16 November 2026, not part of the repository. The stationary
+problem $\cA_kg=1$ was solved by quadrature on a stretched velocity grid,
+using $g = (1+\nu p)/(\nu+ikv)$ and the $3\times3$ system for $p$.
+\begin{itemize}
+  \item \textbf{Constant $\nu$.} $\theta(k)$ agrees with the closed formula
+    of the previous note to seven digits for $k/\nu$ from $0.1$ to $10$, and
+    the time-dependent ratio \eqref{eq:exact} agrees with $\Phi$ to six
+    digits at two test points.
+  \item \textbf{Constraints.} $|\avg{v^2g}|$ and $|\Im n_1|$ are below
+    $10^{-13}$.
+  \item \textbf{Bounds.} (b) and (c) hold at every wavenumber tested, for
+    three choices of $\nu$.
+  \item \textbf{$K_2$ is the exact coefficient,} numerically. For
+    $\nu = 1/(1+|v|^3)$, $K_2 = 33215.4$ and $(1-\chi/\kappa_{\mathrm F})/k^2$
+    is $33214.6$ at $k=10^{-5}$ and $33135.2$ at $k=10^{-4}$. This is not
+    proved; it is expected because $\psi_*$ is the exact first-order
+    solution.
+  \item \textbf{Collisionless limit.} $\theta = 1.5938$ at $k=300$ for both
+    velocity-dependent models, against $\sqrt{8/\pi} = 1.5958$.
+\end{itemize}
+
+\section{A Coulomb-like example}
+
+Take $\nu(v) = \nu_0/(1+|v|^3)$, which has the Coulomb tail
+$\nu\propto|v|^{-3}$ and is bounded at low speed. Then
+\[
+  \kappa_{\mathrm F} = 70.02/\nu_0,\qquad K_2 = 3.32\times10^4/\nu_0^2 .
+\]
+The thermal mean free path is $\lambda_T = 1/\nu(1) = 2/\nu_0$. The table
+compares with constant $\nu$ (for which $\lambda=1/\nu$).
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{rrrrr}
+  & \multicolumn{2}{c}{$\nu_0/(1+|v|^3)$}
+  & \multicolumn{2}{c}{constant $\nu$} \\
+  $k/\nu_0$ & $\chi/\kappa_{\mathrm F}$ & bound (c)
+            & $\chi/\kappa_{\mathrm F}$ & bound (c) \\ \hline
+  0.001 & 0.972 & 0.968 & 1.000 & 1.000 \\
+  0.003 & 0.855 & 0.770 & 1.000 & 1.000 \\
+  0.01  & 0.568 & 0.231 & 1.000 & 1.000 \\
+  0.03  & 0.302 & 0.032 & 0.996 & 0.996 \\
+  0.1   & 0.126 & 0.003 & 0.963 & 0.962 \\
+  0.3   & 0.052 & 0.000 & 0.787 & 0.735 \\
+  1     & 0.019 & 0.000 & 0.404 & 0.200 \\
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+  \item \textbf{The local closure fails two orders of magnitude earlier.}
+    With the Coulomb-like tail the conductivity is 11\% below Fourier at
+    $k\lambda_T = 0.005$ and 48\% below at $k\lambda_T = 0.024$. With
+    constant $\nu$ a 4\% deficit needs $k\lambda = 0.1$. The constant in (c)
+    is $3.3\times10^4$ against $4$. The mechanism is visible in the formula
+    for $C_*$: it contains moments of $\He_3^2/\nu^3$, which for
+    $\nu\propto|v|^{-3}$ are Gaussian moments of order near 17.
+  \item \textbf{The harmonic-mean interpolation changes sign of error.} Let
+    $\theta_{\mathrm H} = (\sqrt{\pi/8} + 1/(k\kappa_{\mathrm F}))^{-1}$. For
+    constant $\nu$, $\theta/\theta_{\mathrm H}$ lies between $1.00$ and
+    $1.23$ (the interpolant is too low). For the Coulomb-like $\nu$ it falls
+    to $0.67$ near $k/\nu_0\approx0.1$ (the interpolant is too high by up to
+    48\%). The second behaviour is the one reported for the Landau operator
+    \cite{Brodrick}. In this family of models the sign is decided by the
+    velocity dependence of $\nu$. These statements are numerical.
+  \item \textbf{The bound (c) is sharp only near $k=0$.} It captures the
+    onset of the breakdown but is far below the exact value once
+    $K_2k^2\gtrsim1$. Better trial functions in Theorem~\ref{thm:var} would
+    tighten it.
+\end{itemize}
+
+\section{What is not covered}
+\label{sec:limits}
+
+\begin{enumerate}
+  \item \textbf{The collision operator is a relaxation model.} It has the
+    right conservation laws and a realistic $\nu(v)$, but it is not the
+    Landau or Fokker--Planck operator, has no pitch-angle scattering, and
+    does not distinguish electron--ion from electron--electron collisions.
+    The Lenard--Bernstein operator of the tournament note is also not
+    covered; the variational structure uses only that the operator is
+    symmetric, non-negative, and explicitly invertible on the complement of
+    its kernel, so an extension looks feasible but is not done.
+  \item \textbf{Low-speed singularity.} Assumption (N) requires $\nu$
+    bounded. For $\nu\propto|v|^{-3}$ down to $v=0$ the resonant particles
+    of the collisionless limit are always collisional, and (d) should not be
+    expected to hold.
+  \item \textbf{Rates.} (d) is a limit without a rate. $K_2$ is proved to be
+    an upper bound for the $k^2$ coefficient and only observed to equal it.
+  \item \textbf{Linear, one-dimensional, quasi-static.} As in the previous
+    note, the relation \eqref{eq:exact} depends on the drive and the defect
+    of the quasi-static form in time-dependent problems is not bounded.
+  \item \textbf{Prior art.} The previous note's literature check concerned
+    constant $\nu$. Variational principles for transport coefficients are
+    classical in kinetic theory, and wavenumber-dependent versions for
+    nonlocal transport may exist; this was not searched.
+\end{enumerate}
+
+\section{Use in the benchmark}
+
+Theorem~\ref{thm:var} turns the exact closure into a certificate. For any
+candidate closure $\chi_{\mathrm{model}}(k)$ in this model family, a trial
+pair $(\varphi,\psi)$ gives an interval that must contain the truth, without
+solving the kinetic equation. The Coulomb-like example is a compact test in
+which a closure tuned on constant-$\nu$ data fails with the opposite sign of
+error.
+
+\begin{thebibliography}{9}
+\bibitem{Struchtrup} H.~Struchtrup, \emph{The BGK-model with
+velocity-dependent collision frequency}, Continuum Mech.\ Thermodyn.\
+\textbf{9} (1997) 23--31 (cited from memory; not verified).
+\bibitem{Brodrick} J.~P. Brodrick et al., \emph{Testing nonlocal models of
+electron thermal conduction for magnetic and inertial confinement fusion
+applications}, arXiv:1704.08963 (2017).
+\end{thebibliography}
+
+\end{document}
