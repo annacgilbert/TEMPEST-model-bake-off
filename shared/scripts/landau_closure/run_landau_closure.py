@@ -7,14 +7,15 @@ Builds the linearized like-particle Landau matrix for each truncation degree (ca
   1. the Dougherty check of the same machinery (expected kF = 5/6, eta = 1/2, Kexact = 2/15);
   2. the Landau Chapman-Enskog constants per degree (Braginskii: kappa = 3.906, eta0 = 0.96);
   3. the quasi-static closure chi/kappa_F versus k*lambda with the proved bounds;
-  4. the two-sided estimates of the leading-coefficient theorem.
+  4. the two-sided estimates of the leading-coefficient theorem;
+  5. the positivity range k^2 kF eta < 3 and the perpendicular-temperature ratio.
 Units: n = m = v_t = 1 with v_t = sqrt(T/m); Braginskii like-particle collision time tau = 1.
 Deterministic: no random numbers are used."""
 import os, sys, time
 import numpy as np
 from scipy.integrate import quad
 from landau3d import landau_matrix
-from closure3d import constants, theta, dougherty, second_order
+from closure3d import constants, theta, dougherty, second_order, temperatures
 
 HERE = os.path.dirname(os.path.abspath(__file__)); CACHE = os.path.join(HERE, "cache")
 
@@ -70,6 +71,15 @@ def main(dmax):
             ok1 = o["Cs"] - o["B"] * k * k - 1e-4 <= dn <= o["Cs"] + 1e-4      # 1e-4: rounding in n1 - 1/eps
             ok2 = abs(t[4] - te * o["X0"]) <= np.sqrt(12 * o["eta"] * o["B"]) * k
             print(f"      k={k:5.3f}  n1-1/eps={dn:9.5f}  {ok1}   |X-t eps X0|={abs(t[4]-te*o['X0']):.5f}  {ok2}")
+
+    print("\n5. Positivity (landau_positivity.tex): proved for k < sqrt(3/(kF eta)); T_perp1/n1 should lie in [-1, 0]")
+    for name, dd, L in (("Dougherty", 80, dougherty(80)), ("Landau", degs[-1], Ls[degs[-1]])):
+        cc = constants(L, dd); kc = np.sqrt(3 / (cc["kF"] * cc["eta"]))
+        print(f"   {name} d={dd}: kF*eta = {cc['kF']*cc['eta']:.4f}, proved range k < {kc:.3f}")
+        print("       k    T_perp1/n1   -T1/n1   N(theta)/(9 n1)   -T1 >= 1/(k^2 kF) - eta/3")
+        for k in (0.1, 0.3, 0.5, 0.8, 1.0, 1.5, 2.0, 3.0, 5.0):
+            t = temperatures(L, dd, k); lb = 1 / (k * k * cc["kF"]) - cc["eta"] / 3
+            print(f"     {k:4.1f}   {t['Tperp']/t['n1']:8.4f}   {-t['T1']/t['n1']:7.4f}     {t['Ntheta']/(9*t['n1']):7.4f}          {-t['T1'] >= lb - 1e-9}")
 
 if __name__ == "__main__":
     main(int(sys.argv[1]) if len(sys.argv) > 1 else 16)

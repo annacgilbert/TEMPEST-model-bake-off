@@ -44,3 +44,9 @@ def second_order(L, d):
     Gt = G - 0.5 * (vx2 @ G) * E2                      # <Gt> = 0 and <v_x^2 Gt> = 0
     u = Vx @ Gt
     return dict(kF=kF, Cs=chis @ G, X0=th @ G, B=u @ Lp @ u, eta=th @ Lp @ th / 12)
+def temperatures(L, d, k):
+    """Stationary response: n1, T_par1 = -n1, T_perp1 = <xi g>, and N(theta) = <theta, A^-1 theta>."""
+    B_, ix, one, vx, E2, th, Q, Vx = vecs(d); A = 1j * k * Vx + L
+    g = np.linalg.solve(A, one.astype(complex)); gt = np.linalg.solve(A, th.astype(complex))
+    n1 = (one @ g).real; X = (th @ g).real                 # X = <v_perp^2 g> because <v_x^2 g> = 0
+    return dict(n1=n1, Tperp=0.5 * X - n1, T1=((E2 @ g) / 3).real, Ntheta=(th @ gt).real)

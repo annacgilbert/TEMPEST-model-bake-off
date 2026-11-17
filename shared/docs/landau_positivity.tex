@@ -1,0 +1,256 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{array}
+\usepackage{hyperref}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\avg}[1]{\langle #1\rangle}
+\newcommand{\Tpar}{T_{\parallel1}}
+\newcommand{\Tperp}{T_{\perp1}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Positivity of the heat-flux closure in three velocity dimensions:\\
+what is proved and what is not}
+\author{Working note}
+\date{17 November 2026}
+
+\begin{document}
+\sloppy
+\maketitle
+
+\noindent\emph{Summary.} The goal was to prove that the quasi-static
+conductivity $\chi(k)$ of the Landau operator is positive at every
+wavenumber. \textbf{That is not proved here.} What is proved:
+\begin{itemize}
+  \item \textbf{Theorem~\ref{thm:range}.} For any conserving operator,
+    $\chi(k)>0$ whenever $k^2\kappa_{\mathrm F}\eta<3$. For the Landau
+    operator this is $k\lambda<0.89$, against $0.30$ before, and the same
+    argument gives a cleaner upper bound on $\chi$.
+  \item \textbf{Proposition~\ref{prop:red}.} An exact reduction: positivity
+    is equivalent to the perpendicular temperature response not overshooting,
+    $\Tperp<n_1/2$.
+  \item \textbf{Theorem~\ref{thm:models}.} For the BGK operator with constant
+    $\nu$ and for the Dougherty operator, in three velocity dimensions,
+    $\Tpar\le\Tperp\le0$ at every $k$, hence positivity at every $k$.
+\end{itemize}
+For the Landau operator, numerical values satisfy $\Tpar\le\Tperp\le0$ at
+every wavenumber computed, with a margin, but the computation does not reach
+the collisionless regime and is not a proof. Section~\ref{sec:why} explains
+why the argument that works in one velocity dimension does not extend, and
+what would suffice.
+
+\section{Reduction}
+
+Notation is that of \texttt{landau\_3d\_closure.tex}: $g=g_e+iw$ is the
+stationary solution, $n_1=\avg{g_e}>0$, $T_1=\tfrac13\avg{(|v|^2-3)g_e}$,
+$\chi=-1/(k^2T_1)$, $\vartheta=v_\perp^2-2v_x^2$, $X=\avg{\vartheta g_e}$,
+$\kappa_{\mathrm F}$ the conductivity and $\eta$ the viscosity. Define the
+parallel and perpendicular temperature responses
+\[
+  \Tpar=\avg{(v_x^2-1)\,g_e},\qquad
+  \Tperp=\avg{(\tfrac12v_\perp^2-1)\,g_e}.
+\]
+
+\begin{proposition}\label{prop:red}
+For any operator satisfying (A3) and (S):
+\begin{enumerate}
+  \item[(i)] $\Tpar=-n_1<0$, $T_1=\tfrac13(\Tpar+2\Tperp)$, and
+    $X=2(n_1+\Tperp)$.
+  \item[(ii)] $\chi(k)>0$ if and only if $\Tperp<\tfrac12n_1$.
+  \item[(iii)] If $\Tpar\le\Tperp\le0$, then
+    $\tfrac13n_1\le-T_1\le n_1$, so that
+    \[
+      \frac{1}{k^2n_1}\;\le\;\chi(k)\;\le\;\frac{3}{k^2n_1}
+      \;\le\;3\,\kappa_{\mathrm F}.
+    \]
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) Momentum conservation gives $\avg{v_x^2g_e}=0$, hence $\Tpar=-n_1$ and
+$X=\avg{v_\perp^2g_e}=2\Tperp+2n_1$. The formula for $T_1$ is the
+decomposition $|v|^2-3=(v_x^2-1)+(v_\perp^2-2)$. (ii) follows from
+$T_1=\tfrac13(-n_1+2\Tperp)$. (iii) uses in addition
+$n_1\ge1/(k^2\kappa_{\mathrm F})$.
+\end{proof}
+
+So the sign question is whether collisions, acting on a parallel
+compression, can drive the perpendicular temperature in the opposite
+direction by more than half. Streaming does not act on $v_\perp$, so $\Tperp$
+is produced by collisions alone.
+
+\section{An improved range for any operator}
+
+\begin{theorem}\label{thm:range}
+Assume (A3) and (S). Then for every $k\ne0$
+\begin{equation}
+  -T_1\;\ge\;\frac{1}{k^2\kappa_{\mathrm F}}-\frac{\eta}{3}.
+  \label{eq:lower}
+\end{equation}
+Consequently, if $k^2\kappa_{\mathrm F}\,\eta<3$, then $\chi(k)>0$ and
+\begin{equation}
+  \chi(k)\;\le\;\frac{\kappa_{\mathrm F}}{1-\tfrac13\kappa_{\mathrm F}\eta\,k^2}.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+From \texttt{landau\_3d\_closure.tex}: $-T_1=n_1-\tfrac13X$;
+$n_1=\cD[g_e]+\cD[w]$; $\cD[w]\ge1/(k^2\kappa_{\mathrm F})$; and
+$X^2\le12\,\eta\,\cD[g_e]$. Writing $D=\cD[g_e]\ge0$,
+\[
+  -T_1\ \ge\ \frac{1}{k^2\kappa_{\mathrm F}}+D-\frac{2}{\sqrt3}\sqrt{\eta D}
+  \ \ge\ \frac{1}{k^2\kappa_{\mathrm F}}-\frac{\eta}{3},
+\]
+the minimum over $D$ being attained at $D=\eta/3$.
+\end{proof}
+
+\begin{remark}
+The earlier bound used $D\le C_*$ and then the worst case of the cross term;
+keeping $D$ on both sides removes $C_*$ from the condition. For the Landau
+operator, with the computed $\kappa_{\mathrm F}=3.9502\,\tau$ and
+$\eta=0.9653\,\tau$, the condition is $k\lambda<0.887$. For the Dougherty
+operator it is $k\lambda<2.68$. The constants are those of the Galerkin
+computation; the theorem itself is in terms of $\kappa_{\mathrm F}\eta$.
+\end{remark}
+
+\section{Two operators for which positivity holds at every wavenumber}
+
+\begin{theorem}\label{thm:models}
+In three velocity dimensions, for the BGK operator
+$\Lambda=\nu(1-\Pi)$ with constant $\nu$ and for the Dougherty operator,
+\[
+  \Tperp=c(k)\,T_1\quad\text{with}\quad0<c(k)<1,\qquad
+  T_1=-\frac{n_1}{3-2c(k)}<0 ,
+\]
+so $\Tpar\le\Tperp\le0$ and $\chi(k)>0$ for every $k\ne0$. Here
+$c=\avg{\nu^2/(\nu^2+k^2v_x^2)}$ for BGK and
+$c=2\int_0^1(1-s)E_a(s)\,\dd s$ for Dougherty.
+\end{theorem}
+
+\begin{proof}
+Let $\xi=\tfrac12v_\perp^2-1$, so $|v|^2-3=(v_x^2-1)+2\xi$, $\avg{\xi}=0$,
+$\avg{\xi^2}=1$, and $\Tperp=\avg{\xi g}$.
+
+\emph{BGK.} $\Pi g=\avg{g}+\avg{v_xg}v_x+\tfrac12T_1(|v|^2-3)$, so
+\[
+  g=\frac{1+\nu\,\Pi g}{\nu+ikv_x}
+   =\frac{1+\nu\bigl(\avg{g}+\avg{v_xg}v_x+\tfrac12T_1(v_x^2-1)\bigr)}{\nu+ikv_x}
+    +\frac{\nu\,T_1\,\xi}{\nu+ikv_x}.
+\]
+Only the last term has a component along $\xi$, and
+$\avg{\nu/(\nu+ikv_x)}=\avg{\nu^2/(\nu^2+k^2v_x^2)}=c\in(0,1)$, so
+$\Tperp=c\,T_1$.
+
+\emph{Dougherty.} In the proof of the closed form, $\Tperp=\epsilon_1
+=2T_1S_1$ with $S_1=\int_0^1(1-s)E_a<\tfrac12$.
+
+In both cases Proposition~\ref{prop:red}(i) gives
+$3T_1=-n_1+2c\,T_1$, hence $T_1=-n_1/(3-2c)$, which lies in
+$(-n_1,-\tfrac13n_1)$; and $\Tperp=cT_1\in(-n_1,0)$.
+\end{proof}
+
+\begin{remark}
+The mechanism is that the perpendicular-energy mode $\xi$ evolves in a closed
+way: the equation for the $\xi$-component is a scalar resolvent equation
+driven by $T_1$, and its solution has mean in $(0,1)$ times the drive. For
+the Landau operator the function $\xi$, minus its conserved part, is not an
+eigenfunction and the $\xi$-sector is not invariant, so this closure does not
+occur.
+\end{remark}
+
+\section{Numerical values for the Landau operator}
+\label{sec:num}
+
+From \texttt{shared/scripts/landau\_closure/run\_landau\_closure.py},
+section 5 (polynomial Galerkin, degree 16; Dougherty at degree 80).
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{r|rrr|rrr}
+  & \multicolumn{3}{c|}{Landau} & \multicolumn{3}{c}{Dougherty} \\
+  $k\lambda$ & $\Tperp/n_1$ & $-T_1/n_1$ & $N_\vartheta/(9n_1)$
+     & $\Tperp/n_1$ & $-T_1/n_1$ & $N_\vartheta/(9n_1)$ \\ \hline
+  0.1 & $-0.981$ & 0.988 & 0.043 & $-0.995$ & 0.997 & 0.006 \\
+  0.3 & $-0.856$ & 0.904 & 0.224 & $-0.958$ & 0.972 & 0.047 \\
+  0.5 & $-0.712$ & 0.808 & 0.386 & $-0.893$ & 0.929 & 0.117 \\
+  1.0 & $-0.459$ & 0.639 & 0.620 & $-0.696$ & 0.798 & 0.317 \\
+  2.0 & $-0.245$ & 0.497 & 0.778 & $-0.423$ & 0.615 & 0.568 \\
+  3.0 & $-0.164$ & 0.443 & 0.824 & $-0.290$ & 0.527 & 0.678 \\
+  5.0 & $-0.094$ & 0.396 & 0.863 & $-0.174$ & 0.450 & 0.768 \\
+\end{tabular}
+\end{center}
+Here $N_\vartheta=\avg{\vartheta,(ikv_x+\Lambda)^{-1}\vartheta}$.
+\begin{itemize}
+  \item At every point $-1\le\Tperp/n_1\le0$, and $-T_1/n_1$ decreases from
+    $1$ towards $\tfrac13$, the value when the perpendicular temperature does
+    not respond at all.
+  \item The Landau values are converged in the truncation degree to three
+    digits for $k\lambda\le1$ and to about two for $k\lambda\ge2$
+    (degrees 10, 12, 16 give $X/(3n_1)=0.581$, $0.601$, $0.604$ at
+    $k\lambda=5$). A polynomial basis does not reach larger $k\lambda$.
+  \item Inequality \eqref{eq:lower} holds at every point.
+\end{itemize}
+
+\section{Why this is not a proof, and what would suffice}
+\label{sec:why}
+
+\begin{enumerate}
+  \item \textbf{The structure available.} The even part of the resolvent
+    defines a non-negative quadratic form
+    $N(\sigma)=\avg{\sigma,(ikv_x+\Lambda)^{-1}\sigma}$ on even sources, with
+    $v_x^2$ in its kernel. Modulo that kernel there are two relevant sources,
+    $1$ and $\xi$, and
+    \[
+      n_1=N(1),\qquad \Tperp=\text{the mixed term of }1\text{ and }\xi .
+    \]
+    Non-negativity bounds the mixed term by $\sqrt{N(1)N(\xi)}$ in absolute
+    value and says nothing about its sign. In one velocity dimension there is
+    no $\xi$, $T_1=-n_1$ is a diagonal term, and positivity is automatic.
+  \item \textbf{A sufficient condition.} By the Cauchy--Schwarz inequality,
+    positivity holds if $N_\vartheta<9\,n_1$. In the collisionless limit the
+    ratio $N_\vartheta/(9n_1)$ tends formally to $\tfrac89$, so the margin
+    is $\tfrac19$; at small $k$ it tends to $0$. The table shows it
+    increasing between the two. Proving $N_\vartheta<9n_1$ uniformly would
+    need an upper bound on $N_\vartheta$ and a lower bound on $n_1$ at each
+    $k$, both of which have variational principles; for the Landau operator
+    the trial functions require inverting $\Lambda$, which is not available
+    in closed form, so this would be a computer-assisted proof with
+    certified bounds.
+  \item \textbf{A stronger conjecture.} The data suggest
+    $\Tpar\le\Tperp\le0$ for the Landau operator at every $k$: collisions
+    move the perpendicular temperature towards the parallel one and never
+    past zero. This is proved above for BGK and Dougherty. I do not have an
+    argument for a general operator, and I do not know whether it is true
+    for every conserving, isotropic, non-negative operator.
+  \item \textbf{Large wavenumber.} Any proof at all $k$ also needs the
+    collisionless regime, where neither the theory in these notes nor the
+    polynomial computation applies to the Landau operator.
+\end{enumerate}
+
+\section{Status}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{6.4cm}p{8.2cm}}
+  Statement & Status \\ \hline
+  $\chi>0$ for $k^2\kappa_{\mathrm F}\eta<3$, any operator & proved \\
+  $\chi>0$ for all $k$: BGK (constant $\nu$), Dougherty & proved \\
+  $\chi>0$ for all $k$: Landau & not proved; holds numerically for
+     $k\lambda\le5$; proved for $k\lambda<0.89$ given the computed
+     $\kappa_{\mathrm F}$, $\eta$ \\
+  $\Tpar\le\Tperp\le0$: Landau & conjecture, supported numerically \\
+\end{tabular}
+\end{center}
+The value $0.89$ uses Galerkin values of $\kappa_{\mathrm F}$ and $\eta$,
+which are lower bounds for the true values by the variational
+characterization of each; a certified upper bound on
+$\kappa_{\mathrm F}\eta$ would be needed to make the number rigorous. No
+second reader has checked the proofs.
+
+\end{document}
