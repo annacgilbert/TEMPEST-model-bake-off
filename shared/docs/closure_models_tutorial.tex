@@ -1,0 +1,450 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{array}
+\usepackage{hyperref}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\vt}{v_t}
+\newcommand{\Kn}{\mathrm{Kn}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\avg}[1]{\langle #1 \rangle}
+\newcommand{\bu}{\mathbf{u}}
+\newcommand{\bv}{\mathbf{v}}
+\newcommand{\bq}{\mathbf{q}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\bE}{\mathbf{E}}
+\newcommand{\bB}{\mathbf{B}}
+
+\title{Closure models: a high-level tutorial\\[4pt]
+\large From gases and turbulence to plasmas}
+\author{Working note}
+\date{16 November 2026}
+
+\begin{document}
+\maketitle
+
+\noindent\emph{Status.} This tutorial is written from general knowledge of
+the subject. The equations are standard, but the text and the bibliography
+were not checked against the cited sources, with the exception of the
+Hammett--Perkins material in Section~\ref{sec:collisionless}, which is
+derived and checked in the companion note
+\texttt{hammett\_perkins\_closure\_derivation.tex}.
+
+\tableofcontents
+
+\section{What a closure problem is}
+
+Suppose a system has a full state $X$ obeying $\dot X = F(X)$, and we only
+want to track a reduced state $x = \mathcal{P}X$: an average, a few moments,
+a coarse-grained field. Applying $\mathcal{P}$ to the dynamics gives
+\begin{equation}
+  \dot x = \mathcal{P}F(X).
+  \label{eq:unclosed}
+\end{equation}
+The right-hand side depends on the full state $X$, not only on $x$. That is
+the closure problem. A \emph{closure} is a rule that replaces
+$\mathcal{P}F(X)$ by something computable from $x$ alone,
+\begin{equation}
+  \dot x = f(x) + \underbrace{\bigl[\mathcal{P}F(X) - f(x)\bigr]}_{\text{closure defect}} ,
+\end{equation}
+and the term in brackets is what the closure gets wrong. Every scale
+transition in this project can be described with five items: the exact
+hierarchy, the limiting process, the retained state, the discarded
+information, and the closure defect.
+
+The problem always has one of two causes, and usually both:
+\begin{itemize}
+  \item \textbf{Nonlinearity.} The average of a product is not the product
+    of averages.
+  \item \textbf{Transport.} Streaming or advection couples each retained
+    quantity to one that is not retained, producing an infinite hierarchy.
+\end{itemize}
+
+\section{Three places the problem first appeared}
+
+\subsection{Kinetic theory of gases}
+
+A dilute gas is described by a distribution $f(\bx,\bv,t)$ obeying the
+Boltzmann equation,
+\begin{equation}
+  \partial_t f + \bv\cdot\nabla f = C[f],
+\end{equation}
+where $C$ is the collision operator. Take velocity moments: density
+$n = \int f\,\dd^3 v$, flow $n\bu = \int \bv f\,\dd^3 v$, and temperature
+$\tfrac{3}{2}nT = \int \tfrac{1}{2}m|\bv-\bu|^2 f\,\dd^3 v$ (with
+$k_B = 1$). Because collisions conserve particles, momentum and energy, the
+moment equations are
+\begin{align}
+  \partial_t n + \nabla\cdot(n\bu) &= 0, \\
+  mn\,\frac{D\bu}{Dt} &= -\nabla p - \nabla\cdot\boldsymbol{\pi}, \\
+  \frac{3}{2}\,n\,\frac{DT}{Dt} + p\,\nabla\cdot\bu
+     &= -\nabla\cdot\bq - \boldsymbol{\pi}:\nabla\bu ,
+\end{align}
+with $p = nT$. These are exact, and they are not closed: the viscous stress
+$\boldsymbol{\pi}$ and heat flux $\bq$ are higher moments of $f$. Writing
+equations for them brings in still higher moments. The term
+$\bv\cdot\nabla f$ is responsible: multiplying by $\bv^k$ and integrating
+always produces a moment of order $k+1$. Maxwell wrote this hierarchy down in
+1867; the systematic closures came from Hilbert, Chapman and Enskog
+(1912--1917) and from Grad (1949).
+
+\subsection{Turbulence}
+
+For an incompressible fluid, split the velocity into a mean and a
+fluctuation, $u_i = \bar u_i + u_i'$, and average the Navier--Stokes
+equations (Reynolds, 1895):
+\begin{equation}
+  \partial_t \bar u_i + \bar u_j\,\partial_j \bar u_i
+  = -\frac{1}{\rho}\,\partial_i \bar p + \nu\,\nabla^2 \bar u_i
+    - \partial_j \avg{u_i' u_j'} .
+\end{equation}
+The Reynolds stress $\avg{u_i'u_j'}$ is not a function of the mean flow.
+Its own evolution equation contains triple correlations, and so on. Here the
+cause is the quadratic nonlinearity. Large-eddy simulation has the same
+structure with a spatial filter in place of the average.
+
+\subsection{Many-body statistical mechanics}
+
+For $N$ interacting particles, the reduced $s$-particle distributions obey
+the BBGKY hierarchy, schematically
+\begin{equation}
+  \partial_t f_s = \mathcal{L}_s f_s + \mathcal{C}_{s,s+1} f_{s+1},
+  \qquad s = 1, 2, \dots, N-1,
+\end{equation}
+where $\mathcal{L}_s$ is the dynamics of $s$ particles among themselves and
+$\mathcal{C}_{s,s+1}$ is their interaction with one more. A kinetic equation
+is a closure of the $s=1$ equation: the Boltzmann equation follows from
+assuming that particles about to collide are uncorrelated,
+$f_2 \approx f_1 f_1$, in the low-density limit.
+
+\subsection{The common pattern}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{>{\raggedright}p{3.2cm}>{\raggedright}p{3.6cm}>{\raggedright}p{3.4cm}p{3.6cm}}
+  Problem & Retained state & Unclosed quantity & Discarded information \\ \hline
+  Kinetic to fluid & $n$, $\bu$, $T$ & $\boldsymbol{\pi}$, $\bq$
+     & shape of $f$ in velocity \\
+  Turbulence & $\bar{\bu}$, $\bar p$ & $\avg{u_i'u_j'}$
+     & fluctuations below the filter \\
+  Particles to kinetic & $f_1$ & $f_2$ & correlations between particles \\
+\end{tabular}
+\end{center}
+
+\section{The standard ways to close}
+
+\subsection{Asymptotic closure}
+
+If a small parameter makes the discarded variables relax quickly to a state
+determined by the retained ones, the closure can be derived. For a gas the
+parameter is the Knudsen number,
+\begin{equation}
+  \Kn = \frac{\lambda}{L},
+\end{equation}
+the mean free path over the gradient length. The Chapman--Enskog expansion
+writes $f = f_M\,(1 + \Kn\,\phi_1 + \Kn^2\phi_2 + \dots)$ about the local
+Maxwellian $f_M(n,\bu,T)$ and solves for $\phi_1$. At zeroth order
+$\boldsymbol{\pi} = \bq = 0$ (the Euler equations). At first order,
+\begin{equation}
+  \boldsymbol{\pi} = -\mu\left(\nabla\bu + \nabla\bu^{\mathsf T}
+     - \tfrac{2}{3}(\nabla\cdot\bu)\,\mathbf{I}\right),
+  \qquad
+  \bq = -\kappa\,\nabla T ,
+  \label{eq:NSF}
+\end{equation}
+which are the Navier--Stokes--Fourier equations, with
+$\mu \sim mn\,\vt\lambda$ and $\kappa \sim n\,\vt\lambda$ computed from the
+collision operator. The closure is local in space and time, and its error is
+controlled by $\Kn$.
+
+\subsection{Closure by an ansatz for the distribution}
+
+Instead of expanding, assume a shape for $f$ with as many free parameters as
+retained moments, then compute the missing moment from that shape.
+\begin{itemize}
+  \item \textbf{Grad (1949):} $f = f_M \times$ (a polynomial in $\bv$), with
+    stress and heat flux promoted to dynamical variables (13 moments).
+  \item \textbf{Maximum entropy (Levermore 1996):}
+    $f = \exp\bigl(\sum_i \alpha_i m_i(\bv)\bigr)$, the least-biased
+    distribution consistent with the retained moments.
+\end{itemize}
+These give evolution equations for the fluxes, so they have finite relaxation
+times, but they can lose hyperbolicity or realizability away from
+equilibrium.
+
+\subsection{Gradient-diffusion models}
+
+When no small parameter is available, postulate the form of \eqref{eq:NSF}
+and model the coefficient. For turbulence (Boussinesq, 1877),
+\begin{equation}
+  -\avg{u_i'u_j'} + \tfrac{2}{3}k\,\delta_{ij}
+  = \nu_t\left(\partial_i \bar u_j + \partial_j \bar u_i\right),
+\end{equation}
+with the eddy viscosity $\nu_t$ supplied by a mixing length
+($\nu_t = \ell_m^2\,|\partial \bar u/\partial y|$, Prandtl 1925), by
+transport equations for turbulence quantities ($k$--$\varepsilon$), or by the
+filter width ($\nu_t = (C_s\Delta)^2|\bar S|$, Smagorinsky 1963). These are
+models, not limits: turbulent eddies have no scale separation from the mean
+flow that would justify them.
+
+\subsection{Memory closures}
+
+The Mori--Zwanzig formalism projects the full dynamics onto the retained
+variables without approximation. For retained variables $a(t)$ the result is
+a generalized Langevin equation,
+\begin{equation}
+  \frac{\dd a}{\dd t} = i\Omega\,a(t)
+     - \int_0^t K(s)\,a(t-s)\,\dd s + F(t),
+\end{equation}
+with a Markovian term, a memory kernel $K$, and a term $F$ that depends on
+the discarded initial data. This shows what any local closure gives up:
+memory and noise. Asymptotic closures correspond to a kernel that decays much
+faster than $a$ evolves.
+
+\subsection{Learned closures}
+
+Fit the unclosed term, or a correction to a classical closure, from
+higher-fidelity data. The learned object can be a local function, a nonlocal
+operator, or a memory kernel. The structural questions are the same as for
+any other closure.
+
+\subsection{How a closure is judged}
+
+\begin{itemize}
+  \item \textbf{Conservation} of mass, momentum and energy.
+  \item \textbf{Realizability:} the closed moments correspond to some
+    non-negative distribution.
+  \item \textbf{Well-posedness and stability}, including an entropy
+    inequality where one exists.
+  \item \textbf{Limit recovery:} the closure reduces to the trusted result
+    where the small parameter is small.
+  \item \textbf{A posteriori behaviour:} accuracy when embedded in a solver
+    over long times, not only accuracy of the closure term in isolation.
+\end{itemize}
+
+\section{Why neutral gases are the easy case}
+
+Collisions between neutral molecules are short-range and frequent. Three
+facts follow, and each will fail for plasmas.
+\begin{enumerate}
+  \item \textbf{Fast local relaxation.} Collisions drive $f$ to a local
+    Maxwellian in a few collision times, so the kinetic state is determined
+    by $n$, $\bu$, $T$ and their gradients.
+  \item \textbf{One small parameter.} All molecules have comparable mean
+    free paths, so a single $\Kn$ controls the expansion.
+  \item \textbf{Locality.} Fluxes depend on gradients at the same point and
+    time.
+\end{enumerate}
+
+\section{What makes plasmas different}
+
+\subsection{Long-range forces and collective behaviour}
+
+The Coulomb force is long-range, so each particle interacts with many others
+simultaneously. The relevant parameter is the number of particles in a Debye
+sphere, $\Lambda \sim n\lambda_D^3$. When $\Lambda \gg 1$, the leading-order
+closure of BBGKY is not a collision term at all but a mean field:
+\begin{equation}
+  \partial_t f_s + \bv\cdot\nabla f_s
+  + \frac{q_s}{m_s}\left(\bE + \bv\times\bB\right)\cdot\nabla_{\bv} f_s
+  = C[f],
+\end{equation}
+with $\bE$ and $\bB$ determined self-consistently by Maxwell's equations.
+Collisions enter as a correction of relative size $\sim \ln\Lambda/\Lambda$,
+and they are the cumulative effect of many small-angle deflections, described
+by a Fokker--Planck (Landau) operator, not a Boltzmann operator. The
+expansion parameter for the particle-to-kinetic closure is weak coupling, not
+low density.
+
+When the potential energy between neighbours is comparable to or larger than
+the thermal energy (coupling parameter $\Gamma \gtrsim 1$, as in dusty
+plasmas), $\Lambda$ is not large, pair correlations are not small, and this
+kinetic closure fails as well.
+
+\subsection{Collisions weaken with energy}
+
+The Coulomb collision frequency falls steeply with speed,
+\begin{equation}
+  \nu(v) \propto \frac{n\ln\Lambda}{v^3},
+  \qquad
+  \lambda(v) = \frac{v}{\nu(v)} \propto v^4 .
+\end{equation}
+There is no single mean free path. The Chapman--Enskog result for a plasma
+(Spitzer--H\"arm 1953; Braginskii 1965) is $\bq = -\kappa\nabla T$ with
+$\kappa \propto T^{5/2}$, but the heat is carried by electrons several times
+faster than thermal, whose mean free path is far longer than the thermal one.
+The local closure therefore fails when the thermal mean free path is still
+only of order one percent of the temperature gradient length. Two standard
+repairs are used in practice:
+\begin{align}
+  \text{flux limiter:}\quad
+    & q = \min\bigl(q_{\mathrm{SH}},\; f\,n T \vt\bigr),
+      \quad f \text{ tuned}, \\
+  \text{nonlocal kernel:}\quad
+    & q(x) = \int W(x,x')\,q_{\mathrm{SH}}(x')\,\dd x' ,
+\end{align}
+the second due to Luciani, Mora and Virmont (1983) and developed into
+multigroup models such as Schurtz--Nicola\"i--Busquet (2000). The closure has
+become a nonlocal functional of the temperature profile.
+
+\subsection{No collisions does not mean no closure physics}
+\label{sec:collisionless}
+
+In hot, dilute plasmas the mean free path exceeds the system size. Nothing
+then relaxes $f$ toward a Maxwellian, and Chapman--Enskog has no small
+parameter. What takes the place of collisions is phase mixing: particles
+streaming at different speeds smear out perturbations, and particles resonant
+with a wave ($v = \omega/k$) exchange energy with it (Landau damping).
+
+The Hammett--Perkins closure builds this into a fluid model. Compare the two
+heat-flux closures in Fourier space:
+\begin{equation}
+  \text{collisional:}\quad q_k = -\kappa\,ik\,T_k,
+  \qquad\qquad
+  \text{collisionless:}\quad
+  q_k = -n_0\sqrt{\frac{8}{\pi}}\;\vt\;i\,\sgn(k)\,T_k .
+\end{equation}
+The collisional closure damps temperature perturbations at a rate
+$\propto k^2$; the collisionless one at a rate $\propto |k|\vt$, the
+phase-mixing rate. In real space the first is a derivative and the second is
+a Hilbert transform, a nonlocal operator with no intrinsic length scale. It
+is matched to the linear kinetic response and is exact only in limiting
+cases.
+
+\subsection{The magnetic field makes the closure anisotropic}
+
+A magnetic field confines particles to gyro-orbits of radius $\rho$ across
+the field while leaving them free along it. This introduces a second small
+parameter, $\rho/L$, that works even without collisions.
+\begin{itemize}
+  \item \textbf{Across the field,} gyromotion provides locality. With heat
+    fluxes neglected, the pressure tensor is gyrotropic and obeys the
+    double-adiabatic (Chew--Goldberger--Low 1956) laws
+    \[
+      \frac{\dd}{\dd t}\!\left(\frac{p_\perp}{nB}\right) = 0,
+      \qquad
+      \frac{\dd}{\dd t}\!\left(\frac{p_\parallel B^2}{n^3}\right) = 0 .
+    \]
+  \item \textbf{Along the field} there is no such help, and the parallel
+    closure is where the nonlocal physics of the previous two subsections
+    enters.
+  \item \textbf{With collisions,} transport coefficients differ by many
+    orders of magnitude between directions:
+    $\kappa_\perp/\kappa_\parallel \sim (\Omega\tau)^{-2}$, where $\Omega$
+    is the gyrofrequency and $\tau$ the collision time.
+\end{itemize}
+
+\subsection{More fields and more scales}
+
+A plasma has at least two species with a mass ratio of 1836 or more, which
+can have different temperatures and flows, and electromagnetic fields that
+are dynamical variables in their own right. The Debye length, the skin
+depths and the gyroradii of each species are all distinct scales, and a
+closure valid at one may fail at another.
+
+\subsection{Closures in sequence}
+
+A plasma model typically stacks several closures, each with its own defect:
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{>{\raggedright}p{4.2cm}>{\raggedright}p{4.6cm}p{5.2cm}}
+  Transition & Small parameter & Fails when \\ \hline
+  Particles $\to$ kinetic & $1/\Lambda$ (weak coupling)
+     & strong coupling, dense or dusty plasmas \\
+  Kinetic $\to$ fluid, collisional & $\lambda/L$
+     & steep gradients, fast particles \\
+  Kinetic $\to$ fluid, magnetized & $\rho/L$
+     & unmagnetized regions, parallel dynamics \\
+  Fluid $\to$ mean transport & none in general
+     & always a model (turbulence) \\
+\end{tabular}
+\end{center}
+
+\section{Side-by-side summary}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{>{\raggedright}p{2.9cm}>{\raggedright}p{3.4cm}>{\raggedright}p{3.4cm}p{4.3cm}}
+  & Neutral gas & Fluid turbulence & Plasma \\ \hline
+  What relaxes the discarded variables
+    & frequent short-range collisions
+    & nothing fast; cascade
+    & weak, speed-dependent collisions; phase mixing; gyromotion \\
+  Small parameter
+    & $\Kn$
+    & none
+    & several ($1/\Lambda$, $\lambda/L$, $\rho/L$), often not small \\
+  Form of closure
+    & local gradient law
+    & modelled eddy viscosity
+    & nonlocal in space, anisotropic, sometimes with memory \\
+  Status
+    & derived, with error control
+    & modelled
+    & derived only in limits; modelled or matched elsewhere \\
+\end{tabular}
+\end{center}
+
+\paragraph{In one sentence.} In a gas the closure is justified because
+collisions enforce local equilibrium below every scale that is resolved; in a
+plasma that justification is often missing, so the discarded kinetic
+information is not determined by the local fluid state, and the closure
+becomes nonlocal, anisotropic, and tied to wave--particle resonance.
+
+\begin{thebibliography}{99}
+\bibitem{ChapmanCowling}
+S.~Chapman and T.~G. Cowling,
+\emph{The Mathematical Theory of Non-uniform Gases},
+3rd ed., Cambridge University Press (1970).
+\bibitem{Grad49}
+H.~Grad,
+\emph{On the kinetic theory of rarefied gases},
+Commun.\ Pure Appl.\ Math.\ \textbf{2}, 331 (1949).
+\bibitem{Levermore96}
+C.~D. Levermore,
+\emph{Moment closure hierarchies for kinetic theories},
+J.\ Stat.\ Phys.\ \textbf{83}, 1021 (1996).
+\bibitem{Pope}
+S.~B. Pope,
+\emph{Turbulent Flows},
+Cambridge University Press (2000).
+\bibitem{Zwanzig}
+R.~Zwanzig,
+\emph{Nonequilibrium Statistical Mechanics},
+Oxford University Press (2001).
+\bibitem{SH53}
+L.~Spitzer and R.~H\"arm,
+\emph{Transport phenomena in a completely ionized gas},
+Phys.\ Rev.\ \textbf{89}, 977 (1953).
+\bibitem{CGL56}
+G.~F. Chew, M.~L. Goldberger, and F.~E. Low,
+\emph{The Boltzmann equation and the one-fluid hydromagnetic equations in
+the absence of particle collisions},
+Proc.\ R.\ Soc.\ Lond.\ A \textbf{236}, 112 (1956).
+\bibitem{Braginskii65}
+S.~I. Braginskii,
+\emph{Transport processes in a plasma},
+in Reviews of Plasma Physics, Vol.~1, p.~205 (1965).
+\bibitem{LMV83}
+J.~F. Luciani, P.~Mora, and J.~Virmont,
+\emph{Nonlocal heat transport due to steep temperature gradients},
+Phys.\ Rev.\ Lett.\ \textbf{51}, 1664 (1983).
+\bibitem{SNB00}
+G.~P. Schurtz, Ph.~D. Nicola\"i, and M.~Busquet,
+\emph{A nonlocal electron conduction model for multidimensional radiation
+hydrodynamics codes},
+Phys.\ Plasmas \textbf{7}, 4238 (2000).
+\bibitem{HP90}
+G.~W. Hammett and F.~W. Perkins,
+\emph{Fluid moment models for Landau damping with application to the
+ion-temperature-gradient instability},
+Phys.\ Rev.\ Lett.\ \textbf{64}, 3019 (1990).
+\bibitem{Hunana19}
+P.~Hunana et al.,
+\emph{An introductory guide to fluid models with anisotropic temperatures.
+Part 2. Kinetic theory, Pad\'e approximants and Landau fluid closures},
+\href{https://arxiv.org/abs/1901.09360}{arXiv:1901.09360} (2019).
+\end{thebibliography}
+
+\end{document}

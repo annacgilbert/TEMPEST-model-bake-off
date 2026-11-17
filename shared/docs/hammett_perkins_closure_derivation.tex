@@ -1,0 +1,318 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\PV}{\mathrm{P.V.}\!\!}
+\newcommand{\Hil}{\mathcal{H}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\vt}{v_t}
+
+\title{The Hammett--Perkins closures:\\ where the Hilbert transform comes from}
+\author{Working note}
+\date{16 November 2026}
+
+\begin{document}
+\maketitle
+
+\noindent\emph{Status.} This is a hand derivation written from first
+principles. The closures, coefficients, response functions, and the
+real-space integral \eqref{eq:real3} agree with a literature check against
+Hammett--Perkins \cite{HP90} (eqs.~7--8), Hammett--Dorland--Perkins
+\cite{HDP92}, and the review of Hunana et al.\ \cite{Hunana19}. The
+intermediate algebra is my own and was not compared line by line; the
+original papers are scans and some coefficients were confirmed through the
+review and not read directly from them. See the convention notes in
+Section~\ref{sec:caveat}.
+
+\section{Setup and conventions}
+
+Consider one species in one spatial dimension $z$ (the direction along the
+magnetic field), with no collisions, linearized about a uniform Maxwellian
+\[
+  f_0(v) = \frac{n_0}{\sqrt{2\pi}\,\vt}\,
+           \exp\!\left(-\frac{v^2}{2\vt^2}\right),
+  \qquad \vt = \sqrt{T_0/m}.
+\]
+With acceleration $a = (e/m)E$, the perturbation $f_1$ obeys
+\begin{equation}
+  \partial_t f_1 + v\,\partial_z f_1 + a\,\partial_v f_0 = 0 .
+  \label{eq:vlasov}
+\end{equation}
+Derivations below use units $n_0 = m = \vt = 1$; dimensional forms are
+restored for the final results. Fourier modes are $\propto e^{ikz - i\omega t}$,
+and
+\begin{equation}
+  \zeta = \frac{\omega}{\sqrt{2}\,|k|\,\vt}.
+  \label{eq:zeta}
+\end{equation}
+The Hilbert transform is taken with the convention
+\begin{equation}
+  \Hil[g](z) = \frac{1}{\pi}\,\PV\int_{-\infty}^{\infty}
+               \frac{g(z')}{z - z'}\,\dd z',
+  \qquad
+  \widehat{\Hil[g]}(k) = -i\,\sgn(k)\,\hat g(k).
+  \label{eq:hilbert}
+\end{equation}
+
+\section{The kinetic response and the origin of $\sgn(k)$}
+
+In Fourier space \eqref{eq:vlasov} gives, using $\partial_v f_0 = -v f_0$,
+\[
+  f_{1,k} = -\,\frac{i\,a\,v\,f_0(v)}{k v - \omega},
+\]
+so the density perturbation is
+\[
+  n_k = -\frac{i a}{k}\int \frac{v\,f_0}{v - \omega/k}\,\dd v
+      = -\frac{i a}{k}\left[1 + \frac{\omega}{k}
+        \int \frac{f_0}{v - \omega/k}\,\dd v\right].
+\]
+The integral is defined for $\operatorname{Im}\omega > 0$ (causality) and
+continued analytically. It is the plasma dispersion function
+\begin{equation}
+  Z(\zeta) = \frac{1}{\sqrt{\pi}}\int_{-\infty}^{\infty}
+             \frac{e^{-x^2}}{x - \zeta}\,\dd x ,
+  \qquad \operatorname{Im}\zeta > 0,
+  \label{eq:Z}
+\end{equation}
+which is the Hilbert transform, in velocity space, of a Gaussian. For real
+$\zeta$ the Plemelj formula
+\[
+  \frac{1}{x - \zeta - i0} = \PV\frac{1}{x - \zeta} + i\pi\,\delta(x - \zeta)
+\]
+separates a principal-value part from the contribution of the resonant
+particles at $v = \omega/k$.
+
+The pole sits at $v = \omega/k$. For $\operatorname{Im}\omega > 0$ it lies
+above the real $v$ axis when $k > 0$ and below it when $k < 0$. Substituting
+$x \to -x$ in the second case shows that both signs give the same function of
+$\zeta$ as defined in \eqref{eq:zeta}, with $|k|$ and not $k$:
+\begin{equation}
+  n_k = \frac{a}{ik}\,R(\zeta), \qquad R(\zeta) = 1 + \zeta Z(\zeta).
+  \label{eq:R}
+\end{equation}
+This is the source of the non-analytic dependence on $k$. The expansions
+needed below are
+\begin{align}
+  R(\zeta) &= 1 + i\sqrt{\pi}\,\zeta - 2\zeta^2 + O(\zeta^3),
+  & \zeta &\to 0, \label{eq:Rsmall}\\
+  R(\zeta) &= -\frac{1}{2\zeta^2} - \frac{3}{4\zeta^4}
+              - \frac{15}{8\zeta^6} - \dots,
+  & |\zeta| &\to \infty. \label{eq:Rlarge}
+\end{align}
+The term $i\sqrt{\pi}\,\zeta$ in \eqref{eq:Rsmall} is the pure resonant
+contribution, $Z(0) = i\sqrt{\pi}$.
+
+\section{Linearized moment equations}
+
+Define $n = \int f_1\,\dd v$, $u = \int v f_1\,\dd v$,
+$p = \int v^2 f_1\,\dd v$, $T = p - n$, the linearized heat flux
+$q = \int v^3 f_1\,\dd v - 3u$, and the deviation of the fourth moment from
+its Maxwellian value, $\delta r = r - 3p^2/n$, which linearizes to
+$\delta r = \int v^4 f_1\,\dd v - 6p + 3n$. Moments of \eqref{eq:vlasov} give
+\begin{align}
+  \partial_t n + \partial_z u &= 0, \label{eq:n}\\
+  \partial_t u + \partial_z (n + T) &= a, \label{eq:u}\\
+  \partial_t T + 2\,\partial_z u + \partial_z q &= 0, \label{eq:T}\\
+  \partial_t q + 3\,\partial_z T + \partial_z \delta r &= 0. \label{eq:q}
+\end{align}
+Each equation is exact; the hierarchy is unclosed because each involves the
+next moment. In Fourier space write $\omega/k = \sqrt{2}\,\sgn(k)\,\zeta$.
+
+\section{Three-moment closure}
+
+Keep \eqref{eq:n}--\eqref{eq:T} and close $q$. A diffusive closure is
+$q_k = -\chi\, i k\, T_k$. With collisions $\chi \sim \vt^2/\nu$; without
+them the only available rate is the phase-mixing rate $|k|\vt$, so
+$\chi = \chi_1 \sqrt{2}\,\vt/|k|$ with $\chi_1$ a pure number:
+\begin{equation}
+  q_k = -\,i\,\sgn(k)\,\sqrt{2}\,\chi_1\,T_k .
+  \label{eq:closure3}
+\end{equation}
+Equation \eqref{eq:T} then gives $T_k = 2\zeta\,n_k/(\zeta + i\chi_1)$, and
+\eqref{eq:u} gives $n_k = (a/ik)\,R_3$ with
+\begin{equation}
+  R_3(\zeta) = \frac{\chi_1 - i\zeta}
+                    {\chi_1 - 3i\zeta - 2\chi_1\zeta^2 + 2i\zeta^3}.
+  \label{eq:R3}
+\end{equation}
+For large $\zeta$, $R_3 = -1/(2\zeta^2) - 3/(4\zeta^4) + O(\zeta^{-5})$,
+which agrees with \eqref{eq:Rlarge} for any $\chi_1$ because the retained
+moment equations are exact. For small $\zeta$,
+$R_3 = 1 + 2i\zeta/\chi_1 + O(\zeta^2)$; comparison with \eqref{eq:Rsmall}
+fixes
+\begin{equation}
+  \chi_1 = \frac{2}{\sqrt{\pi}} .
+\end{equation}
+Restoring units,
+\begin{equation}
+  q_k = -\,n_0\,\chi_1\,\frac{\sqrt{2}\,\vt}{|k|}\,i k\,T_k
+      = -\,i\,\sgn(k)\; n_0\sqrt{\frac{8}{\pi}}\;\vt\;T_k .
+\end{equation}
+By \eqref{eq:hilbert} the multiplier $-i\,\sgn(k)$ is the Hilbert transform,
+so in real space
+\begin{equation}
+  q(z) = n_0\sqrt{\frac{8}{\pi}}\;\vt\;\Hil[T](z)
+       = -\,n_0\,\chi_1\,\frac{\sqrt{2}\,\vt}{\pi}
+         \int_0^\infty \frac{T(z+z') - T(z-z')}{z'}\,\dd z' .
+  \label{eq:real3}
+\end{equation}
+The kernel carries no length scale, because a collisionless plasma has no
+mean free path to supply one.
+
+\section{Four-moment closure}
+
+Now keep \eqref{eq:q} as well and close $\delta r$ in terms of the two
+highest retained moments. Parity and dimensions allow a local term in $T$ and
+a phase-mixing term in $q$:
+\begin{equation}
+  \delta r_k = \beta_1\,T_k - i\,\sgn(k)\,\sqrt{2}\,D_1\,q_k .
+  \label{eq:closure4}
+\end{equation}
+The $T$ term is not dissipative; it replaces the coefficient $3$ in
+\eqref{eq:q} by
+\[
+  b \equiv 3 + \beta_1 .
+\]
+Eliminating upward through the hierarchy:
+\begin{align*}
+  \text{from \eqref{eq:q}:}\quad
+    q_k &= \frac{b\,T_k}{\sqrt{2}\,\sgn(k)\,(\zeta + iD_1)},\\[4pt]
+  \text{from \eqref{eq:T}:}\quad
+    T_k &= \frac{4\zeta(\zeta + iD_1)}{2\zeta(\zeta + iD_1) - b}\;n_k,\\[4pt]
+  \text{from \eqref{eq:u}:}\quad
+    n_k &= \frac{a}{ik}\,R_4(\zeta),
+\end{align*}
+with
+\begin{equation}
+  R_4(\zeta) = \frac{b - 2iD_1\zeta - 2\zeta^2}
+                    {b - 6iD_1\zeta - (2b+6)\zeta^2
+                     + 4iD_1\zeta^3 + 4\zeta^4}.
+  \label{eq:R4}
+\end{equation}
+As in the three-moment case every factor of $\sgn(k)$ cancels except through
+$\zeta$.
+
+\paragraph{Matching at small $\zeta$.} With $\alpha = 2iD_1/b$,
+\[
+  R_4(\zeta) = 1 + 2\alpha\,\zeta
+             + \left(2 + \frac{4}{b} + 6\alpha^2\right)\zeta^2 + O(\zeta^3).
+\]
+Comparing with \eqref{eq:Rsmall}:
+\begin{align*}
+  O(\zeta):&\quad 2\alpha = i\sqrt{\pi}
+    \;\Longrightarrow\; D_1 = \frac{\sqrt{\pi}}{4}\,b,\\
+  O(\zeta^2):&\quad 2 + \frac{4}{b} - \frac{3\pi}{2} = -2
+    \;\Longrightarrow\; b = \frac{8}{3\pi - 8}.
+\end{align*}
+Therefore
+\begin{equation}
+  D_1 = \frac{2\sqrt{\pi}}{3\pi - 8} \approx 2.49,
+  \qquad
+  \beta_1 = \frac{32 - 9\pi}{3\pi - 8} \approx 2.62 .
+  \label{eq:coeffs4}
+\end{equation}
+
+\paragraph{Behaviour at large $\zeta$.} From \eqref{eq:R4},
+\[
+  \frac{1}{R_4} = -2\zeta^2 + 3 + \frac{b}{\zeta^2} + O(\zeta^{-3}),
+  \qquad\text{whereas}\qquad
+  \frac{1}{R} = -2\zeta^2 + 3 + \frac{3}{\zeta^2} + \dots
+\]
+So $R_4$ reproduces the first two terms of \eqref{eq:Rlarge} for any $D_1$
+and $\beta_1$, but the $\zeta^{-6}$ term is correct only if $\beta_1 = 0$.
+The closure spends its two parameters on the low-frequency side and gives up
+one order of high-frequency accuracy to do so.
+
+\paragraph{Real space.} Restoring units, \eqref{eq:closure4} reads
+\begin{equation}
+  \delta r_k = \beta_1\,n_0\vt^2\,T_k
+             - D_1\,\frac{\sqrt{2}\,\vt}{|k|}\,i k\,q_k ,
+  \qquad
+  \delta r(z) = \beta_1\,n_0\vt^2\,T(z)
+              + \sqrt{2}\,D_1\,\vt\,\Hil[q](z),
+\end{equation}
+to be used in the dimensional form of \eqref{eq:q},
+$\partial_t q + 3 n_0\vt^2\,\partial_z T + \partial_z\delta r = 0$.
+The Hilbert transform now acts on the heat flux, which has its own evolution
+equation, and not on the temperature.
+
+\section{Summary}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{lll}
+  & Three-moment & Four-moment \\ \hline
+  Closed quantity & $q$ & $\delta r$ \\
+  Closure & $q = n_0\sqrt{2}\,\chi_1\vt\,\Hil[T]$
+          & $\delta r = \beta_1 n_0\vt^2 T + \sqrt{2}\,D_1\vt\,\Hil[q]$ \\
+  Coefficients & $\chi_1 = 2/\sqrt{\pi}$
+          & $D_1 = \dfrac{2\sqrt{\pi}}{3\pi-8}$,\;
+            $\beta_1 = \dfrac{32-9\pi}{3\pi-8}$ \\
+  Matched as $\zeta \to 0$ & through $O(\zeta)$ & through $O(\zeta^2)$ \\
+  Matched as $\zeta \to \infty$ & through $O(\zeta^{-4})$
+          & through $O(\zeta^{-4})$ \\
+\end{tabular}
+\end{center}
+
+In both cases the response function is a rational (Pad\'e-type) approximant
+of $R(\zeta) = 1 + \zeta Z(\zeta)$, and the Hilbert transform in $z$ is the
+image of the Landau resonance: the resonant denominator makes the response a
+function of $\omega/|k|$, the closure coefficient scales as $1/|k|$, and
+$(1/|k|)\,ik = i\,\sgn(k)$.
+
+\section{Caveats}
+\label{sec:caveat}
+
+\begin{itemize}
+  \item \textbf{Thermal-speed convention.} This note and
+    Hammett--Perkins use $\vt = \sqrt{T_0/m}$, for which the coefficients are
+    those in \eqref{eq:coeffs4}. Hunana et al.\ \cite{Hunana19} use
+    $v_{\mathrm{th}} = \sqrt{2T_0/m}$, in which the same closure reads
+    \[
+      \delta r_k = -\,i\,\frac{2\sqrt{\pi}}{3\pi - 8}\,v_{\mathrm{th}}\,
+                   \sgn(k)\,q_k
+                 + \frac{32 - 9\pi}{2(3\pi - 8)}\,v_{\mathrm{th}}^2\,n_0\,T_k ,
+    \]
+    so the local coefficient appears a factor of two smaller, and the
+    three-moment closure reads
+    $q_k = -i\,(2/\sqrt{\pi})\,n_0 v_{\mathrm{th}}\,\sgn(k)\,T_k$.
+  \item \textbf{Sign of the Hilbert transform.} With \eqref{eq:hilbert} and
+    modes $e^{+ikz}$, $i\,\sgn(k) \leftrightarrow -\Hil$. Several
+    Landau-fluid papers define the opposite sign so that
+    $i\,\sgn(k) \leftrightarrow \Hil$; the integral form \eqref{eq:real3}
+    is convention-free. The 1990 and 1992 papers write the integral but do
+    not use the words ``Hilbert transform''; the identification is made
+    explicitly in \cite{Hunana19}.
+  \item \textbf{Known inaccuracies.} According to \cite{Hunana19}, the
+    three-moment closure gives $q \sim \zeta^{-2}$ at large $\zeta$ where
+    the kinetic result is $\zeta^{-3}$, and so tends to overestimate Landau
+    damping; the closures are also local in time.
+  \item \textbf{Validity.} The matching is linear, about a Maxwellian, and
+    exact only in the limits $\zeta \to 0$ and $\zeta \to \infty$; in between
+    the closures are approximants.
+  \item \textbf{Domain.} $\Hil$ is defined on the whole line or a periodic
+    domain. Bounded or sheath-terminated field lines require a separate
+    choice of extension.
+\end{itemize}
+
+\begin{thebibliography}{9}
+\bibitem{HP90}
+G.~W. Hammett and F.~W. Perkins,
+\emph{Fluid moment models for Landau damping with application to the
+ion-temperature-gradient instability},
+Phys.\ Rev.\ Lett.\ \textbf{64}, 3019 (1990).
+\bibitem{HDP92}
+G.~W. Hammett, W.~Dorland, and F.~W. Perkins,
+\emph{Fluid models of phase mixing, Landau damping, and nonlinear
+gyrokinetic dynamics},
+Phys.\ Fluids B \textbf{4}, 2052 (1992).
+\bibitem{Hunana19}
+P.~Hunana et al.,
+\emph{An introductory guide to fluid models with anisotropic temperatures.
+Part 2. Kinetic theory, Pad\'e approximants and Landau fluid closures},
+\href{https://arxiv.org/abs/1901.09360}{arXiv:1901.09360} (2019).
+\end{thebibliography}
+
+\end{document}
