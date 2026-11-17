@@ -1,0 +1,209 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{array}
+\usepackage{hyperref}
+
+\newcommand{\avg}[1]{\langle #1\rangle}
+
+\title{Closure theory notes: summary of what is proved}
+\author{Working note}
+\date{17 November 2026}
+
+\begin{document}
+\sloppy
+\maketitle
+
+\noindent This note collects the results of the closure notes in
+\texttt{shared/docs/} and \texttt{hani-to-algorithms/docs/}, with the
+conditions each depends on and a list of what is not proved. Each section
+names the note that contains the proofs.
+
+\paragraph{Two caveats that apply throughout.}
+\begin{itemize}
+  \item No proof has been checked by a second reader.
+  \item The Landau results rest on published coercivity estimates, which are
+    cited and not reproved; one source was used through a later restatement.
+\end{itemize}
+
+\paragraph{Convention.} The linear heat-flux closure is the quasi-static
+limit of the response to a potential force, written
+$\hat q=-\chi(k)\,ik\,\hat T$. $\kappa_{\mathrm F}$ is the Chapman--Enskog
+(Fourier) conductivity, $\eta$ the viscosity, $\lambda$ the mean free path,
+and $y=\nu/|k|$.
+
+\section{Orbit decorrelation}
+
+\emph{Note:} \texttt{hani-to-algorithms/docs/orbit\_decorrelation\_theorem.tex}.
+
+\begin{itemize}
+  \item \textbf{Exact fluctuation system.} For $N$ particles with a smooth
+    even pair potential, the mean and the fluctuation of the empirical
+    measure satisfy a closed pair of equations, with no truncation.
+  \item \textbf{Decorrelation at $N^{1/3}$, in a model.} For a particle in a
+    prescribed Gaussian field of amplitude $N^{-1/2}$ with
+    Ornstein--Uhlenbeck mode amplitudes, the departure $Y_t$ from the
+    ballistic orbit satisfies
+    \[
+      \mathbb{E}\,e^{iq\cdot Y_t}=\exp\!\Bigl(-\frac{t^3}{3N}\,q\cdot Dq\Bigr)
+      +\text{explicit error},
+    \]
+    and the error is $O(N^{-1/6})$ at $t\sim N^{1/3}$.
+  \item \textbf{Not proved:} the same statement for the particle system, and
+    the rest of the strategy in \texttt{plasma\_extension.tex} for deriving
+    the Lenard--Balescu equation.
+\end{itemize}
+
+\section{One velocity dimension}
+
+\emph{Notes:} \texttt{plasma\_closure\_gaps\_and\_bgk\_theorem.tex},
+\texttt{bgk\_velocity\_dependent\_closure.tex},
+\texttt{dougherty\_closure\_theorem.tex}.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{>{\raggedright}p{3.6cm}p{10.8cm}}
+  Operator & Proved \\ \hline
+  BGK, constant $\nu$
+    & Exact relation at every wavenumber and frequency: the collisionless
+      response evaluated at the complex phase velocity
+      $(\omega+i\nu)/|k|$. $\chi>0$; $\chi<\kappa_{\mathrm F}$;
+      $1-\chi/\kappa_{\mathrm F}\le4(k\lambda)^2$ with $4$ sharp;
+      collisionless limit $\sqrt{8/\pi}$ (Hammett--Perkins). \\
+  BGK, $\nu(v)$
+    & Two-sided variational principles for $\chi(k)$. $\chi>0$;
+      $\chi<\kappa_{\mathrm F}$; $1-\chi/\kappa_{\mathrm F}\le K_2k^2$ with
+      $K_2$ explicit and exact; Hammett--Perkins limit for every bounded
+      continuous positive $\nu$. \\
+  Dougherty
+    & Closed form
+      $\theta_1(y)=\dfrac{2}{y}\,\dfrac{\int_0^1sE}{\int_0^1E}$,
+      $E(s)=[(1-s)e^s]^{1/y^2}$. $\chi>0$; $\chi<\kappa_{\mathrm F}$;
+      $1-\chi/\kappa_{\mathrm F}\le\tfrac13(k\lambda)^2$ with $\tfrac13$
+      sharp; Hammett--Perkins limit. \\
+  Any conserving, symmetric, non-negative operator
+    & The dual variational principles and the two-sided bound
+      $\kappa_{\mathrm F}/(1+K_2k^2)\le\chi\le\kappa_{\mathrm F}$. \\
+\end{tabular}
+\end{center}
+
+\section{Three velocity dimensions}
+
+\emph{Notes:} \texttt{dougherty\_closure\_theorem.tex},
+\texttt{landau\_3d\_closure.tex}, \texttt{landau\_positivity.tex}.
+
+\begin{itemize}
+  \item \textbf{Dougherty (the tournament ground truth).} Closed form
+    \[
+      \theta_3(y)=\frac1y\,\frac{\int_0^1s(3-2s)E}{\int_0^1E}.
+    \]
+    $\chi>0$ at every $k$; $\chi<\kappa_{\mathrm F}=\tfrac56n_0T_0/(m\nu)$;
+    $1-\chi/\kappa_{\mathrm F}=\tfrac{2}{15}(k\lambda)^2+O((k\lambda)^4)$;
+    collisionless limit $3\sqrt{2/\pi}$.
+  \item \textbf{Any conserving operator.}
+    \begin{itemize}
+      \item Two-sided bound $|\chi/\kappa_{\mathrm F}-1|\le Kk^2$ at small
+        $k$, with $K$ explicit.
+      \item Exact leading coefficient:
+        $1-\chi/\kappa_{\mathrm F}=K_{\mathrm{ex}}k^2+O(|k|^3)$,
+        $K_{\mathrm{ex}}=\kappa_{\mathrm F}\,
+        \avg{\chi_*-\tfrac13\vartheta,\Lambda^+\chi_*}$.
+      \item $\chi>0$ whenever $k^2\kappa_{\mathrm F}\eta<3$.
+      \item $\chi>0$ if and only if the perpendicular temperature response
+        does not overshoot, $T_{\perp1}<n_1/2$.
+    \end{itemize}
+  \item \textbf{BGK with constant $\nu$.} $\chi>0$ at every $k$.
+\end{itemize}
+
+\section{The Landau--Coulomb operator (like-particle)}
+
+\emph{Notes:} \texttt{landau\_solvability.tex},
+\texttt{landau\_quasistatic\_limit.tex}, \texttt{landau\_3d\_closure.tex}.
+
+\begin{itemize}
+  \item \textbf{Solvability.} The Chapman--Enskog problems have unique
+    solutions that keep all polynomial moments; $\kappa_{\mathrm F}$, $\eta$
+    and the second-order constants are finite.
+  \item \textbf{Stationary solution.} It exists, has all moments, and is
+    unique among weak solutions in a weighted energy class.
+  \item \textbf{Quasi-static limit.} The resolvent solution is bounded
+    uniformly for frequencies in a sector, and its moments converge to those
+    of the stationary solution as the frequency tends to zero.
+  \item \textbf{Consequently} the results for a general operator in the
+    previous section hold for the Landau operator, apart from the item on
+    the time-dependent solution below.
+\end{itemize}
+
+\section{Not proved}
+
+\begin{itemize}
+  \item \textbf{Landau:} positivity at every wavenumber,
+    $\chi<\kappa_{\mathrm F}$ at every wavenumber, and the collisionless
+    limit. Positivity is proved for $k\lambda<0.89$, with the computed
+    constants.
+  \item \textbf{Landau:} existence of the time-dependent weak solution in
+    the weighted class is taken from a standard method and not written out;
+    approach to zero frequency along the real axis is not covered.
+  \item \textbf{Scope:} everything is linear, for a single drive, and
+    quasi-static, on an unbounded or periodic domain. Electron--ion
+    scattering and magnetic fields are not included.
+  \item \textbf{Numerical, not proved:} the Landau constants
+    ($\kappa_{\mathrm F}=3.9502\,\tau$, $\eta=0.9653\,\tau$,
+    $K_{\mathrm{ex}}=22.35\,\tau^2$), the comparisons with harmonic-mean
+    interpolants, and the monotonicity observations.
+  \item \textbf{Prior art:} checked for the constant-$\nu$ BGK result and
+    for the Lenard--Balescu strategy; not searched for the $\nu(v)$,
+    Dougherty and Landau results, some of which may be known.
+\end{itemize}
+
+\section{A finding for the benchmark}
+
+Write $1-\chi/\kappa_{\mathrm F}\approx c\,(k\kappa_{\mathrm F})^2$ with unit
+density and thermal speed, which compares operators at equal conductivity.
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{lll}
+  Operator & $c$ & Status of the value \\ \hline
+  Dougherty, 3D & $0.192$ & proved \\
+  Dougherty, 1D & $0.333$ & proved \\
+  BGK, constant $\nu$, 1D & $0.444$ & proved \\
+  Landau, like-particle, 3D & $1.43$ & proved formula, numerical value \\
+  BGK, $\nu_0/(1+|v|^3)$, 1D & $6.78$ & proved formula, numerical value \\
+\end{tabular}
+\end{center}
+The spread is a factor of about 35. The Dougherty operator, which the
+tournament note takes as ground truth, is the mildest: with a
+velocity-independent collision frequency the local closure fails only when
+$k\lambda$ is of order one, so it does not reproduce the early failure of
+Spitzer--H\"arm transport that the tournament note uses as motivation. In the
+one-dimensional models a $|v|^{-3}$ tail in the collision frequency moves the
+breakdown to $k\lambda\sim10^{-2}$ and reverses the sign of the error of
+harmonic-mean closures.
+
+\section{Where things are}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{>{\raggedright}p{7.6cm}p{6.8cm}}
+  File & Content \\ \hline
+  \texttt{hammett\_perkins\_closure\_derivation.tex} & Hammett--Perkins
+    closures and the Hilbert transform \\
+  \texttt{closure\_models\_tutorial.tex} & Tutorial on closure models \\
+  \texttt{plasma\_closure\_gaps\_and\_bgk\_theorem.tex} & Gaps; BGK with
+    constant $\nu$ \\
+  \texttt{bgk\_velocity\_dependent\_closure.tex} & BGK with $\nu(v)$ \\
+  \texttt{dougherty\_closure\_theorem.tex} & Dougherty, 1D and 3D \\
+  \texttt{landau\_3d\_closure.tex} & General 3D theorem; Landau numbers \\
+  \texttt{landau\_solvability.tex} & Landau: solvability, stationary
+    solution \\
+  \texttt{landau\_quasistatic\_limit.tex} & Landau: quasi-static limit \\
+  \texttt{landau\_positivity.tex} & Positivity in 3D \\
+  \texttt{../scripts/landau\_closure/} & Code for the Landau numbers \\
+  \texttt{hani-to-algorithms/docs/plasma\_extension.tex} & Strategy for the
+    collisional kinetic limit \\
+  \texttt{hani-to-algorithms/docs/ orbit\_decorrelation\_theorem.tex} &
+    Model theorem at $N^{1/3}$ \\
+\end{tabular}
+\end{center}
+
+\end{document}
