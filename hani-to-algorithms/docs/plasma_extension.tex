@@ -1,0 +1,972 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{array}
+\usepackage{hyperref}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\bv}{\mathbf{v}}
+\newcommand{\bk}{\mathbf{k}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\diel}{\epsilon}
+\newcommand{\avg}[1]{\langle #1 \rangle}
+
+\theoremstyle{definition}
+\newtheorem{target}{Target statement}
+\newtheorem{obstruction}{Obstruction}
+
+\title{Extending the Deng--Hani--Ma closure analysis to plasmas:\\
+what carries over, what breaks, and what to compute}
+\author{Working note}
+\date{16 November 2026}
+
+\begin{document}
+\maketitle
+
+\noindent\emph{Status and scope.} This note does not prove a theorem. A
+long-time derivation of a collisional plasma kinetic equation from Coulomb
+particle dynamics is an open problem, and nothing here closes it. The note
+does three things: it maps each ingredient of the Deng--Hani--Ma analysis to
+its plasma counterpart; it identifies where the proof strategy fails and what
+would have to replace it; and it turns the result into a computational track
+in the format of \texttt{math\_to\_algorithm.md}. The formal derivation in
+Section~\ref{sec:formal} is the classical Bogoliubov argument, not a rigorous
+one. The literature summary in Section~\ref{sec:known} was checked on the
+date above.
+
+\tableofcontents
+
+\section{What is being extended}
+
+Stripped of technique, the hard-sphere analysis has six components.
+\begin{enumerate}
+  \item A reversible microscopic system: $N$ hard spheres of diameter $\eps$.
+  \item A scaling limit with one small parameter: Boltzmann--Grad,
+    $N\eps^{d-1} = \alpha$ fixed, $\eps\to 0$.
+  \item A retained state, the one-particle density $f_1$, and a closure,
+    $f_2 \approx f_1\otimes f_1$ for particles about to collide.
+  \item A cumulant expansion of $f_s$ in which the connected parts are the
+    closure error, each represented as a sum over collision histories
+    (molecules).
+  \item A gain: histories with cycles (recollisions) are suppressed by a
+    positive power of $\eps$, and a cutting algorithm proves this uniformly.
+  \item Time layering: the cumulant ansatz is propagated across many short
+    layers, reaching any time on which the Boltzmann solution exists.
+\end{enumerate}
+The plasma extension must supply an analogue of each. Components 1--3 have
+clean analogues. Components 4--6 do not, and the reasons are structural.
+
+\section{The plasma reduction ladders}
+
+Take $N$ particles of unit mass in a periodic box, interacting through a pair
+potential $\phi$ in the mean-field scaling,
+\begin{equation}
+  \dot{\bx}_i = \bv_i, \qquad
+  \dot{\bv}_i = -\frac{1}{N}\sum_{j\ne i}\nabla\phi(\bx_i - \bx_j).
+  \label{eq:nbody}
+\end{equation}
+For a one-component plasma $\phi$ is the Coulomb potential in a neutralizing
+background; a Yukawa potential $\phi(r) = e^{-\kappa r}/r$ models a screened
+or dusty plasma. In physical units the expansion parameter is the inverse
+plasma parameter $1/\Lambda$, $\Lambda\sim n\lambda_D^3$, which plays the
+role of $1/N$ here.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.45}
+\begin{tabular}{>{\raggedright}p{0.6cm}>{\raggedright}p{3.6cm}>{\raggedright}p{3.4cm}>{\raggedright}p{2.6cm}p{3.6cm}}
+  & Transition & Limit & Time scale & Hard-sphere analogue \\ \hline
+  P1 & particles $\to$ Vlasov & $N\to\infty$ & $O(1)$
+     & none: no collisions at leading order \\
+  P2 & particles $\to$ Landau or Lenard--Balescu & $N\to\infty$
+     & $O(N)$ & hard spheres $\to$ Boltzmann \\
+  P3 & Vlasov--Landau $\to$ fluid & $\mathrm{Kn}\to 0$ & fluid
+     & Boltzmann $\to$ Euler, Navier--Stokes--Fourier \\
+  P4 & Vlasov $\to$ quasilinear, weak turbulence & small amplitude, random phases
+     & $O(\text{amplitude}^{-2})$ & NLS $\to$ wave kinetic equation \\
+\end{tabular}
+\end{center}
+
+The essential difference is already visible in P1 and P2. For hard spheres
+there is one kinetic limit. For a plasma there are two nested ones: the
+leading-order limit is collisionless, and the collisional equation appears
+only as a $1/N$ correction that matters on times of order $N$.
+
+\section{Formal derivation of the collisional closure}
+\label{sec:formal}
+
+\subsection{Hierarchy and cluster expansion}
+
+The first BBGKY equation for \eqref{eq:nbody} is
+\begin{equation}
+  \partial_t f_1 + \bv\cdot\nabla_{\bx} f_1
+  = \frac{N-1}{N}\int \nabla\phi(\bx - \bx')\cdot\nabla_{\bv}
+    f_2(z, z')\,\dd z', \qquad z = (\bx,\bv).
+\end{equation}
+Write the cluster expansion with the expected orders made explicit,
+\begin{equation}
+  f_2 = f\otimes f + \frac{1}{N}\,g, \qquad
+  f_3 = f^{\otimes 3} + \frac{1}{N}\sum f\otimes g + \frac{1}{N^2}\,h ,
+\end{equation}
+with $f = f_1$. Then
+\begin{equation}
+  \partial_t f + \bv\cdot\nabla_{\bx} f
+  - (\nabla\phi * \rho_f)\cdot\nabla_{\bv} f
+  = \frac{1}{N}\,\nabla_{\bv}\cdot\!\int \nabla\phi(\bx-\bx')\,
+    g(z,z')\,\dd z' + O\!\left(\frac{1}{N}\right)_{\text{self}} .
+  \label{eq:f1}
+\end{equation}
+The left side is the Vlasov operator. The right side is the collision term,
+and it is carried entirely by the two-point cumulant $g$.
+
+At leading order $g$ obeys a linear equation driven by the product state,
+\begin{equation}
+  \partial_t g + (\mathcal{L}_1 + \mathcal{L}_2)\,g
+  = \nabla\phi(\bx_1 - \bx_2)\cdot(\nabla_{\bv_1} - \nabla_{\bv_2})
+    \,f(z_1) f(z_2) + O\!\left(\frac{1}{N}\right),
+  \label{eq:g}
+\end{equation}
+where $\mathcal{L}_i$ is the Vlasov operator linearized about $f$, acting on
+variable $i$, and the $O(1/N)$ remainder contains the three-point cumulant
+$h$.
+
+\subsection{Bogoliubov closure}
+
+Two assumptions close the system.
+\begin{itemize}
+  \item \textbf{Truncation:} drop $h$.
+  \item \textbf{Time-scale separation:} $g$ relaxes on the plasma period,
+    $f$ evolves on the collision time, which is $N$ times longer. So solve
+    \eqref{eq:g} with $f$ frozen and take $t\to\infty$; $g$ becomes a
+    functional of the current $f$, with no memory of its own initial data.
+\end{itemize}
+For spatially homogeneous $f(\bv)$ the result is the Lenard--Balescu
+equation,
+\begin{equation}
+  \partial_t f = \frac{1}{N}\,\nabla_{\bv}\cdot\!\int
+    \mathsf{B}(\bv,\bv_*;f)\,(\nabla_{\bv} - \nabla_{\bv_*})
+    \,f(\bv) f(\bv_*)\,\dd\bv_* ,
+  \label{eq:LB}
+\end{equation}
+\begin{equation}
+  \mathsf{B}(\bv,\bv_*;f) = c_d\int
+    \frac{\bk\otimes\bk\;|\hat\phi(\bk)|^2}
+         {|\diel(\bk,\bk\cdot\bv)|^2}\;
+    \delta\bigl(\bk\cdot(\bv - \bv_*)\bigr)\,\dd\bk ,
+  \qquad
+  \diel(\bk,\omega) = 1 + \hat\phi(\bk)\int
+    \frac{\bk\cdot\nabla_{\bv} f}{\omega + i0 - \bk\cdot\bv}\,\dd\bv ,
+\end{equation}
+with $c_d$ a constant fixed by the Fourier convention. Setting $\diel = 1$
+gives the Landau equation.
+
+Three features matter for what follows.
+\begin{enumerate}
+  \item The delta function is a wave--particle resonance: two particles
+    exchange momentum through the Fourier mode that is stationary in both
+    their frames.
+  \item The dielectric function $\diel$ contains the same resonant
+    denominator, Landau contour and Plemelj structure as the plasma
+    dispersion function in the Hammett--Perkins note. Screening is the
+    linearized Vlasov response of all other particles to the interacting
+    pair.
+  \item For the bare Coulomb potential, $|\hat\phi|^2\propto k^{-4}$ and the
+    $\bk$ integral diverges logarithmically at large $k$ if $\diel=1$ and is
+    cut off by $\diel$ at small $k$. The large-$k$ divergence signals close
+    encounters, where the weak-deflection expansion is invalid and a
+    Boltzmann-type treatment is required. The Coulomb logarithm is the
+    result of matching these regimes.
+\end{enumerate}
+
+\section{Dictionary}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{>{\raggedright}p{3.1cm}>{\raggedright}p{5.2cm}p{6.2cm}}
+  Ingredient & Hard spheres (Deng--Hani--Ma) & Plasma \\ \hline
+  Small parameter & $\eps$, with $N\eps^{d-1}$ fixed
+    & $1/N$ (physically $1/\Lambda$) \\
+  Leading-order closure & $f_2 = f\otimes f$ gives the collision integral
+    & $f_2 = f\otimes f$ gives the mean field; no collisions \\
+  Role of the two-point cumulant & closure \emph{error}
+    & the collision operator itself, eq.~\eqref{eq:f1} \\
+  Closure error & all connected cumulants
+    & three-point cumulant $h$, memory of $g$, close encounters \\
+  Elementary event & instantaneous binary collision, $O(1)$ deflection, rare
+    & every pair interacts at all times, $O(1/N)$ deflection each \\
+  History object & collision graph (molecule), sparse
+    & no discrete events; complete weighted graph, or perturbative diagrams \\
+  Propagator between events & free transport
+    & linearized Vlasov flow about $f$ (dressed, includes $\diel$) \\
+  Cycles & recollisions, each costs a power of $\eps$
+    & ring diagrams, all of the same order; resummed into $1/|\diel|^2$ \\
+  Source of irreversibility & pre-collisional chaos
+    & loss of memory in $g$ (Bogoliubov) after reversible phase mixing \\
+  Stability of the limit equation & H-theorem
+    & Vlasov has no H-theorem; needs linear (Penrose) stability of $f$ \\
+\end{tabular}
+\end{center}
+
+\section{Where the proof strategy breaks}
+
+\begin{obstruction}[No sparse collision graph]
+The molecule expansion relies on collisions being discrete and rare, so that
+a typical history is a tree and each cycle can be charged a power of $\eps$.
+In \eqref{eq:nbody} every pair interacts continuously. The natural
+replacement is a Duhamel expansion in the pair interaction, with diagrams in
+place of molecules. The counting problem is then different in kind: the
+number of diagrams at a given order is not controlled by rarity of events.
+\end{obstruction}
+
+\begin{obstruction}[Cycles are not small]
+For hard spheres, cycles are the error. For a plasma an infinite class of
+cyclic diagrams (rings) contributes at leading order to the collision
+operator and must be summed exactly; the sum is the factor $1/|\diel|^2$. A
+cutting argument that discards cycles would discard screening. Any extension
+needs a resummation step before the combinatorial estimate, which amounts to
+expanding around the linearized Vlasov flow instead of free transport.
+\end{obstruction}
+
+\begin{obstruction}[The background must be stable]
+The dressed propagator is the linearized Vlasov semigroup about the current
+$f$. It decays (Landau damping) only if $f$ is linearly stable; near an
+unstable profile it grows exponentially and no cumulant bound can propagate.
+Hard spheres have no counterpart to this. A theorem can be expected only for
+$f$ that remain in a stable class, for example near a homogeneous
+Penrose-stable equilibrium.
+\end{obstruction}
+
+\begin{obstruction}[Memory and echoes]
+Landau damping is reversible phase mixing: information moves to fine
+velocity scales and can return (plasma echo). The Bogoliubov step asserts
+that $g$ forgets its past on the fast time scale. Over the long kinetic time
+this must hold uniformly, which is the plasma form of the long-time problem
+that layering solves for hard spheres. The layered cumulant ansatz would
+need to carry fine-scale velocity regularity, not only size.
+\end{obstruction}
+
+\begin{obstruction}[Three collision regimes]
+With Coulomb interaction the kinetic operator is assembled from close
+encounters (Boltzmann-like), weak binary deflections (Landau) and collective
+response (Lenard--Balescu). Only the first resembles the hard-sphere setting,
+and it is subdominant by a factor $1/\ln\Lambda$. A single expansion does not
+cover all three.
+\end{obstruction}
+
+\begin{obstruction}[Singularity of the force]
+Even the leading-order limit P1 requires control of the Coulomb singularity
+at short range, a difficulty with no hard-sphere analogue.
+\end{obstruction}
+
+\section{What a plasma theorem would say}
+
+These are targets, stated to fix what the extension aims at. None is claimed.
+
+\begin{target}[Cumulant hierarchy on the kinetic time scale]
+Let $\phi$ be smooth and $f$ stay in a neighbourhood of a homogeneous
+Penrose-stable equilibrium. Then for $\tau = t/N$ in a fixed interval
+$[0,\tau_*]$ the connected cumulants of the $N$-particle system satisfy, in a
+suitable weak norm, $\|g_s\| \lesssim N^{-(s-1)}$ uniformly in $\tau$.
+\end{target}
+
+\begin{target}[Lenard--Balescu limit]
+Under the same hypotheses, the velocity marginal of $f_1$ at time $t = N\tau$
+converges as $N\to\infty$ to the solution of \eqref{eq:LB} with time
+$\tau$, for as long as that solution exists and remains in the stable class.
+\end{target}
+
+\begin{target}[Interpolation to the Boltzmann--Grad regime]
+For the Yukawa potential with screening length $1/\kappa$, there is a family
+of scalings interpolating between mean-field ($\kappa$ fixed, weak coupling)
+and Boltzmann--Grad (short range, strong deflection, low density), with
+Landau, Lenard--Balescu and Boltzmann operators as limits. The hard-sphere
+theorem is the short-range endpoint.
+\end{target}
+
+The third target is not new: Nota, Vel\'azquez and Winter formulate the
+interpolation as conjectures, with Boltzmann, Landau and Lenard--Balescu
+limits selected by the scaling of the potential \cite{NVW}. It is the most
+useful for this project: it places the
+Deng--Hani--Ma result and the plasma on one axis, and dusty plasmas sit on
+that axis at strong coupling, where none of the limits applies.
+
+\section{What is known}
+\label{sec:known}
+
+This section was checked against the literature on 16 November 2026.
+Citations were confirmed online unless marked otherwise in the bibliography;
+several are preprints and are identified as such.
+
+\paragraph{The reference point.} Deng, Hani and Ma derive the Boltzmann
+equation from hard spheres in $\mathbb{R}^d$, $d\ge 2$, in the Boltzmann--Grad
+limit, for as long as a suitable strong solution of the Boltzmann equation
+exists \cite{DHM1}; the fluid limits are obtained on the torus in $d=2,3$ by
+taking the collision rate to infinity after the Boltzmann--Grad limit
+\cite{DHM2}. The short-time theory is due to Lanford \cite{Lanford} and
+Gallagher, Saint-Raymond and Texier \cite{GST}. The wave-kinetic analogue is
+\cite{DH-WKE,DH-long}.
+
+\paragraph{P1, particles to Vlasov.}
+\begin{itemize}
+  \item \emph{Lipschitz forces:} classical \cite{BraunHepp,Dobrushin}, with a
+    stability constant $e^{Ct}$, so the estimate is useful only for
+    $t \ll \log N$.
+  \item \emph{Longer times near stable states:} in one dimension with
+    smooth potentials, mean-field validity up to times $N^{1/8-}$ near
+    stable homogeneous profiles \cite{CagliotiRousset}.
+  \item \emph{Singular forces weaker than Coulomb:} $|F|\sim |x|^{-\alpha}$
+    with $\alpha < 1$, without cutoff \cite{HaurayJabin}.
+  \item \emph{Coulomb with an $N$-dependent cutoff:} in three dimensions
+    \cite{LazaroviciPickl}.
+  \item \emph{Modulated energy:} covers first-order Coulomb flows, and
+    second-order dynamics only for monokinetic data \cite{Serfaty}.
+  \item \emph{Coulomb without cutoff:} a 2026 preprint claims the
+    two-dimensional case for chaotic data and regular mean-field solutions
+    \cite{DuerinckxJabin}. The three-dimensional case is open.
+\end{itemize}
+
+\paragraph{P2, particles to Landau or Lenard--Balescu.} Open. The available
+results are:
+\begin{itemize}
+  \item \emph{Consistency for Landau:} the leading-order truncation of the
+    weak-coupling expansion agrees with the Landau collision term; no
+    convergence for positive times \cite{BPS}.
+  \item \emph{From the truncated hierarchy:} convergence to Landau when the
+    truncation of BBGKY is taken as a hypothesis \cite{VelazquezWinter,Winter}.
+  \item \emph{Lenard--Balescu correction:} for a tagged particle in an
+    equilibrium background with smooth interaction on the torus, the $1/N$
+    correction is the linearized Lenard--Balescu operator, on times $N^r$ for
+    a small $r > 0$, far short of the relaxation time $t\sim N$
+    \cite{DuerinckxSR}. The same paper remarks that in one dimension the
+    operator vanishes and the relevant scale is $N^2$.
+  \item \emph{Cumulant bounds:} sharp estimates on correlation functions on
+    the mean-field time scale for smooth interactions \cite{DuerinckxChaos}.
+    These are the plasma counterpart of the cumulant bounds in component 4,
+    but only on short times.
+  \item \emph{Toy model:} convergence on $t\sim N$ to a linearized Landau
+    equation for a truncated hierarchical model, not the particle system;
+    its introduction states that a rigorous justification for the true
+    dynamics ``is still beyond reach'' \cite{DuerinckxLeBihan}.
+\end{itemize}
+The first two target statements of the previous section therefore lie beyond
+the current state of the art even in the linearized equilibrium setting.
+
+\paragraph{Stability input.} Nonlinear Landau damping holds near linearly
+stable homogeneous equilibria for analytic and Gevrey data
+\cite{MouhotVillani,BMM}. In finite (Sobolev) regularity, plasma echoes
+obstruct results of this type \cite{BedrossianEcho}. This is the rigorous
+form of the fourth obstruction.
+
+\paragraph{P3, kinetic to fluid.} A global Hilbert expansion gives
+Euler--Poisson from Vlasov--Poisson--Boltzmann for small irrotational data
+\cite{GuoJang}; conditional convergence to incompressible viscous
+electro-magneto-hydrodynamics is in \cite{ArsenioSR}. These start from a
+kinetic equation, not from particles, so no plasma analogue of the chained
+particle-to-fluid result \cite{DHM2} exists.
+
+\paragraph{P4, quasilinear and weak turbulence.} A velocity-diffusion limit
+is proved for a prescribed stochastic field, and the authors state that a
+complete proof of quasilinear theory for the self-consistent problem is out
+of reach \cite{BardosBesse}. There is no plasma analogue of
+\cite{DH-WKE,DH-long}.
+
+\paragraph{One dimension.} Numerical relaxation on a time scale $\propto N^2$
+was reported by Dawson \cite{Dawson}; kinetic equations at order $1/N^2$ have
+been derived formally \cite{Fouvry}. The vanishing concerns the
+self-consistent evolution of the whole distribution; a test particle in a
+fixed bath still diffuses at order $1/N$.
+
+\section{A fluctuation formulation}
+\label{sec:fluct}
+
+The remaining sections go beyond the dictionary and propose a strategy. The
+scaling arguments are heuristic and are labelled as such. Much of the
+picture turns out to be in the recent literature; Section~\ref{sec:prior}
+records what is prior art and what is proposed here.
+
+For smooth $\phi$ the empirical measure
+$\mu_N = N^{-1}\sum_i \delta_{z_i(t)}$ is an exact weak solution of the Vlasov
+equation. Put $f = \mathbb{E}\mu_N$ (which is exactly $f_1$) and
+$\eta = \sqrt{N}\,(\mu_N - f)$, and write $F[h] = -\nabla\phi * \rho_h$ for
+the force generated by $h$. Then, with no truncation,
+\begin{align}
+  \partial_t f + \bv\cdot\nabla_{\bx} f + F[f]\cdot\nabla_{\bv} f
+    &= -\frac{1}{N}\,\nabla_{\bv}\cdot\mathbb{E}\bigl[F[\eta]\,\eta\bigr],
+    \label{eq:mean}\\
+  \partial_t \eta + \mathcal{L}_f\,\eta
+    &= -\frac{1}{\sqrt{N}}\,\nabla_{\bv}\cdot
+       \Bigl(F[\eta]\,\eta - \mathbb{E}\bigl[F[\eta]\,\eta\bigr]\Bigr),
+    \label{eq:fluct}
+\end{align}
+where $\mathcal{L}_f\eta = \bv\cdot\nabla_{\bx}\eta + F[f]\cdot\nabla_{\bv}\eta
++ F[\eta]\cdot\nabla_{\bv} f$ is the linearized Vlasov operator. The
+covariance of $\eta$ is
+$f\,\delta_{z=z'} - f\otimes f + (1 - 1/N)\,g$: shot noise plus the two-point
+cumulant.
+
+Equation \eqref{eq:fluct} is a wave equation with a quadratic nonlinearity of
+strength $\alpha = N^{-1/2}$ and random initial data, and \eqref{eq:mean} says
+the retained state evolves at rate $\alpha^2$. This is the scaling of the
+wave-kinetic problem, where the kinetic time is $\alpha^{-2}$:
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{>{\raggedright}p{4.0cm}>{\raggedright}p{4.6cm}p{5.6cm}}
+  & NLS $\to$ wave kinetic & Fluctuating Vlasov $\to$ Lenard--Balescu \\ \hline
+  Field & $\hat u_k$ & $\eta_{\bk}(\bv)$ \\
+  Nonlinearity strength & $\alpha$ & $N^{-1/2}$ \\
+  Kinetic time & $\alpha^{-2}$ & $N$ \\
+  Initial data & independent Gaussian modes & Poisson-type shot noise \\
+  Mode frequency & $|k|^2$ & $\bk\cdot\bv$ (continuous in $\bv$) \\
+  Resonance & four-wave manifold & $\bk\cdot(\bv - \bv_*) = 0$ \\
+  Linear propagator & diagonal, unitary & linearized Vlasov: non-normal, damped \\
+  Retained state & spectrum $n_k$ & $f$, which also sets the propagator \\
+\end{tabular}
+\end{center}
+So ladder P2 is ladder P4 with the wave spectrum supplied by particle
+discreteness, and the natural template for a proof is the wave-kinetic
+analysis of Deng and Hani \cite{DH-WKE,DH-long}, not the hard-sphere one.
+Four features have no counterpart there and are where new work is needed:
+the nonlinearity loses a velocity derivative; the propagator is not unitary;
+the background $f$ evolves and feeds back; and the data are not Gaussian, with
+cumulants of order $s$ of size $N^{-(s-2)/2}$, the same order as the
+nonlinear corrections.
+
+\section{Three time scales and two thresholds (heuristic)}
+\label{sec:scales}
+
+Work in the frame moving with free transport, where a fluctuation created at
+time $s$ with wavenumber $\bk$ has velocity-frequency $\bk\,(t-s)$ at time
+$t$. A velocity derivative acting on it costs a factor $|\bk|(t-s)$. The
+field $F[\eta]$ is a stationary random field of size $O(1)$ with correlation
+time $O(1)$.
+
+\begin{itemize}
+  \item \textbf{Worst-case bound.} One Duhamel iterate of \eqref{eq:fluct}
+    has relative size at most
+    $N^{-1/2}\int_0^t |F|\,k s\,\dd s \sim N^{-1/2}t^2$. A deterministic
+    estimate therefore fails at $t\sim N^{1/4}$.
+  \item \textbf{Random-phase bound.} Because $F$ decorrelates in $O(1)$
+    time, the same iterate has variance
+    $N^{-1}\int_0^t k^2 s^2\,\dd s \sim t^3/N$. An estimate that uses this
+    cancellation fails at $t\sim N^{1/3}$.
+  \item \textbf{What happens at $N^{1/3}$.} The breakdown is physical. A
+    particle's velocity diffuses with coefficient $D\sim 1/N$, so its
+    position departs from the unperturbed orbit by
+    $\avg{|\Delta x|^2} = \tfrac{2}{3}Dt^3$. A phase-mixed fluctuation obeys,
+    in the moving frame, $\dot a = -D k^2 t^2 a$, hence
+    \begin{equation}
+      a(t) = a(0)\,\exp\!\left(-\tfrac{1}{3}\,D k^2 t^3\right),
+      \qquad
+      \tau_{\mathrm{mem}} \sim \left(\frac{N}{k^2}\right)^{1/3}.
+      \label{eq:mem}
+    \end{equation}
+\end{itemize}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{>{\raggedright}p{2.6cm}>{\raggedright}p{5.2cm}p{6.4cm}}
+  Time & Meaning & Hard-sphere counterpart \\ \hline
+  $O(1)$ & correlation time of the field; $g$ relaxes to its Bogoliubov form
+     & collision duration (zero) \\
+  $N^{1/3}$ & memory time: orbits decorrelate, phase-mixed information is erased
+     & none \\
+  $N$ & relaxation of $f$ & mean free time \\
+\end{tabular}
+\end{center}
+
+None of these scales is new. The cubic exponential \eqref{eq:mem} is
+Dupree's resonance broadening \cite{Dupree} and the collisional attenuation
+of echoes \cite{ONeil}. In the derivation problem, Duerinckx and Le Bihan
+state that naive resolvent bounds control their expansion ``at best'' for
+$t\ll N^{1/3}$ and that renormalization turns free propagators into
+hypoelliptic ones, which compensates for filamentation
+\cite{DuerinckxLeBihan}; Bodineau and Le Bris find a Gr\"onwall barrier at
+$N^{1/4}$, extended towards $N^{1/3}$ by averaging of fluctuations, for a
+tagged particle in a free gas \cite{BodineauLeBris}. What this section adds
+is the reading of the two exponents as worst-case versus random-phase bounds
+on the single term $N^{-1/2}\nabla_{\bv}\cdot(F[\eta]\eta)$.
+
+The Markovian closure is correct because $N^{1/3}\ll N$: memory is erased
+long before $f$ changes. The difficulty of the proof is that the erasure is
+itself a collisional effect, of the same origin as the equation being
+derived.
+
+\section{Proposed techniques}
+\label{sec:techniques}
+
+\subsection{T1. Expand the fluctuation, not the hierarchy}
+
+Apply a Duhamel expansion to \eqref{eq:fluct} about the linearized Vlasov
+flow and organize the terms as in the wave-kinetic theory: trees for the
+iterates of $\eta$, paired into couples when the expectation in
+\eqref{eq:mean} is taken.
+\begin{itemize}
+  \item The dressed propagator $e^{-t\mathcal{L}_f}$ is explicit for
+    homogeneous $f$: free transport plus a rank-one correction in $\bv$
+    governed by $1/\diel$. Using it removes the ring diagrams from the
+    combinatorics altogether, which disposes of the second obstruction.
+  \item The leading couples reproduce \eqref{eq:LB}; the resonance
+    $\delta(\bk\cdot(\bv-\bv_*))$ arises from the time integral of
+    $e^{-i\bk\cdot(\bv-\bv_*)s}$ exactly as the resonant manifold does for
+    waves.
+  \item Pairing must use a calculus for independent, non-Gaussian particles
+    in place of Wick's theorem. Duerinckx's Glauber calculus
+    \cite{DuerinckxChaos} is the available tool; at present it is controlled
+    only for $t\ll\log N$.
+\end{itemize}
+Fluctuation formulations of the Lenard--Balescu problem exist
+\cite{Lancellotti,FeliachiBouchet}, and a Dyson expansion in Feynman diagrams
+with renormalization has been carried out on the correlation hierarchy of a
+toy model \cite{DuerinckxLeBihan}. A limited search found no application of
+the random-data wave-kinetic method to \eqref{eq:fluct}; that is a null
+search result, not a proof of absence. The expected gain is the one noted in
+\cite{DuerinckxSR}: on the hierarchy each operator carries a velocity
+derivative and summability seems to need analyticity, whereas mean-square
+estimates over random data do not require regularity of the data.
+
+\subsection{T2. Layer inside the memory window}
+
+Re-expand at times $t_l = l\tau$ with
+\begin{equation}
+  1 \ll \tau \ll N^{1/3}.
+\end{equation}
+The lower bound lets $g$ reach its Bogoliubov form within a layer; the upper
+bound keeps the expansion parameter $\tau^3/N$ small, so no resummation of
+orbit perturbations is needed inside a layer. Term by term, contributions of
+order $2m$ can be as large as $(\tau/N)(\tau^3/N)^{m-1}$; cancellations among
+them are expected, as for irregular chains in the wave problem, but the
+window already suffices for convergence.
+
+The layered ansatz, playing the role of the cumulant ansatz of
+Deng--Hani--Ma, would be
+\begin{equation}
+  g(t_l) = \mathcal{G}[f(t_l)] + r_l ,
+\end{equation}
+where $\mathcal{G}[f]$ is the Bogoliubov (dressed-particle) correlation and
+$r_l$ is a remainder measured in a weak norm in the moving frame, with a
+weight that records the age of each component, so that components older than
+$\tau_{\mathrm{mem}}$ are discounted by the factor in \eqref{eq:mem}. Higher
+cumulants are carried with bounds $N^{-(s-1)}$ and at most polynomial growth
+in the moving-frame derivative.
+
+\subsection{T3. Self-generated suppression of echoes}
+
+The fourth obstruction is that phase-mixed information can return. The
+proposal is that it cannot return after $\tau_{\mathrm{mem}}$, by a bootstrap.
+\begin{itemize}
+  \item \textbf{Mechanism.} Weak collisions of strength $\nu$ damp fine
+    velocity structure at the enhanced rate $\nu^{1/3}$ and suppress echoes
+    for small perturbations. For Vlasov--Poisson with Fokker--Planck or
+    Landau collisions this is proved for perturbations of size
+    $\ll\nu^{1/3}$ in high Sobolev regularity
+    \cite{Bedrossian17,CLN}.
+  \item \textbf{The problem is critical.} Here $\nu\sim 1/N$ and the
+    fluctuation amplitude is $N^{-1/2}$. That is below the high-regularity
+    threshold $\nu^{1/3} = N^{-1/3}$, but shot noise has no regularity, and
+    in low regularity the sharp threshold is reported to be $\nu^{1/2}$
+    \cite{ZhaoZi}, which is exactly $N^{-1/2}$. So discreteness noise sits
+    at the borderline of deterministic echo suppression, with no room to
+    spare. A deterministic argument cannot be expected to close; the margin
+    has to come from independence of the particles.
+  \item \textbf{Bootstrap.} Assume the layered ansatz up to $t_l$. It
+    implies that a tagged particle diffuses in velocity at rate at least
+    $c/N$ over the next layer. That in turn gives the damping
+    \eqref{eq:mem} for the remainder, which closes the ansatz at $t_{l+1}$.
+\end{itemize}
+Two things make this harder than the collisional-Vlasov theorems. The
+collisions are not an external operator but are produced by the fluctuations
+being estimated. And, by the criticality just noted, smoothness must be
+replaced by independence: the estimates have to be in mean square over the
+initial data, as in random-data wave theory.
+
+The toy-model theorem of \cite{DuerinckxLeBihan} reaches $t\sim N$ under an
+added velocity diffusion of strength $\kappa/N$, which the authors say they
+``cannot yet dispense with''. The bootstrap proposed here is a route to
+removing that hypothesis: the diffusion would be supplied by the dynamics.
+
+\subsection{T4. An intermediate theorem at $N^{1/3}$}
+
+The bootstrap needs only a statement about a tagged particle on times just
+past $N^{1/3}$, far short of the kinetic time.
+
+\begin{target}[Orbit decorrelation]
+For $\phi$ smooth, $f$ near a homogeneous Penrose-stable equilibrium, and
+$1\ll t\le N^{1/3+\delta}$, a tagged particle satisfies
+\[
+  \mathbb{E}\exp\bigl(i\bk\cdot(\bx(t) - \bx(0) - \bv(0)t)\bigr)
+  = \exp\!\left(-\frac{t^3}{3N}\,\bk\cdot\mathsf{D}(\bv(0))\,\bk\right)
+    + o(1),
+\]
+with $\mathsf{D}$ the Lenard--Balescu diffusion matrix.
+\end{target}
+
+For a tagged particle in a non-interacting background in dimension
+$d\ge 4$, convergence to the linear Landau diffusion on $t\sim N$ is proved
+in \cite{BodineauLeBris}, which contains this statement in that setting. The
+target is the interacting, screened case. It is the natural next step after
+the tagged-particle result of \cite{DuerinckxSR}: it asks for the collisional correction on a time scale
+where it is first visible, and it is the single input from which the memory
+cutoff follows. It is also directly measurable (Section~\ref{sec:tests}).
+
+\subsection{T5. Split the interaction at the interparticle spacing}
+
+For Coulomb interaction in three dimensions, with lengths in units of the
+Debye length, the $90^\circ$ deflection radius is $b_{90}\sim N^{-1}$ and the
+interparticle spacing is $a\sim N^{-1/3}$. Write
+$\phi = \phi_< + \phi_>$ with the split at a scale just below $a$.
+\begin{itemize}
+  \item Encounters through $\phi_<$ are binary and do not overlap in space
+    and time. They form a sparse event graph, to which the molecule
+    technique applies in a grazing-collision regime.
+  \item $\phi_>$ acts on many particles at once and is treated by T1--T3.
+\end{itemize}
+Each range of impact parameters contributes to velocity diffusion in
+proportion to its logarithmic width, so to leading logarithmic order
+\begin{equation}
+  \frac{\ln(a/b_{90})}{\ln(1/b_{90})} = \frac{2}{3}
+  \quad\text{(binary)},
+  \qquad
+  \frac{\ln(1/a)}{\ln(1/b_{90})} = \frac{1}{3}
+  \quad\text{(many-body)} .
+\end{equation}
+The split at the interparticle spacing is standard; I did not find the
+fractions stated in the literature, and one review is reported to attribute
+most of the transport to impact parameters between the spacing and the Debye
+length, which would disagree. The fractions should be treated as a
+leading-logarithm estimate to be checked, numerically and against that
+review. On this accounting two thirds of the Coulomb logarithm is within
+reach of a hard-sphere-type analysis, and only one third requires the fluctuation
+theory. A hybrid expansion would use event histories for $\phi_<$ with the
+dressed propagator of $\phi_>$ between events.
+
+\subsection{Prior art and what is claimed}
+\label{sec:prior}
+
+Checked by a literature search on 16 November 2026. A null search result is
+recorded as such and is not a claim of novelty.
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{>{\raggedright}p{5.2cm}p{9.0cm}}
+  Ingredient & Status \\ \hline
+  Exact fluctuation system & classical (Klimontovich); rigorous fluctuation
+     theory in \cite{BraunHepp,Lancellotti} \\
+  Analogy $\alpha = N^{-1/2}$, $T_{\mathrm{kin}} = \alpha^{-2}$; use of the
+     random-data wave-kinetic method & not found in a limited search \\
+  Diagram expansion with renormalization & done on the hierarchy for a toy
+     model \cite{DuerinckxLeBihan} \\
+  $N^{1/3}$ barrier; diffusion at rate $1/N$ cures filamentation & in
+     \cite{DuerinckxLeBihan}; exponents $N^{1/4}$, $N^{1/3}$ also in
+     \cite{BodineauLeBris} \\
+  Link to enhanced dissipation and echo thresholds with $\nu = 1/N$;
+     criticality of shot noise & not found stated; follows by combining
+     \cite{Bedrossian17,CLN,ZhaoZi} with $\nu = 1/N$ \\
+  Layering in the window $1\ll\tau\ll N^{1/3}$ with an age-weighted
+     remainder & proposed here; layering itself is from
+     \cite{DHM1,DH-long} \\
+  Orbit-decorrelation target & proved for a free-gas background, $d\ge 4$
+     \cite{BodineauLeBris}; open with interaction \\
+  Interpolation between scalings & conjectured in \cite{NVW} \\
+  Two-thirds, one-third split & elementary; not found stated; possibly in
+     tension with a review, unchecked \\
+\end{tabular}
+\end{center}
+
+\subsection{Proof architecture}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{>{\raggedright}p{0.5cm}>{\raggedright}p{6.6cm}p{6.8cm}}
+  & Step & Status \\ \hline
+  1 & Exact fluctuation system \eqref{eq:mean}--\eqref{eq:fluct} & proved (\texttt{orbit\_decorrelation\_theorem.tex}, Lemma 1) \\
+  2 & Dressed propagator and its decay for stable $f$ & known \\
+  3 & Cumulant bounds on $O(1)$ times & known \cite{DuerinckxChaos} \\
+  4 & One layer: expansion converges for $\tau\ll N^{1/3}$ and gives
+      $(\tau/N)\,Q_{\mathrm{LB}}$ & proposed (T1, T2); needs mean-square
+      estimates \\
+  5 & Orbit decorrelation at $N^{1/3}$ & proved for a prescribed Markovian Gaussian field (\texttt{orbit\_decorrelation\_theorem.tex}); open for the particle system \\
+  6 & Remainder cannot return: bootstrap & proposed (T3); open, the crux \\
+  7 & Iterate over $N/\tau$ layers with $f$ in the stable class & needs
+      stability of \eqref{eq:LB} in that class \\
+  8 & Coulomb: hybrid expansion & proposed (T5); open \\
+\end{tabular}
+\end{center}
+
+\section{Computational translation: Algorithm D}
+
+This follows the layered closure state $S_l = (y_l, c_l, h_l, d_l,\sigma_l)$
+of \texttt{math\_to\_algorithm.md}. The baseline reduced equation stays
+explicit; a history-aware model predicts only the defect or a validity
+indicator.
+
+\subsection{Generator}
+
+$N$-body dynamics \eqref{eq:nbody} in a periodic box with a Yukawa or
+softened Coulomb potential, in two or three dimensions. Sweep $N$ at fixed
+mean-field strength, and sweep the screening parameter $\kappa$.
+
+One dimension needs care: for a homogeneous one-species system the
+resonance condition in \eqref{eq:LB} forces $v = v_*$ and the operator
+vanishes identically, so collisional relaxation appears only at higher order
+in $1/N$. A one-dimensional run therefore tests the three-point cumulant
+directly, but it is not a test of \eqref{eq:LB}.
+
+\subsection{Retained state and cumulants}
+
+\begin{itemize}
+  \item $y_l$: $f_1$ in a weak basis, Fourier in $\bx$ and Hermite in $\bv$.
+  \item $c_l$: the two-point cumulant in the same basis. Its lowest moment is
+    the field fluctuation spectrum $\avg{|E_{\bk}|^2}$, which has a
+    closed-form prediction from the dressed-particle picture at equilibrium.
+    That prediction is the first sanity test.
+  \item Scaling check: $\|g_2\|\sim N^{-1}$ and $\|g_3\|\sim N^{-2}$ across
+    the sweep, with ensemble error bars.
+\end{itemize}
+
+\subsection{History object}
+
+There is no collision log. The replacement is a per-layer momentum-transfer
+record,
+\begin{equation}
+  \Delta\mathbf{p}_{ij}^{(l)} = -\frac{1}{N}\int_{t_l}^{t_{l+1}}
+    \nabla\phi(\bx_i - \bx_j)\,\dd t ,
+\end{equation}
+kept as a sparse sketch, and its decomposition into three channels:
+\begin{itemize}
+  \item close encounters (impact parameter below the $90^\circ$ deflection
+    radius), which can be logged as discrete events exactly as for hard
+    spheres;
+  \item weak binary deflections at intermediate range;
+  \item collective transfer, measured in Fourier space at
+    $k\lambda_D \lesssim 1$.
+\end{itemize}
+The fraction of momentum transfer in each channel, as a function of $\kappa$
+and coupling, is the plasma counterpart of the molecule statistics, and it
+locates a given system on the interpolation axis of the third target.
+
+\subsection{Closure defects}
+
+For a test function $\psi(\bx,\bv)$,
+\begin{align}
+  R^{\mathrm{V}}_\psi &= \frac{\dd}{\dd t}\avg{f_1,\psi}
+     - \avg{f_1,\;\bv\cdot\nabla_{\bx}\psi
+       - (\nabla\phi*\rho_f)\cdot\nabla_{\bv}\psi}, \\
+  R^{\mathrm{LB}}_\psi &= R^{\mathrm{V}}_\psi
+     - \frac{1}{N}\avg{Q_{\mathrm{LB}}(f_1,f_1),\psi} .
+\end{align}
+$R^{\mathrm{V}}$ is the Vlasov defect and should equal the collision term to
+leading order; $R^{\mathrm{LB}}$ is the defect of the collisional closure and
+should scale as $N^{-2}$ in the weakly coupled regime. Discretization error
+and ensemble error must be reported separately from both.
+
+\subsection{Arrow-of-time experiment}
+
+The plasma version of the paired forward and reversed continuation is the
+echo. At a layer boundary, reverse all velocities and continue. In the
+Vlasov limit the phase-mixed perturbation reassembles; particle noise at
+order $1/N$ degrades the echo. The echo amplitude as a function of $N$ and of
+elapsed time measures directly how fast $g$ loses memory, which is the
+assumption the Bogoliubov closure rests on. The three predictors of
+\texttt{math\_to\_algorithm.md} (retained state; plus cumulant magnitudes;
+plus time-oriented history) are compared on the echo data.
+
+\subsection{Tests of the proposed mechanism}
+\label{sec:tests}
+
+The strategy of Sections~\ref{sec:scales}--\ref{sec:techniques} makes four
+predictions that can be checked at times far shorter than the relaxation
+time.
+\begin{itemize}
+  \item \textbf{Orbit decorrelation.} The departure of a tagged particle
+    from its mean-field orbit satisfies
+    $\avg{|\Delta x|^2} = \tfrac{2}{3}Dt^3$ with $D\propto 1/N$. This
+    measures the Lenard--Balescu diffusion coefficient without a relaxation
+    run.
+  \item \textbf{Echo attenuation.} Echo amplitude as a function of delay $t$
+    and of $N$ collapses onto a single curve in $k^2t^3/N$, with
+    $\ln(\text{amplitude})$ linear in that variable.
+  \item \textbf{History horizon.} History features older than
+    $\tau_{\mathrm{mem}}\sim N^{1/3}$ add no predictive value for the
+    defect; features inside the window may.
+  \item \textbf{Channel fractions.} For a potential with short-range scale
+    $b_{\min}$ and long-range scale $\lambda$, the fraction of velocity
+    diffusion from non-overlapping binary encounters is
+    $\ln(a/b_{\min})/\ln(\lambda/b_{\min})$, tending to $2/3$ for Coulomb in
+    three dimensions. Finite-$N$ corrections are of relative order
+    $1/\ln N$ and will be large in any affordable run.
+\end{itemize}
+Failure of the first two would refute the picture of
+Section~\ref{sec:scales}; failure of the third would mean the memory cutoff
+is not the relevant horizon for closure.
+
+\paragraph{Preliminary check of the first prediction.} A scratch experiment,
+not part of the repository and not a benchmark result, was run on
+16 November 2026: particles on the two-dimensional torus $[0,2\pi)^2$ with
+$\hat\phi(\bk) = |\bk|^{-2}$ truncated to $|k_i|\le 2$, uniform positions,
+unit Maxwellian velocities, leapfrog with $\Delta t = 0.05$ to $t = 40$, four
+realizations per $N$, fixed seed. The quantity $N\avg{|\Delta x|^2}$ for
+$N = 500$, $2000$, $8000$ was
+\begin{center}
+\begin{tabular}{rrrrr}
+  $t$ & $N=500$ & $N=2000$ & $N=8000$ & local slope ($N=8000$) \\ \hline
+  1  & 1.57 & 1.55 & 1.95 & 3.50 \\
+  5  & 260 & 237 & 260 & 2.98 \\
+  10 & 1921 & 1789 & 2002 & 2.94 \\
+  20 & 15236 & 14347 & 15766 & 3.00 \\
+  40 & 119356 & 115393 & 127423 & 3.01 \\
+\end{tabular}
+\end{center}
+The values agree across a factor of 16 in $N$ to within about 10\%, and the
+logarithmic slope is 3 for $t\gtrsim 2$. No error bars were computed, so the
+10\% spread is not separated from ensemble noise. This is consistent with
+$\avg{|\Delta x|^2}\propto t^3/N$ and with a memory time
+$\propto N^{1/3}$; it does not test the echo, the history horizon, or the
+channel fractions.
+
+\paragraph{Attempted check of the second prediction: no result.} An echo
+experiment was run with the same system: velocity kicks
+$0.05\cos x$ at $t=0$ and $0.05\cos 2x$ at $t=10$, looking for a response in
+the $k=1$ density mode near $t=20$, with $N = 500$ to $32000$ and
+$N\times\text{realizations} = 128000$. The measured peaks ($0.002$ to
+$0.005$) were at the ensemble noise floor ($0.0028$), and a control with no
+kicks gave the same peak ($0.005$). No echo was detected, so the run neither
+supports nor refutes the predicted attenuation. A usable test needs a larger
+echo (stronger kicks or weaker Landau damping of the pulses) or a much larger
+ensemble.
+
+\subsection{Limit-recovery tests}
+
+\begin{itemize}
+  \item Weak coupling, $N\to\infty$ at fixed time: Vlasov, with defect
+    $\propto 1/N$.
+  \item Weak coupling at time $N\tau$: relaxation rate against
+    \eqref{eq:LB} and against Landau with a fitted Coulomb logarithm.
+  \item Large $\kappa$, low density: crossover to Boltzmann-like sparse
+    collision histories, where the existing hard-sphere track applies.
+  \item Strong coupling: all three closures fail; the diagnostics should
+    report it.
+\end{itemize}
+
+\section{Open questions}
+
+\begin{enumerate}
+  \item Is there a diagram expansion about the linearized Vlasov flow in
+    which the non-ring diagrams can be counted and bounded in the way
+    molecules are, with the gain coming from powers of $1/N$?
+  \item What is the right layered ansatz? It must propagate cumulant size
+    and enough velocity regularity to exclude echoes over the kinetic time.
+  \item Does the three-channel decomposition of momentum transfer have a
+    sharp formulation, so that the close-encounter channel can be treated by
+    the hard-sphere method and the remainder by resummation?
+  \item For the benchmark: do history features add predictive value for the
+    Lenard--Balescu defect beyond $f_1$ and $g_2$, given that here $g_2$ is
+    already part of the closure and not only its error?
+\end{enumerate}
+
+\begin{thebibliography}{99}
+\small
+\bibitem{DHM1} Y.~Deng, Z.~Hani, X.~Ma, \emph{Long time derivation of the
+Boltzmann equation from hard sphere dynamics}, arXiv:2408.07818; to appear in
+Ann.\ of Math.
+\bibitem{DHM2} Y.~Deng, Z.~Hani, X.~Ma, \emph{Hilbert's sixth problem:
+derivation of fluid equations via Boltzmann's kinetic theory},
+arXiv:2503.01800 (preprint).
+\bibitem{DH-WKE} Y.~Deng, Z.~Hani, \emph{Full derivation of the wave kinetic
+equation}, Invent.\ Math.\ \textbf{233} (2023) 543--724.
+\bibitem{DH-long} Y.~Deng, Z.~Hani, \emph{Long time justification of wave
+turbulence theory}, arXiv:2311.10082 (preprint).
+\bibitem{Lanford} O.~E. Lanford III, \emph{Time evolution of large classical
+systems}, Lecture Notes in Physics \textbf{38}, Springer (1975).
+\bibitem{GST} I.~Gallagher, L.~Saint-Raymond, B.~Texier, \emph{From Newton to
+Boltzmann: Hard Spheres and Short-range Potentials}, Zurich Lectures in
+Advanced Mathematics, EMS (2013); see also the published erratum.
+\bibitem{BraunHepp} W.~Braun, K.~Hepp, \emph{The Vlasov dynamics and its
+fluctuations in the $1/N$ limit of interacting classical particles}, Comm.\
+Math.\ Phys.\ \textbf{56} (1977) 101--113.
+\bibitem{Dobrushin} R.~L. Dobrushin, \emph{Vlasov equations}, Funct.\ Anal.\
+Appl.\ \textbf{13} (1979) 115--123.
+\bibitem{HaurayJabin} M.~Hauray, P.-E. Jabin, \emph{Particle approximation of
+Vlasov equations with singular forces: propagation of chaos}, Ann.\ Sci.\
+\'Ec.\ Norm.\ Sup\'er.\ (4) \textbf{48} (2015) 891--940.
+\bibitem{LazaroviciPickl} D.~Lazarovici, P.~Pickl, \emph{A mean field limit
+for the Vlasov--Poisson system}, Arch.\ Ration.\ Mech.\ Anal.\ \textbf{225}
+(2017), no.~3.
+\bibitem{Serfaty} S.~Serfaty, \emph{Mean field limit for Coulomb-type flows}
+(appendix with M.~Duerinckx), Duke Math.\ J.\ \textbf{169} (2020) 2887--2935.
+\bibitem{DuerinckxJabin} M.~Duerinckx, P.-E. Jabin, \emph{Derivation of 2D
+Vlasov--Poisson for classical particles with Coulomb interactions},
+arXiv:2608.04104 (2026, preprint, not refereed).
+\bibitem{BPS} A.~V. Bobylev, M.~Pulvirenti, C.~Saffirio, \emph{From particle
+systems to the Landau equation: a consistency result}, Comm.\ Math.\ Phys.\
+\textbf{319} (2013) 683--702.
+\bibitem{VelazquezWinter} J.~J.~L. Vel\'azquez, R.~Winter, \emph{From a
+non-Markovian system to the Landau equation}, Comm.\ Math.\ Phys.\
+\textbf{361} (2018) 239--287.
+\bibitem{Winter} R.~Winter, \emph{Convergence to the Landau equation from the
+truncated BBGKY hierarchy in the weak-coupling limit}, J.\ Differential
+Equations \textbf{283} (2021) 1--36.
+\bibitem{DuerinckxSR} M.~Duerinckx, L.~Saint-Raymond, \emph{Lenard--Balescu
+correction to mean-field theory}, Probab.\ Math.\ Phys.\ \textbf{2} (2021)
+27--69. The admissible exponent $r$ is stated differently in the abstract and
+in the arXiv theorem; check the published Theorem~1 before quoting a value.
+\bibitem{DuerinckxChaos} M.~Duerinckx, \emph{On the size of chaos via Glauber
+calculus in the classical mean-field dynamics}, Comm.\ Math.\ Phys.\
+\textbf{382} (2021) 613--653.
+\bibitem{DuerinckxLeBihan} M.~Duerinckx, C.~Le~Bihan, \emph{Lenard--Balescu
+thermalization: rigorous derivation from a toy model}, arXiv:2511.10778
+(2025, preprint).
+\bibitem{MouhotVillani} C.~Mouhot, C.~Villani, \emph{On Landau damping}, Acta
+Math.\ \textbf{207} (2011) 29--201.
+\bibitem{BMM} J.~Bedrossian, N.~Masmoudi, C.~Mouhot, \emph{Landau damping:
+paraproducts and Gevrey regularity}, Ann.\ PDE \textbf{2} (2016), Art.~4.
+\bibitem{BedrossianEcho} J.~Bedrossian, \emph{Nonlinear echoes and Landau
+damping with insufficient regularity}, Tunis.\ J.\ Math.\ \textbf{3} (2021)
+121--205.
+\bibitem{GuoJang} Y.~Guo, J.~Jang, \emph{Global Hilbert expansion for the
+Vlasov--Poisson--Boltzmann system}, Comm.\ Math.\ Phys.\ \textbf{299} (2010)
+469--501.
+\bibitem{ArsenioSR} D.~Ars\'enio, L.~Saint-Raymond, \emph{From the
+Vlasov--Maxwell--Boltzmann System to Incompressible Viscous
+Electro-magneto-hydrodynamics, Volume~1}, EMS Monographs in Mathematics
+(2019).
+\bibitem{BardosBesse} C.~Bardos, N.~Besse, \emph{Diffusion limit of the
+Vlasov equation in the weak turbulent regime}, J.\ Math.\ Phys.\ \textbf{62}
+(2021) 101505.
+\bibitem{Dawson} J.~Dawson, \emph{Thermal relaxation in a one-species,
+one-dimensional plasma}, Phys.\ Fluids \textbf{7} (1964) 419--425.
+\bibitem{Fouvry} J.-B. Fouvry, B.~Bar-Or, P.-H. Chavanis, \emph{Kinetic theory
+of one-dimensional homogeneous long-range interacting systems sourced by
+$1/N^2$ effects}, Phys.\ Rev.\ E \textbf{100} (2019) 052142.
+\bibitem{BodineauLeBris} T.~Bodineau, P.~Le~Bris, \emph{Linear Landau
+equation as a limit of a tagged particle in mean field interaction with a
+free gas}, arXiv:2602.16440 (2026, preprint).
+\bibitem{Bedrossian17} J.~Bedrossian, \emph{Suppression of plasma echoes and
+Landau damping in Sobolev spaces by weak collisions in a
+Vlasov--Fokker--Planck equation}, Ann.\ PDE \textbf{3} (2017), Art.~19.
+\bibitem{CLN} S.~Chaturvedi, J.~Luk, T.~T. Nguyen, \emph{The
+Vlasov--Poisson--Landau system in the weakly collisional regime}, J.\ Amer.\
+Math.\ Soc.\ \textbf{36} (2023) 1103--1189.
+\bibitem{ZhaoZi} W.~Zhao, R.~Zi, \emph{Optimal stability threshold in lower
+regularity spaces for the Vlasov--Poisson--Fokker--Planck equations},
+arXiv:2603.29204 (2026, preprint; abstract only consulted).
+\bibitem{Dupree} T.~H. Dupree, \emph{A perturbation theory for strong plasma
+turbulence}, Phys.\ Fluids \textbf{9} (1966) 1773--1782 (consulted through
+secondary sources).
+\bibitem{ONeil} T.~M. O'Neil, \emph{Effect of Coulomb collisions and
+microturbulence on the plasma wave echo}, Phys.\ Fluids \textbf{11} (1968)
+2420--2425 (consulted through secondary sources).
+\bibitem{NVW} A.~Nota, J.~J.~L. Vel\'azquez, R.~Winter, \emph{Interacting
+particle systems with long-range interactions: scaling limits and kinetic
+equations}, Atti Accad.\ Naz.\ Lincei Rend.\ Lincei Mat.\ Appl.\ \textbf{32}
+(2021) 335--377.
+\bibitem{Lancellotti} C.~Lancellotti, \emph{On the fluctuations about the
+Vlasov limit for $N$-particle systems with mean-field interactions}, J.\
+Stat.\ Phys.\ \textbf{136} (2009) 643--665.
+\bibitem{FeliachiBouchet} O.~Feliachi, F.~Bouchet, \emph{Dynamical large
+deviations for homogeneous systems with long range interactions and the
+Balescu--Guernsey--Lenard equation}, arXiv:2105.05644.
+\bibitem{CagliotiRousset} E.~Caglioti, F.~Rousset, \emph{Quasi-stationary
+states for particle systems in the mean-field limit}, J.\ Stat.\ Phys.\
+\textbf{129} (2007) 241--263.
+\end{thebibliography}
+
+\end{document}
