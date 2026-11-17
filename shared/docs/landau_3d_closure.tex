@@ -1,0 +1,356 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{array}
+\usepackage{hyperref}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\avg}[1]{\langle #1\rangle}
+\newcommand{\vt}{v_t}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The linear heat-flux closure in three velocity dimensions\\
+for a general conserving collision operator, with numbers for Landau}
+\author{Working note}
+\date{16 November 2026}
+
+\begin{document}
+\maketitle
+
+\noindent\emph{Summary.} The previous notes left the Landau operator open
+for two reasons: no closed form, and, in three dimensions, a coupling to the
+viscous stress that breaks the positivity argument. This note gets as far as
+the argument goes.
+\begin{itemize}
+  \item \textbf{Proved} (Theorem~\ref{thm:3d}): for any conserving,
+    symmetric, non-negative linearized collision operator in three velocity
+    dimensions, the quasi-static closure obeys
+    $|\chi(k)/\kappa_{\mathrm F}-1|\le K\,k^2$ at small $k$, two-sided, with
+    $K$ given explicitly by three Chapman--Enskog-type quantities. The
+    Landau operator is covered, conditionally on the existence statement in
+    Assumption~(S).
+  \item \textbf{Derived formally and checked} (Proposition~\ref{prop:K}):
+    the exact coefficient of $k^2$, for any such operator. It reproduces
+    $\tfrac{2}{15}$ for the Dougherty operator.
+  \item \textbf{Computed} for the like-particle Landau operator: the
+    conductivity, the viscosity, the exact $k^2$ coefficient, and the
+    closure itself up to $k\lambda\approx1$, with a polynomial Galerkin
+    method validated against Braginskii's coefficients and the Dougherty
+    closed form.
+\end{itemize}
+\textbf{Not proved for Landau:} positivity at all $k$, the inequality
+$\chi<\kappa_{\mathrm F}$, the collisionless limit, and Assumption~(S)
+itself. The Landau numbers are numerical, not certified. Electron--ion
+collisions are not included. No second reader has checked the proofs.
+
+\section{Setting}
+
+Units: density, mass and thermal speed $\sqrt{T_0/m}$ equal to one. $M$ is
+the unit Maxwellian on $\mathbb{R}^3$, $\avg{\cdot}$ its average. All
+functions are axisymmetric about the $x$ axis, and
+$H=\operatorname{span}\{1,v_x,|v|^2\}$. Write
+\[
+  Q=\tfrac12v_x(|v|^2-5),\qquad
+  \vartheta=v_\perp^2-2v_x^2,\qquad
+  T=\tfrac13\avg{(|v|^2-3)h},\qquad q=\avg{Qh}.
+\]
+
+\paragraph{Assumption (A3).} $\cD(f,h)=\avg{f\Lambda h}$ is a real,
+symmetric, non-negative bilinear form whose domain contains the polynomials,
+invariant under $v_x\to-v_x$, with $\cD[f]:=\cD(f,f)=0$ exactly for $f\in H$.
+
+For real $\sigma$ put
+$\avg{\sigma,\Lambda^+\sigma}=\sup_f[2\avg{\sigma f}-\cD[f]]$. Then
+$\avg{\sigma f}^2\le\avg{\sigma,\Lambda^+\sigma}\,\cD[f]$, and if
+$\cD(f_0,\cdot)=\avg{\sigma\,\cdot}$ then
+$\avg{\sigma,\Lambda^+\sigma}=\cD[f_0]$.
+
+\paragraph{Assumption (S).} For the given $k\ne0$ there is $g=g_e+iw$, with
+$g_e$ real and even in $v_x$, $w$ real and odd, in the form domain and with
+finite polynomial moments, solving $ikv_x\,g+\Lambda g=1$ weakly; and the
+quasi-static limit of the potential-driven response of
+$\partial_th+v_x\partial_xh+\Lambda h=a\,v_x$ is given by its moments, as in
+the earlier notes: $\hat q/\hat T\to q_1/T_1$ with $q_1=\avg{Qg}$,
+$T_1=\tfrac13\avg{(|v|^2-3)g}$.
+
+\medskip
+(S) was proved for the BGK and Dougherty operators. For the Landau operator
+with Coulomb interaction the linearized operator has no spectral gap, and
+(S) is not verified here.
+
+\paragraph{Chapman--Enskog quantities.} Let $\Xi$ solve $\Lambda\Xi=Q$ with
+$\avg{v_x\Xi}=0$. Define
+\begin{equation}
+  \kappa_{\mathrm F}=\avg{Q\,\Xi},\qquad
+  \eta=\tfrac1{12}\avg{\vartheta,\Lambda^+\vartheta},\qquad
+  \chi_*=1-v_x^2+\frac{v_x\,\Xi}{\kappa_{\mathrm F}},\qquad
+  C_*=\avg{\chi_*,\Lambda^+\chi_*}.
+\end{equation}
+$\kappa_{\mathrm F}$ is the heat conductivity and $\eta$ the viscosity
+($\pi_{xx}=-\tfrac43\eta\,\partial_xu$). For the Dougherty operator
+$\kappa_{\mathrm F}=5/(6\nu)$ and $\eta=1/(2\nu)$.
+
+\section{Theorem}
+
+\begin{theorem}\label{thm:3d}
+Assume (A3) and (S), and let $n_1=\avg{g}$,
+$X=\avg{\vartheta\,g_e}$, $X_{\max}=(12\,\eta\,C_*)^{1/2}$.
+\begin{enumerate}
+  \item[(i)] $q_1=i/k$, $\avg{v_x^2g}=0$, and
+    $T_1=-n_1+\tfrac13X$.
+  \item[(ii)] $\displaystyle\frac{1}{k^2\kappa_{\mathrm F}}\le n_1\le
+    \frac{1}{k^2\kappa_{\mathrm F}}+C_*$ and $|X|\le X_{\max}$.
+  \item[(iii)] If $\kappa_{\mathrm F}X_{\max}k^2<3$, then $T_1<0$, the
+    closure is $\hat q=-i\,\sgn(k)\,\theta\,\hat T$ with
+    $\theta=-1/(|k|T_1)>0$, and $\chi=\theta/|k|$ satisfies
+    \begin{equation}
+      \frac{\kappa_{\mathrm F}}
+           {1+\kappa_{\mathrm F}\bigl(C_*+\tfrac13X_{\max}\bigr)k^2}
+      \;\le\;\chi(k)\;\le\;
+      \frac{\kappa_{\mathrm F}}{1-\tfrac13\kappa_{\mathrm F}X_{\max}k^2}.
+      \label{eq:bounds}
+    \end{equation}
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Take $k>0$.
+
+\emph{(i).} Testing the equation with $1$, $v_x$, $|v|^2$, which lie in the
+kernel of the form: $ik\avg{v_xg}=1$, $ik\avg{v_x^2g}=0$,
+$ik\avg{v_x|v|^2g}=\avg{|v|^2}=3$. Hence $q_1=(3-5)/(2ik)=i/k$. Also
+$\avg{(|v|^2-3)g}=\avg{v_\perp^2g}-3n_1$ and
+$\avg{\vartheta g}=\avg{v_\perp^2g}$, which gives $3T_1=-3n_1+X$; and $X$ is
+real with $\avg{\vartheta g}=\avg{\vartheta g_e}$ because $\vartheta$ is
+even.
+
+\emph{Energy identity.} The real and imaginary parts of the equation are
+\begin{equation}
+  -kv_xw+\Lambda g_e=1,\qquad kv_xg_e+\Lambda w=0 .
+  \label{eq:sys}
+\end{equation}
+Testing the first with $g_e$ and the second with $w$ and subtracting,
+\begin{equation}
+  n_1=\cD[g_e]+\cD[w].
+  \label{eq:energy}
+\end{equation}
+
+\emph{Lower bound on $\cD[w]$.} Since $Q$ is odd, $q_1=i\avg{Qw}$, so
+$\avg{Qw}=1/k$. Then
+$k^{-2}=\avg{Qw}^2\le\avg{Q,\Lambda^+Q}\,\cD[w]=\kappa_{\mathrm F}\cD[w]$.
+With \eqref{eq:energy} this is the lower bound in (ii).
+
+\emph{Upper bound on $n_1$.} Let
+$\psi_*=(v_x-\Xi/\kappa_{\mathrm F})/k$. Then
+$1-kv_x\psi_*=\chi_*$, $\cD[\psi_*]=\cD[\Xi]/(k\kappa_{\mathrm F})^2
+=1/(k^2\kappa_{\mathrm F})$, and $\chi_*$ is orthogonal to $1$ and $|v|^2$:
+$\avg{\chi_*}=1-1+0$ and
+$\avg{|v|^2\chi_*}=3-5+\avg{(2Q+5v_x)\Xi}/\kappa_{\mathrm F}=0$. Write
+\[
+  n_1=\avg{g_e}=\avg{g_e\chi_*}+k\avg{v_xg_e\,\psi_*}.
+\]
+The first term is at most $C_*^{1/2}\cD[g_e]^{1/2}$. For the second, test
+the second equation of \eqref{eq:sys} with $\psi_*$:
+$k\avg{v_xg_e\psi_*}=-\cD(w,\psi_*)\le\cD[w]^{1/2}(k^2\kappa_{\mathrm F})^{-1/2}$.
+By the Cauchy--Schwarz inequality in $\mathbb{R}^2$ and \eqref{eq:energy},
+$n_1\le(C_*+1/(k^2\kappa_{\mathrm F}))^{1/2}n_1^{1/2}$.
+
+\emph{Bound on $X$.} From the two bounds, $\cD[g_e]=n_1-\cD[w]\le C_*$. Since
+$\vartheta$ is orthogonal to $H$,
+$X^2\le\avg{\vartheta,\Lambda^+\vartheta}\,\cD[g_e]\le12\,\eta\,C_*$.
+
+\emph{(iii).} $-T_1=n_1-\tfrac13X$ lies between
+$1/(k^2\kappa_{\mathrm F})-\tfrac13X_{\max}$ and
+$1/(k^2\kappa_{\mathrm F})+C_*+\tfrac13X_{\max}$. Under the stated condition
+the lower end is positive, $q_1/T_1=-i\theta$ with $\theta=-1/(kT_1)$, and
+$\chi=1/(k^2(-T_1))$ gives \eqref{eq:bounds}.
+\end{proof}
+
+\begin{remark}
+In one velocity dimension $\avg{v^2g}=0$ makes $T_1=-n_1$, a diagonal
+resolvent element, and positivity holds at every $k$. In three dimensions
+$T_1$ contains the cross term $X$, which is the perpendicular temperature
+response; the argument controls it only by $X_{\max}$, so positivity and the
+upper bound are obtained only for $k^2<3/(\kappa_{\mathrm F}X_{\max})$. For
+the Dougherty operator both hold at every $k$, by the closed form.
+\end{remark}
+
+\begin{proposition}[Leading coefficient; formal]\label{prop:K}
+As $k\to0$,
+\begin{equation}
+  1-\frac{\chi(k)}{\kappa_{\mathrm F}}=K_{\mathrm{ex}}\,k^2+o(k^2),\qquad
+  K_{\mathrm{ex}}=\kappa_{\mathrm F}\,
+  \bigl\langle\chi_*-\tfrac13\vartheta,\;\Lambda^+\chi_*\bigr\rangle .
+\end{equation}
+\end{proposition}
+
+\noindent\emph{Derivation.} To leading order $-w=\psi_*$, so
+$1+kv_xw\to\chi_*$ and, by the first equation of \eqref{eq:sys}, the part of
+$g_e$ outside $H$ tends to $\Lambda^+\chi_*$. Then
+$n_1-1/(k^2\kappa_{\mathrm F})\to C_*$ and
+$X\to\avg{\vartheta,\Lambda^+\chi_*}$. This is not proved: it assumes the
+expansion is uniform. It is checked in Section~\ref{sec:num}.
+
+\section{Numerical method and validation}
+\label{sec:num}
+
+Scratch computations on 16 November 2026, not part of the repository.
+
+\paragraph{Operator.} The like-particle Landau operator, linearized, in the
+weak form
+\[
+  \cD(g,h)=\frac{3\sqrt\pi}{4\,\tau}\iint M(v)M(v')\,
+  (\nabla g-\nabla'g')\cdot U(v-v')\,(\nabla h-\nabla'h')\,\dd v\,\dd v',
+\]
+\[
+  U(w)=\frac{|w|^2I-ww^{\mathsf T}}{|w|^3},
+\]
+with $\tau$ Braginskii's like-particle collision time and $\lambda=\tau$ in
+these units. This is one species colliding with itself.
+
+\paragraph{Discretization.} Galerkin in the polynomials
+$\psi_n(v_x)L_m(v_\perp^2/2)$ of total degree $n+2m\le d$. In the variables
+$(v\pm v')/\sqrt2$ the integrand is a polynomial times $1/|u|$, and the
+matrix is computed by Gauss quadrature that is exact for it.
+
+\paragraph{Validation.}
+\begin{itemize}
+  \item $\Lambda$ annihilates $1$, $v_x$, $|v|^2$ to $10^{-14}$, is
+    symmetric to $10^{-15}$ and has no negative eigenvalue beyond rounding.
+  \item $\kappa_{\mathrm F}=3.90625\,\tau$ at $d=6$, which is Braginskii's
+    $3.906$, and converges to $3.9502\,\tau$;
+    $\eta=0.9653\,\tau$ against Braginskii's $0.96$.
+  \item With the Dougherty matrix in place of the Landau one, the same code
+    returns $\kappa_{\mathrm F}=5/6$, $\eta=1/2$ and
+    $K_{\mathrm{ex}}=0.133333=\tfrac{2}{15}$, and the Galerkin closure agrees
+    with the closed form of the previous note to six digits for
+    $k\lambda\le2$. This is the check of Proposition~\ref{prop:K}.
+\end{itemize}
+
+\section{Results for the Landau operator}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{rrrrrr}
+  $d$ & $\kappa_{\mathrm F}/\tau$ & $\eta/\tau$ & $C_*$
+      & $\avg{\vartheta,\Lambda^+\chi_*}$ & $K_{\mathrm{ex}}/\tau^2$ \\ \hline
+  6  & 3.9063 & 0.9653 & 4.308 & 0.883 & 15.68 \\
+  8  & 3.9501 & 0.9653 & 5.958 & 0.813 & 22.46 \\
+  10 & 3.9502 & 0.9653 & 5.937 & 0.815 & 22.38 \\
+  12 & 3.9502 & 0.9653 & 5.928 & 0.815 & 22.34 \\
+  16 & 3.9502 & 0.9653 & 5.929 & 0.815 & 22.35 \\
+\end{tabular}
+\end{center}
+So $1-\chi/\kappa_{\mathrm F}\approx22.35\,(k\lambda)^2$, and the rigorous
+constant in \eqref{eq:bounds} is
+$\kappa_{\mathrm F}(C_*+\tfrac13X_{\max})=34.3\,\tau^2$ with
+$X_{\max}=8.29$; the upper bound applies for $k\lambda<0.30$.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{rrrrrr}
+  $k\lambda$ & $\chi/\kappa_{\mathrm F}$ ($d=12$) & ($d=16$)
+     & $1-22.35(k\lambda)^2$ & lower bound & upper bound \\ \hline
+  0.005 & 0.99944 & 0.99944 & 0.99944 & 0.99914 & 1.00027 \\
+  0.01  & 0.99779 & 0.99779 & 0.99777 & 0.99658 & 1.00109 \\
+  0.02  & 0.99140 & 0.99140 & 0.99106 & 0.98645 & 1.00438 \\
+  0.05  & 0.95426 & 0.95429 & 0.94413 & 0.92095 & 1.02805 \\
+  0.1   & 0.87095 & 0.87112 & 0.77652 & 0.74442 & 1.12249 \\
+  0.2   & 0.72711 & 0.72717 & ---     & 0.42135 & 1.77459 \\
+  0.3   & 0.62603 & 0.62758 & ---     & 0.24450 & --- \\
+  0.5   & 0.50159 & 0.50300 & ---     & 0.10435 & --- \\
+  1.0   & 0.34975 & 0.35057 & ---     & 0.02830 & --- \\
+\end{tabular}
+\end{center}
+\begin{itemize}
+  \item The bounds of Theorem~\ref{thm:3d} hold at every point, as do the
+    two inequalities of part (ii).
+  \item The closure is converged in $d$ to four digits for
+    $k\lambda\le0.2$ and to two or three for $k\lambda$ up to $1$. Beyond
+    that a polynomial basis is not adequate, and the collisionless regime is
+    not reached.
+  \item $\chi<\kappa_{\mathrm F}$ at every computed point.
+\end{itemize}
+
+\section{Comparison across operators}
+
+To compare operators with different collision-time conventions, normalize by
+the conductivity: with $\vt=1$, write
+$1-\chi/\kappa_{\mathrm F}\approx c\,(k\,\kappa_{\mathrm F})^2$.
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{lll}
+  Operator & $c = K/\kappa_{\mathrm F}^2$ & Status of $K$ \\ \hline
+  BGK, constant $\nu$, 1D & $0.444$ & proved, sharp \\
+  Dougherty, 1D & $0.333$ & proved, sharp \\
+  BGK, $\nu_0/(1+|v|^3)$, 1D & $6.78$ & proved bound; equality numerical \\
+  Dougherty, 3D & $0.192$ & proved (asymptotic) \\
+  Landau, like-particle, 3D & $1.43$ & formal formula, numerical value \\
+\end{tabular}
+\end{center}
+At equal conductivity the Landau operator departs from Fourier's law about
+$7.5$ times faster in $k^2$ than the Dougherty operator: a 13\% deficit at
+$k\lambda=0.1$, where $\lambda=\vt\tau$, against about 3\% for Dougherty at
+the same $k\kappa_{\mathrm F}$. This is the like-particle operator. With
+electron--ion scattering added the literature reports a much larger
+coefficient; that case is not computed here.
+
+A harmonic-mean interpolant built from $\kappa_{\mathrm F}$ and the
+conjectured collisionless value $3\sqrt{2/\pi}$ is within 2\% of the
+computed closure at $k\lambda=0.1$ and above it by 3\%, 9\% and 8\% at
+$k\lambda=0.2$, $0.5$ and $1$. The sign is the one reported for the Landau
+operator, and opposite to the Dougherty case. Given the convergence at
+$k\lambda\ge0.5$ and the unproved limit, treat this as indicative.
+
+\section{What is not done}
+
+\begin{enumerate}
+  \item \textbf{Assumption (S) for Landau.} Existence of the stationary
+    solution and of the quasi-static limit is assumed. The Coulomb operator
+    has no spectral gap, so the Fredholm argument of the earlier notes does
+    not apply.
+  \item \textbf{All wavenumbers.} Positivity of $\chi$, and
+    $\chi<\kappa_{\mathrm F}$, are proved only in the Dougherty case in
+    three dimensions. For a general operator the theorem covers
+    $k^2<3/(\kappa_{\mathrm F}X_{\max})$. A variational principle for the
+    coupled heat-flux and stress response would be needed to go further.
+  \item \textbf{Collisionless limit.} Not proved for Landau and not reached
+    numerically.
+  \item \textbf{Certification.} The Landau constants come from a Galerkin
+    truncation. They are converged to the digits shown, but there is no
+    error bound; Proposition~\ref{prop:K} is formal.
+  \item \textbf{Physics.} One species, like-particle collisions, no
+    electron--ion scattering, no magnetic field, linear, quasi-static,
+    single drive.
+  \item \textbf{Prior art.} Not searched. Wavenumber-dependent transport
+    coefficients for the Landau operator have a large literature, and
+    $K_{\mathrm{ex}}$ is a Burnett-type coefficient that may be tabulated.
+\end{enumerate}
+
+\section{Use in the benchmark}
+
+\begin{itemize}
+  \item \textbf{A test that separates ground truths.} The single number
+    $c=K/\kappa_{\mathrm F}^2$ distinguishes the operators above by a factor
+    of 35 between extremes. A closure trained on one and evaluated on
+    another can be scored against it without a kinetic solve.
+  \item \textbf{A certificate at small $k$.} For any conserving operator,
+    \eqref{eq:bounds} brackets the exact closure using only Chapman--Enskog
+    solves.
+  \item \textbf{For the tournament.} The Dougherty ground truth has the
+    smallest coefficient in the table. If the benchmark is meant to exercise
+    departures from the local closure at moderate $k\lambda$, a Landau
+    ground truth departs several times faster.
+\end{itemize}
+
+\end{document}
