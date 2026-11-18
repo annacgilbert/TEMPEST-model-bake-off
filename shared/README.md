@@ -9,6 +9,9 @@ Background used by all three projects. Nothing here is project-specific code.
   PDF).
   Also `dusty_plasma_data_sources.md`, a running list of datasets offered
   to the collaboration.
+  The [plasma heat-flux paper](docs/plasma_heat_flux_paper/README.md) synthesizes
+  the closure notes into a research manuscript with proofs, a source audit,
+  and reproducible computations; the original notes remain intact.
 - `presentations/`: the full TEMPEST closure-models talk.
 - `assets/`: figures reused across documents and the talk.
 
