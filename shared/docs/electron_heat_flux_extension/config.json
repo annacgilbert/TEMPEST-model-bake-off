@@ -1,0 +1,18 @@
+{
+  "schema_version": "electron-heat-flux-extension-v1",
+  "seed": 0,
+  "stochastic_sampling": false,
+  "degrees": [6, 8, 10, 12, 16],
+  "ion_charges": [1, 2, 3, 4, 8, 16, 64],
+  "lorentz_limit_charges": [256, 4096],
+  "curve_degrees": [12, 16],
+  "electron_k_lambda": {"min": 0.001, "max": 1.0, "points": 31},
+  "like_particle_k": {"min": 0.005, "max": 1.0, "points": 24},
+  "dougherty_k": {"min": 0.003, "max": 100.0, "points": 60},
+  "embedded_charges": [1, 8],
+  "embedded_k_lambda": [0.01, 0.03, 0.1, 0.3],
+  "embedded_degrees": [12, 16],
+  "embedded_decay_times": 6.0,
+  "embedded_samples": 601,
+  "quadrature_relative_tolerance": 2e-11
+}
