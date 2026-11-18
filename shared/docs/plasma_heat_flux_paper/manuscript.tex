@@ -51,13 +51,13 @@ variational bounds, exact responses,\\ and limits of transfer}
 \maketitle
 \vspace{-1.5em}
 \begin{abstract}
-A kinetic heat-flux closure that recovers both the local and the
-collisionless limits is still not determined at intermediate
-collisionality. In this paper, we study how much freedom remains and how
-to test for it. We work with linear perturbations of a Maxwellian driven
+A kinetic heat-flux closure can recover both the local and the
+collisionless limits and still be undetermined at intermediate
+collisionality. How much freedom is left, and how do we test for it?
+We work with linear perturbations of a Maxwellian driven
 by a potential force, and we define the closure as the zero-frequency
 limit of a specified kinetic response.
-In one velocity dimension, we show that a conserving, symmetric collision
+In one velocity dimension, a conserving, symmetric collision
 operator admits a pair of dual variational principles that bracket the
 exact response and give $\F/(1+Kk^2)\leq\chi(k)\leq\F$.
 For conserving relaxation models the upper bound is strict and, under
@@ -65,19 +65,21 @@ stated solvability hypotheses, the constant $K$ is exactly the leading
 coefficient of the conductivity deficit. Constant-frequency BGK and the
 conserving Dougherty operator give explicit reference formulas, including
 both the collisional and the collisionless limits.
-In three velocity dimensions the temperature response picks up a stress
-cross term. We derive two-sided small-wavenumber bounds, the leading
-coefficient, and the positivity criterion $k^2\F\eta<3$.
+Three velocity dimensions are harder. The temperature response picks up
+a stress cross term, and what survives is a set of two-sided
+small-wavenumber bounds, the leading coefficient, and the positivity
+criterion $k^2\F\eta<3$.
 Weighted coercivity estimates make these small-wavenumber results rigorous
 for like-particle Landau--Coulomb collisions. Polynomial Galerkin
 calculations give $\F/\tau\simeq3.9502$ and $K/\tau^2\simeq22.35$; at
 matched conductivity, the leading deficit is approximately $7.45$ times
-that of the Dougherty operator.
-Finally, an embedded initial-value test shows that even an exact
-quasi-static response can have substantial transient error.
-Taken together, these results give analytic tests for both learned and
-classical closures. They also keep three things separate from a general
-constitutive law: the response to a single drive, the normalization of
+that of the Dougherty operator. Matching the conductivity does not match
+the closure. Nor does matching the static response: an embedded
+initial-value test shows that even an exact quasi-static response can
+have substantial transient error.
+These results are analytic tests for learned and classical closures
+alike. They are not a general constitutive law, and we keep three things
+separate from one: the response to a single drive, the normalization of
 the physical energy flux, and numerical convergence.
 We state the collisionless limit for Landau as a conditional
 boundary-layer result, apart from the finite-wavenumber estimates that we
@@ -111,18 +113,18 @@ physics~\cite{Brodrick2017}. The lesson we take from this literature is
 that an interpolant fitted to two asymptotic limits needs an independent
 test in the regime between them.
 
-In this paper, we develop such tests for a deliberately restricted but
-mathematically precise response. The full state is a linearized
+We develop such tests here, for a response that is deliberately
+restricted and mathematically precise. The full state is a linearized
 distribution $h$. We retain the density, velocity, and temperature, and
 we discard the heat flux, the stress, and all higher moments. The
 classical reduced operator is the linear Euler system with
 Chapman--Enskog transport. We isolate the heat-flux defect through a
 Fourier multiplier $\chi(k)$, which we obtain by slowly forcing the
 kinetic system away from equilibrium. The advantage of this construction
-is that there is no ambiguity about what is being compared. We do not
-assume that an instantaneous function of temperature closes every kinetic
-trajectory, and in \cref{sec:embedded} we give an example in which it
-does not.
+is that there is no ambiguity about what is being compared. What it does
+not do is assume that an instantaneous function of temperature closes
+every kinetic trajectory. (It does not; \cref{sec:embedded} has an
+example.)
 
 Our analysis has three parts. First, we use conservation and a parity
 decomposition to convert the one-dimensional stationary problem into a
@@ -140,21 +142,21 @@ collision kernel.
 Throughout, we compare collision models at fixed conductivity rather than
 at fixed nominal collision frequency. Even after this matching, the
 small-$k$ coefficient of the conductivity deficit depends strongly on the
-collision operator. Moreover, the error of the usual harmonic interpolant
-changes sign over the intermediate regime that we resolve. In other
-words, matching the two endpoints and the local transport coefficient
-does not match the closure.
+collision operator, and the error of the usual harmonic interpolant
+changes sign over the intermediate regime that we resolve. Match the two
+endpoints, match the local transport coefficient, and you still have not
+matched the closure.
 
-A word about what is and is not new. This paper synthesizes and rederives
+What is new here, and what is not? This paper synthesizes and rederives
 a sequence of internal closure notes, with unified conventions, explicit
 hypotheses, and numerical evidence that we have reproduced. We do not
 claim priority for the underlying response formulas or the variational
 techniques; exact solutions of kinetic model equations have a long
-history \cite{BGK1954,Dougherty1964,Struchtrup1997}. We also emphasize
-that our forced-response closure is different from the invariant
+history \cite{BGK1954,Dougherty1964,Struchtrup1997}. Our forced-response
+closure is also a different object from the invariant
 hydrodynamic manifolds and spectral closures of Kogelbauer and Karlin
 \cite{KogelbauerKarlin2024,KogelbauerKarlin2025}. A response ratio is
-tied to its input, whereas an invariant manifold is a reduction of the
+tied to its input. An invariant manifold is a reduction of the
 autonomous dynamics.
 
 \section{The response being closed}\label{sec:setting}
@@ -177,7 +179,7 @@ The perturbation is $f=M_d(1+h)$. Its dimensionless moments are
  \label{eq:moments}
 \end{equation}
 Thus $q$ is the \emph{energy flux relative to the local flow}.
-A warning about conventions is in order. In one dimension, Landau-fluid
+A warning about conventions. In one dimension, Landau-fluid
 papers often write $q$ for the parallel third central moment, which is
 $2q$ in our convention. The Hammett--Perkins coefficient $\sqrt{8/\pi}$
 therefore becomes $\sqrt{2/\pi}$ here. The same factor of two applies to
@@ -397,11 +399,10 @@ $g_e$ to be proportional to $\varphi_0$. The first equation of
 \eqref{eq:parity} would then give $w=-1/(kv)$, which is not in $L^2(M_1)$.
 \end{proof}
 
-We think of these inequalities as certificates for a specified kinetic
-model, as opposed to empirical fitting constraints. For example, a
-candidate closure that falls below a trial lower bound is inconsistent
-with that model, even if its average prediction error is small. The
-converse fails: a closure that satisfies the bounds need not be
+These inequalities are certificates for a specified kinetic model, not
+empirical fitting constraints. A candidate closure that falls below a
+trial lower bound is inconsistent with that model, however small its
+average prediction error. The converse fails: a closure that satisfies the bounds need not be
 kinetically realizable or accurate in a transient.
 Positivity implies the quadratic dissipation relation
 \[
@@ -645,7 +646,8 @@ not the total energy, so
  T_1=-n_1+\frac X3.
  \label{eq:3dT}
 \end{equation}
-This cross term is the main difference from the one-dimensional problem.
+This cross term is the main difference from the one-dimensional problem,
+and it is where the trouble begins.
 
 \begin{theorem}[Finite-wavenumber estimates]\label{thm:3dbounds}
 Assume the stationary form solution and the finite collision inverses in
@@ -698,9 +700,9 @@ Also $-T_1\leq1/(k^2\F)+C+X_{\max}/3$.
 Inverting these two positive bounds proves \eqref{eq:3dbounds}.
 \end{proof}
 
-Notice that the upper bound now allows $\chi>\F$. Nonnegative collision
+The upper bound now allows $\chi>\F$. Nonnegative collision
 dissipation by itself does not remove the stress cross term.
-To see what is missing, define
+So what is missing? Define
 \[
  T_{\parallel1}=\av{(v_x^2-1)g_e}=-n_1,\qquad
  T_{\perp1}=\av{(v_\perp^2/2-1)g_e}.
@@ -711,11 +713,10 @@ Then
  \chi(k)>0\quad\Longleftrightarrow\quad T_{\perp1}<n_1/2.
  \label{eq:perptest}
 \end{equation}
-This criterion tells us what information is missing. A sufficiently large
-perpendicular response could change the sign of $\chi$ even though $n_1$
-is positive. Positivity of a quadratic resolvent form controls its
-diagonal entries, but it does not determine the sign of an off-diagonal
-response.
+The perpendicular response is what is missing. If it were large enough,
+it could change the sign of $\chi$ even though $n_1$ is positive.
+Positivity of a quadratic resolvent form controls its diagonal entries.
+It says nothing about the sign of an off-diagonal response.
 
 For three-dimensional constant-frequency BGK we can prove more.
 Writing $\xi=v_\perp^2/2-1$ in the explicit resolvent gives
@@ -1044,10 +1045,10 @@ $1/\nu$ in $\F$ and the further inverse collisions in $C$ strongly
 weight suprathermal particles. The result is
 $K\simeq3.32\times10^4/\nu_0^2$, compared with $4/\nu^2$ for
 constant-rate BGK. (The nominal thermal length in this example is
-$v_t/\nu(v_t)=2v_t/\nu_0$.) We stress that this model is not a Landau
+$v_t/\nu(v_t)=2v_t/\nu_0$.) This model is not a Landau
 collision operator, and it does not represent pitch-angle scattering or
-electron--ion transport. We include it to isolate how the speed
-dependence of relaxation changes the closure.
+electron--ion transport. It is here for one reason: to isolate how the
+speed dependence of relaxation changes the closure.
 
 \begin{figure}[tb]
 \centering
@@ -1119,9 +1120,9 @@ $s\simeq0.395$, the Dougherty deficit is only about $3\%$.
 At $|k|\tau=0.3$, the degree-12 to degree-16 difference is approximately
 $1.5\times10^{-3}$, so we cannot report six converged digits of the
 continuum closure there.
-Note also that the quadratic asymptote at $|k|\tau=0.1$ is already
-visibly less accurate than the computed response: asymptotic truncation
-and Galerkin truncation are different errors.
+The quadratic asymptote at $|k|\tau=0.1$ is already visibly less
+accurate than the computed response. Asymptotic truncation and Galerkin
+truncation are different errors.
 
 \begin{figure}[tb]
 \centering
@@ -1138,9 +1139,9 @@ all-wavenumber theorem.}
 
 The positivity criterion gives the \emph{estimated} threshold
 $|k|\tau\simeq\sqrt{3/(3.9502\cdot0.9653)}\simeq0.887$.
-We emphasize that this number is an estimate and that the calculation
-does not certify it; the rigorous statement is still $k^2\F\eta<3$ with
-the exact coefficients. The data also support
+That number is an estimate. The calculation does not certify it, and
+the rigorous statement is still $k^2\F\eta<3$ with the exact
+coefficients. The data also support
 $-n_1\leq T_{\perp1}\leq0$ over the sampled interval
 (\cref{fig:landau}), but they do not prove it outside that interval or
 in the continuum. We leave open an all-$k$ proof of positivity and a
@@ -1276,26 +1277,26 @@ are all explicit.
 
 \section{Conclusions}
 
-The quasi-static heat-flux response is a tractable setting in which we
-can bound closure error without identifying it with arbitrary kinetic
-dynamics. In one velocity dimension, conservation and positivity of the
-collision form yield exact dual certificates and a comparison with
-Fourier conduction at all wavenumbers. The BGK and Dougherty models
-provide explicit reference responses and sharp leading deficits. In
-three dimensions a perpendicular-temperature contribution changes the
+What did the restricted setting buy us? A response for which we can
+bound closure error without pretending that it describes arbitrary
+kinetic dynamics. In one velocity dimension, conservation and positivity
+of the collision form yield exact dual certificates and a comparison
+with Fourier conduction at all wavenumbers, and the BGK and Dougherty
+models supply explicit reference responses with sharp leading deficits.
+In three dimensions a perpendicular-temperature contribution changes the
 mathematical structure: the bounds now require both heat and stress
 collision solves, and they give the positivity criterion
 $k^2\F\eta<3$.
 
-Our Landau calculations show that matching the conductivity does not
-match the first nonlocal correction. Independently, the embedded
-initial-value experiment shows that matching an exact quasi-static
-response does not guarantee an accurate transient evolution.
-Both distinctions matter when simple conserving collision models are
-used to evaluate closures intended for plasma transport.
-Three analytical problems remain: certified continuum bounds for the
-Landau constants, positivity at all wavenumbers, and uniform control of
-the collisionless resonant layer.
+The two negative results matter as much as the bounds. Our Landau
+calculations show that matching the conductivity does not match the
+first nonlocal correction, and the embedded initial-value experiment
+shows that matching an exact quasi-static response does not guarantee an
+accurate transient. Anyone who uses a simple conserving collision model
+to evaluate a closure meant for plasma transport should keep both in
+mind. Three analytical problems remain: certified continuum bounds for
+the Landau constants, positivity at all wavenumbers, and uniform control
+of the collisionless resonant layer. None of them is settled here.
 
 \paragraph{Data and code availability.}
 The accompanying repository directory contains the configuration,

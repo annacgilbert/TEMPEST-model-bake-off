@@ -1,6 +1,6 @@
 # Nonlocal heat-flux closure across collision models
 
-A 22-page research manuscript synthesized from the plasma-closure notes in the parent
+A 23-page research manuscript synthesized from the plasma-closure notes in the parent
 directory, with a unified physical energy-flux convention, proofs, primary
 references, and reproducible numerical evidence. The original notes are unchanged.
 

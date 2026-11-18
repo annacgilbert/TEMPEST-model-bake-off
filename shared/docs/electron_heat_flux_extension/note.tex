@@ -53,7 +53,7 @@ its limitations matter for applications. In three velocity dimensions the
 response has a stress cross term, so positivity and the Fourier upper
 bound are only proved at small wavenumber. And the collision models
 conserve momentum, so they do not describe electrons scattering on ions.
-In this note we remove both limitations. We replace the potential drive
+This note removes both. We replace the potential drive
 by an isotropic heating source. The temperature response is then a
 diagonal entry of the kinetic resolvent, and the one-dimensional dual
 variational principle carries over to three dimensions. For every
@@ -61,7 +61,7 @@ symmetric, nonnegative collision operator whose kernel contains the
 density and energy invariants, we obtain
 $\kap/(1+Kk^2)\leq\chi_\thr(k)\leq\kap$ at every wavenumber, where $\kap$
 is the conductivity at zero current and $K$ is the sharp leading
-coefficient. The hypotheses do not include momentum conservation, so the
+coefficient. Momentum conservation is not among the hypotheses, so the
 result covers electron--electron Landau collisions together with
 pitch-angle scattering on ions of charge $Z$. We derive the exact
 thermally driven Dougherty response, which has
@@ -91,8 +91,8 @@ The first is the drive. In three velocity dimensions the potential-driven
 temperature response is an off-diagonal entry of the resolvent. The
 companion manuscript shows that the resulting stress cross term prevents
 an all-wavenumber proof of positivity or of $\chi\leq\kap$, and for Landau
-collisions both questions are left open. Moreover, a potential force is
-not how electron temperature perturbations are produced. Electrons are
+collisions both questions are left open. A potential force is also not
+how electron temperature perturbations are produced. Electrons are
 heated, and the ambipolar electric field then adjusts so that no current
 flows.
 
@@ -104,7 +104,7 @@ Spitzer--H\"arm conductivity \cite{SpitzerHarm1953,Braginskii1965}, which
 involves a thermoelectric correction and has no analogue in the
 momentum-conserving models.
 
-In this note we address both. Our results are as follows.
+We address both. There are four results.
 \begin{itemize}
 \item \emph{A thermal drive makes the three-dimensional problem as clean
 as the one-dimensional one.} If the kinetic equation is driven by an
@@ -131,7 +131,7 @@ the kinetic decay of a temperature perturbation closely
 (\cref{sec:embedded}).
 \end{itemize}
 
-We are careful about what we do not do. Everything is linear, about a
+What do we not do? Quite a lot. Everything is linear, about a
 homogeneous Maxwellian, with one spatial Fourier direction, no magnetic
 field and immobile ions. The theorems assume that the stationary problems
 are solvable in the form domain, as in the companion manuscript; we do
@@ -220,7 +220,7 @@ Consequently the conductivity
  \chi_\thr(k):=-\frac{\av{Qg}}{ik\,T_1}=\frac1{k^2T_1}
  \label{eq:chith}
 \end{equation}
-is positive at every nonzero wavenumber. Moreover, for all admissible
+is positive at every nonzero wavenumber. For all admissible
 trials,
 \begin{equation}
  \frac{\av{\zeta\varphi}^2}{\Q_k[\varphi]}\leq T_1\leq\P_k[\psi],
@@ -258,11 +258,11 @@ and that $\Q_k[g_e]=\P_k[w]=\D[g_e]+\D[w]=T_1$. Taking one trial at its
 optimum proves \eqref{eq:certificates}.
 \end{proof}
 
-The proof is the one-dimensional proof of the companion manuscript. What
-changed is the source. With a potential drive the source is $1$ and the
-temperature is read off against $\zeta$, an off-diagonal pairing. With a
-thermal drive the source and the observable are the same function, and
-positivity is automatic.
+The proof is the one-dimensional proof of the companion manuscript,
+line for line. So what changed? The source. With a potential drive the
+source is $1$ and the temperature is read off against $\zeta$, an
+off-diagonal pairing. With a thermal drive the source and the observable
+are the same function, and positivity is automatic.
 
 \subsection{Bounds and the leading coefficient}
 
@@ -338,7 +338,7 @@ $T_1\geq1/\Q_k[\varphi']\geq\varepsilon^{-1}+C-Bk^2$ for small $k$, and
 $\chi_\thr/\kap=1/(\varepsilon T_1)=1-\kap Ck^2+O(k^4)$.
 \end{proof}
 
-Three remarks are in order. First, the global constant in
+Three remarks. First, the global constant in
 \eqref{eq:bounds} is sharp at the origin, exactly as in one dimension.
 Second, the remainder is $O(k^4)$, where the potential-driven result in
 three dimensions only gives $O(|k|^3)$; the stress response no longer
@@ -392,7 +392,7 @@ manuscript, whose response is
 $\chi_\pot=-1/(k^2T_1)$ with $T_1=(-n_1+2T_{\perp1})/3$.
 \end{proof}
 
-In other words, a potential force is equivalent to heating only the
+A potential force, then, is equivalent to heating only the
 parallel degree of freedom, and the companion manuscript then reads off
 the total temperature. The denominator in \eqref{eq:chipotM} contains one
 diagonal entry and one off-diagonal entry, and positive definiteness does
@@ -403,8 +403,8 @@ give the same response.
 
 The two responses agree as $k\to0$, where
 $M\approx(k^2\kap)^{-1}\bigl(\begin{smallmatrix}1&1\\1&1\end{smallmatrix}\bigr)$,
-but they differ at order $k^2$. A closure trained or tuned on one drive
-should not be expected to reproduce the other. A closure that retains
+but they differ at order $k^2$. Do not expect a closure trained or tuned
+on one drive to reproduce the other. A closure that retains
 $T_\parallel$ and $T_\perp$ separately would need all of $M$.
 
 \section{The exact thermally driven Dougherty response}\label{sec:dougherty}
@@ -502,7 +502,7 @@ $\nu_{ei}(v)=3\sqrt{\pi/2}\,\tau_e^{-1}|v|^{-3}$. Here
 and $\tau_e$ is Braginskii's electron collision time
 \cite{Braginskii1965}. The normalization is fixed by the exact identity
 $\av{v_x\Lambda_{ei}v_x}=1/\tau_e$: a drifting Maxwellian loses momentum
-to the ions at the rate $1/\tau_e$. Note that $\lambda_e$ is defined with
+to the ions at the rate $1/\tau_e$. A warning: $\lambda_e$ is defined with
 $v_t=\sqrt{T_0/m_e}$ and not with $\sqrt{2T_0/m_e}$.
 
 The operator $\Lambda_Z$ is symmetric and nonnegative. It annihilates $1$
@@ -570,7 +570,7 @@ $6.064$ and $6.920$ for $Z=1,2,3,4$ to all quoted digits. At $Z=1$ we
 also obtain $\sigma/\tau_e=1.9499$ and $L_{12}/L_{11}=0.7110$, compared
 with his $1/0.5129=1.9497$ and $0.711$. These agreements test the relative
 normalization of the two collision terms in \eqref{eq:electron}, which is
-the easiest place to lose a factor of $\sqrt2$.
+the easiest place to lose a factor of $\sqrt2$. (We did not. We checked.)
 
 As the degree increases, the $Z=1$ values rise to $\kap/\tau_e=3.1967$ and
 $\sigma/\tau_e=1.9742$ at $D=16$. They are still increasing slowly, and
@@ -611,8 +611,8 @@ set by electron--ion scattering and scales like $1/Z$ in units of
 $\tau_{ee}$, whereas $C$ involves the collision inverse of the isotropic
 part of $b_*$, which only electron--electron collisions can relax. So
 $\sqrt K$ scales like $\sqrt Z\,\lambda_e$, the geometric mean of the
-scattering and energy-exchange lengths. We state this as a numerical
-observation with a heuristic explanation and not as a theorem. For
+scattering and energy-exchange lengths. This is a numerical
+observation with a heuristic explanation. It is not a theorem. For
 comparison, the like-particle Landau value is $K/\kap^2=1.69$ for the
 thermal drive, so even at $Z=1$ electron--ion scattering makes the
 closure about $2.5$ times more nonlocal at matched conductivity.
@@ -664,8 +664,8 @@ problem at any $k$ and, under \cref{ass:form}, for the continuum.
 
 \subsection{An embedded test: decay of a temperature perturbation}\label{sec:embedded}
 
-A static response has to be tested separately as an evolution law. The
-natural experiment here is the decay of an electron temperature
+A static response is not an evolution law until it has been tested as
+one. The natural experiment here is the decay of an electron temperature
 perturbation, the setting of \cite{EpperleinShort1991}. The kinetic model
 is \eqref{eq:kinetic} with $p=0$ and with the ambipolar force chosen at
 each time so that the current vanishes:
@@ -724,14 +724,14 @@ between degrees.
 
 This is a much better outcome than the embedded test of the companion
 manuscript, where the exact quasi-static closure had errors of $24\%$ and
-$34\%$. We think the difference is the time scale. There, the temperature
+$34\%$. Why? We think the difference is the time scale. There, the temperature
 was coupled to sound waves with frequencies comparable to the collision
 rate. Here, quasi-neutrality removes the acoustic dynamics and the
 temperature decays over $10$ to several thousand collision times
 (\cref{tab:embedded}), so a zero-frequency response is the appropriate
-one. It is interesting that the quasi-static closure is at least as
-accurate as the least-damped-mode closure, which matches the late-time
-rate exactly but not the initial layer.
+one. The quasi-static closure is also at least as accurate as the
+least-damped-mode closure, which matches the late-time rate exactly but
+not the initial layer.
 
 \section{Discussion}\label{sec:discussion}
 
@@ -752,8 +752,8 @@ a factor of four and the normalized deficit by a factor of twenty. A
 closure fitted at one value of $Z$ and matched to the local conductivity
 at another will be wrong at order $k^2$ by a known amount.
 
-Several steps toward realistic settings remain, and we list them in what
-we think is increasing order of difficulty.
+How far is this from a realistic setting? Still some distance. Here is
+what remains, in what we think is increasing order of difficulty.
 \begin{enumerate}
 \item \emph{Certified constants and larger $|k|\lambda_e$.} A basis
 adapted to the $|v|^{-3}$ singularity, or a speed grid, would remove the
