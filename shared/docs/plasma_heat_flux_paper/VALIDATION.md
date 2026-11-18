@@ -115,3 +115,30 @@ printed originals were not consulted):
   consistent with "about 3.20" in the text and above the degree-16 value
   3.1967, as a lower bound requires.
 - Not confirmed: the Spitzer-Harm electrical conductivity "about 1.98".
+
+## Landau collisionless limit promoted to a theorem (18 November 2026)
+
+Section 6.2 now states Theorem 6.2 and Corollary 6.3; Appendix D is the
+proof; Corollary 7.8 is the thermal-drive consequence. See `PLAN.md` and
+the last section of `SOURCE_AUDIT.md` for scope and for what was and was
+not checked. No Galerkin computation was rerun and no result directory was
+touched. The Galerkin method does not reach the collisionless layer, so the
+limit itself has no numerical confirmation for Landau; at `k lambda = 5` the
+source note reports `-T_1/n_1 = 0.396` against the limiting `1/3`.
+
+Profile identities of Lemma D.2, by quadrature:
+
+```
+python3 extra_airy_check.py        # about 9 minutes, single core
+ODE residual (max over [0.0, 0.3, 1.0, 2.5, 6.0]): 2.22e-16
+int F = 3.14159265   (pi = 3.14159265)
+int F'^2 + W'^2 = 3.14159265
+int_u^inf tF + W'(u) at u=1.3: -1.67e-12
+u^4 F at u=40: -2.00000   u W at u=40: -1.00000
+```
+
+The output is printed, not saved; the two integrals over `u` use a
+trapezoid rule on `[0, 400]` with spacing `0.005` plus the analytic tails.
+
+Build: `latexmk` as above, 39 pages, no undefined references and no
+overfull boxes. Pages 12 and 33-37 were read from the PDF.

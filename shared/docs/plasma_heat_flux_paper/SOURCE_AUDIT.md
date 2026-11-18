@@ -116,3 +116,88 @@ arXiv:1610.05346v2. Carrapatoso-Mischler is identified as the consulted arXiv
 version rather than assigned unverified journal metadata. The Dougherty
 publisher record supplies bibliographic metadata; the manuscript's exact
 response formula is independently derived in Appendix B.
+
+## Reconciliation with the two Landau notes (18 November 2026)
+
+`landau_positivity.tex` and `landau_collisionless_limit.tex` were reread in
+full against the merged manuscript. No manuscript claim was changed.
+
+**`landau_positivity.tex`: consistent.** Its Theorem 2 is the manuscript's
+finite-wavenumber theorem in Section 5, its Proposition 1 is the
+perpendicular-response criterion, and its Theorem 3 is the BGK/Dougherty
+paragraph that follows. Both documents say all-wavenumber Landau positivity
+is not proved and that 0.887 is not a certified threshold. The note contains
+three things the manuscript omits: the bound `chi <= 3 kappa_F` whenever
+`T_par <= T_perp <= 0`; the sufficient condition `N_theta < 9 n_1` with its
+formal collisionless value 8/9; and a table of the Landau perpendicular
+response up to `k lambda = 5`. Its status item 4 relies on the second note.
+
+**`landau_collisionless_limit.tex`: the note claims more than the manuscript.**
+Its Theorem 4 asserts `k N_k(sigma) -> pi M_1(0) <sigma^2>_perp` for every
+even polynomial `sigma(v_perp)`, which is exactly hypothesis (6.4) of the
+manuscript's conditional proposition; its corollary supplies the trial
+sequence that proposition also assumes. If the note's proof stands, the
+proposition becomes unconditional, and Landau positivity holds for all
+sufficiently large `k` (no rate, no explicit threshold).
+
+Item 6 above says the Airy profile "alone" does not control the nonlocal
+part, the transverse tails and the sharp inverse-form estimate. That
+understates the note, which has a specific argument for each:
+
+- nonlocal part: a cited two-sided comparison of the Landau form with its
+  local diffusion form up to a compactly supported remainder (the note's
+  (C6), from Strain-Guo Lemma 7 / Kim-Guo-Hwang Lemma 2.6);
+- sharp inverse-form estimate: the note's Lemma 3, which bounds the dual
+  seminorm of a source in divergence form by a flux integral, using (C6) and
+  a weak-convergence plus Rellich step to dispose of the remainder;
+- transverse tails: dominated convergence in `(u, v_perp)` with the bounds
+  `c m^-1 <= d <= C` and `(S^-1)_xx <= C m^3` against the Gaussian.
+
+Independent read on 18 November 2026 (one pass, not a referee report): the
+proof of Lemma 3 was followed step by step and no error was found; the
+leading-order values of all four trial functionals were recomputed and match
+(`int F'^2 + int W'^2 = pi` on both sides); the corollary's algebra is
+correct. Not verified: the lower-order terms of the trial functionals, which
+the note estimates by scaling without writing them out; the exact
+correspondence between (C6) and the cited lemmas in the manuscript's
+normalization (the cited papers were not reopened); and density of smooth
+compactly supported functions in the form domain, which Lemma 3 uses
+implicitly. The non-constructive compactness step means there is no rate.
+
+Status: the manuscript's conditional statement is safe but more cautious
+than its source. Promoting it to a theorem needs the lower-order terms
+written out and a second reader; that decision has not been taken.
+
+### Promotion to a theorem (18 November 2026)
+
+The author decided to promote the limit. The manuscript now states it as
+Theorem 6.2 with Corollary 6.3, proved in Appendix D, and audit item 6 above
+is superseded. What was done before promoting, against the three items
+listed as not verified:
+
+- Lower-order terms: every one is now written out in Appendix D with its
+  dominating function. The note's scaling estimates are correct; one of its
+  remarks (that away from the layer the dual trial contributes `O(k^-2)`) is
+  not needed, since square integrability of `W`, `uW'` and `W'` suffices.
+  The flux of the corrected source in the upper bound is computed exactly,
+  with a pointwise `O(delta^3 (1 + v_x^2))` error.
+- The cited estimate: the note's (C6) was compared with Lemma 2.6 of Kim,
+  Guo and Hwang as rendered by ar5iv for arXiv:1610.05346. That lemma bounds
+  the divergence term and the nonlocal term by `(C/m)|g|_sigma^2` plus an
+  `L^2` norm on a ball, for any `m > 1`, and attributes the statement to
+  Lemma 5 of its reference [13]. With `L = -A - K` and the identity for
+  `-<Ag, g>` this is (C6). The eigenvalue bounds are its Lemma 2.3 and the
+  derivative bound its Lemma 2.2. Not done: the bibliography was not
+  readable, so [13] is identified as Guo's periodic-box paper from the
+  note's own citation, not from the paper; the journal version and the
+  Strain-Guo lemma numbers were not opened.
+- Density: proved as Lemma D.1 (radial cutoff, then mollification).
+
+New in the manuscript and not in any source note: Corollary 7.8, the Landau
+collisionless limit for the thermal drive and for the 2x2 response matrix.
+It follows from Theorem 6.2 because admissible trials have zero `v_x^2`
+moment, and it is conditional on the thermal form-solvability assumption.
+
+What the theorem still rests on: the cited operator estimates, which are
+not reproved; and the check above, which was done by the same assistant
+that wrote Appendix D. No independent human reader has refereed the proof.

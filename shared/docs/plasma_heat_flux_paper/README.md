@@ -1,6 +1,6 @@
 # Nonlocal heat-flux closure across collision models
 
-A 33-page research manuscript synthesized from the plasma-closure notes in the parent
+A 39-page research manuscript synthesized from the plasma-closure notes in the parent
 directory, with a unified physical energy-flux convention, proofs, primary
 references, and reproducible numerical evidence. The original notes are unchanged.
 
@@ -49,6 +49,8 @@ nevertheless recorded. Each run saves the configuration, environment, source
 hashes, diagnostics, runtime, status, and any failure in `metrics.json`.
 
 The optional `--compare-metrics results/2026-11-17/metrics.json` argument to
+`extra_airy_check.py` checks the boundary-layer profile identities of
+Appendix D by quadrature and prints the residuals (about nine minutes).
 `extra_checks.py` compares transport constants against the archived cache-based
 run. Optional cache-symmetry checks are reported as skipped when caches are absent.
 

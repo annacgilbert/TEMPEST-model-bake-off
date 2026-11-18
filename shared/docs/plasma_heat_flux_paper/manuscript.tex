@@ -12,6 +12,7 @@
 \usepackage[nameinlink,noabbrev]{cleveref}
 \crefname{proposition}{proposition}{propositions}
 \crefname{corollary}{corollary}{corollaries}
+\crefname{lemma}{lemma}{lemmas}
 \crefname{assumption}{assumption}{assumptions}
 \hypersetup{pdftitle={Nonlocal heat-flux closure across collision models},
  pdfsubject={Variational bounds, exact responses, and limits of transfer},
@@ -39,6 +40,7 @@
 \newcommand{\Qth}{\mathcal Q^{\thr}}
 \newcommand{\Pth}{\mathcal P^{\thr}}
 \newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\nstar}[1]{\left\|#1\right\|_*}
 \newcommand{\dual}[1]{\left\langle #1,\Lambda^+ #1\right\rangle}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{proposition}[theorem]{Proposition}
@@ -74,7 +76,11 @@ Three velocity dimensions are harder. The potential-driven temperature
 response picks up a stress cross term, and what survives is a set of
 two-sided small-wavenumber bounds, the leading coefficient, and the
 positivity criterion $k^2\F\eta<3$. Weighted coercivity estimates make
-these rigorous for like-particle Landau--Coulomb collisions.
+these rigorous for like-particle Landau--Coulomb collisions. For that
+operator we also prove the collisionless limit
+$|k|\chi\to3\sqrt{2/\pi}$, by matching variational bounds built on an
+Airy-type boundary layer, and with it positivity at all sufficiently
+large wavenumbers.
 Changing the drive removes the obstruction. For an isotropic heating
 source the temperature response is a diagonal entry of the resolvent, and
 $\kap/(1+K_\thr k^2)\leq\chi_\thr(k)\leq\kap$ holds at every wavenumber for
@@ -99,10 +105,9 @@ of an electron temperature perturbation it stays within $2\%$ for $Z=1$
 at $|k|\lambda_e\leq0.3$, where Spitzer--H\"arm conduction is off by
 $42\%$.
 These results are analytic tests for learned and classical closures
-alike. They are not a general constitutive law. We state the
-collisionless limit for Landau as a conditional boundary-layer result,
-and the electron results assume a form-domain solvability that we do not
-prove.
+alike. They are not a general constitutive law. The Landau collisionless
+limit comes without a rate, and the electron results assume a form-domain
+solvability that we do not prove.
 \end{abstract}
 \noindent\textbf{Keywords:} kinetic closure; nonlocal transport; BGK;
 Dougherty; Landau operator; electron--ion collisions;
@@ -157,7 +162,10 @@ stress contribution in three dimensions and show exactly where the
 one-dimensional positivity argument breaks down. A weighted functional
 setting for Landau--Coulomb collisions, together with reproducible
 Galerkin calculations, connects these estimates to a more realistic
-collision kernel.
+collision kernel. For that kernel we also prove the collisionless limit
+(\cref{thm:airy}): the resonant layer has width $(d/k)^{1/3}$, with $d$
+the local velocity diffusion coefficient, and the limiting response does
+not depend on $d$.
 
 The last two parts move toward the problem that plasma transport codes
 actually close, which is electron heat flux. Fourth, we replace the
@@ -924,7 +932,7 @@ most polynomially, then its Laplace transform satisfies
 \eqref{eq:resolvent} by uniqueness. We do not prove that every such
 time-dependent solution exists.
 
-\subsection{What can be said about large wavenumbers?}\label{sec:airy}
+\subsection{The collisionless limit}\label{sec:airy}
 
 The collisionless potential-driven response and the exact Dougherty calculation
 suggest
@@ -937,13 +945,11 @@ does not follow by simply discarding $\Lambda$. Near $v_x=0$, longitudinal
 streaming
 balances velocity diffusion across a layer of width
 $\delta(v_\perp)=[d(v_\perp)/k]^{1/3}$, with $d$ the local
-longitudinal diffusion coefficient.
+longitudinal diffusion coefficient. The layer gets thinner as $k$ grows,
+but the collision term never drops out of it.
 
-The argument we have identifies the Airy-type profile and matching
-variational trials, but it does not yet supply all of the uniform tail
-and inverse-form estimates needed for the full Landau limit. We therefore
-state the reduction precisely, as a conditional result.
-For an even axisymmetric polynomial $\sigma(v_\perp)$ define
+Is \eqref{eq:landauhyp} true? It is. For an even axisymmetric polynomial
+$\sigma(v_\perp)$ define
 \[
  N_k(\sigma)=\sup_{\substack{\varphi\ {\rm even}\\
                             \av{v_x^2\varphi}=0}}
@@ -952,54 +958,80 @@ For an even axisymmetric polynomial $\sigma(v_\perp)$ define
 \]
 The supremum is over the admissible form domain, and $N_k(1)=n_1$.
 
-\begin{proposition}[Conditional collisionless limit]\label[proposition]{prop:conditional}
-Suppose the Landau form admits the sharp trial estimates
+\begin{theorem}[Boundary-layer limit]\label{thm:airy}
+For the Landau form \eqref{eq:landauform} and every even axisymmetric
+polynomial $\sigma(v_\perp)$,
 \begin{equation}
- \lim_{k\to\infty} kN_k(\sigma)
-       =\pi M_1(0)\av{\sigma^2}_\perp
+ \lim_{|k|\to\infty}|k|\,N_k(\sigma)
+       =\pi M_1(0)\av{\sigma^2}_\perp .
  \label{eq:BLhyp}
 \end{equation}
-for $\sigma=1$ and $\sigma=\xi=v_\perp^2/2-1$.
-Suppose also that admissible even trials $\varphi_k$ satisfy
+\end{theorem}
+
+The proof is in \cref{app:airy}; here is how it goes. The profile is
+$\gamma(u)=\int_0^\infty e^{-iut-t^3/3}\dd t=F(u)+iW(u)$,
+which solves $iu\gamma-\gamma''=1$ and satisfies
+$\int F=\int(F'^2+W'^2)=\pi$.
+The even trial
+$\sigma(v_\perp)\delta^{-1}F(v_x/\delta)$, corrected by a
+collision invariant to meet its constraint, bounds $N_k$ from below. The
+odd dual trial
+$-\sigma(v_\perp)(k\delta)^{-1}W(v_x/\delta)$, with polynomial
+moment corrections, bounds it from above, and the two bounds meet. Three
+things have to be controlled. The nonlocal part of the Landau form is
+handled by a published comparison with the local diffusion form, up to a
+compactly supported remainder. The inverse form of the corrected sources
+needs a sharp constant, which we get from a flux representation and a
+compactness argument (\cref{lem:flux}). Uniformity in the unbounded
+perpendicular velocity is dominated convergence against the Gaussian.
+The diffusion coefficient $d$ sets the width of the layer and then cancels:
+the limit does not depend on it.
+
+\begin{corollary}[Collisionless limit for Landau collisions]\label[corollary]{cor:landaulimit}
+For the like-particle Landau operator, with $c_0=\pi M_1(0)=\sqrt{\pi/2}$,
+as $|k|\to\infty$
 \[
- \av{\varphi_k}\to c_0,\quad
- \mathcal Q_k[\varphi_k]/k\to c_0,\quad
- \av{\xi\varphi_k}\to0,\qquad c_0=\pi M_1(0).
+ |k|\,n_1\to c_0,\qquad |k|\,T_{\perp1}\to0,\qquad
+ -|k|\,T_1\to c_0/3,
 \]
-Then $kn_1\to c_0$, $kT_{\perp1}\to0$,
-$-kT_1\to c_0/3$, and \eqref{eq:landauhyp} follows.
-\end{proposition}
+and \eqref{eq:landauhyp} holds. In particular the potential-driven
+conductivity $\chi(k)$ is positive for all sufficiently large $|k|$.
+\end{corollary}
 
 \begin{proof}
+Take $k>0$ and $\xi=v_\perp^2/2-1$, so $\av\xi_\perp=0$ and
+$\av{\xi^2}_\perp=1$. Let $\varphi_k$ be the even trial of
+\cref{app:airy} for $\sigma=1$, made admissible by subtracting the
+constant $\av{v_x^2\varphi_k}=O(k^{-2/3})$. Then $\av{\varphi_k}\to c_0$
+and $\av{\xi\varphi_k}\to c_0\av\xi_\perp=0$. By \eqref{eq:Qtrial},
+$\limsup\mathcal Q_k[\varphi_k]/k\leq c_0$, and
+$\mathcal Q_k[\varphi_k]\geq\av{\varphi_k}^2/N_k(1)$ with
+\cref{thm:airy} gives the matching lower limit. So
+$\mathcal Q_k[\varphi_k]/k\to c_0$.
 Set $t_k=\av{\varphi_k}/\mathcal Q_k[\varphi_k]$, so $kt_k\to1$.
-The gap identity \eqref{eq:gap} and \eqref{eq:BLhyp} give
-$\mathcal Q_k[g_e-t_k\varphi_k]=o(k^{-1})$.
-The definition of $N_k(\xi)$ then yields
+The gap identity \eqref{eq:gap} gives
+\[
+ \mathcal Q_k[g_e-t_k\varphi_k]
+   =n_1-\frac{\av{\varphi_k}^2}{\mathcal Q_k[\varphi_k]}=o(k^{-1}),
+\]
+since both terms are $c_0/k+o(k^{-1})$. The function $g_e-t_k\varphi_k$
+is admissible, so the definition of $N_k(\xi)$ and \cref{thm:airy} for
+$\sigma=\xi$ yield
 \[
  |\av{\xi(g_e-t_k\varphi_k)}|
    \leq N_k(\xi)^{1/2}\mathcal Q_k[g_e-t_k\varphi_k]^{1/2}
    =o(k^{-1}).
 \]
-Since $k\,t_k\av{\xi\varphi_k}\to0$, the perpendicular moment vanishes
-at that scale. Equations \eqref{eq:perptest} and \eqref{eq:chi} finish
-the proof.
+Since $k\,t_k\av{\xi\varphi_k}\to0$, we get $kT_{\perp1}\to0$. Equations
+\eqref{eq:perptest} and \eqref{eq:chi} finish the proof.
 \end{proof}
 
-The candidate profile is
-$\gamma(u)=\int_0^\infty e^{-iut-t^3/3}\dd t=F(u)+iW(u)$.
-It solves $iu\gamma-\gamma''=1$ and satisfies
-$\int F=\int(F'^2+W'^2)=\pi$.
-The natural even trial is
-$\sigma(v_\perp)\delta^{-1}F(v_x/\delta)$, corrected by a
-collision invariant to meet its constraint. The odd dual trial is
-$-\sigma(v_\perp)(k\delta)^{-1}W(v_x/\delta)$, with polynomial
-moment corrections. These give matching \emph{formal} leading values
-in \eqref{eq:BLhyp}. To complete the proof, we would need estimates that
-are uniform in the unbounded perpendicular velocity, control of the
-nonlocal part of the Landau form, and a sharp inverse-form estimate for
-the corrected sources. The finite-degree computations below do not
-resolve this layer either. For Landau, then, we claim neither
-unconditional large-$k$ positivity nor a collisionless convergence rate.
+What does this leave open? The convergence has no rate, because the
+compactness step is not constructive. So there is no explicit wavenumber
+beyond which positivity holds. Positivity of the potential-driven Landau
+conductivity is now proved for $k^2\F\eta<3$ and for all sufficiently
+large $|k|$; in between it rests on the finite-degree computations below,
+which do not resolve the layer.
 
 \section{The thermally driven response}\label{sec:th-thermal}
 
@@ -1348,6 +1380,47 @@ $T_\thr=\pi M_1(0)\av{\zeta(0,v_\perp)^2}_\perp/|k|$, and
 $\av{\zeta(0,v_\perp)^2}_\perp=5/9$. The collisionless limit depends on
 the drive because resonant particles with $v_x=0$ carry a weight set by
 the source.
+
+Does Landau share this limit too? Yes, and the reason is short. When
+momentum is conserved, an admissible even trial has $\av{v_x^2\varphi}=0$,
+so it cannot tell a source from its restriction to $v_x=0$.
+
+\begin{corollary}[Landau collisions, thermal drive]\label[corollary]{cor:th-landaulimit}
+For the like-particle Landau operator, under the analogue of
+\cref{ass:th-form} for the sources $a_\parallel$ and $a_\perp$ of
+\cref{sec:th-matrix},
+\begin{equation}
+ \lim_{|k|\to\infty}|k|\,M(k)=\sqrt{\frac\pi2}\,
+   \begin{pmatrix}1&0\\0&1\end{pmatrix},
+ \qquad
+ \lim_{|k|\to\infty}|k|\,\chi_\thr(k)=\frac95\sqrt{\frac2\pi} .
+ \label{eq:th-landaulimit}
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+Let $c\in\RR^2$ and $a_c=c_\parallel a_\parallel+c_\perp a_\perp$. The
+argument of \cref{thm:th-dual} gives
+$\av{a_c,\A_k^{-1}a_c}=\max\av{a_c\varphi}^2/\Qth_k[\varphi]$ over
+admissible even trials. For such a trial
+$\av{a_\parallel\varphi}=-\av\varphi$, so
+$\av{a_c\varphi}=\av{\sigma_c\varphi}$ with
+$\sigma_c=-c_\parallel+c_\perp\xi$ and $\xi=v_\perp^2/2-1$. Hence
+$\av{a_c,\A_k^{-1}a_c}=N_k(\sigma_c)$ in the notation of \cref{sec:airy},
+and \cref{thm:airy} gives
+$|k|\,c\cdot M(k)c\to\pi M_1(0)\av{\sigma_c^2}_\perp
+=\sqrt{\pi/2}\,(c_\parallel^2+c_\perp^2)$. This is the first limit. The
+second follows from \eqref{eq:th-chithM}, whose denominator is the
+quadratic form of $M$ at $c=(1,2)$.
+\end{proof}
+
+The entries $M_{\parallel\parallel}=n_1$ and
+$M_{\parallel\perp}=-T_{\perp1}$ are covered by \cref{cor:landaulimit}
+without the extra assumption. At large $|k|$, then, the parallel and
+perpendicular temperatures decouple and respond equally. The denominator
+of \eqref{eq:th-chipotM} then tends to $c_0/|k|$ and that of
+\eqref{eq:th-chithM} to $5c_0/|k|$, with $c_0=\sqrt{\pi/2}$. That is the
+whole difference between $3\sqrt{2/\pi}$ and $\tfrac95\sqrt{2/\pi}$.
 
 \section{Electron--electron and electron--ion collisions}\label{sec:th-electron}
 
@@ -1980,7 +2053,9 @@ models supply explicit reference responses with sharp leading deficits.
 In three dimensions a perpendicular-temperature contribution changes the
 mathematical structure: the bounds now require both heat and stress
 collision solves, and they give the positivity criterion
-$k^2\F\eta<3$. Heating the plasma instead of pushing it removes that
+$k^2\F\eta<3$. At the other end, the Landau response converges to the
+collisionless value shared with Dougherty, so it is positive at small
+and at large wavenumbers. Heating the plasma instead of pushing it removes that
 contribution. The thermally driven response satisfies the
 one-dimensional bounds in three dimensions, at every wavenumber, with or
 without momentum conservation, and so it reaches electrons colliding
@@ -1996,9 +2071,9 @@ sometimes does, when the dynamics are slow.) Anyone who uses a simple
 conserving collision model to evaluate a closure meant for plasma
 transport should keep both in mind. Four analytical problems remain:
 certified continuum bounds for the Landau and electron constants,
-positivity at all wavenumbers for the potential drive, uniform control
-of the collisionless resonant layer, and a weighted existence theorem
-for the electron operator. None of them is settled here.
+positivity at intermediate wavenumbers for the potential drive, a
+convergence rate for the collisionless limit, and a weighted existence
+theorem for the electron operator. None of them is settled here.
 
 \paragraph{Data and code availability.}
 The accompanying repository directory contains the configuration,
@@ -2314,6 +2389,414 @@ $\HH_0$ by \eqref{eq:W1}; they converge along the entire family.
 The transfer ratio converges wherever $T_1\ne0$, in particular in
 the positivity range of \cref{thm:3dbounds}.
 
+\section{Proof of the Landau collisionless limit}\label{app:airy}
+
+This appendix proves \cref{thm:airy}. Since $N_k$ is even in $k$, we take
+$k>0$. We write $m_\perp=(1+v_\perp^2)^{1/2}$, and $C$ denotes a constant
+that does not depend on $k$ and may change from line to line. The layer
+width $\delta$ below is unrelated to the coercivity constant in
+\eqref{eq:W2}.
+
+\subsection{Inputs and the form domain}
+
+Here the diffusion matrix carries its exact normalization,
+$S=(3\sqrt\pi/2\tau)\,U*M_3$, and
+\[
+ \mathfrak a[f]=\|f\|_{\sigma,0}^2
+   =\int\Bigl[S^{ij}\partial_i\widetilde f\,\partial_j\widetilde f
+     +\tfrac14S^{ij}v_iv_j\widetilde f^{\,2}\Bigr]\dd v,
+ \qquad\widetilde f=\sqrt M f .
+\]
+Expanding \eqref{eq:landauform} gives
+$\D[f]=\int MS^{ij}\partial_if\,\partial_jf\dd v$ plus a nonlocal term, and
+the first integral equals $\mathfrak a[f]-\tfrac12\int\partial_i(S^{ij}v_j)
+\widetilde f^{\,2}\dd v$. Besides \eqref{eq:W1}, \eqref{eq:W2} and
+\eqref{eq:W4} with $\ell=0$, we use two more published estimates.
+\begin{enumerate}[label=(W\arabic*),start=5]
+\item \emph{Local form plus a localized remainder.} For every
+$\epsilon\in(0,1)$ there are $C_\epsilon$ and $R_\epsilon$ such that
+\begin{equation}
+ \bigl|\D[f]-\mathfrak a[f]\bigr|\leq\epsilon\,\mathfrak a[f]
+   +C_\epsilon\int_{|v|\leq R_\epsilon}M f^2\dd v .
+ \label{eq:W5}
+\end{equation}
+This is the bound on the divergence term and on the nonlocal term in
+Lemma~2.6 of \cite{KimGuoHwang2020} (Lemma~5 of Guo's periodic-box paper,
+as cited there), after the Maxwellian dilation.
+\item \emph{The diffusion matrix.} $S$ is smooth,
+$S=\lambda_1P_v+\lambda_2(I-P_v)$ with $P_v$ the projection on $v$,
+$\lambda_1$ comparable to $m^{-3}$, $\lambda_2$ comparable to $m^{-1}$, and
+$|\nabla S|\leq Cm^{-2}$ (Lemmas~2.2 and 2.3 of \cite{KimGuoHwang2020}).
+\end{enumerate}
+From (W6),
+\begin{equation}
+ S^{xx}=\lambda_1\frac{v_x^2}{|v|^2}
+        +\lambda_2\Bigl(1-\frac{v_x^2}{|v|^2}\Bigr)\leq C,\qquad
+ (S^{-1})_{xx}=\frac{v_x^2}{\lambda_1|v|^2}
+        +\frac1{\lambda_2}\Bigl(1-\frac{v_x^2}{|v|^2}\Bigr)\leq Cm^3 .
+ \label{eq:Sxx}
+\end{equation}
+Both are continuous, and at $v_x=0$ they equal $d$ and $1/d$, where
+\begin{equation}
+ d(v_\perp)=S^{xx}(0,v_\perp)=\lambda_2(|v_\perp|),\qquad
+ C^{-1}m_\perp^{-1}\leq d\leq C,\qquad|\nabla_\perp d|\leq Cd .
+ \label{eq:dprops}
+\end{equation}
+
+For a function $b$ with $\av{m\,b^2}<\infty$ define the dual seminorm
+\[
+ \nstar b=\sup\bigl\{\av{bf}/\D[f]^{1/2}:\ f\in\HH_0,\ \Pi f=0,\
+ f\ne0\bigr\}.
+\]
+By \eqref{eq:W1} and \eqref{eq:W2},
+$\nstar b\leq C\av{m\,b^2}^{1/2}$. Collision invariants have zero
+seminorm, and $\nstar b^2=\dual b$ when $b\perp H$.
+
+\begin{lemma}[Density]\label[lemma]{lem:density}
+Smooth compactly supported functions are dense in $\HH_0$, and
+$\{\zeta-\Pi\zeta:\zeta\in C_c^\infty\}$ is dense in
+$(\HH_0\cap H^\perp,\D)$.
+\end{lemma}
+
+\begin{proof}
+Let $\theta_R(v)=\theta(|v|/R)$ with $\theta$ a smooth cutoff. Its gradient
+is radial, so
+$S\nabla\theta_R\cdot\nabla\theta_R=\lambda_1|\theta'|^2/R^2\leq CR^{-2}m^{-3}$
+and
+\[
+ \mathfrak a[(1-\theta_R)f]\leq
+ 2\!\int_{|v|\geq R}\!\Bigl[S^{ij}\partial_i\widetilde f\,\partial_j\widetilde f
+     +\tfrac14S^{ij}v_iv_j\widetilde f^{\,2}\Bigr]\dd v
+ +\frac{C}{R^2}\int m^{-1}\widetilde f^{\,2}\dd v\longrightarrow0 .
+\]
+On a ball $S$ is smooth and uniformly elliptic, so a compactly supported
+element of $\HH_0$ is an $H^1$ function and mollification converges. For
+the second statement let $f\in\HH_0\cap H^\perp$ and $\zeta_n\to f$ in
+$\HH_0$. Then $\D[f-(\zeta_n-\Pi\zeta_n)]=\D[f-\zeta_n]
+\leq C\|f-\zeta_n\|_{\sigma,0}^2$ by \eqref{eq:W4}.
+\end{proof}
+
+By the same continuity, \eqref{eq:W5} holds on all of $\HH_0$. The trial
+functions below are smooth with polynomially bounded derivatives, so they
+lie in every $\HH_\ell$.
+
+\subsection{The profile and the variational bounds}
+
+\begin{lemma}[Boundary-layer profile]\label[lemma]{lem:profile}
+Let $\gamma(u)=\int_0^\infty e^{-iut-t^3/3}\dd t=F(u)+iW(u)$. Then
+\begin{enumerate}[label=(\alph*)]
+\item $-uW-F''=1$ and $uF-W''=0$;
+\item $F$ is even, $W$ is odd, and as $|u|\to\infty$,
+$F=-2u^{-4}+O(u^{-7})$ and $W=-u^{-1}+O(u^{-4})$, and these expansions may
+be differentiated term by term;
+\item $\int F\dd u=\pi$ and $\int_u^\infty tF(t)\dd t=-W'(u)$;
+\item $\int F'^2\dd u+\int W'^2\dd u=\pi$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) Integration by parts gives
+$iu\gamma=1-\int_0^\infty t^2e^{-iut-t^3/3}\dd t=1+\gamma''$.
+(b) Parity is immediate. Repeated integration by parts with
+$a(t)=e^{-t^3/3}$, for which $a(0)=1$, $a'(0)=a''(0)=0$ and $a'''(0)=-2$,
+gives $\gamma=(iu)^{-1}-2(iu)^{-4}+O(u^{-7})$; derivatives of $\gamma$ are
+integrals of the same type. (c) $2F$ is the Fourier transform of
+$a(|t|)$, so $\int F=\pi a(0)$. Since $W''=uF$ and $W'\to0$ at both ends,
+$W'(u)=-\int_u^\infty tF$. (d) Multiply the first equation of (a) by $F$
+and the second by $W$, integrate and add. The boundary terms vanish by
+(b), and $\int F'^2+\int W'^2=\int F$.
+\end{proof}
+
+Write $\mathcal Q_k[\varphi]=\D[\varphi]+k^2\nstar{v_x\varphi}^2$ for
+even $\varphi\in\HH_0$; for admissible $\varphi$ this is the form in
+\eqref{eq:gap}.
+
+\begin{lemma}[Two-sided bounds]\label[lemma]{lem:twosided}
+Let $\sigma=\sigma(v_\perp)$ be an even axisymmetric polynomial.
+\begin{enumerate}[label=(\alph*)]
+\item For every even axisymmetric $\varphi\in\HH_1$, with
+$t=\av{v_x^2\varphi}$,
+\[
+ N_k(\sigma)\geq
+ \frac{(\av{\sigma\varphi}-t\av\sigma)^2}{\mathcal Q_k[\varphi]} .
+\]
+\item For every odd axisymmetric $\psi\in\HH_1$ such that
+$b=\sigma-kv_x\psi$ is orthogonal to $1$ and $|v|^2$,
+\[
+ N_k(\sigma)\leq\D[\psi]+\nstar b^2 .
+\]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) The function $\varphi-t$ is admissible, $\D[\varphi-t]=\D[\varphi]$,
+and $\nstar{v_x(\varphi-t)}=\nstar{v_x\varphi}$ because $v_x\in H$.
+(b) For admissible $\varphi$,
+$\av{\sigma\varphi}=\av{b\varphi}+k\av{v_x\varphi\,\psi}$. Since $b$ is
+even and orthogonal to $1$ and $|v|^2$, $\av{b\,\Pi\varphi}=0$, and since
+$v_x\varphi\perp H$, $\av{v_x\varphi\,\Pi\psi}=0$. So the two terms are at
+most $\nstar b\,\D[\varphi]^{1/2}$ and
+$k\nstar{v_x\varphi}\D[\psi]^{1/2}$. Apply Cauchy--Schwarz in $\RR^2$.
+\end{proof}
+
+\subsection{A sharp bound for the dual seminorm}
+
+The estimate $\nstar b\leq C\av{m\,b^2}^{1/2}$ loses a constant, and we
+cannot afford one. The next lemma does not.
+
+\begin{lemma}[Flux bound]\label[lemma]{lem:flux}
+Let $\Phi_k$ be smooth functions with polynomially bounded derivatives,
+let $b_k=-M^{-1}\partial_{v_x}(M\Phi_k)$, and put
+$\mathcal I_k=\int M\Phi_k^2\,(S^{-1})_{xx}\dd v$. Suppose that, as
+$k\to\infty$,
+\begin{equation}
+ \int M|\Phi_k|\dd v=o\bigl(\mathcal I_k^{1/2}\bigr),\qquad
+ \int M\Phi_k^2\,v_x^2\,m\dd v=o(\mathcal I_k).
+ \label{eq:fluxhyp}
+\end{equation}
+Then $\nstar{b_k}^2\leq(1+o(1))\,\mathcal I_k$.
+\end{lemma}
+
+\begin{proof}
+Let $s_k=\nstar{b_k}^2$. It suffices to consider a subsequence along which
+$s_k>\mathcal I_k$. By the Riesz theorem in $(\HH_0\cap H^\perp,\D)$ there
+is $f_k$ with $\D(f_k,h)=\av{b_kh}$ for all $h$ in that space and
+$\D[f_k]=\av{b_kf_k}=s_k$. For $f\in\HH_0$ and
+$\widetilde f=\sqrt Mf$, integration by parts gives
+\begin{equation}
+ \av{b_kf}=\int M\Phi_k\,\partial_xf\dd v
+  =\int\sqrt M\,\Phi_k\,\partial_x\widetilde f\dd v
+   +\frac12\int M\Phi_k\,v_xf\dd v ;
+ \label{eq:fluxparts}
+\end{equation}
+it holds for $f\in C_c^\infty$ and extends by \cref{lem:density}. In the
+first term we use
+$|\partial_x\widetilde f|\leq(S^{-1})_{xx}^{1/2}
+(S^{ij}\partial_i\widetilde f\,\partial_j\widetilde f)^{1/2}$,
+and in the second \eqref{eq:W1} and \eqref{eq:W2}:
+\begin{equation}
+ s_k\leq\mathcal I_k^{1/2}\,\mathfrak a[f_k]^{1/2}
+   +C\Bigl(\int M\Phi_k^2v_x^2m\Bigr)^{1/2}s_k^{1/2}
+  =\mathcal I_k^{1/2}\bigl(\mathfrak a[f_k]^{1/2}+o(1)\,s_k^{1/2}\bigr).
+ \label{eq:fluxstep}
+\end{equation}
+Fix $\epsilon$. By \eqref{eq:W5},
+$\mathfrak a[f_k]\leq(1-\epsilon)^{-1}\bigl(s_k
++C_\epsilon\int_{|v|\leq R_\epsilon}Mf_k^2\bigr)$. We claim the last
+integral is $o(s_k)$. Let $\hat f_k=f_k/s_k^{1/2}$, which has $\D$-norm
+one. For $\zeta\in C_c^\infty$, \eqref{eq:fluxparts} gives
+\[
+ \D(\hat f_k,\zeta-\Pi\zeta)
+   =s_k^{-1/2}\int M\Phi_k\,\partial_x(\zeta-\Pi\zeta)\dd v .
+\]
+Here $\partial_x\Pi\zeta$ is a combination of $1$ and $v_x$, and
+$|\int M\Phi_kv_x|\leq C(\int M\Phi_k^2v_x^2m)^{1/2}$, so by
+\eqref{eq:fluxhyp} the right-hand side is
+$o(\mathcal I_k^{1/2})/s_k^{1/2}\to0$. With \cref{lem:density},
+$\hat f_k\to0$ weakly. By \eqref{eq:W1}, \eqref{eq:W2} and (W6) the $\D$-norm controls
+the $H^1$ norm of $\sqrt M\hat f_k$ on the ball $|v|\leq R_\epsilon$, so
+Rellich's theorem gives
+$\int_{|v|\leq R_\epsilon}M\hat f_k^{\,2}\to0$. This is the claim. Now
+\eqref{eq:fluxstep} reads
+$s_k^{1/2}\leq\mathcal I_k^{1/2}\bigl((1-\epsilon)^{-1/2}+o(1)\bigr)$, and
+$\epsilon$ is arbitrary.
+\end{proof}
+
+\subsection{The lower bound}
+
+Let $\delta=\delta(v_\perp)=(d(v_\perp)/k)^{1/3}$ and $u=v_x/\delta$. By
+\eqref{eq:dprops},
+\begin{equation}
+ C^{-1}k^{-1/3}m_\perp^{-1/3}\leq\delta\leq Ck^{-1/3},\qquad
+ |\nabla_\perp\delta|\leq C\delta,\qquad\delta^3=d/k .
+ \label{eq:deltaprops}
+\end{equation}
+We change variables from $v_x$ to $u$ in every integral and pass to the
+limit in $(u,v_\perp)$ by dominated convergence. The dominating functions
+have the form $p(v_\perp)M_\perp(v_\perp)G(u)$ with $p$ a polynomial in
+$m_\perp$ and $G$ integrable; we name $G$ each time.
+
+Take $\varphi_k=\sigma\,\delta^{-1}F(u)$ in \cref{lem:twosided}(a).
+
+\emph{Numerator.}
+$\av{\sigma\varphi_k}=\int M_\perp\sigma^2\!\int M_1(\delta u)F(u)\dd u\dd v_\perp
+\to\pi M_1(0)\av{\sigma^2}_\perp$, with $G=|F|$. Also
+$t_k=\av{v_x^2\varphi_k}=\int M_\perp\sigma\,\delta^2\!\int u^2F(u)M_1(\delta u)
+\dd u\dd v_\perp=O(k^{-2/3})$, because $u^2F$ is integrable.
+
+\emph{Collision form.} For any $f$ with $\widetilde f=\sqrt Mf$,
+\begin{equation}
+ \mathfrak a[f]=\int M\bigl[S\nabla f\cdot\nabla f-f\,Sv\cdot\nabla f
+    +\tfrac12Sv\cdot v\,f^2\bigr]\dd v
+ \leq\bigl(A[f]^{1/2}+B[f]^{1/2}\bigr)^2,
+ \label{eq:aAB}
+\end{equation}
+where $A[f]=\int MS\nabla f\cdot\nabla f$ and
+$B[f]=\int M\,Sv\cdot v\,f^2\leq C\int Mf^2$. For the trial,
+\[
+ \partial_x\varphi_k=\sigma\delta^{-2}F'(u),\qquad
+ \nabla_\perp\varphi_k=\delta^{-1}F(u)\nabla_\perp\sigma
+   -\sigma\,\delta^{-2}\nabla_\perp\delta\,\bigl(F(u)+uF'(u)\bigr),
+\]
+so $|\nabla_\perp\varphi_k|\leq C\delta^{-1}(|\sigma|+|\nabla\sigma|)
+(|F|+|uF'|)$ by \eqref{eq:deltaprops}. Therefore
+\begin{align*}
+ \int MS^{xx}(\partial_x\varphi_k)^2
+ &=k\int M_\perp\sigma^2\!\int\frac{S^{xx}(\delta u,v_\perp)}{d(v_\perp)}
+    M_1(\delta u)F'(u)^2\dd u\dd v_\perp
+  =k\,M_1(0)\av{\sigma^2}_\perp\!\int F'^2\,(1+o(1)),\\
+ \int M|\nabla_\perp\varphi_k|^2
+ &\leq C\int M_\perp(|\sigma|+|\nabla\sigma|)^2\delta^{-1}\!
+     \int(|F|+|uF'|)^2\dd u\dd v_\perp=O(k^{1/3}).
+\end{align*}
+In the first line $S^{xx}/d\leq Cm_\perp$ by \eqref{eq:Sxx} and
+\eqref{eq:dprops}, and $G=F'^2$. The cross term in $A$ is at most twice
+the geometric mean of the other two, so
+$A[\varphi_k]=kM_1(0)\av{\sigma^2}_\perp\int F'^2\,(1+o(1))$. Finally
+$\int M\varphi_k^2=\int M_\perp\sigma^2\delta^{-1}\!\int M_1F^2=O(k^{1/3})$,
+which bounds both $B[\varphi_k]$ and the localized remainder in
+\eqref{eq:W5}. Hence
+\begin{equation}
+ \D[\varphi_k]\leq(1+\epsilon)\,k\,M_1(0)\av{\sigma^2}_\perp\!\int F'^2\,(1+o(1)).
+ \label{eq:lowerD}
+\end{equation}
+
+\emph{Streaming term.} The function $b_k=v_x\varphi_k=\sigma\,uF(u)$ is odd
+in $v_x$, so $b_k=-M^{-1}\partial_x(M\Phi_k)$ with
+\[
+ \Phi_k=\frac1{M_1(v_x)}\int_{v_x}^\infty b_kM_1\dd s
+   =\sigma\,\delta\,j_\delta(u),\qquad
+ j_\delta(u)=\frac1{M_1(\delta u)}\int_u^\infty tF(t)M_1(\delta t)\dd t .
+\]
+For $u>0$ the ratio of Maxwellians is at most one, and for $u<0$ oddness
+gives the same formula with $-\int_{-\infty}^u$. So
+$|j_\delta(u)|\leq C(1+u^2)^{-1}$ uniformly in $\delta$, and
+$j_\delta\to-W'$ pointwise by \cref{lem:profile}(c). Using
+$\delta^3=d/k$,
+\[
+ \mathcal I_k=\frac1k\int M_\perp\sigma^2\!\int d\,(S^{-1})_{xx}(\delta u,v_\perp)\,
+   M_1(\delta u)\,j_\delta(u)^2\dd u\dd v_\perp
+ =\frac1k\,M_1(0)\av{\sigma^2}_\perp\!\int W'^2\,(1+o(1)).
+\]
+The domination uses $d\,(S^{-1})_{xx}M_1(\delta u)\leq Cm_\perp^3$, from
+\eqref{eq:Sxx}, and $G=(1+u^2)^{-2}$. The hypotheses \eqref{eq:fluxhyp}
+hold:
+\begin{align*}
+ \int M|\Phi_k|&=\int M_\perp|\sigma|\delta^2\!\int M_1|j_\delta|=O(k^{-2/3}),\\
+ \int M\Phi_k^2v_x^2m&\leq C\!\int M_\perp\sigma^2m_\perp\delta^5\!\int u^2j_\delta^2
+   =O(k^{-5/3}).
+\end{align*}
+\Cref{lem:flux} gives
+$k^2\nstar{v_x\varphi_k}^2\leq kM_1(0)\av{\sigma^2}_\perp\int W'^2\,(1+o(1))$.
+
+\emph{Conclusion.} Adding this to \eqref{eq:lowerD} and using
+\cref{lem:profile}(d),
+\begin{equation}
+ \mathcal Q_k[\varphi_k]\leq(1+\epsilon)\,\pi M_1(0)\av{\sigma^2}_\perp\,k\,(1+o(1)),
+ \label{eq:Qtrial}
+\end{equation}
+so $\liminf kN_k(\sigma)\geq\pi M_1(0)\av{\sigma^2}_\perp/(1+\epsilon)$ for
+every $\epsilon$.
+
+\subsection{The upper bound}
+
+Take
+\[
+ \psi_k=\psi_k^0+\frac1k\bigl(\alpha_kv_x+\beta_kv_x|v|^2\bigr),\qquad
+ \psi_k^0=-\frac{\sigma}{k\delta}W(u),
+\]
+in \cref{lem:twosided}(b). By \cref{lem:profile}(a), $1+uW=-F''$, so
+\[
+ b_k=\sigma-kv_x\psi_k=-\sigma F''(u)-\alpha_kv_x^2-\beta_kv_x^2|v|^2 .
+\]
+For a polynomial $p$, two integrations by parts give
+$\int F''(v_x/\delta)\,p\,M_1\dd v_x
+=\delta^3\!\int F(u)\,(pM_1)''(\delta u)\dd u=O(\delta^3)$. So the moments
+of $-\sigma F''$ against $1$ and $|v|^2$ are $O(k^{-1})$. The matrix of
+moments of $v_x^2$ and $v_x^2|v|^2$ against $1$ and $|v|^2$ has
+determinant $1\cdot35-5\cdot5=10$, so there are
+$\alpha_k,\beta_k=O(k^{-1})$ that make $b_k$ orthogonal to $1$ and
+$|v|^2$.
+
+\emph{Collision form.} As before,
+\[
+ \partial_x\psi_k^0=-\frac{\sigma}{k\delta^2}W'(u),\qquad
+ |\nabla_\perp\psi_k^0|\leq\frac{C}{k\delta}(|\sigma|+|\nabla\sigma|)
+   (|W|+|uW'|),
+\]
+and $W$, $uW'$ and $W'$ are square integrable by \cref{lem:profile}(b).
+Hence
+\begin{align*}
+ \int MS^{xx}(\partial_x\psi_k^0)^2
+  &=\frac1k\int M_\perp\sigma^2\!\int\frac{S^{xx}}{d}M_1(\delta u)W'^2
+   \dd u\dd v_\perp\\
+  &=\frac1k\,M_1(0)\av{\sigma^2}_\perp\!\int W'^2\,(1+o(1)),\\
+ \int M|\nabla_\perp\psi_k^0|^2+\int M(\psi_k^0)^2
+  &\leq\frac{C}{k^2}\int M_\perp(|\sigma|+|\nabla\sigma|)^2\delta^{-1}\dd v_\perp
+   =O(k^{-5/3}).
+\end{align*}
+By \eqref{eq:aAB}, $\mathfrak a[\psi_k^0]=k^{-1}M_1(0)\av{\sigma^2}_\perp
+\int W'^2\,(1+o(1))$. The polynomial correction has
+$\mathfrak a^{1/2}=O(k^{-2})$, and $\mathfrak a^{1/2}$ is a seminorm.
+With \eqref{eq:W5},
+\begin{equation}
+ \D[\psi_k]\leq(1+\epsilon)\,\frac1k\,M_1(0)\av{\sigma^2}_\perp\!\int W'^2\,(1+o(1)).
+ \label{eq:upperD}
+\end{equation}
+
+\emph{Dual seminorm.} Let
+$\mu_k(v_\perp)=-\sigma\int F''(s/\delta)M_1(s)\dd s$, so
+$|\mu_k|\leq C|\sigma|/k$, and split $b_k=b_k^0+r_k$ with
+\[
+ b_k^0=-\sigma F''(u)-\mu_k,\qquad
+ r_k=\mu_k-\alpha_kv_x^2-\beta_kv_x^2|v|^2 .
+\]
+Then $\nstar{r_k}\leq C\av{m\,r_k^2}^{1/2}=O(k^{-1})$. The function $b_k^0$
+is even in $v_x$ and has zero $M_1$-mean for every $v_\perp$, so
+$b_k^0=-M^{-1}\partial_x(M\Phi_k^0)$ with
+$\Phi_k^0=M_1^{-1}\int_{v_x}^\infty b_k^0M_1\dd s$, an odd function of
+$v_x$. For $v_x>0$, two integrations by parts and $M_1'=-v_xM_1$ give
+\[
+ \Phi_k^0=\sigma\delta\bigl[F'(u)+\delta^2uF(u)\bigr]
+  -\frac{\sigma\delta^2}{M_1(v_x)}\int_{v_x}^\infty F(s/\delta)M_1''(s)\dd s
+  -\frac{\mu_k}{M_1(v_x)}\int_{v_x}^\infty M_1\dd s .
+\]
+Since $|M_1''(s)|\leq(1+s^2)M_1(s)$ and
+$(1+s^2)M_1(s)\leq C(1+v_x^2)M_1(v_x)$ for $s\geq v_x>0$, the first
+integral term is at most
+$C|\sigma|\delta^2(1+v_x^2)\int_0^\infty|F(s/\delta)|\dd s
+\leq C|\sigma|\delta^3(1+v_x^2)$. The last term is at most
+$C|\sigma|\delta^3$ by the bound on the Mills ratio, and $uF$ is bounded.
+So, for all $v_x$ by oddness,
+\[
+ \bigl|\Phi_k^0-\sigma\,\delta\,F'(u)\bigr|\leq C|\sigma|\,\delta^3(1+v_x^2).
+\]
+The error contributes $O(k^{-2})$ to $\mathcal I_k^0$ and to the second
+integral in \eqref{eq:fluxhyp}, and $O(k^{-1})$ to the first. The main
+part is handled as in the lower bound, with $F'$ in place of $j_\delta$:
+\[
+ \mathcal I_k^0=\frac1k\,M_1(0)\av{\sigma^2}_\perp\!\int F'^2\,(1+o(1)),\qquad
+ \int M|\Phi_k^0|=O(k^{-2/3}),\qquad
+ \int M(\Phi_k^0)^2v_x^2m=O(k^{-5/3}).
+\]
+\Cref{lem:flux} and the triangle inequality give
+\[
+ \nstar{b_k}^2\leq\bigl(\nstar{b_k^0}+\nstar{r_k}\bigr)^2
+ \leq\frac1k\,M_1(0)\av{\sigma^2}_\perp\!\int F'^2\,(1+o(1)).
+\]
+
+\emph{Conclusion.} With \eqref{eq:upperD} and \cref{lem:profile}(d),
+$\limsup kN_k(\sigma)\leq(1+\epsilon)\,\pi M_1(0)\av{\sigma^2}_\perp$ for
+every $\epsilon$. Together with the lower bound, this proves
+\cref{thm:airy}. \qed
+
+\medskip
+Two remarks. The proof uses coercivity, a local diffusion form with a
+relatively compact remainder, and a continuous positive diffusion
+coefficient at $v_x=0$. The limit depends on none of the constants, which
+is why Landau and Dougherty share it. And the compactness step in
+\cref{lem:flux} is not constructive, so the proof gives no rate.
+
 \section{Summary of claims and normalizations}\label{app:ledger}
 
 \begin{table}[ht]
@@ -2345,9 +2828,11 @@ limits and leading coefficients
 \addlinespace
 Landau--Coulomb
  & Weighted stationary realization, stated low-frequency moment limit,
-small-$k$ bounds and coefficient formula
- & All-$k$ positivity, global Fourier upper bound,
-unconditional collisionless limit in this manuscript\\
+small-$k$ bounds and coefficient formula; collisionless limit
+$|k|\chi\to3\sqrt{2/\pi}$ and positivity for all sufficiently large $|k|$,
+given the cited operator estimates
+ & Positivity at intermediate $k$, global Fourier upper bound, a
+convergence rate or explicit large-$k$ threshold\\
 \addlinespace
 Landau numerical values
  & Reproducible finite-dimensional solves and degree comparisons
@@ -2356,9 +2841,10 @@ Landau numerical values
 Thermal drive, $d=3$, kernel containing $1$ and $|v|^2$
  & Positivity, dual certificates, all-$k$ bounds and sharp leading
 coefficient with $O(k^4)$ remainder, conditional on form solvability;
-exact Dougherty response and both limits
+exact Dougherty response and both limits; Landau collisionless limit
+$|k|\chi_\thr\to\tfrac95\sqrt{2/\pi}$ under the same solvability
  & Stationary solvability for Landau with the source $\zeta$; a
-collisionless limit beyond Dougherty\\
+collisionless limit without momentum conservation\\
 \addlinespace
 Electron--electron plus electron--ion
  & The thermal theorems with the zero-current conductivity, under their

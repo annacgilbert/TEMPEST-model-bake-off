@@ -74,3 +74,31 @@ operator, Galerkin differences are diagnostics, slow polynomial convergence
 at large `Z`. Reference values and the three added bibliography entries were
 checked against secondary sources on 18 November 2026; see `VALIDATION.md`
 for what was and was not confirmed.
+
+## Promotion of the Landau collisionless limit to a theorem (18 November 2026)
+
+Decision by the author after the reconciliation recorded in `SOURCE_AUDIT.md`.
+Source: `shared/docs/landau_collisionless_limit.tex`. No new computation
+except a quadrature check of the boundary-layer profile identities.
+
+1. Replace the conditional proposition of Section 6.2 by a theorem
+   (`k N_k(sigma) -> pi M_1(0) <sigma^2>_perp` for every even polynomial
+   `sigma(v_perp)`) and a corollary: `|k| chi -> 3 sqrt(2/pi)` and positivity
+   for all sufficiently large `|k|`, potential drive, like-particle Landau.
+2. New appendix with the full proof: density of test functions in the form
+   domain, the profile identities, two-sided variational bounds, the sharp
+   dual-seminorm bound, and both trial evaluations with every lower-order
+   term written out and a stated dominating function.
+3. Add the two cited inputs to Appendix C as numbered estimates: the
+   local-form comparison with a compactly supported remainder, and the
+   bounds on the diffusion matrix. Check both against the published lemmas.
+4. New consequence, not in the source note: for admissible trials the
+   thermal source pairs as its restriction to `v_x = 0`, so the same theorem
+   gives `|k| M(k) -> sqrt(pi/2) I` and `|k| chi_th -> (9/5) sqrt(2/pi)` for
+   Landau, under the form-solvability assumption of the thermal section.
+5. Update abstract, introduction, discussion, conclusions and claims table.
+
+Evidence boundaries: no convergence rate and no explicit threshold (the
+compactness step is not constructive); intermediate wavenumbers stay
+numerical; the proof rests on cited operator estimates that are not
+reproved; it has not had an independent human referee.
