@@ -153,8 +153,8 @@
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/manuscript.tex",
-      "sha256": "6af7bcad85c6cd468579c7d911ebed075736946d2b8e4e114ceb6fc81a779b02",
-      "bytes": 67067
+      "sha256": "39fc389a7ffa4b75140664664c5efd5eaae3c758010bbeb79c0b105c58eec68b",
+      "bytes": 68878
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/numerics.py",
@@ -163,8 +163,8 @@
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/output/pdf/manuscript.pdf",
-      "sha256": "f9b1f5d42c103eda5568368a573e358cd01f90b10b049fd1b54747d54c5071e4",
-      "bytes": 412782
+      "sha256": "a1fc82b1ca528012ba54ec08e734ffcf6b388714fc3106322fb70cde029129b3",
+      "bytes": 414679
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/references.bib",
