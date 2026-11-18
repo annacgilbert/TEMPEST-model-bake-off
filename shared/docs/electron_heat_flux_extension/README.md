@@ -2,7 +2,11 @@
 
 A 12-page companion note that pushes the results of the
 [plasma heat-flux paper](../plasma_heat_flux_paper/README.md) toward the
-electron heat-flux problem. The paper and its validated bundle are unchanged.
+electron heat-flux problem. The note has since been merged into the paper as
+its Sections 7, 8 and 10; this directory remains the home of the code, tests,
+configuration, saved metrics and generated figures for those sections, and
+the paper reads its tables and figures from `figures/` here. The standalone
+note is kept as written.
 
 - [Read the note](output/pdf/note.pdf); [LaTeX source](note.tex).
 - [Plan and evidence boundaries](PLAN.md).

@@ -78,13 +78,13 @@
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/PLAN.md",
-      "sha256": "e48fcf24ed9f6de78558c6ce682d9f0cf6a9a10aaf4cf810648786c43d38f32b",
-      "bytes": 2479
+      "sha256": "29d833dc4bc3381073c27d2e3b67bbb9ecb64b751628e4800e75ef570e9b98b6",
+      "bytes": 4472
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/README.md",
-      "sha256": "f590a8a91690b73ec167113d0745d8dc6b9a3b891abd43c9d8d328bedd704606",
-      "bytes": 3774
+      "sha256": "b244c2222cf5ac9286c100dc22ab3ddd61d47532f3ff33edeb5a4d7df9fb25b1",
+      "bytes": 4415
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/SOURCE_AUDIT.md",
@@ -93,8 +93,8 @@
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/VALIDATION.md",
-      "sha256": "bf0102eb17a229c9d4adce5d109473d1dee38e788edea70deda2b44d18609d73",
-      "bytes": 4930
+      "sha256": "21addd3110a52e6842e0635f50655deb81012f612edbe4fa10b0f518fbb41149",
+      "bytes": 6838
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/config.json",
@@ -153,8 +153,8 @@
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/manuscript.tex",
-      "sha256": "1537588ec69343565ac7a46e1d18ac103bac69957cdcc65af968999b308dd729",
-      "bytes": 68905
+      "sha256": "7fc0d36f7a7678912db6d2d2828473d6ac59a2dc7f2538bb05b828597482d59f",
+      "bytes": 104359
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/numerics.py",
@@ -163,13 +163,13 @@
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/output/pdf/manuscript.pdf",
-      "sha256": "340140af02323e708d51db333c530472e0d1120d4fcd6b18b05fa60079d263fc",
-      "bytes": 415862
+      "sha256": "5f07487040e5ef26c50a5a3b4b80aa4fae4c83eefe795a1e48e90f116ddfcd50",
+      "bytes": 521501
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/references.bib",
-      "sha256": "956b48b0ef420351b97e9b23c49a346a60be104cea3d5c7585d3e8004227cf7a",
-      "bytes": 4822
+      "sha256": "e495e53f68591e2b4be56d4df8c3efc3475e44c637bb4a59c7aca136637548df",
+      "bytes": 5573
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/reproduce.py",
@@ -205,6 +205,73 @@
       "path": "shared/docs/plasma_heat_flux_paper/test_numerics.py",
       "sha256": "c1ab693e962d6111ef73b343a680b613a64908be36310f81bb972a6db82e5758",
       "bytes": 2023
+    }
+  ],
+  "extension_inputs": [
+    {
+      "path": "shared/docs/electron_heat_flux_extension/config.json",
+      "sha256": "bb2069a63f40a26366df5de7a998769eba188312ac109bfa8c8e77d6e0666d86",
+      "bytes": 645
+    },
+    {
+      "path": "shared/docs/electron_heat_flux_extension/electron_numerics.py",
+      "sha256": "95423f4a69b8b38c23fb6ebe78487cc978c3561f6915521fc9ef467ab7e3bb63",
+      "bytes": 7309
+    },
+    {
+      "path": "shared/docs/electron_heat_flux_extension/make_figures.py",
+      "sha256": "4a156a41dacf890016aa308e08c6feee4b2e8538099e3f86f0ec508bb0af73cb",
+      "bytes": 7469
+    },
+    {
+      "path": "shared/docs/electron_heat_flux_extension/reproduce.py",
+      "sha256": "ce25ee257b1772358fb46fcb2beb02876f2e5b26953d6389d1d86c397c7d9572",
+      "bytes": 10304
+    },
+    {
+      "path": "shared/docs/electron_heat_flux_extension/test_electron_numerics.py",
+      "sha256": "51c673908e9e83b1c391a2010f14b7c71e5145153a5cc688d666014b7f74615b",
+      "bytes": 5177
+    },
+    {
+      "path": "shared/docs/electron_heat_flux_extension/results/2026-11-17/metrics.json",
+      "sha256": "67381242799521d0b9ca4d20e8e9f25dee3a5f3fe4e6954cb4c8790602a45772",
+      "bytes": 853259
+    },
+    {
+      "path": "shared/docs/electron_heat_flux_extension/figures/provenance.json",
+      "sha256": "b135f9332ff6b17e6f755962da6df7aa44ea63feaa8260c29d74bce458a89d3e",
+      "bytes": 144
+    },
+    {
+      "path": "shared/docs/electron_heat_flux_extension/figures/electron_constants.tex",
+      "sha256": "b0aa3442680d17f0c59af32c0689690f5f3080c8b8077ddd27e5e524463d2955",
+      "bytes": 707
+    },
+    {
+      "path": "shared/docs/electron_heat_flux_extension/figures/lorentz_limit.tex",
+      "sha256": "d76cef229f913444b1db2733dfe1c08ca4b687e7248076a9d2558af26a931be2",
+      "bytes": 276
+    },
+    {
+      "path": "shared/docs/electron_heat_flux_extension/figures/landau_drives.tex",
+      "sha256": "3d523fcebe816bc1a18f0dca2d6a781979e6de7315ef342bcaed13a727a92c1b",
+      "bytes": 367
+    },
+    {
+      "path": "shared/docs/electron_heat_flux_extension/figures/embedded_errors.tex",
+      "sha256": "8f1ece968df900a947a343e5a4d53b77b1fab79eb430b839fd02b2c433b08a64",
+      "bytes": 722
+    },
+    {
+      "path": "shared/docs/electron_heat_flux_extension/figures/responses.pdf",
+      "sha256": "952f5172733f15f78ee997cd23008a68372248c382608cff3cd835cc89edf85b",
+      "bytes": 29034
+    },
+    {
+      "path": "shared/docs/electron_heat_flux_extension/figures/embedded_decay.pdf",
+      "sha256": "f88d623e3c4dfd37ce0d528687f999372c32775e64621efdca3e8c3ed1e569e2",
+      "bytes": 22232
     }
   ]
 }

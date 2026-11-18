@@ -82,3 +82,36 @@ PDF is copied to `output/pdf/manuscript.pdf`.
 Both primary numerical runs completed with empty failure lists. The Landau
 proof boundaries and corrected normalization are documented separately in
 `SOURCE_AUDIT.md` and in the manuscript itself.
+
+## Merge of the extension note (17 November 2026)
+
+The thermal-drive and electron-ion note was merged into `manuscript.tex` as
+Sections 7, 8 and 10, with the abstract, introduction, discussion,
+conclusions and claims table rewritten for the merged scope. No computation
+was rerun and no run directory was touched; the new tables and figures are
+read from `../electron_heat_flux_extension/figures/`. The transformation
+renamed thermal quantities (`T_th`, `K_th`, `C_th`, `b_th`) and prefixed the
+note's labels; it was scripted so that the mathematics was not retyped.
+The merged PDF has 33 pages, builds with no undefined references and no
+overfull boxes, and the pages containing new material (13-17 and 21-27) were
+reviewed at reduced resolution for layout, not re-read line by line in the
+PDF. The text of pages 13-17 (Sections 7 and 8) was subsequently proofread in
+full from the PDF and every cross-reference there resolves to the intended
+equation or theorem.
+
+Reference check, 18 November 2026 (web search of secondary sources; the
+printed originals were not consulted):
+
+- Braginskii, Reviews of Plasma Physics vol. 1, pp. 205-311, ed. Leontovich,
+  Consultants Bureau 1965: confirmed by the NASA ADS record
+  1965RvPP....1..205B.
+- Epperlein and Short, Phys. Fluids B 3, 3092-3098 (1991): confirmed by OSTI.
+- Helander and Sigmar, Cambridge University Press 2002: confirmed.
+- Braginskii's Z = 1 coefficients 0.5129, 0.7110 and 3.1616: confirmed by
+  Hunana et al., arXiv:2201.11561, which also lists the heat-conductivity row
+  3.1616, 4.890, 6.064, 6.920 (the snippet seen had no column heads, so the
+  assignment to Z = 1, 2, 3, 4 is by order).
+- Spitzer-Harm heat conductivity at Z = 1: 3.203 in the same source,
+  consistent with "about 3.20" in the text and above the degree-16 value
+  3.1967, as a lower bound requires.
+- Not confirmed: the Spitzer-Harm electrical conductivity "about 1.98".

@@ -41,3 +41,36 @@ and table fragments, a source/proof audit and a validation record.
 
 Completed 17 November 2026: all six steps, including fresh matrix assembly,
 embedded checks, the source audit, and visual review of all 22 final PDF pages.
+
+## Merge of the thermal-drive and electron-ion extension (17 November 2026)
+
+Scope: fold `../electron_heat_flux_extension/note.tex` into `manuscript.tex`
+as new sections. No new computation; no change to either run directory.
+
+1. New Section "The thermally driven response" after the Landau section:
+   setting, dual certificates, bounds and leading coefficient, the 2x2
+   parallel/perpendicular matrix, exact thermal Dougherty response.
+2. New Section "Electron-electron and electron-ion collisions".
+3. New numerical section after the existing one: Braginskii, Spitzer-Harm
+   and Lorentz-limit validation, deficit coefficient versus ion charge,
+   response curves, and the quasi-neutral embedded decay test.
+4. Notation: thermal quantities carry a subscript (`T_th`, `K_th`, `C_th`,
+   `b_th`, `chi_th`); `kappa` is the zero-current conductivity and equals
+   `kappa_F` when momentum is conserved. Note labels are prefixed `th-`.
+5. Rewrite abstract, introduction, discussion, conclusions, claims table
+   and README for the merged scope. Statements that the potential-driven
+   Landau positivity and Fourier bound are open stay as they are.
+6. Figures and table fragments for the new sections are read from
+   `../electron_heat_flux_extension/figures/` (generated there from
+   `results/2026-11-17/metrics.json`), not copied, so there is one source.
+   Their hashes are added to `source_manifest.json`.
+7. Rebuild, check for undefined references and overfull boxes, and view the
+   new pages. The extension directory keeps its code, tests, metrics and the
+   standalone note.
+
+Evidence boundaries of the extension carry over unchanged: conditional on
+form-domain solvability, no weighted existence theorem for the electron
+operator, Galerkin differences are diagnostics, slow polynomial convergence
+at large `Z`. Reference values and the three added bibliography entries were
+checked against secondary sources on 18 November 2026; see `VALIDATION.md`
+for what was and was not confirmed.
