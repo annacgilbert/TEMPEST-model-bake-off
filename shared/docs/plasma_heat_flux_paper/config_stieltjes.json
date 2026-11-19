@@ -1,0 +1,13 @@
+{
+  "schema_version": "plasma-heat-flux-stieltjes-v1",
+  "seed": 0,
+  "stochastic_sampling": "random finite-dimensional model only (seeded)",
+  "radii": [0.01, 0.03, 0.1, 0.3, 1.0, 3.0, 10.0, 30.0],
+  "angles_over_pi": [0.1, 0.25, 0.4, 0.5, 0.6, 0.75, 0.9],
+  "real_axis": [0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0, 3.0, 10.0, 30.0, 100.0],
+  "galerkin_degrees": [12, 16],
+  "ion_charges": [1, 8],
+  "random_model": {"trials": 20, "even_dim": 6, "odd_dim": 9},
+  "tolerance": 1e-8,
+  "units": "v_t = 1; nu = 1 for BGK and Dougherty; tau_ee = 1 for Landau and electrons; z = k^2"
+}

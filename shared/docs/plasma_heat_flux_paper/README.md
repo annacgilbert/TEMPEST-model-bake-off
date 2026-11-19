@@ -1,6 +1,6 @@
 # Nonlocal heat-flux closure across collision models
 
-A 45-page research manuscript synthesized from the plasma-closure notes in the parent
+A 54-page research manuscript synthesized from the plasma-closure notes in the parent
 directory, with a unified physical energy-flux convention, proofs, primary
 references, and reproducible numerical evidence. The original notes are unchanged.
 
@@ -17,7 +17,13 @@ embedded initial-value experiment tests the limits of using this response as
 a transient closure. For an isotropic heating source (Sections 7, 8 and 10,
 merged from the [extension note](../electron_heat_flux_extension/README.md))
 it proves all-wavenumber bounds without momentum conservation and applies
-them to electron-electron plus electron-ion collisions.
+them to electron-electron plus electron-ion collisions. The thermally driven
+response is a Stieltjes function of `k^2` (Section 7.6): monotone, with a
+positive real-space kernel that is a mixture of exponentials, and with
+two-sided Pade bounds. At large ion charge (Section 8.1, Appendix E) the
+normalized deficit is proved to grow linearly in `Z`, with slope
+`C_inf/kappa_L = 1.4305`, and the response converges to a radial diffusive
+limit with two-sided bounds.
 The Landau collisionless boundary-layer conclusion is explicitly conditional,
 and the electron results assume form-domain solvability.
 The manuscript has no assigned authors; authorship can be added before circulation
@@ -51,6 +57,14 @@ hashes, diagnostics, runtime, status, and any failure in `metrics.json`.
 The optional `--compare-metrics results/2026-11-17/metrics.json` argument to
 `response_matrix.py` computes the like-particle response matrix of Table 8
 (`config_matrix.json`, `results/2026-11-18-matrix/`); see `VALIDATION.md`.
+`stieltjes_check.py` tests the sign conditions of Section 7.6 at complex
+`k^2` and the Pade bounds (`config_stieltjes.json`,
+`results/2026-11-18-stieltjes/`, under one second, cached Landau matrices).
+`large_z.py` solves the radial limit problem of Section 8.1 with an
+independent radial discretization of the Landau form, cross-checks it
+against the cached matrices, and compares with the three-dimensional
+electron computation (`config_large_z.json`, `results/2026-11-18-largez/`,
+under one second); its `figures` subcommand writes Table 9 and Figure 5.
 `extra_airy_check.py` checks the boundary-layer profile identities of
 Appendix D by quadrature and prints the residuals (about nine minutes).
 `extra_checks.py` compares transport constants against the archived cache-based

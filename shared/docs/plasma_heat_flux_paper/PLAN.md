@@ -137,3 +137,77 @@ Evidence boundaries: the solvability argument is at the level of detail of
 Appendix C and rests on the same cited estimates; the Galerkin table is a
 diagnostic at degrees 12 and 16 and does not reach the layer; no proof here
 has had an independent referee.
+
+## Stieltjes structure of the thermal closure (18 November 2026)
+
+Requested by the author: item 1 of the next-results list.
+
+1. Theorem (new subsection at the end of the thermal section): for a real
+   even source `s` whose pairing is bounded on the admissible even trials,
+   `N_s(k) = sup <s phi>^2 / Q_k[phi]` is a Stieltjes function of `t = k^2`,
+   and so is `1/(t N_s)`. Proof by complexifying the two quadratic forms
+   (collision form `a`, streaming form `b`), Lax-Milgram off the negative
+   axis, the identity `conj(N) = a[phi_z] + z b[phi_z]`, and the classical
+   characterization of Stieltjes functions by the sign of the imaginary
+   part. No operator estimate beyond those already used.
+2. Consequences: `chi_th(k) = beta + int d rho(lambda)/(lambda + k^2)` with
+   `rho >= 0`; `beta = 0` whenever `chi_th -> 0` (Dougherty, Landau,
+   `Lambda_Z`); monotonicity of `chi_th` and of `k^2 chi_th`; the moments
+   `int d rho/lambda = kappa`, `int d rho/lambda^2 = kappa K_th`; a positive
+   real-space kernel that is a mixture of exponentials; the existing lower
+   bound as the first Pade bound and an upper bound from the `k^4`
+   coefficient. Same statements for the one-dimensional potential drive and
+   for every diagonal form `c.M(k)c`; the potential drive in three
+   dimensions is a difference of two such functions.
+3. Check before writing (`stieltjes_check.py`, `config_stieltjes.json`, new
+   run directory): sign of `Im chi` at complex `k^2` for the closed-form
+   BGK and Dougherty responses, for Galerkin Landau and electron operators,
+   and for a seeded random finite-dimensional model; monotonicity on the
+   real axis; the Pade upper bound for Dougherty with its exact `k^4`
+   coefficient. The potential-driven response in three dimensions is tested
+   too and whatever it shows is reported.
+4. Update abstract, introduction, Section 3 remark on the real-space
+   kernel, discussion, conclusions, claims table, README, audit and
+   validation records.
+
+Evidence boundaries: the Galerkin and random-model checks test the algebra
+and the code, not the continuum hypotheses; the characterization theorem
+for Stieltjes functions is cited, not reproved; the measure `rho` is not
+computed or bounded beyond its first two moments; no independent referee.
+
+## Large ion charge (18 November 2026)
+
+Requested by the author: item 2 of the next-results list. Units `tau_ee = 1`.
+
+1. Structure used: `Lambda_ee` and the Lorentz operator commute with
+   rotations, so `Lambda_Z` is block diagonal in the spherical-harmonic
+   degree `l`, and on sector `l` it is `Lambda_ee + Z nu(v) l(l+1)/2` with
+   `nu = 3 sqrt(pi)/|v|^3`. Radial functions do not see the ions at all.
+2. Theorem (constants): `Z kappa` increases to the Lorentz value
+   `kappa_L = 64 sqrt(2)/(3 pi)` with `O(1/Z)` error; `C_th -> C_inf`, the
+   inverse form of the like-particle operator on the explicit radial source
+   `b_inf^0 = (|v|^2-3)/3 - sqrt(pi/2) |v|^5 (|v|^2-8)/384`, with `O(1/Z)`
+   error; hence `K_th/kappa^2 = (C_inf/kappa_L) Z + O(1)`.
+3. Theorem (diffusive scaling limit): with `s = k^2/Z` fixed,
+   `Z chi_th -> X(s) = 1/(s T_red(s))`, where `T_red` is the response of the
+   radial problem `(Lambda_ee + s |v|^5/(9 sqrt(pi))) phi = zeta`. Two-sided:
+   `T_red(s) <= T_th <= T_red(s) + E(s)/Z` for every `Z` and `k`, from the
+   dual certificates with the radial trial and the `l = 1` dual trial
+   `-k v_x phi_s/(Z nu)`. `X` is a Stieltjes function of `s` by Theorem 7.9.
+4. Computation (`large_z.py`, `config_large_z.json`, new run directory):
+   an independent radial Galerkin solver built from the angular reduction
+   of the Landau form (polynomials in `|v|`, not `|v|^2`); cross-check of
+   its spectrum against the radial block of the cached Landau matrices;
+   `C_inf`, `X(s)`; comparison with the existing three-dimensional electron
+   Galerkin constants and curves at increasing `Z`. Table and figure from
+   the saved metrics.
+5. Manuscript: new subsection in the electron section, proofs in a new
+   appendix, numerical subsection, and the "not a theorem" paragraph on the
+   `Z` scaling replaced. Update abstract, introduction, discussion,
+   conclusions, claims table and the records.
+
+Evidence boundaries: weighted-test and multiplier steps are at the level of
+detail of Appendix C and rest on the same cited estimates; the large-`s`
+behavior of `X` is not proved; the three-dimensional Galerkin values at
+large `Z` converge slowly and are a consistency check, not a confirmation
+to many digits; no independent referee.

@@ -179,3 +179,118 @@ not reach the layer). At `k tau = 5` the like-particle values are
 
 Build: 45 pages, no undefined references, no overfull boxes. Pages 13,
 18-19, 27, 34-35 and 40-42 were read from the PDF.
+
+## Stieltjes structure (18 November 2026)
+
+Manuscript: Section 7.6 (Theorem 7.9, Corollary 7.10, Proposition 7.11,
+Corollary 7.12) and Section 10.5. See `PLAN.md` and `SOURCE_AUDIT.md`.
+
+Computation (deterministic except a seeded random model, seed 0; cached
+Landau matrices; 0.56 s):
+
+```
+python3 stieltjes_check.py results/2026-11-18-stieltjes
+```
+
+- `metrics.json`: status complete, 0 failures. 31 cases covered by the
+  theorem: closed-form 1D BGK, 1D Dougherty and 3D thermal Dougherty;
+  thermal Galerkin responses for Dougherty, Landau and electrons (`Z = 1`,
+  `8`) at degrees 12 and 16; 20 random finite-dimensional models. In every
+  case `Im chi <= 0` at all sampled points of the upper half `k^2`-plane
+  (largest `Im chi/|chi|` over all cases: -1.0e-3), `chi` decreases and
+  `k^2 chi` increases on the real axis.
+- Sampling: 56 complex points, radii 0.01 to 30, angles 0.1 pi to 0.9 pi;
+  11 real points. The closed-form Dougherty integrals converge only for
+  `Re k^2 > -1`, so 11 points with `Re k^2 <= -1/2` were skipped for those
+  three closed forms (45 sampled). The Galerkin Dougherty runs cover the
+  skipped region.
+- Thermal Dougherty: `K = 16/45` and `K_2 = 499/2025` in exact rational
+  arithmetic; quadrature agrees to 1e-14. The Pade bounds hold at all seven
+  tested wavenumbers; the upper bound is 0.06% above the exact response at
+  `k^2 = 0.3` and 1.0% above at `k^2 = 1`.
+- Not covered by the theorem, reported as observed: the potential-driven
+  response in three dimensions. Dougherty (closed form and Galerkin)
+  satisfies all sign conditions at every sampled point. Landau Galerkin
+  violates `Im chi <= 0` at two points each degree, all at angle 0.9 pi:
+  radii 1 and 10 at degree 12, radii 3 and 30 at degree 16. The violating
+  points are not stable under refinement; nothing is claimed for the
+  continuum.
+- A first trial run (scratch directory, not kept) sampled the Dougherty
+  closed forms where the integrals diverge and reported spurious
+  violations. The sampling restriction above was added because of it.
+
+Not validated: the continuum hypotheses of Theorem 7.9 (the Galerkin and
+random-model cases satisfy the theorem exactly, so they test the code and
+the algebra only). The measure `rho` was not computed.
+
+Citations: the SNB reference was confirmed against secondary listings
+(Phys. Plasmas 7, 4238-4249, 2000). The Schilling-Song-Vondracek book was
+confirmed as to edition, year, series and chapter titles; the analytic
+characterization of Stieltjes functions is cited by chapter, and the
+corollary number was not checked against the book.
+
+Build: 48 pages, no undefined references, no overfull boxes. Pages 18-21
+were read from the PDF.
+
+## Large ion charge (18 November 2026)
+
+Manuscript: Section 8.1 (Theorems 8.4 and 8.5), Section 10.6, Table 9,
+Figure 5, Appendix E. See `PLAN.md` and `SOURCE_AUDIT.md`.
+
+Computation (deterministic; cached Landau matrices for the comparison
+only; 0.27 s):
+
+```
+python3 large_z.py run results/2026-11-18-largez
+python3 large_z.py figures results/2026-11-18-largez/metrics.json figures
+```
+
+- `metrics.json`: status complete, 0 failures.
+- Radial solver sanity, six refinement levels (degrees 16 to 64 at 320
+  panels, degree 64 at 160): kernel residual at most 2.7e-12, symmetry
+  defect of the nonlocal term at most 2.0e-12, smallest eigenvalue above
+  -5e-14, source orthogonal to the invariants to 2e-16, and the quadrature
+  of `<w phi_0^2>` equal to `64 sqrt(2)/(3 pi)` to rounding.
+- Independent cross-check: eigenvalues of the radial form on even
+  polynomials of degree at most 12 and 16 against the radial block of the
+  cached three-dimensional Landau matrices (radial subspace = null space of
+  the Lorentz matrix): largest difference 1.1e-14 and 1.6e-14.
+- `C_inf = 13.7378205766`, `C_inf/kappa_L = 1.4305202`,
+  `kappa_L C_inf = 131.92943`. Degrees 32, 48, 64 agree to 12 digits; 160
+  against 320 panels to 12 digits. Observed convergence, not a certified
+  bound.
+- Small `s`: `(1 - X/kappa_L)/s` = 131.85 at `s = 1e-6`, 131.17 at 1e-5,
+  125.0 at 1e-4, 91.8 at 1e-3, against the predicted limit 131.93. The
+  value at `s = 1e-7` (132.07) is rounding-limited.
+- Three-dimensional Galerkin against the limit (Table 9): at `Z = 4096`,
+  `Z kappa/kappa_L = 0.9989`, `C_th = 13.736`, `K/(kappa^2 Z) = 1.432` at
+  degree 16; degree 12 gives 13.790 and 1.438. `Z kappa` increases with `Z`
+  at both degrees, and the thermoelectric ratio tends to 3/2 (1.4993).
+- Curves (Figure 5): `Z chi_th <= X(s)` at all sampled points with
+  `s <= 10` for `Z = 4, 16, 64, 256` and both degrees; largest ratio 0.988.
+  For `s` above about 1 the degree-12 and degree-16 curves separate (ratio
+  to the limit 0.62 against 0.83 at `s = 10`, `Z = 256`).
+- Large `s`: local exponent of `X` is -0.398, -0.399, -0.385, -0.364,
+  -0.343, -0.325 on successive decades from 1 to 1e6; `X` changes by up to
+  5.7e-4 between degrees 48 and 64 there.
+
+Failures and reruns, kept on the record:
+
+- First trial (scratch directory, not kept): the nonlocal term was
+  integrated with a tensor quadrature across the kink of
+  `min(a,b)/max(a,b)^2`. The script's own sanity checks failed (kernel
+  residual 6e-6, spectrum mismatch 5e-5). The inner integral is now split
+  at the kink and done with running integrals; the same checks pass at
+  1e-12 or better. `C_inf` moved from 13.73785 to 13.73782.
+- First recorded-run attempt stopped on a variable-ordering error before
+  the result directory was created; nothing was written.
+- The figure legend position was changed after `run`, so the script hash
+  inside `metrics.json` is that of the earlier version; the `run` code path
+  did not change. `figures/provenance_large_z.json` has the current hash.
+
+Not validated numerically: the error term `E(s)` of Theorem 8.5 (it needs
+the like-particle form on an `l = 1` function, which the radial solver does
+not have), and the `O(1)` term of the linear law.
+
+Build: 54 pages, no undefined references, no overfull boxes. Pages 22-23,
+32-33 and 48-51 were read from the PDF.

@@ -242,3 +242,74 @@ numerical confirmation of either collisionless limit for Landau or
 electrons, because the polynomial basis does not reach the layer. The
 standalone note in `../electron_heat_flux_extension/` still states its
 results conditionally and has not been updated.
+
+## Stieltjes structure (18 November 2026)
+
+New material, not in any source note. Section 7.6 was derived in this
+session.
+
+1. Theorem 7.9. The argument: the admissible even trials form a real
+   vector space independent of `k`; the response is the supremum of
+   `<s phi>^2/(C[phi] + t S[phi])` with `t = k^2`; complexify, apply
+   Lax-Milgram off the negative axis, and read the sign of the imaginary
+   part from `conj F = C[phi_z] + z S[phi_z]`. The second statement
+   (`1/(t R_s)` is Stieltjes) is proved directly from the same identity and
+   does not use the closure properties of the Stieltjes class.
+2. Cited, not reproved: a nonnegative function on `(0, infinity)` with an
+   analytic extension to the cut plane and nonpositive imaginary part in
+   the upper half-plane has the integral representation (7.19).
+3. Corollary 7.10 uses Corollary 7.3 (to remove the `1/t` term), Theorem
+   7.5 (the two moments) and the three collisionless limits (for
+   `chi_infinity = 0`). Proposition 7.11 is Jensen's inequality twice.
+   Corollary 7.12 is the Fourier transform of each term.
+4. The sentence in Section 3 that positivity "does not imply that the
+   real-space convolution kernel is positive" was replaced: positivity of
+   the symbol alone does not, but the kernel is positive by Corollary 7.12
+   and its one-dimensional twin.
+5. Hypothesis to keep in view: Theorem 7.9 needs the pairing with the
+   source to be bounded on the admissible trials, which is Assumption 7.1
+   in general and Proposition 8.1 for Landau and `Lambda_Z`.
+
+Standing caveats: written and checked by the same assistant in one
+session; no independent human referee; the potential drive in three
+dimensions is outside the theorem.
+
+## Large ion charge (18 November 2026)
+
+New material, not in any source note. Section 8.1 and Appendix E were
+derived in this session.
+
+1. Structure: both collision terms commute with rotations, so `Lambda_Z`
+   is block diagonal in the Legendre degree `l` and the ion term is
+   multiplication by `Z nu l(l+1)/2` on sector `l`. The inverse form of a
+   source splits exactly into a radial like-particle part and sector
+   remainders bounded by `1/Z` (E.1).
+2. Theorem 8.4. `Z kappa` monotone and within `O(1/Z)` of the Lorentz
+   value: dual formula on the sector `l = 1` with the trial `s/nu`.
+   `C_th = C_inf + O(1/Z)`: weighted convergence of `Z Xi` to the Lorentz
+   solution at rate `Z^(-1/2)` (Lemma E.2) handles the quadratic terms; the
+   term linear in the error is `O(1/Z)` by Cauchy-Schwarz for the
+   nonnegative form `B_Z` (Lemma E.1). Closed forms checked by hand and by
+   quadrature: `L11 = 16 sqrt(2)/(3 pi)`, ratio 3/2,
+   `kappa_L = 64 sqrt(2)/(3 pi)` (equal to `128/(3 pi)` in units of
+   `tau_e`, the value already in Table 6), and the orthogonality of
+   `b_inf` to 1 and `|v|^2`.
+3. Theorem 8.5. Lower bound: radial trial in the certificate of Theorem
+   7.2. Upper bound: dual trial `-k v_x phi_s/(Z nu)`; its source splits
+   into a radial part equal to `Lambda_ee phi_s` and an `l = 2` part bounded
+   by E.1. The Stieltjes property of `X` is Theorem 7.9 for the two radial
+   forms.
+4. Steps written at the level of detail of Appendix C and not expanded:
+   the rotation-average argument for (S1)-(S2); that multiplication by
+   `v_x |v|^3` (a C^3 function with polynomially bounded derivatives) maps
+   the weighted energy spaces to a space with finite like-particle form;
+   weighted regularity of the reduced solution `phi_s`. A referee should
+   look at these first.
+5. Superseded statement: Section 10.3 said the `sqrt(Z)` scaling was "a
+   numerical observation with a heuristic explanation. It is not a
+   theorem." It is now Theorem 8.4(c).
+6. Not claimed: the decay `X ~ s^(-2/7)` (a scaling argument only, and the
+   computed exponent has not reached it); any comparison with published
+   high-`Z` nonlocal formulas, which was not attempted.
+
+Standing caveats: same assistant, one session, no independent referee.

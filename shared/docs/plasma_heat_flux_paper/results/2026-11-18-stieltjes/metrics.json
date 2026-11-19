@@ -1,0 +1,695 @@
+{
+ "schema_version": "plasma-heat-flux-stieltjes-v1",
+ "config": {
+  "schema_version": "plasma-heat-flux-stieltjes-v1",
+  "seed": 0,
+  "stochastic_sampling": "random finite-dimensional model only (seeded)",
+  "radii": [
+   0.01,
+   0.03,
+   0.1,
+   0.3,
+   1.0,
+   3.0,
+   10.0,
+   30.0
+  ],
+  "angles_over_pi": [
+   0.1,
+   0.25,
+   0.4,
+   0.5,
+   0.6,
+   0.75,
+   0.9
+  ],
+  "real_axis": [
+   0.001,
+   0.003,
+   0.01,
+   0.03,
+   0.1,
+   0.3,
+   1.0,
+   3.0,
+   10.0,
+   30.0,
+   100.0
+  ],
+  "galerkin_degrees": [
+   12,
+   16
+  ],
+  "ion_charges": [
+   1,
+   8
+  ],
+  "random_model": {
+   "trials": 20,
+   "even_dim": 6,
+   "odd_dim": 9
+  },
+  "tolerance": 1e-08,
+  "units": "v_t = 1; nu = 1 for BGK and Dougherty; tau_ee = 1 for Landau and electrons; z = k^2"
+ },
+ "status": "complete",
+ "failures": [],
+ "covered_by_theorem": {
+  "bgk_1d_potential": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.010936590655025624,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.007753778596133085,
+   "max_decrease_z_chi": -0.7982349210401901,
+   "min_chi": 0.07755774503010938,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "dougherty_1d_potential": {
+   "points_sampled": 45,
+   "points_skipped": 11,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.0010219551315195684,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.0006653361356232263,
+   "max_decrease_z_chi": -0.9118103767091594,
+   "min_chi": 0.07419479113281759,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "dougherty_3d_thermal": {
+   "points_sampled": 45,
+   "points_skipped": 11,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.0010880614762185687,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.0007093970365346328,
+   "max_decrease_z_chi": -0.9447799048787929,
+   "min_chi": 0.13111365949071782,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "dougherty_galerkin_d12_thermal": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.0010880614761861504,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.0007093970358253044,
+   "max_decrease_z_chi": -0.8091046583151517,
+   "min_chi": 0.11973367681662936,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "landau_d12_thermal": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.037568791242714124,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.04012517666981012,
+   "max_decrease_z_chi": -0.4941012600678614,
+   "min_chi": 0.10107832501550273,
+   "imag_on_real_axis": 1.9272938642671252e-15,
+   "stieltjes_signs_hold": true
+  },
+  "electron_Z1_d12_thermal": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.03407271563476678,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.034725518727665786,
+   "max_decrease_z_chi": -0.8717238287291339,
+   "min_chi": 0.0848818314072779,
+   "imag_on_real_axis": 3.6431592052638944e-15,
+   "stieltjes_signs_hold": true
+  },
+  "electron_Z8_d12_thermal": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.09968698226512916,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.20720578625006186,
+   "max_decrease_z_chi": -0.5807880924758706,
+   "min_chi": 0.00517159303607008,
+   "imag_on_real_axis": 6.025120155263949e-16,
+   "stieltjes_signs_hold": true
+  },
+  "dougherty_galerkin_d16_thermal": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.0010880614761861504,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.0007093970358253044,
+   "max_decrease_z_chi": -0.9304053120272183,
+   "min_chi": 0.12871046858516516,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "landau_d16_thermal": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.037587630832289755,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.040081152702289846,
+   "max_decrease_z_chi": -0.7830264500433877,
+   "min_chi": 0.12645437388897662,
+   "imag_on_real_axis": 1.2094718096480969e-14,
+   "stieltjes_signs_hold": true
+  },
+  "electron_Z1_d16_thermal": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.03342629549873564,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.03429437327620129,
+   "max_decrease_z_chi": -0.7745287698441714,
+   "min_chi": 0.08436516819943479,
+   "imag_on_real_axis": 4.819971334880647e-14,
+   "stieltjes_signs_hold": true
+  },
+  "electron_Z8_d16_thermal": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.09810262528810476,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.20572290831660017,
+   "max_decrease_z_chi": -0.6459350092171671,
+   "min_chi": 0.006862225043703008,
+   "imag_on_real_axis": 3.1517247218044832e-15,
+   "stieltjes_signs_hold": true
+  },
+  "random_model_0": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.03973452700964359,
+   "at_radius_angle": [
+    0.1,
+    0.1
+   ],
+   "max_increase_chi": -0.0828403146965225,
+   "max_decrease_z_chi": -1.2075532551620265,
+   "min_chi": 0.06292071602115257,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "random_model_1": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.004555366217259678,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.0033554078178991515,
+   "max_decrease_z_chi": -0.5593404884450414,
+   "min_chi": 0.04651892840337141,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "random_model_2": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.026102078765652757,
+   "at_radius_angle": [
+    30.0,
+    0.1
+   ],
+   "max_increase_chi": -0.07117785009061887,
+   "max_decrease_z_chi": -0.31965281293889036,
+   "min_chi": 4.309738370659391,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "random_model_3": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.1472369012574222,
+   "at_radius_angle": [
+    30.0,
+    0.1
+   ],
+   "max_increase_chi": -0.3775345767374361,
+   "max_decrease_z_chi": -0.30068996221677347,
+   "min_chi": 0.1091688937643112,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "random_model_4": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.03235407333788861,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.025737590435068944,
+   "max_decrease_z_chi": -0.3911428074740464,
+   "min_chi": 0.24288687011037355,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "random_model_5": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.04360851131486391,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.04412133480884726,
+   "max_decrease_z_chi": -0.78003493355164,
+   "min_chi": 0.21559703370506644,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "random_model_6": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.06129365261685028,
+   "at_radius_angle": [
+    3.0,
+    0.1
+   ],
+   "max_increase_chi": -0.05085994921554793,
+   "max_decrease_z_chi": -0.84812943029333,
+   "min_chi": 0.2548885550806551,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "random_model_7": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.013214769458775305,
+   "at_radius_angle": [
+    1.0,
+    0.1
+   ],
+   "max_increase_chi": -0.04683877739710135,
+   "max_decrease_z_chi": -0.21174461504271538,
+   "min_chi": 0.38059860711100496,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "random_model_8": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.03778240447665306,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.029478714421573793,
+   "max_decrease_z_chi": -0.5867690103671612,
+   "min_chi": 0.22975620754258222,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "random_model_9": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.1020521986201788,
+   "at_radius_angle": [
+    10.0,
+    0.1
+   ],
+   "max_increase_chi": -0.3240027589455961,
+   "max_decrease_z_chi": -0.12154574183720057,
+   "min_chi": 0.03081789140139963,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "random_model_10": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.09528767813455609,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.08204425631732516,
+   "max_decrease_z_chi": -0.5460844396777385,
+   "min_chi": 0.03942619566550864,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "random_model_11": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.05726379800598902,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.05506368604532888,
+   "max_decrease_z_chi": -0.7424638573764052,
+   "min_chi": 0.34760551686936975,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "random_model_12": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.14289679708411043,
+   "at_radius_angle": [
+    30.0,
+    0.1
+   ],
+   "max_increase_chi": -0.32672381206836104,
+   "max_decrease_z_chi": -0.1342534181371938,
+   "min_chi": 0.09278192045277253,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "random_model_13": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.05415721015338809,
+   "at_radius_angle": [
+    30.0,
+    0.1
+   ],
+   "max_increase_chi": -0.05544997020177758,
+   "max_decrease_z_chi": -0.6918388072346989,
+   "min_chi": 0.7162183775495695,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "random_model_14": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.010510621185630299,
+   "at_radius_angle": [
+    30.0,
+    0.1
+   ],
+   "max_increase_chi": -0.017125825585202883,
+   "max_decrease_z_chi": -1.0997967669685216,
+   "min_chi": 0.08753834104738369,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "random_model_15": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.14583291841184556,
+   "at_radius_angle": [
+    30.0,
+    0.1
+   ],
+   "max_increase_chi": -0.3301475023011799,
+   "max_decrease_z_chi": -0.010512597851336214,
+   "min_chi": 0.040472228423364176,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "random_model_16": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.10814634337106888,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.18000469981183548,
+   "max_decrease_z_chi": -0.48647956607800874,
+   "min_chi": 0.07903891984983569,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "random_model_17": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.02206466097824138,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.015711879589335266,
+   "max_decrease_z_chi": -1.02885374211973,
+   "min_chi": 0.10648758519534259,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "random_model_18": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.0614544859343329,
+   "at_radius_angle": [
+    30.0,
+    0.1
+   ],
+   "max_increase_chi": -0.09779740774235535,
+   "max_decrease_z_chi": -0.656555992970036,
+   "min_chi": 0.33107665931808367,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "random_model_19": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.050564088735900785,
+   "at_radius_angle": [
+    30.0,
+    0.1
+   ],
+   "max_increase_chi": -0.11832271333897754,
+   "max_decrease_z_chi": -0.4309056805170228,
+   "min_chi": 0.06060967010649524,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  }
+ },
+ "not_covered_by_theorem": {
+  "dougherty_3d_potential": {
+   "points_sampled": 45,
+   "points_skipped": 11,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.0004103324820223079,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.00026640031889400156,
+   "max_decrease_z_chi": -1.0588501114636113,
+   "min_chi": 0.20555216504376544,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "dougherty_galerkin_d12_potential": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.0004103324819898712,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.00026640031818502496,
+   "max_decrease_z_chi": -0.8322038784656393,
+   "min_chi": 0.18050104879040474,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "landau_d12_potential": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [
+    [
+     1.0,
+     0.9,
+     0.32408145758394824
+    ],
+    [
+     10.0,
+     0.9,
+     0.49386226371447245
+    ]
+   ],
+   "max_imag_over_abs": 0.49386226371447245,
+   "at_radius_angle": [
+    10.0,
+    0.9
+   ],
+   "max_increase_chi": -0.033482724813748733,
+   "max_decrease_z_chi": -0.44914741914579986,
+   "min_chi": 0.16388595249710503,
+   "imag_on_real_axis": 1.931722731812387e-15,
+   "stieltjes_signs_hold": false
+  },
+  "dougherty_galerkin_d16_potential": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [],
+   "max_imag_over_abs": -0.0004103324819898712,
+   "at_radius_angle": [
+    0.01,
+    0.1
+   ],
+   "max_increase_chi": -0.00026640031818502496,
+   "max_decrease_z_chi": -1.0032212422360993,
+   "min_chi": 0.19982691066483305,
+   "imag_on_real_axis": 0.0,
+   "stieltjes_signs_hold": true
+  },
+  "landau_d16_potential": {
+   "points_sampled": 56,
+   "points_skipped": 0,
+   "sign_violations": [
+    [
+     3.0,
+     0.9,
+     0.746202744237014
+    ],
+    [
+     30.0,
+     0.9,
+     0.34616263843014916
+    ]
+   ],
+   "max_imag_over_abs": 0.746202744237014,
+   "at_radius_angle": [
+    3.0,
+    0.9
+   ],
+   "max_increase_chi": -0.03343812711075128,
+   "max_decrease_z_chi": -0.8256821758736262,
+   "min_chi": 0.21540814893892857,
+   "imag_on_real_axis": 1.218583715598368e-14,
+   "stieltjes_signs_hold": false
+  }
+ },
+ "dougherty_thermal_pade": {
+  "K_quadrature": 0.3555555555555546,
+  "K_exact": "16/45",
+  "K2_quadrature": 0.24641975308640912,
+  "K2_exact": "499/2025",
+  "exact_minus_quadrature": [
+   9.43689570931383e-16,
+   1.0630385460785874e-14
+  ],
+  "rows": [
+   {
+    "z": 0.01,
+    "chi_over_kappa": 0.9964688865376612,
+    "pade_lower": 0.9964570416297609,
+    "pade_upper": 0.9964689168126457,
+    "ok": true
+   },
+   {
+    "z": 0.1,
+    "chi_over_kappa": 0.9667230922587453,
+    "pade_lower": 0.9656652360515021,
+    "pade_upper": 0.9667489284322639,
+    "ok": true
+   },
+   {
+    "z": 0.3,
+    "chi_over_kappa": 0.9111867751425345,
+    "pade_lower": 0.9036144578313254,
+    "pade_upper": 0.9116936874784405,
+    "ok": true
+   },
+   {
+    "z": 1.0,
+    "chi_over_kappa": 0.7821628092094868,
+    "pade_lower": 0.7377049180327874,
+    "pade_upper": 0.78999179655455,
+    "ok": true
+   },
+   {
+    "z": 3.0,
+    "chi_over_kappa": 0.6083675725962971,
+    "pade_lower": 0.48387096774193616,
+    "pade_upper": 0.6535859269282729,
+    "ok": true
+   },
+   {
+    "z": 10.0,
+    "chi_over_kappa": 0.4116027095309002,
+    "pade_lower": 0.21951219512195166,
+    "pade_upper": 0.5516637478108435,
+    "ok": true
+   },
+   {
+    "z": 100.0,
+    "chi_over_kappa": 0.15733639138886138,
+    "pade_lower": 0.027355623100304018,
+    "pade_upper": 0.4942710391149554,
+    "ok": true
+   }
+  ]
+ },
+ "input_hashes": {
+  "landau_d12.npy": "39a59c41fc7400c0e02fab0fb992f0681b2c7254bc52cd00f3256ec1a51e8669",
+  "landau_d16.npy": "3587eca093637527fde8eb09f329c64e9c54e6b974e1f78575234f4188979f55"
+ },
+ "script_sha256": "be3126ac598c125b2d5e6a81b5245a666f752fc2388bb0dcdcd7a75e0826d8d3",
+ "environment": {
+  "python": "3.13.0",
+  "numpy": "2.4.4",
+  "platform": "macOS-27.2.1-arm64-arm-64bit-Mach-O"
+ },
+ "runtime_seconds": 0.5608351230621338
+}

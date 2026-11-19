@@ -88,7 +88,10 @@ every symmetric, nonnegative collision operator whose kernel contains the
 density and energy invariants. Momentum conservation is not among the
 hypotheses, so the result covers electron--electron Landau collisions
 together with pitch-angle scattering on ions of charge $Z$, with $\kap$
-the conductivity at zero current. For both operators we prove the
+the conductivity at zero current. More is true: $\chi_\thr$ is a
+Stieltjes function of $k^2$. It decreases in $|k|$, its real-space kernel
+is a positive mixture of exponentials, and the two-sided bound is the
+first of a family of Pad\'e bounds. For both operators we prove the
 solvability that these theorems require, and the collisionless limit
 $|k|\chi_\thr\to\tfrac95\sqrt{2/\pi}$, which does not depend on $Z$. The two drives share the conductivity
 but not the deficit: for Dougherty the leading coefficients are
@@ -99,7 +102,11 @@ deficit approximately $7.45$ times that of the Dougherty operator at
 matched conductivity. They reproduce Braginskii's electron coefficients
 at low degree, and they give a normalized deficit $K_\thr/\kap^2$ that
 grows roughly linearly in $Z$, from about $4.3$ at $Z=1$ to $96$ at
-$Z=64$. Matching the conductivity does not match the closure.
+$Z=64$. We prove the linear law: the slope, $1.4305$, is the solution of
+a radial like-particle problem, and at large $Z$ the whole response
+converges, with two-sided bounds, to a diffusive limit that depends on
+the wavenumber only through $\sqrt Z\,k\lambda_e$. Matching the
+conductivity does not match the closure.
 Whether matching the static response does depends on the dynamics. In a
 one-dimensional model coupled to sound waves, the exact quasi-static
 closure has transient errors of up to $34\%$. In the quasi-neutral decay
@@ -179,7 +186,10 @@ three-dimensional problem becomes as clean as the one-dimensional one:
 we obtain bounds at every wavenumber and the sharp leading coefficient
 with an $O(k^4)$ remainder, and for like-particle Landau collisions this
 gives the positivity and the Fourier upper bound that are open for the
-potential drive. The drive
+potential drive. The response is moreover a Stieltjes function of $k^2$
+(\cref{thm:stieltjes}), which makes the exact closure a positive
+superposition of screened diffusion problems, the form that multigroup
+transport models assume. The drive
 matters. Both responses are entries of one positive-definite $2\times2$
 matrix of parallel and perpendicular temperature responses; they share
 the conductivity but not the leading deficit. Fifth, none of the thermal
@@ -187,7 +197,11 @@ theorems needs momentum conservation, so they hold for electron--electron
 plus electron--ion collisions with the conductivity replaced by its
 zero-current value (\cref{sec:th-electron}). For this operator we prove
 weighted solvability and the collisionless limit, so the electron closure
-is fixed by theorems at both ends of the wavenumber range. We compute the constants
+is fixed by theorems at both ends of the wavenumber range. At large ion
+charge we go further (\cref{thm:largeZ,thm:LZ-limit}): the ions act only
+on the anisotropic part of the distribution, the response converges to
+that of a radial diffusion problem, and the leading deficit grows
+linearly in the charge with an explicit slope. We compute the constants
 and the response curves for ion charges from $1$ to $64$, and we test the
 closure as an evolution law in the quasi-neutral decay of a temperature
 perturbation (\cref{sec:th-numerics}).
@@ -464,7 +478,9 @@ Positivity implies the quadratic dissipation relation
   =-\frac{1}{2\pi}\sum_{k\ne0} k^2\chi(k)|\widehat T_k|^2\leq0
 \]
 on a $2\pi$-periodic domain with unnormalized Fourier coefficients.
-It does not imply that the real-space convolution kernel is positive.
+Positivity of the symbol does not by itself make the real-space
+convolution kernel positive. The kernel is positive all the same, for a
+finer reason that we give in \cref{sec:th-stieltjes}.
 
 \section{Explicit relaxation and diffusion models}\label{sec:models}
 
@@ -1481,6 +1497,244 @@ of \eqref{eq:th-chipotM} then tends to $c_0/|k|$ and that of
 \eqref{eq:th-chithM} to $5c_0/|k|$, with $c_0=\sqrt{\pi/2}$. That is the
 whole difference between $3\sqrt{2/\pi}$ and $\tfrac95\sqrt{2/\pi}$.
 
+\subsection{The closure as a Stieltjes function}\label{sec:th-stieltjes}
+
+The bounds of \cref{cor:th-bounds} use two numbers, $\kap$ and $K_\thr$.
+Is that all the variational structure has to give? No. The wavenumber
+enters the forms \eqref{eq:th-forms} only through the factor $k^2$ in front
+of a nonnegative quadratic form, and that is enough to fix the analytic
+type of the response.
+
+Recall that a function $f$ on $(0,\infty)$ is a \emph{Stieltjes function}
+if
+\begin{equation}
+ f(t)=\frac{p_0}{t}+f_\infty+\int_{(0,\infty)}\frac{\dd\rho(\mu)}{\mu+t},
+ \qquad p_0,f_\infty\geq0,
+ \label{eq:st-def}
+\end{equation}
+for a positive measure $\rho$ with $\int(1+\mu)^{-1}\dd\rho<\infty$.
+Equivalently, $f$ is nonnegative on $(0,\infty)$ and extends analytically
+to $\mathbb C\setminus(-\infty,0]$ with $\Imag f(z)\leq0$ whenever
+$\Imag z>0$ \cite[Chapters~2 and~7]{SchillingSongVondracek2012}.
+
+Let $\mathcal E$ be the real vector space of admissible even trials in
+\eqref{eq:th-forms}: even functions $\varphi$ in the form domain with
+$v_x\varphi\perp\N$ and $\dual{v_x\varphi}<\infty$. It does not depend on
+$k$. On it put
+\[
+ \mathsf C[\varphi]=\D[\varphi],\qquad
+ \mathsf S[\varphi]=\dual{v_x\varphi},\qquad
+ \Qth_k=\mathsf C+k^2\mathsf S ,
+\]
+the collision form and the streaming form. For a real even source $s$
+define
+\begin{equation}
+ R_s(t)=\sup_{\varphi\in\mathcal E}
+   \frac{\av{s\varphi}^2}{\mathsf C[\varphi]+t\,\mathsf S[\varphi]},
+ \qquad t>0 .
+ \label{eq:st-R}
+\end{equation}
+By \cref{thm:th-dual}, $R_\zeta(k^2)=T_\thr(k)$; by the same argument,
+$R_{a_c}(k^2)=c\cdot M(k)c$ for the sources of \cref{sec:th-matrix}.
+
+\begin{theorem}[Stieltjes structure]\label{thm:stieltjes}
+Suppose $R_s(t_0)$ is finite and nonzero for one $t_0>0$. Then it is finite
+and nonzero for every $t>0$, and both
+\[
+ t\mapsto R_s(t)\qquad\text{and}\qquad t\mapsto\frac1{t\,R_s(t)}
+\]
+are Stieltjes functions.
+\end{theorem}
+
+\begin{proof}
+Both forms are nonnegative quadratic forms; $\mathsf S$ is the square of a
+Hilbert dual norm. If $\mathsf S[\varphi]=0$, then $v_x\varphi$ pairs to
+zero with every function in the form domain, so $v_x\varphi=0$ and
+$\varphi=0$. Thus $\mathsf C+\mathsf S$ is an inner product on $\mathcal E$.
+Complete $\mathcal E$ in it and complexify; $\mathsf C$ and $\mathsf S$
+extend to Hermitian forms $\mathsf C(\varphi,\chi)$ and
+$\mathsf S(\varphi,\chi)$, and $\ell(\varphi)=\av{s\varphi}$ extends to a
+complex-linear functional with $\ell(\bar\varphi)=\overline{\ell(\varphi)}$.
+Since $\min(1,t)(\mathsf C+\mathsf S)\leq\mathsf C+t\mathsf S
+\leq\max(1,t)(\mathsf C+\mathsf S)$, finiteness of $R_s(t_0)$ says that
+$\ell$ is bounded, and then $R_s(t)$ is finite for every $t>0$; it is
+nonzero because $\ell\ne0$.
+
+Fix $z\in\mathbb C\setminus(-\infty,0]$. For every $\varphi$ the number
+$\mathsf C[\varphi]+z\,\mathsf S[\varphi]$ is
+$(\mathsf C+\mathsf S)[\varphi]$ times a point of the segment from $1$ to
+$z$, and that segment stays a positive distance $c_z$ from the origin. So
+the sesquilinear form $\mathsf C+z\mathsf S$ is bounded and coercive, and
+by Lax--Milgram there is a unique $\varphi_z$ with
+\begin{equation}
+ \mathsf C(\varphi_z,\chi)+z\,\mathsf S(\varphi_z,\chi)=\ell(\bar\chi)
+ \qquad\text{for all }\chi .
+ \label{eq:st-weak}
+\end{equation}
+The form is affine in $z$ and boundedly invertible, so $\varphi_z$ and
+$F(z)=\ell(\varphi_z)$ are analytic in $z$. For $z=t>0$ the solution is
+the real Riesz representer of $\ell$ in the inner product
+$\mathsf C+t\mathsf S$, and $F(t)=R_s(t)>0$. Now put $\chi=\varphi_z$ in
+\eqref{eq:st-weak}:
+\begin{equation}
+ \overline{F(z)}=\mathsf C[\varphi_z]+z\,\mathsf S[\varphi_z] .
+ \label{eq:st-key}
+\end{equation}
+Hence $\Imag F(z)=-\Imag z\;\mathsf S[\varphi_z]\leq0$ for $\Imag z>0$, and
+$R_s$ is a Stieltjes function.
+
+Multiply the conjugate of \eqref{eq:st-key} by $z$:
+\[
+ zF(z)=z\,\mathsf C[\varphi_z]+|z|^2\,\mathsf S[\varphi_z],
+ \qquad \Imag\bigl(zF(z)\bigr)=\Imag z\;\mathsf C[\varphi_z]\geq0 .
+\]
+If $zF(z)=0$ with $\Imag z\ne0$, then $\mathsf C[\varphi_z]=0$, then
+$\mathsf S[\varphi_z]=0$, so $\varphi_z=0$ and $\ell=0$ by
+\eqref{eq:st-weak}, a contradiction. So $1/(zF(z))$ is analytic off the
+negative axis, positive on $(0,\infty)$, and has nonpositive imaginary
+part in the upper half-plane.
+\end{proof}
+
+The proof uses no property of the collision operator beyond those of
+\cref{thm:th-dual}. Like that theorem it has a one-dimensional twin: with
+the forms \eqref{eq:trialforms} and $s=1$ it shows that the
+potential-driven $n_1$ and $\chi$ of \cref{sec:variational} are Stieltjes
+functions of $k^2$.
+
+\begin{corollary}[Spectral form of the thermal closure]\label[corollary]{cor:st-chi}
+Assume \cref{ass:th-form} at every $k\ne0$ and that the quantities in
+\eqref{eq:th-constants} are finite. Then there are a number
+$\chi_\infty\geq0$ and a positive measure $\rho$ on $(0,\infty)$ such that
+\begin{equation}
+ \chi_\thr(k)=\chi_\infty+\int_{(0,\infty)}\frac{\dd\rho(\mu)}{\mu+k^2},
+ \qquad k\ne0 .
+ \label{eq:st-chi}
+\end{equation}
+Moreover:
+\begin{enumerate}[label=(\alph*)]
+\item $\chi_\thr$ is nonincreasing in $|k|$, $k^2\chi_\thr$ is
+nondecreasing, and the derivatives of $\chi_\thr$ with respect to $k^2$
+alternate in sign.
+\item $\chi_\infty=\lim_{|k|\to\infty}\chi_\thr(k)$. It is zero for the
+Dougherty operator, for like-particle Landau collisions and for
+$\Lambda_Z$.
+\item $\chi_\infty+\int\mu^{-1}\dd\rho\leq\kap$. Under \cref{ass:th-second}
+this is an equality, and $\int\mu^{-2}\dd\rho=\kap K_\thr$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+\Cref{thm:stieltjes} with $s=\zeta$ gives \eqref{eq:st-def} for
+$\chi_\thr=1/(k^2T_\thr)$ in the variable $t=k^2$. By dominated
+convergence $t\chi_\thr\to p_0$ as $t\to0$, and $\chi_\thr\leq\kap$ by
+\cref{cor:th-bounds}, so $p_0=0$. Each term of \eqref{eq:st-chi} has the
+properties in (a). Dominated convergence as $t\to\infty$ gives the first
+statement of (b); the three operators have $|k|\chi_\thr$ bounded by
+\cref{thm:th-dougherty}, \cref{cor:th-landaulimit} and
+\cref{thm:th-electronlimit}. For (c), monotone convergence as $t\to0$
+gives $\chi_\thr\to\chi_\infty+\int\mu^{-1}\dd\rho$, which is at most
+$\kap$ and equals $\kap$ by \cref{thm:th-leading}. Then
+\[
+ \frac{\kap-\chi_\thr}{t}=\int\frac{\dd\rho(\mu)}{\mu(\mu+t)}
+ \;\uparrow\;\int\frac{\dd\rho(\mu)}{\mu^2}\qquad(t\downarrow0),
+\]
+and the left side tends to $\kap K_\thr$.
+\end{proof}
+
+So the two constants of \cref{cor:th-bounds} are the first two inverse
+moments of $\rho$, and the lower bound there is Jensen's inequality. The
+next moment gives a bound on the other side.
+
+\begin{proposition}[Pad\'e bounds]\label[proposition]{prop:st-pade}
+In the setting of \cref{cor:st-chi}, with \cref{ass:th-second} and
+$\chi_\infty=0$, suppose
+$\chi_\thr/\kap=1-K_\thr k^2+K_2k^4+o(k^4)$ as $k\to0$. Then
+$K_2\geq K_\thr^2$, and at every $k\ne0$
+\begin{equation}
+ \frac{\kap}{1+K_\thr k^2}\;\leq\;\chi_\thr(k)\;\leq\;
+ \kap\left[1-\frac{K_\thr k^2}{1+(K_2/K_\thr)\,k^2}\right].
+ \label{eq:st-pade}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Let $\dd m=\mu^{-1}\dd\rho$, a measure of mass $\kap$, and $x=1/\mu$, so
+$\chi_\thr=\int(1+tx)^{-1}\dd m$ and $\int x\dd m=\kap K_\thr$. The function
+$x\mapsto(1+tx)^{-1}$ is convex, and Jensen's inequality for $m/\kap$ is
+the lower bound. As in the proof of \cref{cor:st-chi}, monotone
+convergence in
+$(\chi_\thr-\kap+\kap K_\thr t)/t^2=\int x^2(1+tx)^{-1}\dd m$ gives
+$\int x^2\dd m=\kap K_2$, and Cauchy--Schwarz gives $K_\thr^2\leq K_2$. Now
+write
+\[
+ \frac1{1+tx}=1-tx+t^2\,x\cdot\frac{x}{1+tx}
+\]
+and apply Jensen's inequality to the concave function $x\mapsto x/(1+tx)$
+and the measure $x\dd m$, which has mass $\kap K_\thr$ and mean
+$K_2/K_\thr$.
+\end{proof}
+
+For the Dougherty operator the integrals in \eqref{eq:th-dougherty} can be
+expanded one order further, and $K_2=\tfrac{499}{2025}\,\nu^{-4}$. The two
+sides of \eqref{eq:st-pade} are the first two of a nested family: each
+further coefficient of the expansion at $k=0$ tightens one side.
+
+The representation \eqref{eq:st-chi} also says what the closure looks like
+in real space. Suppose the flux of a temperature profile on the line is
+given mode by mode by $\widehat q=-ik\chi_\thr(k)\widehat T$. Since
+$(\mu+k^2)^{-1}$ is the Fourier transform of
+$e^{-\sqrt\mu|x|}/(2\sqrt\mu)$,
+\begin{equation}
+ q=-\chi_\infty\,\partial_xT-\mathcal G*\partial_xT,\qquad
+ \mathcal G(x)=\int_{(0,\infty)}\frac{e^{-\sqrt\mu\,|x|}}{2\sqrt\mu}\dd\rho(\mu).
+ \label{eq:st-kernel}
+\end{equation}
+
+\begin{corollary}[Positive kernel]\label[corollary]{cor:st-kernel}
+In the setting of \cref{cor:st-chi}, the kernel $\mathcal G$ is finite for
+$x\ne0$, positive, even, nonincreasing and convex in $|x|$, and
+$\int\mathcal G\dd x=\int\mu^{-1}\dd\rho\leq\kap$. Equivalently,
+\[
+ q=-\chi_\infty\,\partial_xT+\int q_\mu\dd\rho(\mu),\qquad
+ (\mu-\partial_x^2)\,q_\mu=-\partial_xT .
+\]
+\end{corollary}
+
+\begin{proof}
+For $\mu\leq1$ the integrand of $\mathcal G$ is at most $1/(2\mu)$, and for
+$\mu\geq1$ it is at most $C_x/(1+\mu)$ when $x\ne0$; both are integrable
+against $\rho$. Each exponential is positive, even, nonincreasing and
+convex in $|x|$ and has integral $1/\mu$; Tonelli's theorem gives the
+integral of $\mathcal G$.
+\end{proof}
+
+The exact quasi-static closure is therefore a positive superposition of
+screened diffusion problems, one for each point $\mu$ of a spectrum, with
+screening length $\mu^{-1/2}$. This is the form that multigroup models of
+nonlocal electron transport take by construction \cite{SNB2000}, and that
+exponential convolution kernels approximate \cite{LMV1983}. Here it is a
+consequence of the kinetic equation, for every collision operator in the
+class, and the weights are constrained: their first two inverse moments
+are $\kap$ and $\kap K_\thr$. We have not computed $\rho$ for the Landau or
+electron operators.
+
+Two limits of this statement. First, it does not single out an
+interpolant. The harmonic formula \eqref{eq:harmonic} is itself a
+Stieltjes function of $k^2$, because $\sqrt t$ is a complete Bernstein
+function. What excludes it is the second moment: it has
+$\int\mu^{-2}\dd\rho=\infty$, where the kinetic response has
+$\kap K_\thr$. Second, the theorem covers quadratic forms of the response
+matrix and nothing else. By \cref{prop:th-matrix} the potential-driven
+denominator in three dimensions is
+\[
+ M_{\parallel\parallel}+2M_{\parallel\perp}
+   =c\cdot Mc-M_{\perp\perp},\qquad c=(1,1),
+\]
+a difference of two Stieltjes functions, and the measure of $\chi_\pot$
+need not be positive. This is the obstruction of \cref{sec:3d} again, in
+its sharpest form. For Landau collisions at finite degree the measure is
+in fact not positive (\cref{sec:th-stcheck}).
+
 \section{Electron--electron and electron--ion collisions}\label{sec:th-electron}
 
 Electrons collide with ions as well as with each other. Electron--ion
@@ -1594,6 +1848,119 @@ $g-\av g$ solves $\A_k(g-\av g)=\zeta-ik\av g\,v_x$. That is, an ambipolar
 force $a=-ik\av g$ per unit heating removes the density perturbation and
 leaves $T$ and $q$ unchanged. So $\chi_\thr$ is the conductivity of a
 heated, quasi-neutral, current-free electron fluid.
+
+\subsection{Large ion charge}\label{sec:th-largeZ}
+
+The computations of \cref{sec:th-numerics} show the normalized deficit
+$K_\thr/\kap^2$ growing almost linearly in $Z$. Why linearly, and with what
+slope? In this subsection the unit of time is $\tau_{ee}$, so that
+$\Lambda_Z=\Lambda_{ee}+Z\Lambda_1$ with $\Lambda_1$ the Lorentz operator at
+$Z=1$. Both operators commute with rotations of velocity space. On a
+function of the form $P_l(v_x/|v|)f(|v|)$, with $P_l$ the Legendre
+polynomial, the ion term is multiplication by
+\[
+ \tfrac12\,l(l+1)\,Z\,\nu(v),\qquad \nu(v)=3\sqrt\pi\,|v|^{-3} .
+\]
+So the ions do nothing to a radial function and damp every other angular
+sector at a rate proportional to $Z$. Heat flows through the sector
+$l=1$, which the ions control; energy is redistributed in the sector
+$l=0$, which only electron--electron collisions can relax. That is the
+whole mechanism, and it can be made exact.
+
+The Lorentz gas has the closed-form coefficients
+\[
+ L_{11}^{\rm L}=\av{v_x^2/\nu}=\frac{16\sqrt2}{3\pi},\qquad
+ \frac{L_{12}^{\rm L}}{L_{11}^{\rm L}}=\frac32,\qquad
+ \kap_{\rm L}=\frac{64\sqrt2}{3\pi},\qquad
+ \Xi_{\rm L}=\frac{v_x(|v|^2-8)}{2\nu},
+\]
+and the radial part of $\zeta-v_x\Xi_{\rm L}/\kap_{\rm L}$ is
+\begin{equation}
+ b_\infty(v)=\frac{|v|^2-3}{3}-\sqrt{\frac\pi2}\,\frac{|v|^5(|v|^2-8)}{384},
+ \qquad C_\infty=\av{b_\infty,\Lambda_{ee}^+b_\infty} .
+ \label{eq:LZ-binf}
+\end{equation}
+The function $b_\infty$ is orthogonal to $1$ and $|v|^2$, and $C_\infty$ is
+a pure number: the like-particle Landau operator, restricted to radial
+functions, inverted on an explicit source.
+
+\begin{theorem}[Transport constants at large ion charge]\label{thm:largeZ}
+For $\Lambda_Z$, in units $\tau_{ee}=1$, as $Z\to\infty$:
+\begin{enumerate}[label=(\alph*)]
+\item $Z\kap$ is nondecreasing in $Z$ and
+$0\leq\kap_{\rm L}-Z\kap=O(1/Z)$;
+\item $C_\thr=C_\infty+O(1/Z)$;
+\item consequently
+\begin{equation}
+ \frac{K_\thr}{\kap^2}=\frac{C_\infty}{\kap_{\rm L}}\,Z+O(1),
+ \qquad
+ \frac{K_\thr}{\lambda_e^2}=2\kap_{\rm L}C_\infty\,Z+O(1).
+ \label{eq:LZ-slope}
+\end{equation}
+\end{enumerate}
+\end{theorem}
+
+The proof is in \cref{app:largeZ}. Numerically $C_\infty\simeq13.7378$
+(\cref{sec:th-largeZnum}), so the slope is
+$C_\infty/\kap_{\rm L}\simeq1.4305$ and the delocalization length is
+$\sqrt{K_\thr}\simeq16.2\,\sqrt Z\,\lambda_e$. In units of $\tau_{ee}$ the
+first limit says $\kap\simeq\kap_{\rm L}/Z$ and the second that $C_\thr$
+stays of order one, so $K_\thr=\kap C_\thr$ falls like $1/Z$ and
+$\sqrt{K_\thr}$ is the geometric mean of a scattering length of order
+$1/Z$ and an energy-exchange length of order one.
+
+The same structure gives the whole response, not only its first two
+coefficients. Let $w(v)=|v|^2/(3\nu)=|v|^5/(9\sqrt\pi)$, and for $s>0$ let
+\begin{equation}
+ T_{\rm red}(s)=\max_{\varphi\ {\rm radial}}
+   \frac{\av{\zeta\varphi}^2}{\D_{ee}[\varphi]+s\av{w\varphi^2}},
+ \qquad X(s)=\frac1{s\,T_{\rm red}(s)} .
+ \label{eq:LZ-red}
+\end{equation}
+The maximizer $\varphi_s$ solves the radial problem
+$(\Lambda_{ee}+s\,w)\varphi_s=\zeta$: energy diffusion by
+electron--electron collisions against spatial diffusion at the
+speed-dependent rate $s\,w$.
+
+\begin{theorem}[Diffusive limit]\label{thm:LZ-limit}
+For every $Z>0$ and $k\ne0$, with $s=k^2/Z$ and $\tau_{ee}=1$,
+\begin{equation}
+ T_{\rm red}(s)\leq T_\thr(k)\leq T_{\rm red}(s)+\frac{E(s)}{Z},
+ \qquad
+ E(s)=s\,\D_{ee}\!\left[\frac{v_x\varphi_s}{\nu}\right]
+      +\frac{4s^2}{135}\av{\frac{|v|^4\varphi_s^2}{\nu^3}},
+ \label{eq:LZ-twosided}
+\end{equation}
+and $E(s)$ is finite. Equivalently
+\begin{equation}
+ \frac{X(s)}{1+E(s)/(Z\,T_{\rm red}(s))}\leq Z\chi_\thr(k)\leq X(s) .
+ \label{eq:LZ-chi}
+\end{equation}
+In particular $Z\chi_\thr(\sqrt{Zs})\to X(s)$ for every $s>0$, with relative
+error $O(1/Z)$. The limit $X$ is a Stieltjes function of $s$, and
+\begin{equation}
+ \frac{\kap_{\rm L}}{1+\kap_{\rm L}C_\infty s}\leq X(s)\leq\kap_{\rm L},
+ \qquad 1-\frac{X(s)}{\kap_{\rm L}}=\kap_{\rm L}C_\infty\,s+O(s^2).
+ \label{eq:LZ-Xbounds}
+\end{equation}
+\end{theorem}
+
+In electron units $s=2Z(k\lambda_e)^2$, so at large charge the closure
+depends on the wavenumber only through $\sqrt Z\,k\lambda_e$. The reduced
+problem is the diffusion approximation of high-$Z$ transport theory, in
+which the anisotropic part of the distribution is slaved to the gradient
+of the isotropic part. The theorem says how large its error is, and the
+right-hand inequality in \eqref{eq:LZ-chi} holds at every $Z$ and every
+$k$: the diffusion approximation never underestimates the conductivity.
+
+Two cautions. First, the limits do not commute. At fixed $k\lambda_e$ and
+$Z\to\infty$ we have $s\to\infty$, and the collisionless limit of
+\cref{thm:th-electronlimit} belongs to $k\lambda_e\gtrsim1$, that is to
+$s\gtrsim Z$, where $E(s)/Z$ is no longer small. Second, we have not
+proved how $X$ decays. Balancing the two forms for a trial concentrated at
+$|v|\lesssim s^{-1/7}$ suggests $X\sim s^{-2/7}$, but the computed local
+exponent is still $-0.40$ for $s$ between $1$ and $100$ and has only
+reached $-0.33$ at $s=10^6$ (\cref{sec:th-largeZnum}).
 
 \section{Reproducible numerical comparisons}\label{sec:numerics}
 
@@ -1950,8 +2317,9 @@ set by electron--ion scattering and scales like $1/Z$ in units of
 $\tau_{ee}$, whereas $C_\thr$ involves the collision inverse of the isotropic
 part of $b_\thr$, which only electron--electron collisions can relax. So
 $\sqrt{K_\thr}$ scales like $\sqrt Z\,\lambda_e$, the geometric mean of the
-scattering and energy-exchange lengths. This is a numerical
-observation with a heuristic explanation. It is not a theorem. For
+scattering and energy-exchange lengths. \Cref{thm:largeZ} makes this
+exact: $K_\thr/\kap^2=(C_\infty/\kap_{\rm L})Z+O(1)$, and the slope is
+$1.4305$ (\cref{sec:th-largeZnum}). For
 comparison, the like-particle Landau value is $K_\thr/\kap^2=1.69$ for the
 thermal drive, so even at $Z=1$ electron--ion scattering makes the
 closure about $2.5$ times more nonlocal at matched conductivity.
@@ -2022,6 +2390,126 @@ $\sqrt{\pi/2}\simeq1.253$ from opposite sides. Both conditions of
 $N_\vartheta/(9n_1)$ rising monotonically toward $8/9$. The last rows
 are converged to about two digits only; a polynomial basis does not reach
 the layer, and this table is evidence, not proof.
+
+\subsection{A check of the Stieltjes structure}\label{sec:th-stcheck}
+
+\Cref{thm:stieltjes} predicts the sign of $\Imag\chi$ at complex $k^2$,
+which is easy to test and easy to get wrong. We evaluated the responses at
+$56$ points $k^2=re^{i\pi a}$ with $0.01\leq r\leq30$ and
+$0.1\leq a\leq0.9$, and at eleven real points, in units $\nu=1$ or
+$\tau_{ee}=1$ and with $r$ multiplied by $Z^2$ for electrons. For every case the theorem
+covers, $\Imag\chi\leq0$ at every sampled point, $\chi$ decreases and
+$k^2\chi$ increases along the real axis. The cases are the closed forms
+\eqref{eq:bgkclosed}, \eqref{eq:doughertyclosed} in one dimension and
+\eqref{eq:th-dougherty}, continued analytically; the thermally driven
+Galerkin responses for Dougherty, Landau and electrons with $Z=1$ and
+$8$ at degrees $12$ and $16$; and twenty random finite-dimensional models
+of the two quadratic forms. The Dougherty integrals converge only for
+$\Real k^2>-\nu^2$, so the closed forms were sampled at the $45$ points
+with $\Real k^2>-\nu^2/2$. For the Galerkin problems the theorem holds
+exactly, so those runs test the code and not the continuum.
+
+The Dougherty coefficient $K_2=499/2025$ was computed in rational
+arithmetic. The upper bound in \eqref{eq:st-pade} then exceeds the exact
+$\chi_\thr$ by $0.06\%$ at $k/\nu=0.55$ and by $1\%$ at $k/\nu=1$, where
+the lower bound is $6\%$ below.
+
+The potential drive in three dimensions is not covered, and the two
+operators behave differently. For Dougherty the closed form and the
+Galerkin response satisfy all three sign conditions at every sampled
+point; we have no proof. For Landau the Galerkin response has
+$\Imag\chi_\pot>0$ at two of the eight points nearest the negative axis,
+at each degree. A finite-degree response is a rational function with poles
+on the negative axis, so at these degrees some pole of $\chi_\pot$ has a
+negative weight. The points differ between the two degrees, and we do not
+know what survives in the continuum. On the positive axis $\chi_\pot$ is
+monotone at every sampled point.
+
+\subsection{The large-charge limit}\label{sec:th-largeZnum}
+
+The limit problem of \cref{sec:th-largeZ} is radial, so it can be solved
+far more accurately than the three-dimensional one, and by different
+means. For radial $f$ and $h$ the angular integrals in
+\eqref{eq:landauform} can be done in closed form: with $a=|v|$, $b=|v'|$,
+\[
+ \D_{ee}(f,h)=\frac{3\sqrt\pi}{2\tau_{ee}}\Bigl[\av{A\,f'h'}
+  -\frac23\iint M_3M_3'\,f'(a)\,h'(b)\,
+     \frac{\min(a,b)}{\max(a,b)^2}\dd v\dd v'\Bigr],
+\]
+where $A(a)=\tfrac{8\pi}3\int_0^\infty M_3(b)\,b^4\max(a,b)^{-3}\dd b$ is
+elementary. We discretize with polynomials in $|v|$, not in $|v|^2$,
+orthonormal for the radial Maxwellian weight, of degree up to $64$. This
+basis contains $b_\infty$ and $w$ exactly. The kernel has a kink on the
+diagonal; the inner integral is split there and evaluated with running
+integrals on a composite Gauss--Legendre grid, $320$ panels of ten nodes
+on $0\leq|v|\leq16$.
+
+Three checks. The form annihilates $1$ and $|v|^2$ to $3\times10^{-12}$.
+Restricted to even polynomials of degree at most $12$ and $16$, its
+eigenvalues agree with those of the radial block of the cached
+three-dimensional Landau matrices to $2\times10^{-14}$; the two assemblies
+share no code. And the quadrature of $\av{w\varphi_0^2}$ reproduces
+$\kap_{\rm L}=64\sqrt2/(3\pi)$ to rounding.
+
+The result is
+\[
+ C_\infty=13.737821,\qquad \frac{C_\infty}{\kap_{\rm L}}=1.430520,\qquad
+ \kap_{\rm L}C_\infty=131.9294,
+\]
+unchanged to ten digits between degrees $32$ and $64$ and between $160$
+and $320$ panels. Unlike the constants of \cref{tab:th-electron}, these
+digits are converged, although the convergence is observed and not
+certified.
+
+\begin{table}[tb]
+\centering
+\caption{Approach to the large-charge limit of \cref{thm:largeZ} in the
+three-dimensional Galerkin computation at degrees $12$ and $16$, in units
+$\tau_{ee}=1$. The last row is the limit, computed with the radial
+solver.}
+\label{tab:th-largeZ}
+\small
+\input{figures/large_z.tex}
+\end{table}
+
+\Cref{tab:th-largeZ} compares with the three-dimensional computation.
+$Z\kap$ increases toward $\kap_{\rm L}$, as the theorem says it must, and
+at $Z=4096$ and degree $16$ the three-dimensional values are
+$C_\thr=13.736$ and $K_\thr/(\kap^2Z)=1.432$. The remaining differences
+are comparable to the change between the two degrees, so this is
+agreement within the truncation error of the three-dimensional basis and
+no better. Earlier we estimated the slope as $1.43$ from the values at
+$Z=16$ and $64$; the approach to the limit is slow in $Z$, as the table
+shows, and that estimate was better than it had a right to be.
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\textwidth]{figures/large_z.pdf}
+\caption{(a) The scaled conductivity $Z\chi_\thr/\kap_{\rm L}$ against
+$s=k^2/Z$ for several ion charges (three-dimensional Galerkin, degree
+$16$ solid and $12$ dotted) and the limit $X(s)/\kap_{\rm L}$ of
+\cref{thm:LZ-limit} (radial solver). (b) The limit function and its lower
+bound from \eqref{eq:LZ-Xbounds}.}
+\label{fig:th-largeZ}
+\end{figure}
+
+\Cref{fig:th-largeZ}(a) shows the collapse. At every sampled point with
+$s\leq10$ the finite-$Z$ curves lie below the limit, as
+\eqref{eq:LZ-chi} requires; the largest ratio is $0.988$, at $Z=256$. At
+$s=10^{-2}$ the ratio is $0.60$, $0.84$, $0.95$ and $0.99$ for
+$Z=4,16,64,256$, consistent with an error of order $1/Z$. Beyond
+$s\approx1$ the two degrees separate and the three-dimensional curves are
+not converged.
+
+The limit function departs from its small-$s$ expansion very early
+(\cref{fig:th-largeZ}(b)). The ratio $(1-X/\kap_{\rm L})/s$ is $131.9$ at
+$s=10^{-6}$ and has already fallen to $91.8$ at $s=10^{-3}$, where the
+deficit is $9\%$. Half of the conductivity is gone at $s\approx0.03$,
+that is at $k\lambda_e\approx0.13/\sqrt Z$. At large $s$ the local
+exponent $\dd\log X/\dd\log s$ is $-0.40$ between $s=1$ and $100$,
+$-0.36$ near $10^4$ and $-0.33$ near $10^6$; at $s=10^6$ the value of $X$
+still changes by $6\times10^{-4}$ between degrees $48$ and $64$. We do
+not extrapolate the exponent.
 
 \subsection{An embedded test: decay of a temperature perturbation}\label{sec:th-embedded}
 
@@ -2118,7 +2606,13 @@ drive, enforcing $0<\chi\leq\F$ for every conserving collision operator
 would add an assumption that the abstract theorem does not justify. For
 the thermal drive, $0<\chi_\thr\leq\kap$ holds at every wavenumber for a
 large class of collision operators, so a learned symbol can build in
-positivity and the Fourier upper bound without that assumption. The
+positivity and the Fourier upper bound without that assumption. It can
+build in more. By \cref{cor:st-chi} the exact symbol is
+$\int(\mu+k^2)^{-1}\dd\rho$ with $\rho\geq0$, so a finite sum
+$\sum_jw_j/(\mu_j+k^2)$ with $w_j\geq0$, $\sum_jw_j/\mu_j=\kap$ and
+$\sum_jw_j/\mu_j^2=\kap K_\thr$ has the right analytic type, the right
+conductivity and the right leading deficit, and in real space it costs one
+screened diffusion solve per term. The
 thermal drive also has a direct physical interpretation for electrons,
 which makes it the better benchmark target in three dimensions.
 Whichever drive is used, the benchmark should record it:
@@ -2129,7 +2623,10 @@ The electron results also suggest how to hold out collision physics. The
 ion charge is a one-parameter family along which the conductivity changes
 by a factor of four and the normalized deficit by a factor of twenty. A
 closure fitted at one value of $Z$ and matched to the local conductivity
-at another will be wrong at order $k^2$ by a known amount.
+at another will be wrong at order $k^2$ by a known amount. At large $Z$
+the family has an exact scaling form, $Z\chi_\thr\to X(2Z(k\lambda_e)^2)$
+with the error bound \eqref{eq:LZ-chi}, which is a test that a closure
+with $Z$ as an input either passes or does not.
 
 The two embedded tests point in different directions, and the difference
 is the time scale. When the temperature is coupled to dynamics at
@@ -2202,21 +2699,26 @@ contribution. The thermally driven response satisfies the
 one-dimensional bounds in three dimensions, at every wavenumber, with or
 without momentum conservation, and so it reaches electrons colliding
 with ions. For that operator the stationary problem is solvable and the
-collisionless limit is $\tfrac95\sqrt{2/\pi}$ for every ion charge.
+collisionless limit is $\tfrac95\sqrt{2/\pi}$ for every ion charge. The
+thermally driven response is also a Stieltjes function of $k^2$: a
+positive superposition of screened diffusion modes, with a positive
+real-space kernel, constrained by its first two inverse moments.
 
 The two negative results matter as much as the bounds. Our Landau
 calculations show that matching the conductivity does not match the
 first nonlocal correction, and electron--ion scattering widens the gap
-in proportion to the ion charge. The one-dimensional embedded experiment
+in proportion to the ion charge, a law we prove together with the
+diffusive limit of the response at large charge. The one-dimensional embedded experiment
 shows that matching an exact quasi-static response does not guarantee an
 accurate transient. (The quasi-neutral electron experiment shows that it
 sometimes does, when the dynamics are slow.) Anyone who uses a simple
 conserving collision model to evaluate a closure meant for plasma
-transport should keep both in mind. Three analytical problems remain:
+transport should keep both in mind. Four analytical problems remain:
 certified continuum bounds for the Landau and electron constants,
-positivity at intermediate wavenumbers for the potential drive, and a
-convergence rate for the collisionless limits. None of them is settled
-here.
+positivity at intermediate wavenumbers for the potential drive, a
+convergence rate for the collisionless limits, and the spectral measure
+of the thermal closure beyond its first two moments. None of them is
+settled here.
 
 \paragraph{Data and code availability.}
 The accompanying repository directory contains the configuration,
@@ -3192,6 +3694,231 @@ with $r$ and $1/r$ inserted as in the lower bound:
 \]
 Let $\rho_0\to0$ and $\epsilon\to0$. \qed
 
+\section{Proofs for large ion charge}\label{app:largeZ}
+
+Here we prove \cref{thm:largeZ,thm:LZ-limit}. The unit of time is
+$\tau_{ee}$; $\D_{ee}$ is the like-particle form \eqref{eq:landauform},
+$\D_1[f]=\tfrac32\sqrt\pi\av{\nabla f\cdot U(v)\nabla f}$ is the Lorentz
+form at $Z=1$, and $\D_Z=\D_{ee}+Z\D_1$. We use the notation and the
+estimates of \cref{app:weighted,app:th-solv}; $C$ is a constant that does
+not depend on $Z$.
+
+\subsection{Angular sectors}
+
+Let $\mathcal S_l$ be the axisymmetric functions of the form
+$P_l(v_x/|v|)f(|v|)$. Three facts.
+\begin{enumerate}[label=(S\arabic*)]
+\item The sectors are orthogonal in $L^2(M\omega)$ for every radial weight
+$\omega$, and the projection onto a sector is a contraction there.
+\item $\D_{ee}(f,h)=\D_1(f,h)=0$ when $f$ and $h$ lie in different sectors,
+and $\D_1[f]=\tfrac12l(l+1)\av{\nu f^2}$ for $f\in\mathcal S_l$.
+\item If $b=\sum_lb_l$ with $b_l\in\mathcal S_l$ and $b_0$ orthogonal to
+$1$ and $|v|^2$, then
+\begin{equation}
+ \av{b,\Lambda_Z^+b}=\av{b_0,\Lambda_{ee}^+b_0}+\sum_{l\geq1}R_l,\qquad
+ 0\leq R_l\leq\frac{2}{l(l+1)\,Z}\av{\frac{b_l^2}{\nu}} .
+ \label{eq:LZ-split}
+\end{equation}
+\end{enumerate}
+For (S1) and (S2): both forms are invariant under rotations of velocity
+space, and the projection onto a sector is an average over the rotation
+group against a character, so it is symmetric for each form and for each
+weighted inner product. The formula for $\D_1$ is \eqref{eq:th-electron}
+with the eigenvalue $l(l+1)$ of $\mathcal L^2$. For (S3), write the trial
+function in \eqref{eq:dualnorm} as $f=\sum_lf_l$. By (S2) the functional
+separates,
+\[
+ 2\av{bf}-\D_Z[f]=\sum_l\Bigl(2\av{b_lf_l}-\D_{ee}[f_l]
+    -\tfrac12l(l+1)Z\av{\nu f_l^2}\Bigr),
+\]
+and the supremum is taken sector by sector. For $l=0$ it is
+$\av{b_0,\Lambda_{ee}^+b_0}$. For $l\geq1$ drop $\D_{ee}$ and complete the
+square. In the same way, $\Lambda_Z^+$ maps each sector to itself.
+
+\subsection{The sector $l=1$}
+
+\begin{lemma}\label[lemma]{lem:LZ-one}
+Let $s,t\in\mathcal S_1$ with $\av{s^2/\nu}$, $\av{t^2/\nu}$,
+$\D_{ee}[s/\nu]$ and $\D_{ee}[t/\nu]$ finite. Then
+\[
+ B_Z(s,t)=\av{st/\nu}-Z\av{s,\Lambda_Z^+t}
+\]
+is a symmetric, nonnegative bilinear form, nonincreasing in $Z$, with
+\[
+ B_Z(s,s)\leq\frac{\D_{ee}[s/\nu]}{Z},\qquad
+ |B_Z(s,t)|\leq\frac1Z\,\D_{ee}[s/\nu]^{1/2}\,\D_{ee}[t/\nu]^{1/2}.
+\]
+\end{lemma}
+
+\begin{proof}
+By (S2) and \eqref{eq:dualnorm},
+$Z\av{s,\Lambda_Z^+s}=\sup_{f\in\mathcal S_1}\{2\av{sf}-\av{\nu f^2}
+-\D_{ee}[f]/Z\}$. This is nondecreasing in $Z$. Dropping the last term
+gives at most $\av{s^2/\nu}$, and the trial $f=s/\nu$ gives at least
+$\av{s^2/\nu}-\D_{ee}[s/\nu]/Z$. The last inequality is Cauchy--Schwarz for
+the nonnegative form $B_Z$.
+\end{proof}
+
+\begin{lemma}\label[lemma]{lem:LZ-weights}
+Let $s\in\mathcal S_1$ with $s/\nu$ in every weighted energy space, and
+let $e_Z=Z\Lambda_Z^+s-s/\nu$. Then for every $\ell\geq0$ there is $C_\ell$
+with
+\[
+ \av{m^{2\ell}\nu\,e_Z^2}\leq\frac{C_\ell}{Z},\qquad
+ \|e_Z\|_{\sigma,\ell}\leq C_\ell .
+\]
+\end{lemma}
+
+\begin{proof}
+The function $y=Z\Lambda_Z^+s$ lies in $\mathcal S_1$ and in every weighted
+space (\cref{app:th-solv}), and
+$\D_{ee}(y,f)/Z+\av{\nu yf}=\av{sf}$ for $f\in\mathcal S_1$. Since
+$s=\nu\cdot(s/\nu)$,
+\[
+ \av{\nu\,e_Zf}+\frac1Z\D_{ee}(e_Z,f)=-\frac1Z\D_{ee}(s/\nu,f).
+\]
+With $f=e_Z$ this gives $\D_{ee}[e_Z]\leq\D_{ee}[s/\nu]$ and
+$\av{\nu e_Z^2}\leq\D_{ee}[s/\nu]/Z$. With $f=m^{2\ell}e_Z$, which is still
+in $\mathcal S_1$, estimates \eqref{eq:W3} and \eqref{eq:W4} give
+\[
+ \av{m^{2\ell}\nu\,e_Z^2}+\frac{c_\ell}{2Z}\|e_Z\|_{\sigma,\ell}^2
+ \leq\frac CZ\av{\rho\,e_Z^2}+\frac CZ\|s/\nu\|_{\sigma,\ell}^2 ,
+\]
+and $\rho\leq C\nu$ because $\rho$ is a Gaussian.
+\end{proof}
+
+Since $\nu\geq cm^{-3}$, \cref{lem:LZ-weights} bounds every polynomially
+weighted $L^2(M)$ norm of $e_Z$ by $CZ^{-1/2}$.
+
+\subsection{Proof of \cref{thm:largeZ}}
+
+(a) By \cref{lem:LZ-one} the matrix
+$Z\bigl(\begin{smallmatrix}L_{11}&L_{12}\\L_{12}&L_{22}\end{smallmatrix}\bigr)$
+of the sources $v_x$ and $Q$ is nondecreasing in $Z$, at most the Lorentz
+matrix, and within $O(1/Z)$ of it; here $v_x/\nu$ and $Q/\nu$ are
+$v_x|v|^3$ times polynomials, which have finite $\D_{ee}$. By
+\eqref{eq:th-schur}, $Z\kap=\min_\lambda Z\av{Q-\lambda v_x,
+\Lambda_Z^+(Q-\lambda v_x)}$, a minimum of nondecreasing functions, and
+the Schur complement is a smooth function of the matrix near the Lorentz
+values. This is (a), and it also gives $\lambda_Z=L_{12}/L_{11}
+=\tfrac32+O(1/Z)$.
+
+(b) Write $Y_Z=Z\Xi$ and $\widetilde\kap_Z=Z\kap$, so that
+$b_\thr=\zeta-v_xY_Z/\widetilde\kap_Z$. Since $Y_Z\in\mathcal S_1$, the
+source $b_\thr$ has components in $\mathcal S_0$ and $\mathcal S_2$ only,
+and by \eqref{eq:LZ-split}
+\[
+ C_\thr=\av{b_Z^0,\Lambda_{ee}^+b_Z^0}+R_2,\qquad
+ 0\leq R_2\leq\frac1{3Z}\av{\frac{(b_Z^2)^2}{\nu}},
+\]
+with $b_Z^0$ and $b_Z^2$ the two components. By linearity
+$Y_Z-\Xi_{\rm L}=e_Z^Q-\lambda_Ze_Z^{v_x}-(\lambda_Z-\tfrac32)v_x/\nu$, where
+$e_Z^s$ is the function of \cref{lem:LZ-weights} for the source $s$. That
+lemma and (S1) bound $\av{(b_Z^2)^2/\nu}$ uniformly, so $R_2=O(1/Z)$. They
+also give
+\[
+ \delta_Z:=b_Z^0-b_\infty,\qquad \av{m\,\delta_Z^2}\leq\frac CZ ,
+\]
+because $b_\infty$ is the radial part of $\zeta-v_x\Xi_{\rm L}/\kap_{\rm L}$.
+Let $G_\infty=\Lambda_{ee}^+b_\infty$, a radial function in every weighted
+space. Then
+\[
+ \av{b_Z^0,\Lambda_{ee}^+b_Z^0}=C_\infty+2\av{\delta_ZG_\infty}
+   +\av{\delta_Z,\Lambda_{ee}^+\delta_Z},
+\]
+and the last term is at most $C\av{m\,\delta_Z^2}=O(1/Z)$ by
+\eqref{eq:W1} and \eqref{eq:W2}. The middle term is linear in $\delta_Z$,
+and here the rate $Z^{-1/2}$ of \cref{lem:LZ-weights} would not be enough.
+But $G_\infty$ is radial, so
+\[
+ \av{\delta_ZG_\infty}=-\frac{\av{t\,(Y_Z-\Xi_{\rm L})}}{\widetilde\kap_Z}
+   -\av{t\,\Xi_{\rm L}}\Bigl(\frac1{\widetilde\kap_Z}-\frac1{\kap_{\rm L}}\Bigr),
+ \qquad t=v_xG_\infty\in\mathcal S_1 ,
+\]
+and $\av{t\,e_Z^s}=-B_Z(t,s)$. By \cref{lem:LZ-one} this is $O(1/Z)$; the
+function $t/\nu$ is $v_x|v|^3G_\infty$ up to a constant and has finite
+$\D_{ee}$ because $G_\infty$ lies in every weighted energy space and the
+multiplier has polynomially bounded derivatives. With (a) this proves (b).
+
+(c) $K_\thr/\kap^2=C_\thr/\kap=ZC_\thr/\widetilde\kap_Z$, and
+$K_\thr/\lambda_e^2=2Z^2\kap\,C_\thr=2Z\,\widetilde\kap_ZC_\thr$ since
+$\lambda_e=\tau_e=1/(\sqrt2Z)$ by \eqref{eq:th-taue}. \qed
+
+\subsection{Proof of \cref{thm:LZ-limit}}
+
+\emph{The reduced problem.} On radial functions let
+$\mathsf C_0[\varphi]=\D_{ee}[\varphi]$ and
+$\mathsf S_0[\varphi]=\av{w\varphi^2}$. Their sum controls
+$\|\varphi\|_{\sigma,0}^2$: the collision form controls
+$\varphi-\Pi\varphi$ by \eqref{eq:W2}, and on $|v|\leq2$
+\[
+ \int_{|v|\leq2}Mw\,(\Pi\varphi)^2\leq2\av{w\varphi^2}
+   +C\|\varphi-\Pi\varphi\|_{\sigma,0}^2 ,
+\]
+where the left side is a norm on $\operatorname{span}\{1,|v|^2\}$. So
+$\av{\zeta\varphi}$ is bounded by $\mathsf C_0+\mathsf S_0$, the maximum in
+\eqref{eq:LZ-red} is attained at the solution $\varphi_s$ of
+$\D_{ee}(\varphi_s,\chi)+s\av{w\varphi_s\chi}=\av{\zeta\chi}$, and
+$T_{\rm red}(s)=\D_{ee}[\varphi_s]+s\av{w\varphi_s^2}$. The weighted test of
+\cref{app:weighted}, in which the term $s\av{wm^{2\ell}\varphi_s^2}$ has
+the favorable sign, puts $\varphi_s$ in every weighted energy space. Hence
+both terms of $E(s)$ are finite; in the first, $v_x/\nu$ is a multiplier
+with polynomially bounded derivatives.
+
+\emph{Lower bound.} The radial function $\varphi_s$ is an admissible trial
+in \cref{thm:th-dual}, with no constraint. Its collision form is
+$\D_{ee}[\varphi_s]$. Since $v_x\varphi_s\in\mathcal S_1$,
+\cref{lem:LZ-one} gives
+$k^2\dual{v_x\varphi_s}\leq(k^2/Z)\av{v_x^2\varphi_s^2/\nu}
+=s\av{w\varphi_s^2}$. So $\Qth_k[\varphi_s]\leq T_{\rm red}(s)$ and
+$T_\thr\geq\av{\zeta\varphi_s}^2/\Qth_k[\varphi_s]\geq T_{\rm red}(s)$.
+
+\emph{Upper bound.} Take the odd trial
+$\psi=-k\,v_x\varphi_s/(Z\nu)\in\mathcal S_1$. By (S2),
+\[
+ \D_Z[\psi]=\D_{ee}[\psi]+Z\av{\nu\psi^2}
+  =\frac sZ\,\D_{ee}\!\left[\frac{v_x\varphi_s}{\nu}\right]
+   +s\av{w\varphi_s^2}.
+\]
+The source of the dual form splits into its two sectors,
+\[
+ \zeta+kv_x\psi=\bigl(\zeta-s\,w\varphi_s\bigr)
+   -s\Bigl(v_x^2-\frac{|v|^2}{3}\Bigr)\frac{\varphi_s}{\nu}.
+\]
+The radial part is $\Lambda_{ee}\varphi_s$ in the weak sense. It is
+orthogonal to $1$ and $|v|^2$, so $\psi$ is admissible, and its inverse
+form is $\D_{ee}[\varphi_s]$. The part in $\mathcal S_2$ is bounded by
+\eqref{eq:LZ-split}, with the angular mean
+$\av{(\mu^2-\tfrac13)^2}=\tfrac4{45}$ of $\mu=v_x/|v|$:
+\[
+ \dual{\zeta+kv_x\psi}\leq\D_{ee}[\varphi_s]
+   +\frac{s^2}{3Z}\cdot\frac4{45}\av{\frac{|v|^4\varphi_s^2}{\nu^3}} .
+\]
+Adding, $T_\thr\leq\Pth_k[\psi]\leq T_{\rm red}(s)+E(s)/Z$. This is
+\eqref{eq:LZ-twosided}, and \eqref{eq:LZ-chi} is the same statement for
+$\chi_\thr=1/(k^2T_\thr)$.
+
+\emph{The limit function.} \Cref{thm:stieltjes} applies to the forms
+$\mathsf C_0$ and $\mathsf S_0$ and the source $\zeta$; its proof uses
+only that they are nonnegative and that their sum is an inner product. So
+$X$ is a Stieltjes function. For the bounds, let
+$\varphi_0=\tfrac12(|v|^2-8)$. Then $\D_{ee}[\varphi_0]=0$,
+$\av{\zeta\varphi_0}=1$, $\av{w\varphi_0^2}=\kap_{\rm L}$ and
+$\zeta-w\varphi_0/\kap_{\rm L}=b_\infty$. The trial $\varphi_0$ gives
+$T_{\rm red}\geq1/(s\kap_{\rm L})$. For every radial $\varphi$,
+\[
+ \av{\zeta\varphi}=\av{b_\infty\varphi}+\frac{\av{w\varphi_0\varphi}}{\kap_{\rm L}}
+ \leq C_\infty^{1/2}\D_{ee}[\varphi]^{1/2}
+   +(s\kap_{\rm L})^{-1/2}\bigl(s\av{w\varphi^2}\bigr)^{1/2},
+\]
+so $T_{\rm red}\leq1/(s\kap_{\rm L})+C_\infty$. Finally the trial
+$\varphi_0+s\kap_{\rm L}\widetilde G$, with
+$\widetilde G=G_\infty+n_0$ and $n_0\in\operatorname{span}\{1,|v|^2\}$
+chosen so that $\av{\zeta\widetilde G}=0$, gives
+$T_{\rm red}\geq1/(s\kap_{\rm L})+C_\infty-s\av{w\widetilde G^2}$ for small
+$s$ by the computation in the proof of \cref{thm:th-leading}. This proves
+\eqref{eq:LZ-Xbounds}. \qed
+
 \section{Summary of claims and normalizations}\label{app:ledger}
 
 \begin{table}[ht]
@@ -3236,19 +3963,28 @@ Landau numerical values
 Thermal drive, $d=3$, kernel containing $1$ and $|v|^2$
  & Positivity, dual certificates, all-$k$ bounds and sharp leading
 coefficient with $O(k^4)$ remainder, conditional on form solvability;
-exact Dougherty response and both limits. For Landau: solvability, hence
+exact Dougherty response and both limits. Under the same condition:
+Stieltjes representation in $k^2$, monotonicity, positive real-space
+kernel, Pad\'e bounds. For Landau: solvability, hence
 all of these, and the collisionless limit
 $|k|\chi_\thr\to\tfrac95\sqrt{2/\pi}$, given the cited operator estimates
- & Solvability for a general operator in the class; a convergence rate\\
+ & Solvability for a general operator in the class; a convergence rate;
+the spectral measure beyond two moments; any Stieltjes property of the
+potential-driven response in three dimensions\\
 \addlinespace
 Electron--electron plus electron--ion
  & Weighted solvability, hence the thermal theorems with the zero-current
 conductivity at every $k$; collisionless limit
 $|k|\chi_\thr\to\tfrac95\sqrt{2/\pi}$ for every $Z>0$; both given the
-cited like-particle estimates. Galerkin constants and curves for $Z=1$ to $64$, checked
-against Braginskii and the Lorentz limit; quasi-neutral embedded test
- & Certified constants; a convergence rate; converged curves
-at large $Z$ or $|k|\lambda_e$; the $\sqrt Z$ scaling as a theorem\\
+cited like-particle estimates. Large charge: $Z\kap\uparrow\kap_{\rm L}$,
+$C_\thr\to C_\infty$, $K_\thr/\kap^2=(C_\infty/\kap_{\rm L})Z+O(1)$, and
+the diffusive limit $Z\chi_\thr\to X(k^2/Z)$ with two-sided bounds at
+every $Z$. Galerkin constants and curves for $Z=1$ to $64$, checked
+against Braginskii and the Lorentz limit; the limit constants from an
+independent radial solver; quasi-neutral embedded test
+ & Certified constants; a convergence rate for the collisionless limit;
+converged curves at large $|k|\lambda_e$; the decay of $X(s)$ at large
+$s$; the size of the $O(1)$ term in the linear law\\
 \bottomrule
 \end{tabularx}
 \end{table}

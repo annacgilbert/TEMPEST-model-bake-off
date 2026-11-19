@@ -1,0 +1,15 @@
+{
+  "schema_version": "plasma-heat-flux-largez-v1",
+  "seed": 0,
+  "stochastic_sampling": false,
+  "radial": {"v_max": 16.0, "panels": [160, 320], "nodes_per_panel": 10,
+             "degrees": [16, 24, 32, 48, 64]},
+  "s_grid": {"log10_min": -3.0, "log10_max": 3.0, "points": 61},
+  "s_table": [0.01, 0.03, 0.1, 0.3, 1.0, 3.0, 10.0],
+  "s_small": [1e-7, 1e-6, 1e-5, 1e-4, 1e-3],
+  "s_large": [1.0, 10.0, 100.0, 1e3, 1e4, 1e5, 1e6],
+  "galerkin_degrees": [12, 16],
+  "ion_charges_constants": [1, 4, 16, 64, 256, 1024, 4096],
+  "ion_charges_curves": [4, 16, 64, 256],
+  "units": "v_t = 1, tau_ee = 1; s = k^2/Z = 2 Z (k lambda_e)^2"
+}
