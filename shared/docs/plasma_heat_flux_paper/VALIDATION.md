@@ -142,3 +142,40 @@ trapezoid rule on `[0, 400]` with spacing `0.005` plus the analytic tails.
 
 Build: `latexmk` as above, 39 pages, no undefined references and no
 overfull boxes. Pages 12 and 33-37 were read from the PDF.
+
+## Solvability, electron limit and response matrix (18 November 2026)
+
+Manuscript: Proposition 6.4 and Section 6.3, Proposition 8.1, Corollary 8.2,
+Theorem 8.3, Table 8, Appendices C.4 and D.6. See `PLAN.md` and
+`SOURCE_AUDIT.md`.
+
+Computation (deterministic, cached Landau matrices, under one second):
+
+```
+python3 response_matrix.py run results/2026-11-18-matrix
+python3 response_matrix.py constants results/2026-11-18-matrix
+python3 response_matrix.py table results/2026-11-18-matrix/metrics.json figures
+```
+
+- `metrics.json`: status complete, 0 failures over 14 solves (degrees 12
+  and 16, seven wavenumbers). In-script checks at every solve: symmetry and
+  vanishing imaginary part below 1e-9, positive definiteness,
+  `M_par,par = n_1` and the potential-driven conductivity against the shared
+  `closure3d.theta`.
+- `constants.json`: `C_perp = 8.0084` (degree 12), `8.0097` (degree 16);
+  criterion `k^2 kappa_F C_perp < 3` gives `k < 0.308`, against `0.887` from
+  `k^2 kappa_F eta < 3`. A negative result, reported in Section 6.3.
+- `figures/landau_matrix.tex` is generated from `metrics.json`
+  (`figures/provenance_matrix.json`). Degree 12 to 16 changes reach 3.8e-2
+  of `M_par,par` at `k tau = 5`; a diagnostic, not a certified bound.
+- The `constants` subcommand was added to the script after `run` wrote
+  `metrics.json`, so the script hash stored in `metrics.json` is that of the
+  earlier version; the `run` code path was not changed.
+- The table agrees with the one in `landau_positivity.tex`.
+
+Not validated numerically: Theorem 8.3 and Corollary 7.8 (the basis does
+not reach the layer). At `k tau = 5` the like-particle values are
+`|k| M = (1.188, 0.112, 1.343)` against the limit `(1.253, 0, 1.253)`.
+
+Build: 45 pages, no undefined references, no overfull boxes. Pages 13,
+18-19, 27, 34-35 and 40-42 were read from the PDF.

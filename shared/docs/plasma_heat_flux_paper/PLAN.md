@@ -102,3 +102,38 @@ Evidence boundaries: no convergence rate and no explicit threshold (the
 compactness step is not constructive); intermediate wavenumbers stay
 numerical; the proof rests on cited operator estimates that are not
 reproved; it has not had an independent human referee.
+
+## Solvability, electron collisionless limit, and the response matrix (18 November 2026)
+
+Requested by the author: items 1-3 of the next-steps list.
+
+1. Thermal solvability. Extend Appendix C to (a) the thermal source and any
+   even polynomial source with zero mean, and (b) the electron operator
+   `Lambda_Z`. Key facts for (b): the Lorentz form is exactly local, it
+   commutes with radial weights because `U(v) v = 0`, and coercivity on the
+   complement of `span{1, |v|^2}` follows from the like-particle estimate
+   plus a shell argument for the `v_x` direction. Result: the assumptions of
+   the thermal section become a proposition for like-particle Landau and for
+   `Lambda_Z`; positivity, the all-wavenumber bounds and the leading
+   coefficient become unconditional (given the cited operator estimates).
+2. Material from `landau_positivity.tex` not yet in the manuscript: the
+   bound `chi <= 3 kappa_F` under `T_par <= T_perp <= 0`; the sufficient
+   condition `N_theta < 9 n_1` with its collisionless value 8/9, now a
+   proved limit; a table of the Landau response matrix up to `k lambda = 5`.
+   Checked first whether the thermal bounds give a sharper proved positivity
+   range: they do not (the candidate criterion `k^2 kappa_F C_perp < 3` gives
+   `k lambda < 0.31`, worse than 0.887). This negative result is recorded.
+3. Collisionless limit for `Lambda_Z`. Extend Appendix D: sources
+   `sigma(v_perp) + v_x^2 p(v)`, no trial constraint, diffusion coefficient
+   singular at `v_perp = 0` handled by a regularized layer width and a limit,
+   flux lemma reproved without density of smooth functions.
+4. Computation: `response_matrix.py` with `config_matrix.json`; new run
+   directory `results/2026-11-18-matrix/`; table generated from its metrics.
+   Sanity checks run inside the script before the table is written:
+   symmetry, positive definiteness, `M_par,par = n_1` and the potential
+   response against the shared `closure3d.theta`.
+
+Evidence boundaries: the solvability argument is at the level of detail of
+Appendix C and rests on the same cited estimates; the Galerkin table is a
+diagnostic at degrees 12 and 16 and does not reach the layer; no proof here
+has had an independent referee.

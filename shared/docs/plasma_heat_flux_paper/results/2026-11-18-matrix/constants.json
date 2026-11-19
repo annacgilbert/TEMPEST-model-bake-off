@@ -1,0 +1,26 @@
+{
+ "schema_version": "plasma-heat-flux-matrix-v1",
+ "rows": [
+  {
+   "degree": 12,
+   "kappa_F": 3.9501963029523246,
+   "eta": 0.965291523611208,
+   "C_perp": 8.00842392384758,
+   "source_residual": 0.0,
+   "k_max_eta": 0.8869967773769336,
+   "k_max_C_perp": 0.3079482646424265
+  },
+  {
+   "degree": 16,
+   "kappa_F": 3.9502079665086125,
+   "eta": 0.9652916077395851,
+   "C_perp": 8.009720030015195,
+   "source_residual": 0.0,
+   "k_max_eta": 0.8869954292309812,
+   "k_max_C_perp": 0.30792289345982243
+  }
+ ],
+ "input_hashes": {
+  "response_matrix.py": "050402f65cd5766bf8ad5d6226bba0e0b56446ac5875003a634b57a87f47ff12"
+ }
+}

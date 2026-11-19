@@ -201,3 +201,44 @@ moment, and it is conditional on the thermal form-solvability assumption.
 What the theorem still rests on: the cited operator estimates, which are
 not reproved; and the check above, which was done by the same assistant
 that wrote Appendix D. No independent human reader has refereed the proof.
+
+### Solvability, the electron limit and the response matrix (18 November 2026)
+
+Three further additions, requested by the author. None is in a source note
+except where stated.
+
+1. Proposition 8.1 and Appendix C.4: the thermal stationary problem is
+   solvable for like-particle Landau and for the electron operator
+   `Lambda_Z`. New ingredients relative to Appendix C: a dual trial adapted
+   to the source, a test against `Xi` for the invariant part, and for
+   `Lambda_Z` the identities that follow from `U(v) v = 0` plus a shell
+   argument for coercivity in the `v_x` direction (Lemma C.1). Consequence:
+   Corollary 8.2 (positivity, bounds and leading coefficient at every
+   wavenumber, no solvability assumption) and Corollary 7.8 without its
+   former assumption. The proof is written at the level of detail of the
+   rest of Appendix C: the Lax-Milgram, weighted-test and weak-limit steps
+   are referred back to it, not repeated.
+2. From `landau_positivity.tex`: Proposition 6.4 (the `3 kappa_F` bound
+   under the sign condition, and the sufficient condition
+   `N_theta < 9 n_1`) and Table 8. The note's "formal" collisionless value
+   8/9 is now a proved limit through Corollary 7.8. The note's table was
+   recomputed (`response_matrix.py`) and agrees to the digits it printed.
+   Negative result recorded in Section 6.3: the candidate criterion
+   `k^2 kappa_F C_perp < 3` from the thermal certificates gives
+   `k lambda < 0.31` for Landau, worse than 0.887. The proved positivity
+   range for the potential drive is therefore unchanged.
+3. Theorem 8.3 and Appendix D.6: collisionless limit for `Lambda_Z`,
+   `|k| chi_th -> (9/5) sqrt(2/pi)` for every `Z > 0`. Changes to the
+   like-particle proof: sources with a `v_x^2` part (absorbed by the dual
+   trial), no trial constraint, a regularized layer width because the
+   diffusion coefficient is infinite at `v_perp = 0`, and a version of the
+   flux lemma that does not use density of smooth functions. Appendix D.6
+   lists the changes and does not repeat the unchanged estimates.
+
+Standing caveats: all of this rests on the cited like-particle estimates;
+the arguments were written and checked by the same assistant in one
+session; no independent human reader has refereed them; and there is no
+numerical confirmation of either collisionless limit for Landau or
+electrons, because the polynomial basis does not reach the layer. The
+standalone note in `../electron_heat_flux_extension/` still states its
+results conditionally and has not been updated.

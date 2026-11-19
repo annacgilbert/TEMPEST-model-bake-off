@@ -1,0 +1,5 @@
+{
+  "metrics_source": "results/2026-11-18-matrix/metrics.json",
+  "metrics_sha256": "40b643f5c464d31d0bedb3defa430a47938154b9821728d6bc2e6d69460b7b7c",
+  "note": "landau_matrix.tex derives from this saved metrics file."
+}

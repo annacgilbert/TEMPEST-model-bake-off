@@ -88,7 +88,9 @@ every symmetric, nonnegative collision operator whose kernel contains the
 density and energy invariants. Momentum conservation is not among the
 hypotheses, so the result covers electron--electron Landau collisions
 together with pitch-angle scattering on ions of charge $Z$, with $\kap$
-the conductivity at zero current. The two drives share the conductivity
+the conductivity at zero current. For both operators we prove the
+solvability that these theorems require, and the collisionless limit
+$|k|\chi_\thr\to\tfrac95\sqrt{2/\pi}$, which does not depend on $Z$. The two drives share the conductivity
 but not the deficit: for Dougherty the leading coefficients are
 $2/(15\nu^2)$ and $16/(45\nu^2)$.
 Polynomial Galerkin calculations give $\F/\tau\simeq3.9502$ and
@@ -105,9 +107,10 @@ of an electron temperature perturbation it stays within $2\%$ for $Z=1$
 at $|k|\lambda_e\leq0.3$, where Spitzer--H\"arm conduction is off by
 $42\%$.
 These results are analytic tests for learned and classical closures
-alike. They are not a general constitutive law. The Landau collisionless
-limit comes without a rate, and the electron results assume a form-domain
-solvability that we do not prove.
+alike. They are not a general constitutive law. The collisionless limits
+come without a rate, and the Landau and electron theorems rest on
+published coercivity estimates for the Landau operator, which we cite and
+do not reprove.
 \end{abstract}
 \noindent\textbf{Keywords:} kinetic closure; nonlocal transport; BGK;
 Dougherty; Landau operator; electron--ion collisions;
@@ -176,13 +179,15 @@ three-dimensional problem becomes as clean as the one-dimensional one:
 we obtain bounds at every wavenumber and the sharp leading coefficient
 with an $O(k^4)$ remainder, and for like-particle Landau collisions this
 gives the positivity and the Fourier upper bound that are open for the
-potential drive, under the same form-domain hypotheses. The drive
+potential drive. The drive
 matters. Both responses are entries of one positive-definite $2\times2$
 matrix of parallel and perpendicular temperature responses; they share
 the conductivity but not the leading deficit. Fifth, none of the thermal
 theorems needs momentum conservation, so they hold for electron--electron
 plus electron--ion collisions with the conductivity replaced by its
-zero-current value (\cref{sec:th-electron}). We compute the constants
+zero-current value (\cref{sec:th-electron}). For this operator we prove
+weighted solvability and the collisionless limit, so the electron closure
+is fixed by theorems at both ends of the wavenumber range. We compute the constants
 and the response curves for ion charges from $1$ to $64$, and we test the
 closure as an evolution law in the quasi-neutral decay of a temperature
 perturbation (\cref{sec:th-numerics}).
@@ -1033,6 +1038,58 @@ conductivity is now proved for $k^2\F\eta<3$ and for all sufficiently
 large $|k|$; in between it rests on the finite-degree computations below,
 which do not resolve the layer.
 
+\subsection{The intermediate range}\label{sec:intermediate}
+
+What would close the gap? We know two sufficient conditions, and we can
+prove neither for Landau at intermediate wavenumbers. Let
+$N_\vartheta=\av{\vartheta,\A_k^{-1}\vartheta}$, the response of the
+stress moment to its own source.
+
+\begin{proposition}[Two sufficient conditions]\label[proposition]{prop:intermediate}
+Under the hypotheses of \cref{thm:3dbounds}, fix $k\ne0$.
+\begin{enumerate}[label=(\alph*)]
+\item If $-n_1\leq T_{\perp1}\leq0$, then $n_1/3\leq-T_1\leq n_1$ and
+\[
+ \frac1{k^2n_1}\leq\chi(k)\leq\frac3{k^2n_1}\leq3\F .
+\]
+\item If the stationary problem with source $\vartheta$ is solvable in the
+same sense, as it is for Landau by \cref{prop:th-solv}, then $X^2\leq n_1N_\vartheta$. In particular $\chi(k)>0$
+whenever $N_\vartheta<9n_1$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) By \eqref{eq:perptest}, $-T_1=(n_1-2T_{\perp1})/3$, and
+$n_1\geq1/(k^2\F)$ by \eqref{eq:nandT}. (b) Let $g_j=g_{j,e}+iw_j$ solve
+$\A_kg_j=s_j$ for real even sources $s_1,s_2$. The parity equations give
+$\av{s_1g_{2,e}}=\D(g_{1,e},g_{2,e})+\D(w_1,w_2)$, a symmetric nonnegative
+form, so $\av{s_1g_{2,e}}^2\leq\av{s_1g_{1,e}}\av{s_2g_{2,e}}$. Take
+$s_1=\vartheta$ and $s_2=1$. Since $-T_1=n_1-X/3$, positivity follows from
+$X^2<9n_1^2$.
+\end{proof}
+
+Condition (a) says that collisions move the perpendicular temperature
+toward the parallel one and never past zero. It holds for
+constant-frequency BGK and for Dougherty at every $k$, as we saw in
+\cref{sec:3d}, and for those two operators $\chi\leq\F$ anyway. For Landau
+both conditions hold at every wavenumber we have computed
+(\cref{tab:matrix}), and both hold in the two limits. At large $|k|$,
+$T_{\perp1}/n_1\to0$ by \cref{cor:landaulimit} and
+$N_\vartheta/(9n_1)\to8/9$ by \cref{cor:th-landaulimit}, since
+$N_\vartheta=4(M_{\parallel\parallel}-2M_{\parallel\perp}+M_{\perp\perp})$
+in the notation of \cref{sec:th-matrix}; so (b) holds there with a margin
+of $1/9$. At small $|k|$, $n_1$ grows like $1/(k^2\F)$, while
+$N_\vartheta\leq12\eta$ at every $k$ by the upper certificate of
+\cref{thm:th-dual} with the zero trial. Is (a) true for every
+conserving, isotropic, nonnegative collision operator? We do not know.
+
+We tried one more route and record that it does not help. In the
+notation of \cref{sec:th-matrix}, $-3T_1=c\cdot Mc-M_{\perp\perp}$ with
+$c=(1,1)$, and the certificates of \cref{thm:th-dual} bound the two
+terms: positivity would follow from $k^2\F C_\perp<3$, with
+$C_\perp=\dual{a_\perp-v_x\Xi/\F}$. For Landau $C_\perp/\tau\simeq8.01$,
+which gives $|k|\lambda<0.31$, a smaller range than $k^2\F\eta<3$.
+
 \section{The thermally driven response}\label{sec:th-thermal}
 
 The potential drive of \cref{sec:setting} leaves two gaps. In three
@@ -1251,8 +1308,11 @@ enters. Third, for like-particle Landau collisions the constants in
 sources orthogonal to the invariants with every polynomial weight finite,
 which exist in the weighted energy class by the argument of
 \cref{app:weighted}. The stationary solution \eqref{eq:th-g} is a
-resolvent applied to $\zeta$ rather than to $1$, and we have not written
-out that case; it is covered by \cref{ass:th-form}.
+resolvent applied to $\zeta$ rather than to $1$. That case needs a
+different dual trial and a different test for the invariant part, and
+then the same argument works. So for Landau collisions, and for the
+electron operator of \cref{sec:th-electron}, the assumptions of this
+section are theorems (\cref{prop:th-solv}).
 
 \subsection{Why the drive matters}\label{sec:th-matrix}
 
@@ -1386,9 +1446,7 @@ momentum is conserved, an admissible even trial has $\av{v_x^2\varphi}=0$,
 so it cannot tell a source from its restriction to $v_x=0$.
 
 \begin{corollary}[Landau collisions, thermal drive]\label[corollary]{cor:th-landaulimit}
-For the like-particle Landau operator, under the analogue of
-\cref{ass:th-form} for the sources $a_\parallel$ and $a_\perp$ of
-\cref{sec:th-matrix},
+For the like-particle Landau operator,
 \begin{equation}
  \lim_{|k|\to\infty}|k|\,M(k)=\sqrt{\frac\pi2}\,
    \begin{pmatrix}1&0\\0&1\end{pmatrix},
@@ -1400,7 +1458,8 @@ For the like-particle Landau operator, under the analogue of
 
 \begin{proof}
 Let $c\in\RR^2$ and $a_c=c_\parallel a_\parallel+c_\perp a_\perp$. The
-argument of \cref{thm:th-dual} gives
+stationary problem with source $a_c$ is solvable by \cref{prop:th-solv},
+and the argument of \cref{thm:th-dual} gives
 $\av{a_c,\A_k^{-1}a_c}=\max\av{a_c\varphi}^2/\Qth_k[\varphi]$ over
 admissible even trials. For such a trial
 $\av{a_\parallel\varphi}=-\av\varphi$, so
@@ -1415,8 +1474,8 @@ quadratic form of $M$ at $c=(1,2)$.
 \end{proof}
 
 The entries $M_{\parallel\parallel}=n_1$ and
-$M_{\parallel\perp}=-T_{\perp1}$ are covered by \cref{cor:landaulimit}
-without the extra assumption. At large $|k|$, then, the parallel and
+$M_{\parallel\perp}=-T_{\perp1}$ are the limits of \cref{cor:landaulimit}.
+At large $|k|$, then, the parallel and
 perpendicular temperatures decouple and respond equally. The denominator
 of \eqref{eq:th-chipotM} then tends to $c_0/|k|$ and that of
 \eqref{eq:th-chithM} to $5c_0/|k|$, with $c_0=\sqrt{\pi/2}$. That is the
@@ -1457,9 +1516,74 @@ $v_t=\sqrt{T_0/m_e}$ and not with $\sqrt{2T_0/m_e}$.
 
 The operator $\Lambda_Z$ is symmetric and nonnegative. It annihilates $1$
 and $|v|^2$ but not $v_x$, so \eqref{eq:th-kernel} holds with the smaller
-kernel. \Cref{thm:th-dual,cor:th-bounds,thm:th-leading} apply, subject to their
-solvability assumptions, with $\kap$ the zero-current conductivity
-\eqref{eq:th-schur}. In physical units,
+kernel. \Cref{thm:th-dual,cor:th-bounds,thm:th-leading} apply with $\kap$
+the zero-current conductivity \eqref{eq:th-schur}, and their solvability
+assumptions can be proved.
+
+\begin{proposition}[Solvability of the thermal problem]\label[proposition]{prop:th-solv}
+Let $\Lambda$ be the like-particle Landau operator \eqref{eq:landauform}
+or the electron operator $\Lambda_Z$ with $Z>0$. Then the quantities in
+\eqref{eq:th-constants} and the constant $B$ of \cref{ass:th-second} are
+finite. For every $k\ne0$ and every real, even, axisymmetric polynomial $s$
+with $\av s=0$, the problem $\A_kg=s$ has a unique weak solution in the
+weighted energy class; it lies in every weighted space, and its parity
+components are admissible trials. In particular \cref{ass:th-form}, its
+analogue for the sources $a_\parallel$ and $a_\perp$, and
+\cref{ass:th-second} hold.
+\end{proposition}
+
+The proof is in \cref{app:th-solv}. Why does the weighted argument
+survive the $|v|^{-3}$ singularity of the Lorentz rate? Because
+$U(v)v=0$. Pitch-angle scattering moves particles on spheres, so it
+commutes with every radial weight and its form is exactly local, and
+coercivity in the one direction that has left the kernel, $v_x$, comes
+from the Lorentz term itself. As with \cref{prop:landauwell}, the
+published like-particle estimates are inputs that we cite.
+
+\begin{corollary}[Electrons, every wavenumber]\label[corollary]{cor:th-electronbounds}
+For the like-particle Landau operator and for $\Lambda_Z$ with $Z>0$, at
+every $k\ne0$,
+\[
+ 0<\frac{\kap}{1+K_\thr k^2}\leq\chi_\thr(k)\leq\kap,
+ \qquad 1-\frac{\chi_\thr(k)}{\kap}=K_\thr k^2+O(k^4)\quad(k\to0).
+\]
+\end{corollary}
+
+The large-wavenumber end can be settled too.
+
+\begin{theorem}[Collisionless limit for electrons]\label{thm:th-electronlimit}
+For $\Lambda_Z$ with any $Z>0$,
+\begin{equation}
+ \lim_{|k|\to\infty}|k|\,M(k)=\sqrt{\frac\pi2}\,
+   \begin{pmatrix}1&0\\0&1\end{pmatrix},
+ \qquad
+ \lim_{|k|\to\infty}|k|\,\chi_\thr(k)=\frac95\sqrt{\frac2\pi} .
+ \label{eq:th-electronlimit}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+For $c\in\RR^2$ the source $a_c=c_\parallel a_\parallel+c_\perp a_\perp$ is
+$\sigma_c+c_\parallel v_x^2$ with $\sigma_c=-c_\parallel+c_\perp\xi$. By
+\cref{prop:th-solv} and the argument of \cref{thm:th-dual},
+$c\cdot M(k)c$ is the maximum of $\av{a_c\varphi}^2/\Qth_k[\varphi]$ over
+even trials, which now carry no constraint. \Cref{prop:airyZ} gives
+$|k|\,c\cdot M(k)c\to\pi M_1(0)\av{\sigma_c^2}_\perp$, and the rest is as in
+\cref{cor:th-landaulimit}.
+\end{proof}
+
+The limit does not depend on $Z$, and it is the Dougherty value of
+\cref{thm:th-dougherty}. Without momentum conservation a trial function
+can see the $v_x^2$ part of the source, which the like-particle argument
+never had to face. The dual trial absorbs it at a cost of $O(k^{-2})$.
+The ion term makes the diffusion coefficient $d$ infinite on the axis
+$v_\perp=0$, where the layer has no small width; that set carries no
+weight in the limit. So at both ends of the wavenumber range the electron
+closure is now pinned by a theorem:
+$\chi_\thr\to\kap$ with deficit $K_\thr k^2$ as $k\to0$, and
+$\chi_\thr\sim\tfrac95\sqrt{2/\pi}\,/|k|$ as $|k|\to\infty$, in units
+$v_t=1$. In between we have the bounds of \cref{cor:th-electronbounds}
+and the computations of \cref{sec:th-numerics}. In physical units,
 $\kap_{\rm phys}=(\kap/\tau_e)\,n_0T_0\tau_e/m_e$ and
 $\sigma_{\rm phys}=(L_{11}/\tau_e)\,n_0e^2\tau_e/m_e$.
 
@@ -1659,7 +1783,7 @@ $-n_1\leq T_{\perp1}\leq0$ over the sampled interval
 (\cref{fig:landau}), but they do not prove it outside that interval or
 in the continuum. For the potential drive, we leave open an all-$k$
 proof of positivity and a proof of $\chi<\F$ for Landau. For the thermal
-drive, \cref{cor:th-bounds} gives both under its hypotheses.
+drive, \cref{cor:th-electronbounds} gives both.
 
 \subsection{An embedded initial-value test}\label{sec:embedded}
 
@@ -1874,8 +1998,30 @@ $K_\thr/\tau^2\simeq26.36$, compared with $K_\pot/\tau^2\simeq22.35$, a
 ratio of $1.18$. For Dougherty the ratio is $(16/45)/(2/15)=8/3$. In all
 of our computations $\chi_\pot\geq\chi_\thr$; we have not proved this.
 The thermally driven Landau response is positive and below $\kap$ at
-every sampled $k$, which \cref{cor:th-bounds} now guarantees for the Galerkin
-problem at any $k$ and, under \cref{ass:th-form}, for the continuum.
+every sampled $k$, which \cref{cor:th-bounds} guarantees for the Galerkin
+problem at any $k$ and, by \cref{prop:th-solv}, for the continuum.
+
+\begin{table}[tb]
+\centering
+\caption{Like-particle Landau collisions: the response matrix
+\eqref{eq:th-matrix} at degree $16$, scaled by $|k|$, with the two
+quantities of \cref{prop:intermediate}. The refinement column is the
+largest change in an entry from degree $12$ to $16$, relative to
+$M_{\parallel\parallel}$. The last row is the proved limit of
+\cref{cor:th-landaulimit}.}
+\label{tab:matrix}
+\small
+\input{figures/landau_matrix.tex}
+\end{table}
+
+\Cref{tab:matrix} gives the like-particle response matrix itself. The
+off-diagonal entry falls from equality with the diagonal at small $k$ to
+a tenth of it at $|k|\tau=5$, and the diagonal entries approach
+$\sqrt{\pi/2}\simeq1.253$ from opposite sides. Both conditions of
+\cref{prop:intermediate} hold at every row, with
+$N_\vartheta/(9n_1)$ rising monotonically toward $8/9$. The last rows
+are converged to about two digits only; a polynomial basis does not reach
+the layer, and this table is evidence, not proof.
 
 \subsection{An embedded test: decay of a temperature perturbation}\label{sec:th-embedded}
 
@@ -2026,10 +2172,6 @@ order of difficulty.
 \item \emph{Certified constants and larger $|k|\lambda_e$.} A basis
 adapted to the $|v|^{-3}$ singularity, or a speed grid, would remove the
 slow convergence at large $Z$ and reach the collisionless layer.
-\item \emph{A weighted existence theorem for $\Lambda_Z$.} The Lorentz
-form adds coercivity in the angular directions, so we expect the weighted
-argument of \cref{app:weighted} to go through, but we have not
-checked it.
 \item \emph{Comparison with practical nonlocal models.} The constants
 $\kap(Z)$ and $K_\thr(Z)$ are direct tests of the small-$k$ behavior of
 multigroup diffusion and convolution closures
@@ -2059,7 +2201,8 @@ and at large wavenumbers. Heating the plasma instead of pushing it removes that
 contribution. The thermally driven response satisfies the
 one-dimensional bounds in three dimensions, at every wavenumber, with or
 without momentum conservation, and so it reaches electrons colliding
-with ions.
+with ions. For that operator the stationary problem is solvable and the
+collisionless limit is $\tfrac95\sqrt{2/\pi}$ for every ion charge.
 
 The two negative results matter as much as the bounds. Our Landau
 calculations show that matching the conductivity does not match the
@@ -2069,11 +2212,11 @@ shows that matching an exact quasi-static response does not guarantee an
 accurate transient. (The quasi-neutral electron experiment shows that it
 sometimes does, when the dynamics are slow.) Anyone who uses a simple
 conserving collision model to evaluate a closure meant for plasma
-transport should keep both in mind. Four analytical problems remain:
+transport should keep both in mind. Three analytical problems remain:
 certified continuum bounds for the Landau and electron constants,
-positivity at intermediate wavenumbers for the potential drive, a
-convergence rate for the collisionless limit, and a weighted existence
-theorem for the electron operator. None of them is settled here.
+positivity at intermediate wavenumbers for the potential drive, and a
+convergence rate for the collisionless limits. None of them is settled
+here.
 
 \paragraph{Data and code availability.}
 The accompanying repository directory contains the configuration,
@@ -2388,6 +2531,124 @@ it with $g_0$. Polynomial moments are continuous functionals on
 $\HH_0$ by \eqref{eq:W1}; they converge along the entire family.
 The transfer ratio converges wherever $T_1\ne0$, in particular in
 the positivity range of \cref{thm:3dbounds}.
+
+\subsection{Electron--ion collisions and the thermal source}\label{app:th-solv}
+
+Here we prove \cref{prop:th-solv}. Two things change relative to the
+preceding subsections: the operator may be $\Lambda_Z$ of
+\eqref{eq:th-electron}, and the source is no longer $1$.
+
+\paragraph{The Lorentz form.}
+Let $c_Z=3\sqrt\pi Z/(2\tau_{ee})$, so
+$\D_{ei}(f,h)=c_Z\av{\nabla f\cdot U(v)\nabla\bar h}$, and let $\D_Z=\D+\D_{ei}$.
+Everything we need comes from $U(v)v=0$. First, with
+$\widetilde f=\sqrt Mf$,
+\begin{equation}
+ \D_{ei}[f]=c_Z\int U\nabla\widetilde f\cdot\nabla\overline{\widetilde f}\dd v ,
+ \label{eq:L1}
+\end{equation}
+because the term in which the derivative falls on $\sqrt M$ is
+proportional to $U(v)v$. Second, a radial weight passes through the form:
+\begin{equation}
+ \D_{ei}(f,m^{2\ell}h)=c_Z\int M\,m^{2\ell}\,U\nabla f\cdot\nabla\bar h\dd v .
+ \label{eq:L2}
+\end{equation}
+Define $\|f\|_{Z,\ell}^2=\|f\|_{\sigma,\ell}^2
++c_Z\int m^{2\ell}U\nabla\widetilde f\cdot\nabla\overline{\widetilde f}\dd v$ and let
+$\HH_\ell^Z$ be the corresponding spaces. In the axisymmetric class the
+kernel of $\Lambda_Z$ is $H_Z=\operatorname{span}\{1,|v|^2\}$, with
+projection $\Pi_Z$. Estimate \eqref{eq:W1} holds for the larger norm. By
+\eqref{eq:L1} and \eqref{eq:L2}, the Lorentz form adds exactly the new
+term of $\|f\|_{Z,\ell}^2$ to $\Real\D(f,m^{2\ell}f)$ in \eqref{eq:W3}, and it is
+bounded by $\|f\|_{Z,\ell}\|h\|_{Z,\ell}$ in \eqref{eq:W4}. So
+\eqref{eq:W3} and \eqref{eq:W4} hold for $\D_Z$ with the norms
+$\|\cdot\|_{Z,\ell}$. Coercivity needs an argument, because $v_x$ has left
+the kernel.
+
+\begin{lemma}[Coercivity with ions]\label[lemma]{lem:Zcoercive}
+For $Z>0$ there is $\delta_Z>0$ such that
+$\D_Z[f]\geq\delta_Z\|f-\Pi_Zf\|_{Z,0}^2$ for axisymmetric $f\in\HH_0^Z$.
+\end{lemma}
+
+\begin{proof}
+Write $\Pi f=\Pi_Zf+\beta v_x$ and $f^\perp=f-\Pi f$. By \eqref{eq:W2},
+$\D[f]\geq\delta\|f^\perp\|_{\sigma,0}^2$. On the shell
+$A=\{1\leq|v|\leq2\}$ the matrix $U$ is bounded by a multiple of $S$, and
+$\int_AMS\nabla f^\perp\cdot\nabla f^\perp\leq C\|f^\perp\|_{\sigma,0}^2$.
+Since $\D_{ei}$ annihilates $\Pi_Zf$,
+\[
+ \D_{ei}[f]\geq c_Z\!\int_A\!MU\nabla(\beta v_x+f^\perp)\cdot\nabla(\beta v_x+f^\perp)
+ \geq\frac{\beta^2}2\,c_Z\!\int_A\!MU^{xx}\dd v-C\|f^\perp\|_{\sigma,0}^2 .
+\]
+Hence $\beta^2\leq C\D_Z[f]$, and
+$\|f-\Pi_Zf\|_{Z,0}^2=\|\beta v_x+f^\perp\|_{\sigma,0}^2+\D_{ei}[f]
+\leq C\D_Z[f]$.
+\end{proof}
+
+\paragraph{Collision inverses.}
+The first subsection of this appendix uses only
+\eqref{eq:W1}--\eqref{eq:W4}. It therefore applies to $\Lambda_Z$ with
+$H_Z$, $\Pi_Z$ and the spaces $\HH_\ell^Z$: a source orthogonal to $H_Z$
+with every polynomial weight finite has a unique collision inverse
+orthogonal to $H_Z$, in every $\HH_\ell^Z$. Apply this in turn to $v_x$
+and $Q$, which gives $L_{11}$, $L_{12}$, $L_{22}$, $\Xi$ and $\kap$; to
+$b_\thr$; and to $v_x\widetilde G$. For the like-particle operator the same
+sources are covered by the first subsection directly. This is the first
+statement of \cref{prop:th-solv}.
+
+\paragraph{The stationary problem.}
+Let $\Lambda$ be the like-particle operator or $\Lambda_Z$, with kernel
+$\N$, and write $\D$, $\HH_\ell$ and $\Pi$ for the corresponding form,
+spaces and projection on $\N$. Let $s$ be a real, even, axisymmetric
+polynomial with $\av s=0$, and $k\ne0$. As in \eqref{eq:regularized} we
+solve
+\[
+ (\epsilon m^2+ikv_x+\Lambda)g=s,\qquad0<\epsilon\leq1,
+\]
+by Lax--Milgram, and the solution lies in every weighted space by the
+auxiliary-problem argument. The energy identity is
+\[
+ \epsilon\av{m^2|g|^2}+\D[g]=n,\qquad n=\Real\av{sg}.
+\]
+The uniform bound on $n$ needs a dual trial adapted to $s$. Put
+$c_s=\tfrac12\av{s|v|^2}$, $\psi_s=-c_s\Xi/(k\kap)$ and
+$b_s=s+kv_x\psi_s$. Since $\av{v_x\Xi}=0$ and $\av{v_x|v|^2\Xi}=2\kap$, the
+function $b_s$ is orthogonal to $\N$; let $\Lambda G_s=b_s$. Then
+$\av{sg}=\D(g,G_s)-k\av{v_xg\,\psi_s}$. Testing the equation against the
+odd function $\psi_s$ gives
+$ik\av{v_xg\,\psi_s}=-\epsilon\av{m^2g\,\psi_s}-\D(g,\psi_s)$, and so
+\[
+ n\leq|\av{sg}|\leq n^{1/2}\Bigl[\D[G_s]^{1/2}+\D[\psi_s]^{1/2}
+       +\|m\psi_s\|_{L^2(M)}\Bigr].
+\]
+Hence $n$ and $\D[g]$ are bounded uniformly in $\epsilon$.
+
+Next the component in $\N$. Testing against the odd functions $v_x$ and
+$\Xi$, for which the source term vanishes,
+\[
+ ik\av{v_x^2g}=-\epsilon\av{m^2v_xg}-\D(g,v_x),\qquad
+ ik\av{v_x\Xi\,g}=-\epsilon\av{m^2\Xi g}-\D(g,\Xi).
+\]
+The right-hand sides are bounded by $Cn^{1/2}$; here $\D[v_x]$ is zero
+for the like-particle operator and $1/\tau_e$ for $\Lambda_Z$. On
+$a+b|v|^2$ the two functionals on the left take the values $a+5b$ and
+$2\kap b$, so they determine $a$ and $b$. When $v_x\in\N$ the test against
+$1$ gives $ik\av{v_xg}=-\epsilon\av{m^2g}$, which controls the remaining
+coefficient. The same three moments of $g-\Pi g$ are bounded by
+\eqref{eq:W1} and coercivity. So $\Pi g$, and with it $\|g\|_{\sigma,0}$
+and $\av{\rho|g|^2}$, are bounded.
+
+From here the proof is that of the second and third subsections with
+$\omega=0$. The weighted test gives uniform bounds in every $\HH_\ell$,
+with $|\av{m^{2\ell}sg}|$ absorbed in the weighted norm. Weak limits as
+$\epsilon\downarrow0$ give a solution in every $\HH_\ell$. Uniqueness in
+$\HH_1$ follows from $\D[d]=0$ and $kv_xd=0$ for a homogeneous solution.
+Reflection and conjugation give the parity decomposition $g=g_e+iw$. The
+weak equations $\Lambda g_e=s+kv_xw$ and $\Lambda w=-kv_xg_e$ show that
+$s+kv_xw$ and $v_xg_e$ are orthogonal to $\N$, with
+$\dual{s+kv_xw}=\D[g_e]$ and $k^2\dual{v_xg_e}=\D[w]$. So $g_e$ and $w$ are
+admissible trials, and testing with $g$ itself is legitimate because
+$\av{m|g|^2}<\infty$. This proves \cref{prop:th-solv}. \qed
 
 \section{Proof of the Landau collisionless limit}\label{app:airy}
 
@@ -2797,6 +3058,140 @@ coefficient at $v_x=0$. The limit depends on none of the constants, which
 is why Landau and Dougherty share it. And the compactness step in
 \cref{lem:flux} is not constructive, so the proof gives no rate.
 
+\subsection{Electron--ion collisions}\label{app:airyZ}
+
+We now take $\Lambda=\Lambda_Z$ with $Z>0$ and use the notation of
+\cref{app:th-solv}: the form is $\D_Z$, the kernel is $H_Z$, and
+$\nstar\cdot$ is the dual seminorm of $\D_Z$ over
+$\HH_0^Z\cap H_Z^\perp$. Momentum is not conserved, so an even trial
+carries no constraint, and a source can no longer be replaced by its
+restriction to $v_x=0$. For even axisymmetric polynomials $\sigma(v_\perp)$
+and $p(v)$ let
+\[
+ s=\sigma(v_\perp)+v_x^2\,p(v),\qquad
+ N_k^Z(s)=\sup_{\varphi\ \mathrm{even}}
+   \frac{\av{s\varphi}^2}{\D_Z[\varphi]+k^2\nstar{v_x\varphi}^2},
+\]
+with the supremum over even axisymmetric $\varphi\in\HH_1^Z$.
+
+\begin{proposition}[Boundary-layer limit with ions]\label[proposition]{prop:airyZ}
+For every $Z>0$ and every such $s$,
+$\lim_{|k|\to\infty}|k|\,N_k^Z(s)=\pi M_1(0)\av{\sigma^2}_\perp$.
+\end{proposition}
+
+The proof follows the preceding subsections. We list the changes.
+
+\emph{Local form.} The diffusion matrix is $S_Z=S+c_ZU$, with transverse
+eigenvalue $\lambda_2+c_Z/|v|$ and the same radial eigenvalue $\lambda_1$.
+Let $\mathfrak a_Z[f]=\mathfrak a[f]+\D_{ei}[f]$. By \eqref{eq:L1} the
+Lorentz form is exactly its own local part, so \eqref{eq:W5} holds for
+$\D_Z$ and $\mathfrak a_Z$ with the same constants. In place of
+\eqref{eq:Sxx} and \eqref{eq:dprops},
+\begin{equation}
+ d_Z(v_\perp)=S_Z^{xx}(0,v_\perp)=d(v_\perp)+\frac{c_Z}{|v_\perp|},\qquad
+ S_Z^{xx}\leq C+\frac{c_Z}{|v_\perp|},\qquad
+ d_Z\,(S_Z^{-1})_{xx}\leq Cm^3\Bigl(1+\frac1{|v_\perp|}\Bigr).
+ \label{eq:dZ}
+\end{equation}
+The last bound follows from the formula in \eqref{eq:Sxx} with
+$\lambda_2+c_Z/|v|$ in place of $\lambda_2$. The singularity at
+$v_\perp=0$ is integrable against $M_\perp\dd v_\perp$ in two dimensions.
+It is the one new difficulty.
+
+\emph{Two-sided bounds.} For every even $\varphi$,
+$N_k^Z(s)\geq\av{s\varphi}^2/\mathcal Q_k[\varphi]$. For every odd $\psi$
+such that $b=s-kv_x\psi$ is orthogonal to $1$ and $|v|^2$,
+$N_k^Z(s)\leq\D_Z[\psi]+\nstar b^2$. The proof is that of
+\cref{lem:twosided}; $v_x\varphi$ and $\psi$ are odd and so orthogonal to
+$H_Z$.
+
+\emph{Flux bound.} We have not proved density of smooth functions in
+$\HH_0^Z$, where the weight is singular at the origin, so we replace the
+first hypothesis of \cref{lem:flux} by a concentration condition: for
+every $r_0>0$,
+\begin{equation}
+ \int_{|v_x|>r_0}M\Phi_k^2\,(S_Z^{-1})_{xx}\dd v=o(\mathcal I_k),\qquad
+ \mathcal I_k=\int M\Phi_k^2\,(S_Z^{-1})_{xx}\dd v .
+ \label{eq:conc}
+\end{equation}
+With \eqref{eq:conc} and the second hypothesis in \eqref{eq:fluxhyp},
+$\nstar{b_k}^2\leq(1+o(1))\mathcal I_k$. Two steps of the proof change.
+The identity \eqref{eq:fluxparts} holds for $f\in\HH_0^Z$ by applying it
+to $\theta_Rf$, which is a compactly supported $H^1$ function, and letting
+$R\to\infty$; every term converges because $M\Phi_k$ is Gaussian and
+$\mathcal I_k$, $\av{m\,b_k^2}$ are finite. For the weak convergence
+$\hat f_k\to0$, take any $h\in\HH_0^Z\cap H_Z^\perp$ and split
+\eqref{eq:fluxparts} at $|v_x|=r_0$:
+\[
+ |\av{b_kh}|\leq\mathcal I_k^{1/2}\Bigl(\int_{|v_x|\leq r_0}
+   S_Z\nabla\widetilde h\cdot\nabla\widetilde h\dd v\Bigr)^{1/2}
+  +o\bigl(\mathcal I_k^{1/2}\bigr)\,\|h\|_{Z,0}.
+\]
+The first integral tends to zero with $r_0$. So
+$\D_Z(\hat f_k,h)=s_k^{-1/2}\av{b_kh}\to0$ for every $h$. The Rellich step
+is unchanged, since $S_Z\geq S$.
+
+\emph{A regularized layer width.} The width $(d_Z/k)^{1/3}$ is unbounded
+near $v_\perp=0$ and its logarithmic gradient is not bounded. Fix
+$\rho_0\in(0,1]$ and let
+\[
+ d_{\rho_0}=d+\frac{c_Z}{(v_\perp^2+\rho_0^2)^{1/2}},\qquad
+ \delta=\Bigl(\frac{d_{\rho_0}}{k}\Bigr)^{1/3},\qquad
+ r=\frac{d_Z}{d_{\rho_0}},\qquad 1\leq r\leq1+\frac{\rho_0}{|v_\perp|}.
+\]
+Then \eqref{eq:deltaprops} holds with constants that depend on $\rho_0$,
+and $r\to1$ pointwise as $\rho_0\to0$.
+
+\emph{Lower bound.} Take $\varphi_k=\sigma\delta^{-1}F(u)$. The numerator
+is $\av{s\varphi_k}=\av{\sigma\varphi_k}+O(k^{-2/3})\to\pi M_1(0)\av{\sigma^2}_\perp$.
+For the collision form,
+$\D_Z[\varphi_k]\leq(1+\epsilon)\mathfrak a[\varphi_k]
++C_\epsilon\!\int_{|v|\leq R_\epsilon}\!M\varphi_k^2+\D_{ei}[\varphi_k]$. The
+perpendicular part of $\D_{ei}[\varphi_k]$ is at most
+$c_Z\int M|v|^{-1}|\nabla_\perp\varphi_k|^2=O(k^{1/3})$, because
+$|v|^{-1}\leq|v_\perp|^{-1}$. The leading term is
+\[
+ \int MS_Z^{xx}(\partial_x\varphi_k)^2
+ =k\int M_\perp\sigma^2\!\int\frac{S_Z^{xx}(\delta u,v_\perp)}{d_{\rho_0}(v_\perp)}
+   M_1(\delta u)F'^2\dd u\dd v_\perp
+ =k\,M_1(0)\av{\sigma^2r}_\perp\!\int F'^2\,(1+o(1)),
+\]
+dominated through $S_Z^{xx}/d_{\rho_0}\leq Cm_\perp+r$. For the streaming
+term the flux is $\Phi_k=\sigma\delta j_\delta(u)$ as before, and by
+\eqref{eq:dZ}
+\[
+ \mathcal I_k=\frac1k\int M_\perp\sigma^2\!\int d_{\rho_0}(S_Z^{-1})_{xx}
+   M_1(\delta u)j_\delta^2\dd u\dd v_\perp
+ =\frac1k\,M_1(0)\av{\sigma^2/r}_\perp\!\int W'^2\,(1+o(1)).
+\]
+The same dominated convergence, with the indicator of $|u|>r_0/\delta$
+inserted, gives \eqref{eq:conc}. Therefore
+\[
+ \liminf_{k\to\infty}kN_k^Z(s)\geq
+ \frac{\bigl(\pi M_1(0)\av{\sigma^2}_\perp\bigr)^2}
+ {(1+\epsilon)M_1(0)\bigl[\av{\sigma^2r}_\perp\int F'^2
+     +\av{\sigma^2/r}_\perp\int W'^2\bigr]} .
+\]
+Let $\rho_0\to0$ and then $\epsilon\to0$. Since $r\leq1+|v_\perp|^{-1}$,
+dominated convergence gives $\av{\sigma^2r}_\perp\to\av{\sigma^2}_\perp$ and
+likewise for $1/r$, and \cref{lem:profile}(d) gives the lower bound.
+
+\emph{Upper bound.} Take
+\[
+ \psi_k=-\frac{\sigma}{k\delta}W(u)+\frac{v_x\,p}{k}
+   +\frac1k\bigl(\alpha_kv_x+\beta_kv_x|v|^2\bigr).
+\]
+The second term is what the missing constraint costs: it cancels the part
+$v_x^2p$ of the source exactly, and it contributes $O(k^{-2})$ to the
+collision form. Then $b_k=s-kv_x\psi_k=-\sigma F''(u)-\alpha_kv_x^2
+-\beta_kv_x^2|v|^2$ as before, and the rest of the upper bound goes through
+with $r$ and $1/r$ inserted as in the lower bound:
+\[
+ \limsup_{k\to\infty}kN_k^Z(s)\leq(1+\epsilon)M_1(0)
+ \Bigl[\av{\sigma^2r}_\perp\!\int W'^2+\av{\sigma^2/r}_\perp\!\int F'^2\Bigr].
+\]
+Let $\rho_0\to0$ and $\epsilon\to0$. \qed
+
 \section{Summary of claims and normalizations}\label{app:ledger}
 
 \begin{table}[ht]
@@ -2841,16 +3236,18 @@ Landau numerical values
 Thermal drive, $d=3$, kernel containing $1$ and $|v|^2$
  & Positivity, dual certificates, all-$k$ bounds and sharp leading
 coefficient with $O(k^4)$ remainder, conditional on form solvability;
-exact Dougherty response and both limits; Landau collisionless limit
-$|k|\chi_\thr\to\tfrac95\sqrt{2/\pi}$ under the same solvability
- & Stationary solvability for Landau with the source $\zeta$; a
-collisionless limit without momentum conservation\\
+exact Dougherty response and both limits. For Landau: solvability, hence
+all of these, and the collisionless limit
+$|k|\chi_\thr\to\tfrac95\sqrt{2/\pi}$, given the cited operator estimates
+ & Solvability for a general operator in the class; a convergence rate\\
 \addlinespace
 Electron--electron plus electron--ion
- & The thermal theorems with the zero-current conductivity, under their
-hypotheses; Galerkin constants and curves for $Z=1$ to $64$, checked
+ & Weighted solvability, hence the thermal theorems with the zero-current
+conductivity at every $k$; collisionless limit
+$|k|\chi_\thr\to\tfrac95\sqrt{2/\pi}$ for every $Z>0$; both given the
+cited like-particle estimates. Galerkin constants and curves for $Z=1$ to $64$, checked
 against Braginskii and the Lorentz limit; quasi-neutral embedded test
- & A weighted existence theorem; certified constants; converged curves
+ & Certified constants; a convergence rate; converged curves
 at large $Z$ or $|k|\lambda_e$; the $\sqrt Z$ scaling as a theorem\\
 \bottomrule
 \end{tabularx}

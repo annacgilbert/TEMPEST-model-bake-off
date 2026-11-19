@@ -78,28 +78,33 @@
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/PLAN.md",
-      "sha256": "4aec9d4073846a35565a266a8c504d40e2079138cbdf059fc608c468dcbfeec0",
-      "bytes": 6200
+      "sha256": "68f2191fbfd200a3f4ad5d73601f70b3bf45074c9ad12b1942cc98e8ee0d124d",
+      "bytes": 8418
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/README.md",
-      "sha256": "be33833d919f9437f805730910a0769dd906dbefe7f114b2d208a9eb0c5aab92",
-      "bytes": 4557
+      "sha256": "45595d2073d6a874780c8fbf8edca92c1a4f91271429b9207b9774a34237067f",
+      "bytes": 4707
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/SOURCE_AUDIT.md",
-      "sha256": "1dead9046d3403c64df0cc5e28320d826aaee3dcf6fb3a71223173c36a6b78d6",
-      "bytes": 12251
+      "sha256": "f5d5437032d0aecbd90bbacbe742b65d2120ef6294f4c9a3e0c3bf54300e2abf",
+      "bytes": 14776
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/VALIDATION.md",
-      "sha256": "df509c427de0498d25849aa2ac42e956ca9b96cff6aac324d9c667bb13a72386",
-      "bytes": 8036
+      "sha256": "749f218da0abbb30cdf847f84dc2559134eb9357b3091f1c0003af92e89b1276",
+      "bytes": 9884
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/config.json",
       "sha256": "431307debb9bb11b70210404125e303b6777b8f5e1705be9f947fee644d9fb7f",
       "bytes": 399
+    },
+    {
+      "path": "shared/docs/plasma_heat_flux_paper/config_matrix.json",
+      "sha256": "73628302d307fe6dc233205ebc83b7c0a67dabed9a1aa51ae919190a83cd082f",
+      "bytes": 230
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/extra_airy_check.py",
@@ -137,6 +142,11 @@
       "bytes": 439
     },
     {
+      "path": "shared/docs/plasma_heat_flux_paper/figures/landau_matrix.tex",
+      "sha256": "42f4bbe90f0699ce7a21e13e9deae0c78f46ef4165dc595ea477f2d1ce39d377",
+      "bytes": 676
+    },
+    {
       "path": "shared/docs/plasma_heat_flux_paper/figures/landau_refinement.tex",
       "sha256": "992766194ff09bff8d2b274c73f5619acc5d31665923ec6a6c71113bac61e3c0",
       "bytes": 605
@@ -145,6 +155,11 @@
       "path": "shared/docs/plasma_heat_flux_paper/figures/provenance.json",
       "sha256": "e395d6403bcc865759e86664b8457acfa9ba65432a1041f31720e9a42d397565",
       "bytes": 154
+    },
+    {
+      "path": "shared/docs/plasma_heat_flux_paper/figures/provenance_matrix.json",
+      "sha256": "b7ae8ecd33f037c6b894124c125f9c4806bfcbf742caff5e962a2810915b9508",
+      "bytes": 222
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/figures/relaxation_comparison.pdf",
@@ -158,8 +173,8 @@
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/manuscript.tex",
-      "sha256": "b011e6f413206f1b4c1cb1e1a9b11b48ce5cdd607796002d8390fb03edb48733",
-      "bytes": 125219
+      "sha256": "98015dd01de7fb4f61f769e1c66035ffc0824cf34f370db997b48b5971122659",
+      "bytes": 144265
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/numerics.py",
@@ -168,8 +183,8 @@
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/output/pdf/manuscript.pdf",
-      "sha256": "a6a8f71a0af410cfe7a0b8a1285f72dece447fc0d5a7b0250c919d938849743b",
-      "bytes": 561366
+      "sha256": "57eeb9f93555c37de36f5e948963b89840ef7067de54347b409bb4343fec3701",
+      "bytes": 596401
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/references.bib",
@@ -185,6 +200,11 @@
       "path": "shared/docs/plasma_heat_flux_paper/requirements.txt",
       "sha256": "15023b79e401f66ffb55a42f011bffb70f3cdca94701c24f00b8354cbdbb7fc4",
       "bytes": 46
+    },
+    {
+      "path": "shared/docs/plasma_heat_flux_paper/response_matrix.py",
+      "sha256": "050402f65cd5766bf8ad5d6226bba0e0b56446ac5875003a634b57a87f47ff12",
+      "bytes": 7528
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/results/2026-11-17-fresh/extra_checks.json",
@@ -205,6 +225,16 @@
       "path": "shared/docs/plasma_heat_flux_paper/results/2026-11-17/metrics.json",
       "sha256": "0f96e4463ad85f140abb9d0d0ad3a776ad4b9a91a1cfc0bbb6b6bcaa2186e1b9",
       "bytes": 324532
+    },
+    {
+      "path": "shared/docs/plasma_heat_flux_paper/results/2026-11-18-matrix/constants.json",
+      "sha256": "a84e8acce931a74dc59733713b45e08a43255b58a8b7858efdbbaade27730142",
+      "bytes": 625
+    },
+    {
+      "path": "shared/docs/plasma_heat_flux_paper/results/2026-11-18-matrix/metrics.json",
+      "sha256": "40b643f5c464d31d0bedb3defa430a47938154b9821728d6bc2e6d69460b7b7c",
+      "bytes": 7254
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/test_numerics.py",
