@@ -78,23 +78,23 @@
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/PLAN.md",
-      "sha256": "0110851303f02cca3e6ac160ef04c27561bd368dabf54ef192558de2070714af",
-      "bytes": 12957
+      "sha256": "7ef7a8fa97c41b561d82ffd7f6641a502893b2740a2fde9611b5e249fe7b1d16",
+      "bytes": 14940
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/README.md",
-      "sha256": "23385e0e60f0057a29b756e9d53f708b92b314beea4393056d647e306a8c5789",
-      "bytes": 5671
+      "sha256": "5b4d43ebb372848ee6efc793321c0e4275791a50daed9f6f33a426fae10643d0",
+      "bytes": 6539
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/SOURCE_AUDIT.md",
-      "sha256": "dfd1db04588054d71eef0276ddfdc7f76f757dfaeb4f1d2cc8c51a49b536c9f9",
-      "bytes": 18745
+      "sha256": "aa645b284e39c752ff1f89270ceecdda71cfdd0da48b72a72fd6bd9f976ae953",
+      "bytes": 21972
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/VALIDATION.md",
-      "sha256": "80306494ee17451f643ec5b2cfb1b93d012fb5732ad9a1a12bdd100725f1c4be",
-      "bytes": 15921
+      "sha256": "1b11df4819d2b32c47ea635331d7fd2887d4011cfec3426831c13de42deec3c1",
+      "bytes": 21789
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/config.json",
@@ -173,8 +173,8 @@
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/manuscript.tex",
-      "sha256": "e1bdfdc53fb19238533ba74c5f22a6c1208b2b2f73829d1a36764655d12d3c26",
-      "bytes": 178802
+      "sha256": "bed6576bc538b9b4350004c9b061f0da0822c2c19790b8175d3b766128c1ae0f",
+      "bytes": 270132
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/numerics.py",
@@ -183,13 +183,13 @@
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/output/pdf/manuscript.pdf",
-      "sha256": "46fc00544d7172b78f427af0e81e4183450a219aacf53ee2f1979acce7c0ad3e",
-      "bytes": 690106
+      "sha256": "5e78781a4fa2f90bde8f87c08732d70828870132f3e3284b24ecdd7a4cdbe144",
+      "bytes": 852300
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/references.bib",
-      "sha256": "0a9d7682707f05eb0869cfd74da9d2058955dd0ce17c56220059ebbe38b220af",
-      "bytes": 6196
+      "sha256": "02a31fbbbda9b21b30edb574931129fa1688968b68d91a55797179f6f70903c6",
+      "bytes": 6503
     },
     {
       "path": "shared/docs/plasma_heat_flux_paper/reproduce.py",
@@ -285,6 +285,46 @@
       "path": "shared/docs/plasma_heat_flux_paper/figures/provenance_large_z.json",
       "sha256": "41fb958f407486a08d582cc4bcc1c24457cadebd5f4bed7f3af5f35ee0a7087f",
       "bytes": 230
+    },
+    {
+      "path": "shared/docs/plasma_heat_flux_paper/potential_counterexample.py",
+      "sha256": "7fc8f9d4a7153a4c816bc91291c793d8951342ba7c47a82d4394a6f3041cc131",
+      "bytes": 32885
+    },
+    {
+      "path": "shared/docs/plasma_heat_flux_paper/config_counterexample.json",
+      "sha256": "7eb49cee076650d6851501acc37950a997740c7619ed0bd8dd7b937bd618c50a",
+      "bytes": 1824
+    },
+    {
+      "path": "shared/docs/plasma_heat_flux_paper/results/2026-11-18-counterexample/metrics.json",
+      "sha256": "3809e596149da353118c64d5ee9c4ad20d56274d922213607d995edcd2386448",
+      "bytes": 91354
+    },
+    {
+      "path": "shared/docs/plasma_heat_flux_paper/frequency_response.py",
+      "sha256": "50de33724fc9c19b5a7164f1ce7457e0cfced65a387fcd652f24d2727052e210",
+      "bytes": 28135
+    },
+    {
+      "path": "shared/docs/plasma_heat_flux_paper/config_frequency.json",
+      "sha256": "ca2babb7011eed04b882cb2794dfc9fd8816069934fa29182215552ea5454dde",
+      "bytes": 1248
+    },
+    {
+      "path": "shared/docs/plasma_heat_flux_paper/results/2026-11-18-frequency/metrics.json",
+      "sha256": "6c34802989c42c6e7b49b7c8c987e0fcc5eff3b9faab086fa65d7b6ba73a6469",
+      "bytes": 78533
+    },
+    {
+      "path": "shared/docs/plasma_heat_flux_paper/rate_check.py",
+      "sha256": "2aa6a57993fa3d724c39f35d8c4d72eeca50c57fdadd79b13e954444f5ff546f",
+      "bytes": 8945
+    },
+    {
+      "path": "shared/docs/plasma_heat_flux_paper/results/2026-11-18-rate/metrics.json",
+      "sha256": "3233db0d4a2b3ed1b1366b2c850df72fab14e6dc605fe2eee265fe767475648b",
+      "bytes": 6926
     }
   ],
   "extension_inputs": [

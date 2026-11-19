@@ -211,3 +211,37 @@ detail of Appendix C and rest on the same cited estimates; the large-`s`
 behavior of `X` is not proved; the three-dimensional Galerkin values at
 large `Z` converge slowly and are a consistency check, not a confirmation
 to many digits; no independent referee.
+
+## Remaining items: potential-drive sharpness, frequency response, rate (18 November 2026)
+
+Requested by the author: the remaining items of the next-results list, with
+the proof work delegated to three independent subagents. Each writes a
+LaTeX fragment and a report outside the repository and its own script,
+configuration and result directory here; none edits the manuscript or the
+records. Integration, checking and the records are done afterwards in the
+main session.
+
+A. Sharpness of the potential-drive obstruction (item 4).
+   - Candidate counterexample to the Fourier upper bound: BGK with a
+     separate stress relaxation rate `nu_s` (the linearized ellipsoidal
+     model). Sketch: `K = 16/(5 nu^2) - 4/(5 nu nu_s)`, negative for
+     `nu_s < nu/4`. To be proved, checked against Dougherty (`2/15`) and
+     numerically, and extended to the sign of `chi_pot`, condition (a) of
+     Proposition 6.4 and the Stieltjes property at finite `k`.
+   - `chi_pot >= chi_th` is equivalent to
+     `2 M_perp,perp >= M_par,par + M_par,perp`; prove what can be proved
+     (BGK, Dougherty, small and large `k`) and test the family above.
+B. Frequency response and transfer bound (item 3).
+   - Exact memory form of the closure for forcing and initial data in the
+     retained subspace; positive-real kernel `chi(k, s)`; consistency with
+     the quasi-static responses and the exact BGK formula (4.6).
+   - A bound on the error of the quasi-static closure in the two embedded
+     tests in terms of the kernel's frequency dependence; compare the bound
+     with the measured errors of Tables 4 and 10.
+C. Rate for the collisionless limit and the intermediate range (item 5).
+   Exploratory: make the flux lemma quantitative if possible; otherwise
+   document precisely where it fails. No result is promised.
+
+Evidence boundaries: subagent proofs are checked in the main session before
+anything enters the manuscript; what cannot be checked or proved is
+recorded as open, not stated.

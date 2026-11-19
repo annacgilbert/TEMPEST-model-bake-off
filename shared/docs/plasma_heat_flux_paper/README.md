@@ -1,6 +1,6 @@
 # Nonlocal heat-flux closure across collision models
 
-A 54-page research manuscript synthesized from the plasma-closure notes in the parent
+A 77-page research manuscript synthesized from the plasma-closure notes in the parent
 directory, with a unified physical energy-flux convention, proofs, primary
 references, and reproducible numerical evidence. The original notes are unchanged.
 
@@ -23,7 +23,13 @@ positive real-space kernel that is a mixture of exponentials, and with
 two-sided Pade bounds. At large ion charge (Section 8.1, Appendix E) the
 normalized deficit is proved to grow linearly in `Z`, with slope
 `C_inf/kappa_L = 1.4305`, and the response converges to a radial diffusive
-limit with two-sided bounds.
+limit with two-sided bounds. Section 8 gives explicit relaxation operators
+for which the potential-driven conductivity exceeds the Fourier value or is
+negative, and compares the two drives. Section 12 writes the exact closure
+for data in the retained moments as a convolution in time with a
+positive-real kernel and bounds the error of the quasi-static closure in
+the two embedded tests. Appendix D.6 gives the like-particle collisionless
+limit the rate `O(|k|^(-2/3) log|k|)`.
 The Landau collisionless boundary-layer conclusion is explicitly conditional,
 and the electron results assume form-domain solvability.
 The manuscript has no assigned authors; authorship can be added before circulation
@@ -65,6 +71,12 @@ independent radial discretization of the Landau form, cross-checks it
 against the cached matrices, and compares with the three-dimensional
 electron computation (`config_large_z.json`, `results/2026-11-18-largez/`,
 under one second); its `figures` subcommand writes Table 9 and Figure 5.
+`potential_counterexample.py` (Section 8, `config_counterexample.json`,
+`results/2026-11-18-counterexample/`, 16 s), `frequency_response.py`
+(Section 12, `config_frequency.json`, `results/2026-11-18-frequency/`, 40 s)
+and `rate_check.py` (Appendix D.6, `results/2026-11-18-rate/`, 33 s, seeded
+Monte Carlo) each take a new result directory or refuse to overwrite the
+recorded one; see `VALIDATION.md` for the commands.
 `extra_airy_check.py` checks the boundary-layer profile identities of
 Appendix D by quadrature and prints the residuals (about nine minutes).
 `extra_checks.py` compares transport constants against the archived cache-based

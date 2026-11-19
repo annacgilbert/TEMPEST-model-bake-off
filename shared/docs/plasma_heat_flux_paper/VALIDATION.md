@@ -294,3 +294,113 @@ not have), and the `O(1)` term of the linear law.
 
 Build: 54 pages, no undefined references, no overfull boxes. Pages 22-23,
 32-33 and 48-51 were read from the PDF.
+
+## Counterexamples, frequency response and rate (18 November 2026)
+
+Manuscript: Section 8 (Theorems 8.4 and 8.7, Propositions 8.3, 8.5, 8.8,
+Corollary 8.6), Section 12 (Theorems 12.2 and 12.6, Propositions 12.3 and
+12.4, Corollaries 12.5, 12.7, 12.8, Table 11), Appendix D.6 (Theorem D.5,
+Corollary D.6, Lemmas D.7-D.10, Proposition D.13). The numbering of later
+sections moved: electrons are now Section 9, numerics 10 and 11, the
+electron boundary layer D.7. See `PLAN.md` and `SOURCE_AUDIT.md`.
+
+The proofs and computations were produced by three delegated subagents and
+then checked in the main session (what was checked is listed in
+`SOURCE_AUDIT.md`). Their scripts and metrics are kept unmodified.
+
+### Section 8: `potential_counterexample.py`
+
+```
+python3 potential_counterexample.py results/2026-11-18-counterexample
+```
+
+- `metrics.json`: status complete, 23 checks, 0 failures, 15.7 s; 11 cases
+  listed as nonconverged; 351 quadrature roundoff warnings counted.
+- Three evaluations of the stationary response (closed form of Proposition
+  8.5, finite-rank linear system with adaptive quadrature, polynomial
+  Galerkin at degrees 12 and 16) agree to 4.4e-13 at the cross-check points
+  and 1.2e-10 over the three-rate scan for `k/nu >= 0.05`; Galerkin agrees
+  to 3.1e-13 on the overlap `0.05 <= k/nu < 0.1`.
+- Galerkin collision solves reproduce the constants of Theorem 8.4, the
+  identities of Lemma 8.2, `K = 12/(5 nu^2)` for BGK and `2/15` for
+  Dougherty to 1e-13.
+- Proved instance of Theorem 8.7 (`nu = 100 nu_s`, `nu_q = nu_s`,
+  `k = 2 nu_s`): computed `nu_s T_1 = 0.1857`, `chi_pot = -1.346/nu_s`,
+  against the proved lower bound 0.037.
+- Numerical only: sign-change thresholds `nu/nu_s > 6.75, 8.28, 10.79,
+  15.03, 22.37` for `nu_q/nu_s = 0.25, 0.5, 1, 2, 4`; maxima of
+  `chi_pot/kappa_F` in the ellipsoidal family (1.09, 1.20, 1.66 at
+  `nu_s/nu = 0.1, 0.05, 0.001`); the Stieltjes sign test of the
+  ellipsoidal closed form at 2178 complex points (violations for every
+  sampled `nu_s/nu <= 0.5`, none for 0.6, 1, 2, 5; a finite-grid
+  observation).
+- Coupled-stress operator of Proposition 8.8(c): `K = 5.405`,
+  `K_th = 3.565`, and `chi_th > chi_pot > 0` for `k/nu <= 0.5`.
+- Landau (cached matrices, degree 16): `4 eta - X_0 = 3.046`,
+  `K_th - K = 4.011`, `M_perp,perp >= M_par,par >= M_par,perp` at the seven
+  wavenumbers of Table 8. Nothing is proved for Landau.
+- Failures kept on the record: trial run 1 (scratch) had two failed checks
+  because the finite-rank system and the closed form lose digits for
+  `k/nu < 0.05`; the scan now uses Galerkin there. Trial run 2 used a
+  Stieltjes grid ending at argument `0.9 pi` that wrongly passed
+  `nu_s/nu = 0.4` and `0.5`. Polynomial Galerkin does not converge for
+  BGK-type operators at `k/nu >= 1` (1.7% off at 1, 46-50% at 3); nothing
+  rests on those cases.
+- Not validated: the Dougherty response-matrix formulas at the end of
+  Section 8.5 have no written proof (they match Galerkin to 1e-12 for
+  `k/nu <= 0.3`); the ordering proof does not use them.
+
+### Section 12: `frequency_response.py`
+
+```
+python3 frequency_response.py results/2026-11-18-frequency
+```
+
+- `metrics.json`: status complete, 239 checks, 0 failures, 39.7 s.
+- Memory identities against the kinetic resolvent: 2.6e-11. Static
+  contractions (Proposition 12.3) for three-dimensional Dougherty and
+  Landau: 1.3e-12. `chi(k,0)` against the existing codes: 2.7e-11. BGK
+  kernel against the closed form (4.6): 2.1e-11 at 15 points (Hermite
+  degree 6000). Reduced rollout against the saved kinetic histories: about
+  1e-11; saved embedded errors reproduced to 3e-14. Plancherel (Lyapunov
+  against frequency quadrature): 2e-5. `Re chi > 0` on every grid.
+- Table 11 is copied from this run. The supremum bound exceeds the
+  infinite-window error by 1.4-3.8 (electrons) and 2.0-2.4 (sound); the
+  weighted bound by at most 32% (electrons) and 6%, 39%, 51% (sound).
+- Caveats: suprema over frequency are taken on a grid of about 1.9e4
+  points, not certified. The theorem bounds the error on `(0, infinity)`,
+  not on the saved window (at sound `k = 0.1` the window holds 86.5% of the
+  norm and has error 0.020 against 0.033). `gamma_0 tau_m` is not a bound
+  and `tau_m` is negative for `Z = 8` at `k lambda_e >= 0.03`. The Galerkin
+  gap behind `tau_*` is not uniform in degree (0.247 at 12, 0.206 at 16).
+  The row `Z = 8`, `k lambda_e = 0.3` is not resolved (error 0.143 at
+  degree 12, 0.114 at 16). In the degree-12 electron rows of the metrics
+  the field `bound_*_finite_window_over_saved_error` divides by the
+  recomputed degree-12 error; those rows are diagnostics.
+
+### Appendix D.6: `rate_check.py`
+
+```
+python3 rate_check.py        # writes results/2026-11-18-rate, refuses to overwrite
+```
+
+- `metrics.json`: no failures, 33 s, seed 20261118 (Monte Carlo part only).
+- Splitting identity of Lemma D.7 by Monte Carlo for four functions:
+  differences 1e-5 +- 2e-4, -4e-3 +- 5e-3, 2e-4 +- 1e-3, 1e-3 +- 2e-3 in
+  units of `c_Lambda`; exact at `f = 1` by hand.
+- Dougherty first corrections (Proposition D.13): coefficients 0.904,
+  -1.557, -1.047, -0.919 against 0.906, -1.549, -1.048, -0.916 computed at
+  `nu/|k| = 0.005`.
+- One-dimensional Dougherty certificates with the boundary-layer trial
+  functions: relative gaps 5.8e-5 (lower) and 7.3e-4 (upper) at
+  `k/nu = 1e4`, local slopes -0.94 and -0.99. A computation, not a proof,
+  that the trial functions do better than the proved exponent 2/3.
+- Not validated numerically: Theorem D.5 for Landau itself (no computation
+  reaches the layer), and the constant in it.
+
+Citation: Gilbarg-Trudinger, Theorem 8.8 (interior `H^2` regularity), from
+memory; not re-checked against the book.
+
+Build: 77 pages, no undefined references, no overfull boxes. Pages 24-25
+and 49 were read from the PDF; the three fragments were read in full in
+source form.

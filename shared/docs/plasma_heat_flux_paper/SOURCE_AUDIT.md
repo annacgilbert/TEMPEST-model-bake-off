@@ -313,3 +313,59 @@ derived in this session.
    high-`Z` nonlocal formulas, which was not attempted.
 
 Standing caveats: same assistant, one session, no independent referee.
+
+## Counterexamples, frequency response and rate (18 November 2026)
+
+New material, not in any source note. Each part was derived by a delegated
+subagent from a brief written in the main session, then read in full and
+checked there before it entered the manuscript. The check is by the same
+model family and is not an independent human referee.
+
+Section 8 (potential-drive counterexamples).
+- Sketch from the main session, confirmed: for BGK with a separate stress
+  rate, `K = 16/(5 nu^2) - 4/(5 nu nu_s)`.
+- Added by the subagent: the heat-flux rate `nu_q`, without which the
+  conductivity never changes sign; the universal identity
+  `b_* + b_th = theta/3`; the closed form; the ordering results.
+- Rechecked by hand in the main session: Lemma 8.2 (both pairings),
+  Proposition 8.3, the constants of Theorem 8.4, the decompositions and
+  norms in the proof of Theorem 8.7 (108/5 and 8), the elimination giving
+  `T_1`, the arithmetic of the explicit instance (0.22 - 0.1826), the
+  variance identity of Corollary 8.6(b), and the coupled-stress formula of
+  Proposition 8.8(c).
+- Not rederived line by line: the algebra leading to the closed form (8.7)
+  and (8.8). It is supported by agreement of three computations to 1e-12.
+- Statements this supersedes: "not manifestly nonnegative" (Theorem 5.3),
+  "We do not know" (Section 6.3), "we have not proved this" (Section 11.4),
+  and the discussion sentence on enforcing `0 < chi <= kappa_F`.
+
+Section 12 (frequency-dependent closure).
+- Corrections to the main-session sketch: the kernel is
+  `<Q, (B_k + s)^-1 Q>` with the compression to the complement of
+  `{1, v_x, |v|^2}` (the sketch had an unprojected source and a compression
+  that is singular at `s = 0`); `chi_pot` is the nonlinear contraction
+  `K_qq/(1 - i k K_q,pi)`; the memory time is sign-indefinite and comes
+  from one transport-plus-collision solve.
+- Rechecked by hand: the projection identities (12.3), the reduction in
+  all three cases of Theorem 12.2, the contraction formula (12.11), the
+  energy identity, the difference formula and Plancherel step of Theorem
+  12.6, the resolvent-identity bound and the parity argument of Corollary
+  12.8.
+- Hypothesis (b) of Assumption 12.1 is asserted for BGK and Dougherty as
+  standard and is not written out. It is not verified for Landau and
+  fails as stated for `Lambda_Z`; for those operators the section is about
+  Galerkin truncations.
+
+Appendix D.6 (rate).
+- Rechecked by hand: every integration by parts in Lemma D.7 and the
+  value `div(S v) = 8 pi c M`; the commutator identity and each of the
+  five absorbed terms in Lemma D.8; the duality argument of Lemma D.9; the
+  three cases of Lemma D.10; every power of `k` in the lower and upper
+  bounds; the Dougherty expansion of `S_0` and the `d = 1` coefficient.
+- Consequence for the inputs: estimate (W5) is no longer needed for the
+  rate proof (Lemma D.7 replaces it by an identity), and (W4) at weight
+  zero follows from (W1). The original proof in D.1-D.5 is left as it was.
+- Inherited from the earlier proof and not rechecked now: the bound
+  `|Phi_k^0 - sigma delta F'| <= C |sigma| delta^3 (1 + v_x^2)`.
+- Not obtained: a rate for `Lambda_Z`; an explicit constant; the sharp
+  exponent.

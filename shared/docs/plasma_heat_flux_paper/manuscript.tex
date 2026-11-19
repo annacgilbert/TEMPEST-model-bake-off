@@ -75,7 +75,10 @@ both the collisional and the collisionless limits.
 Three velocity dimensions are harder. The potential-driven temperature
 response picks up a stress cross term, and what survives is a set of
 two-sided small-wavenumber bounds, the leading coefficient, and the
-positivity criterion $k^2\F\eta<3$. Weighted coercivity estimates make
+positivity criterion $k^2\F\eta<3$. Nothing more survives in general:
+for relaxation operators with a slow stress $\chi>\F$, and with a slow
+heat flux as well $\chi<0$, so the constant $3$ cannot be raised above
+$25/8$. Weighted coercivity estimates make
 these rigorous for like-particle Landau--Coulomb collisions. For that
 operator we also prove the collisionless limit
 $|k|\chi\to3\sqrt{2/\pi}$, by matching variational bounds built on an
@@ -107,17 +110,22 @@ a radial like-particle problem, and at large $Z$ the whole response
 converges, with two-sided bounds, to a diffusive limit that depends on
 the wavenumber only through $\sqrt Z\,k\lambda_e$. Matching the
 conductivity does not match the closure.
-Whether matching the static response does depends on the dynamics. In a
+Whether matching the static response does depends on the dynamics. The
+exact closure for data in the retained moments is a convolution in time
+with a positive-real kernel whose zero-frequency value is the quasi-static
+response, and the error of the quasi-static closure is bounded by the
+variation of that kernel over the frequencies the closed model excites. In a
 one-dimensional model coupled to sound waves, the exact quasi-static
 closure has transient errors of up to $34\%$. In the quasi-neutral decay
 of an electron temperature perturbation it stays within $2\%$ for $Z=1$
 at $|k|\lambda_e\leq0.3$, where Spitzer--H\"arm conduction is off by
 $42\%$.
 These results are analytic tests for learned and classical closures
-alike. They are not a general constitutive law. The collisionless limits
-come without a rate, and the Landau and electron theorems rest on
-published coercivity estimates for the Landau operator, which we cite and
-do not reprove.
+alike. They are not a general constitutive law. The like-particle
+collisionless limits come with the rate $O(|k|^{-2/3}\log|k|)$ and an
+inexplicit constant, the electron limit with no rate, and the Landau and
+electron theorems rest on published coercivity estimates for the Landau
+operator, which we cite and do not reprove.
 \end{abstract}
 \noindent\textbf{Keywords:} kinetic closure; nonlocal transport; BGK;
 Dougherty; Landau operator; electron--ion collisions;
@@ -169,13 +177,16 @@ closed-form inverse of the collision operator. Second, we work out the
 BGK and Dougherty models explicitly, so that both the analysis and the
 computations have exact responses to check against. Third, we keep the
 stress contribution in three dimensions and show exactly where the
-one-dimensional positivity argument breaks down. A weighted functional
+one-dimensional positivity argument breaks down. The breakdown is real:
+explicit relaxation operators violate the Fourier upper bound and
+positivity (\cref{sec:ce}). A weighted functional
 setting for Landau--Coulomb collisions, together with reproducible
 Galerkin calculations, connects these estimates to a more realistic
 collision kernel. For that kernel we also prove the collisionless limit
 (\cref{thm:airy}): the resonant layer has width $(d/k)^{1/3}$, with $d$
 the local velocity diffusion coefficient, and the limiting response does
-not depend on $d$.
+not depend on $d$. The limit is approached at the rate
+$O(|k|^{-2/3}\log|k|)$ (\cref{thm:rate}).
 
 The last two parts move toward the problem that plasma transport codes
 actually close, which is electron heat flux. Fourth, we replace the
@@ -320,9 +331,10 @@ without division by a possibly zero temperature response, is
  \label{eq:transfer}
 \end{equation}
 When $\av{\zeta_dg_\omega}\ne0$, the ratio $\widehat q/\widehat T$ is the
-exact response to this input. The response is tied to the input: nonzero
-initial data, or a source with a different velocity dependence, adds
+exact response to this input. The response is tied to the input: initial
+data or a source with a component outside the retained moments adds
 other resolvent terms and generally changes the ratio.
+(\Cref{thm:mem-closure} says exactly which data do not.)
 
 Suppose $g_\omega$ converges in the required moments to
 $g=\A_k^{-1}1=g_e+iw$, where $g_e$ is real and even and $w$ real and odd.
@@ -770,8 +782,11 @@ Also $-T_1\leq1/(k^2\F)+C+X_{\max}/3$.
 Inverting these two positive bounds proves \eqref{eq:3dbounds}.
 \end{proof}
 
-The upper bound now allows $\chi>\F$. Nonnegative collision
-dissipation by itself does not remove the stress cross term.
+The upper bound now allows $\chi>\F$, and this happens
+(\cref{thm:ce-fourier}). Nonnegative collision
+dissipation by itself does not remove the stress cross term, and without
+further structure the conductivity can even be negative
+(\cref{thm:ce-negative}).
 So what is missing? Define
 \[
  T_{\parallel1}=\av{(v_x^2-1)g_e}=-n_1,\qquad
@@ -831,7 +846,7 @@ Under the preceding hypotheses and \cref{ass:second}, as $k\to0$,
 Thus the one-dimensional global-bound constant is sharp at the origin.
 The three-dimensional coefficient
 $K=\F\av{b_*-\vartheta/3,\Lambda^+b_*}$
-is not manifestly nonnegative for an arbitrary conserving operator.
+can be negative for a conserving operator (\cref{thm:ce-fourier}).
 \end{theorem}
 
 \begin{proof}
@@ -1047,12 +1062,36 @@ Since $k\,t_k\av{\xi\varphi_k}\to0$, we get $kT_{\perp1}\to0$. Equations
 \eqref{eq:perptest} and \eqref{eq:chi} finish the proof.
 \end{proof}
 
-What does this leave open? The convergence has no rate, because the
-compactness step is not constructive. So there is no explicit wavenumber
-beyond which positivity holds. Positivity of the potential-driven Landau
-conductivity is now proved for $k^2\F\eta<3$ and for all sufficiently
-large $|k|$; in between it rests on the finite-degree computations below,
-which do not resolve the layer.
+The convergence has a rate. In \cref{app:rate} we replace the two
+non-quantitative steps of the proof, one by an exact identity for the
+Landau form and the other by a duality argument, and obtain
+\begin{equation}
+ |k|\,M(k)=\sqrt{\frac\pi2}\begin{pmatrix}1&0\\0&1\end{pmatrix}
+   +O\bigl(|k|^{-2/3}\log|k|\bigr)
+ \label{eq:ratemain}
+\end{equation}
+for the response matrix of \cref{sec:th-matrix}, and with it the same rate
+for $|k|n_1$, $|k|T_{\perp1}$, $\theta_{\rm L}$ and $|k|\chi_\thr$
+(\cref{thm:rate,cor:rate}). We do not think the exponent is sharp: for the
+Dougherty operator the exact formulas give a first-order approach,
+$\theta_3=3\sqrt{2/\pi}\,[1-1.557\,\nu/|k|+O(\nu^2/k^2)]$
+(\cref{prop:rate-dougherty}).
+
+What does this leave open? The constant in \eqref{eq:ratemain} is not
+explicit, so there is still no explicit wavenumber beyond which positivity
+holds. Positivity of the potential-driven Landau conductivity is proved
+for $k^2\F\eta<3$ and for all sufficiently large $|k|$; in between it
+rests on the finite-degree computations below, which do not resolve the
+layer. Closing the gap would take two further things. The first is an
+explicit threshold, which needs explicit values of every constant in
+\cref{app:rate}, among them the coercivity constant in \eqref{eq:W2};
+constructive values exist \cite{Mouhot2006} but are far from sharp, and
+the threshold obtained this way would be very large. The second is a
+proof on the remaining compact interval: layer-resolving trial functions
+in the certificates of \cref{thm:th-dual}, with rigorous enclosures of
+their Landau forms and of the dual seminorms of their sources, extended
+from a grid of wavenumbers by the monotonicity of \cref{thm:stieltjes}.
+We have done neither.
 
 \subsection{The intermediate range}\label{sec:intermediate}
 
@@ -1097,7 +1136,10 @@ in the notation of \cref{sec:th-matrix}; so (b) holds there with a margin
 of $1/9$. At small $|k|$, $n_1$ grows like $1/(k^2\F)$, while
 $N_\vartheta\leq12\eta$ at every $k$ by the upper certificate of
 \cref{thm:th-dual} with the zero trial. Is (a) true for every
-conserving, isotropic, nonnegative collision operator? We do not know.
+conserving, isotropic, nonnegative collision operator? No. It fails,
+and so does positivity, for relaxation operators in which the stress and
+the heat flux relax slowly (\cref{sec:ce-negative}). So a proof for
+Landau must use more than the properties listed in \cref{sec:setting}.
 
 We tried one more route and record that it does not help. In the
 notation of \cref{sec:th-matrix}, $-3T_1=c\cdot Mc-M_{\perp\perp}$ with
@@ -1735,6 +1777,638 @@ need not be positive. This is the obstruction of \cref{sec:3d} again, in
 its sharpest form. For Landau collisions at finite degree the measure is
 in fact not positive (\cref{sec:th-stcheck}).
 
+\section{The potential drive: counterexamples and the ordering of the drives}\label{sec:ce}
+
+\subsection{Relaxation operators with separate rates}\label{sec:ce-family}
+
+\Cref{sec:3d,sec:intermediate} left three questions open for the
+potential drive in three dimensions: whether $\chi_\pot\leq\F$, whether
+$\chi_\pot>0$, and whether condition~(a) of \cref{prop:intermediate}
+holds for every conserving, isotropic, nonnegative collision operator.
+The answer to all three is no. The counterexamples are relaxation
+operators, and everything about them can be computed.
+
+Let $\Pi_H$ be the $L^2(M)$ projection onto the collision invariants,
+$\Pi_\vartheta$ the projection onto the five-dimensional space of
+traceless quadratic polynomials $v_iv_j-\tfrac13|v|^2\delta_{ij}$, and
+$\Pi_Q$ the projection onto the three-dimensional space spanned by
+$v_j(|v|^2-5)$. Within the axisymmetric class these last two are the
+projections onto $\vartheta$ and onto $Q$, with
+$\av{\vartheta^2}=12$ and $\av{Q^2}=\tfrac52$. For rates
+$\nu,\nu_s,\nu_q>0$ put
+\begin{equation}
+ \Lambda=\nu\,(I-\Pi_H)-(\nu-\nu_s)\,\Pi_\vartheta-(\nu-\nu_q)\,\Pi_Q .
+ \label{eq:ce-op}
+\end{equation}
+Every mode orthogonal to the invariants relaxes at the rate $\nu$, except
+the stress, which relaxes at $\nu_s$, and the heat flux, which relaxes at
+$\nu_q$. The operator is real, symmetric and bounded, it commutes with
+rotations, its kernel is exactly $H$, and
+$\Lambda\geq\min(\nu,\nu_s,\nu_q)(I-\Pi_H)$. For $\nu_q=\nu$ it is the
+linearized ellipsoidal-statistical BGK operator, and for
+$\nu_s=\nu_q=\nu$ it is constant-frequency BGK. The ratio
+$\nu_q/\nu_s=\tfrac52\eta/\F$ is the Prandtl number.
+
+\begin{lemma}[Solvability]\label{lem:ce-solv}
+Let $\Lambda=\nu-\mathcal K$ be symmetric and nonnegative on $L^2(M)$
+with kernel $H$, where $\nu>0$ and $\mathcal K$ has finite rank and maps
+into the polynomials. Then for every $k\ne0$ the operator $\A_k$, with
+domain $\{g:v_xg\in L^2(M)\}$, has a bounded inverse; for a polynomial
+source $s$ the solution $\A_k^{-1}s$ is a polynomial divided by
+$\nu+ikv_x$; the resolvent $(\A_k-i\omega)^{-1}$ exists for
+$\Imag\omega\geq0$ and is norm-continuous at $\omega=0$; and
+$\Lambda^+$ maps polynomials orthogonal to $H$ to polynomials. In
+particular the operator \eqref{eq:ce-op} satisfies every hypothesis of
+\cref{thm:3dbounds,thm:leading}, \cref{ass:second,ass:th-form,ass:th-second}
+and \cref{prop:th-matrix}.
+\end{lemma}
+
+\begin{proof}
+Let $R=(\nu+ikv_x)^{-1}$, a bounded multiplication operator. Then
+$\A_k=(\nu+ikv_x)(I-R\mathcal K)$, and $R\mathcal K$ has finite rank, so
+$I-R\mathcal K$ is Fredholm of index zero. If $(I-R\mathcal K)g=0$, then
+$g=R\mathcal Kg$ is in the domain and $\A_kg=0$. The real part of
+$\av{\bar g\,\A_kg}$ is $\D[g_e]+\D[w]$ for $g=g_e+iw$, so both parts lie
+in $H$; then $ikv_xg=0$ and $g=0$. Hence $\A_k$ is invertible, and
+$g=R(s+\mathcal Kg)$ shows the form of the solution. For
+$\Imag\omega\geq0$ the same argument applies to
+$\A_k-i\omega$, whose real part is $\D+\Imag\omega$, and
+$\omega\mapsto(\nu-i\omega+ikv_x)^{-1}\mathcal K$ is norm-continuous, so
+the inverse is continuous at $\omega=0$. Finally $\Lambda$ equals $\nu$
+on the orthogonal complement of the range of $\mathcal K$ and is positive
+definite on the finite-dimensional space
+$(\operatorname{ran}\mathcal K+H)\cap H^\perp$, which consists of
+polynomials. All moments, pairings and collision solves that appear in
+the cited statements are therefore finite, and the trial functions are
+bounded multiples of polynomials.
+\end{proof}
+
+\subsection{Fourier's law is not an upper bound}\label{sec:ce-fourier}
+
+One identity holds for every isotropic operator.
+
+\begin{lemma}[The stress component of the source]\label{lem:ce-stress}
+Let $\Lambda$ be as in \cref{sec:setting} with $d=3$, and suppose that it
+commutes with rotations and that the quantities in \eqref{eq:CE3d} exist.
+Let $b_\thr=\zeta-v_x\Xi/\F$ be the thermal source of
+\eqref{eq:th-constants}. Then
+\begin{equation}
+ b_*+b_\thr=\frac\vartheta3,\qquad
+ \av{\vartheta b_*}=\frac{12}5,\qquad
+ \av{\vartheta b_\thr}=\frac85 .
+ \label{eq:ce-stress}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+The first identity is $1-v_x^2+\zeta=\tfrac13(|v|^2-3v_x^2)$. Since
+$\Lambda$ commutes with rotations and $Q=\tfrac12v_x(|v|^2-5)$, the
+solution of \eqref{eq:CE3d} has the form $\Xi=v_x\xi(|v|)$. Write
+$r=|v|$ and $v_x=r\mu$; the angular averages of $\mu^2$ and $\mu^4$ are
+$\tfrac13$ and $\tfrac15$. Then
+$\av{v_x|v|^2\Xi}=\tfrac13\av{r^4\xi}$, and this equals $2\F$ because
+$v_x|v|^2=2Q+5v_x$ and $\av{v_x\Xi}=0$. With
+$\vartheta=r^2(1-3\mu^2)$,
+\[
+ \av{\vartheta v_x\Xi}=\Bigl(\frac13-\frac35\Bigr)\av{r^4\xi}
+   =-\frac45\cdot2\F=-\frac85\F .
+\]
+Also $\av{\vartheta(1-v_x^2)}=-\av{v_\perp^2v_x^2}+2\av{v_x^4}=4$. Hence
+$\av{\vartheta b_*}=4-\tfrac85$, and
+$\av{\vartheta b_\thr}=\tfrac13\av{\vartheta^2}-\tfrac{12}5$.
+\end{proof}
+
+\begin{proposition}[The two leading coefficients]\label[proposition]{prop:ce-K}
+Let $\Lambda$ be conserving and isotropic and satisfy the hypotheses of
+\cref{thm:leading,thm:th-leading}. Then
+\begin{equation}
+ K_\thr-K=\frac{\F}3\,\bigl(4\eta-X_0\bigr)
+        =\frac{\F}3\av{\vartheta,\Lambda^+b_\thr}.
+ \label{eq:ce-Kdiff}
+\end{equation}
+If in addition $\vartheta$ is an eigenfunction of $\Lambda$, then
+$X_0=\tfrac{12}5\eta$ and
+\begin{equation}
+ K=\F\Bigl(C_\perp-\frac8{25}\eta\Bigr),\qquad
+ K_\thr-K=\frac8{15}\F\eta>0,\qquad
+ C_\perp=\dual{b_*-\vartheta/5}\geq0 .
+ \label{eq:ce-Keig}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+By \cref{lem:ce-stress}, $C_\thr=\dual{\vartheta/3-b_*}
+=\tfrac43\eta-\tfrac23X_0+C$, because $\dual\vartheta=12\eta$ and
+$\av{\vartheta,\Lambda^+b_*}=X_0$. Subtracting $K=\F(C-X_0/3)$ from
+$K_\thr=\F C_\thr$ gives \eqref{eq:ce-Kdiff}. If
+$\Lambda\vartheta=\eta^{-1}\vartheta$, then
+$X_0=\eta\av{\vartheta b_*}=\tfrac{12}5\eta$; the function
+$b_*-\vartheta/5$ is orthogonal to $\vartheta$, hence to
+$\Lambda^+\vartheta$, so $C=C_\perp+\tfrac1{25}\dual\vartheta
+=C_\perp+\tfrac{12}{25}\eta$, and \eqref{eq:ce-Keig} follows.
+\end{proof}
+
+The eigenfunction case covers BGK, the Dougherty operator, for which
+$\eta=1/(2\nu)$ and \eqref{eq:ce-Keig} reproduces
+$\tfrac{16}{45}-\tfrac2{15}=\tfrac29$, and the family \eqref{eq:ce-op}.
+In that case \eqref{eq:ce-Keig} shows what decides the sign of $K$: the
+stress contributes $-\tfrac8{25}\F\eta$, and everything else in $b_*$
+contributes $\F C_\perp\geq0$. A slow stress and a fast remainder make
+$K$ negative.
+
+\begin{theorem}[The Fourier bound fails]\label{thm:ce-fourier}
+For the operator \eqref{eq:ce-op},
+\begin{equation}
+ \F=\frac5{2\nu_q},\qquad \eta=\frac1{\nu_s},\qquad
+ C=\frac{12}{25\nu_s}+\frac{32}{25\nu},\qquad
+ X_0=\frac{12}{5\nu_s},
+ \label{eq:ce-constants}
+\end{equation}
+and the leading coefficients of
+\cref{thm:leading,thm:th-leading} are
+\begin{equation}
+ K=\frac4{5\nu_q}\Bigl(\frac4\nu-\frac1{\nu_s}\Bigr),\qquad
+ K_\thr=\frac8{5\nu_q}\Bigl(\frac2\nu+\frac1{3\nu_s}\Bigr).
+ \label{eq:ce-K}
+\end{equation}
+Consequently, if $\nu_s<\nu/4$, then $\chi_\pot(k)>\F$ for all
+sufficiently small $k\ne0$. For the ellipsoidal-statistical operator
+($\nu_q=\nu$) this reads $K=16/(5\nu^2)-4/(5\nu\nu_s)$, and for
+three-dimensional constant-frequency BGK $K=12/(5\nu^2)$ and
+$K_\thr=56/(15\nu^2)$.
+\end{theorem}
+
+\begin{proof}
+The function $Q$ is orthogonal to $H$ and, by parity, to $\vartheta$, so
+$\Lambda Q=\nu_qQ$, $\Xi=Q/\nu_q$ and $\F=\av{Q^2}/\nu_q$. Likewise
+$\Lambda\vartheta=\nu_s\vartheta$ and $\eta=1/\nu_s$. The source is the
+polynomial
+$b_*=1-2v_x^2+\tfrac15v_x^2|v|^2$. The moments
+$\av{v_x^2}=1$, $\av{v_x^4}=3$, $\av{v_x^2|v|^2}=5$,
+$\av{v_x^4|v|^2}=21$ and $\av{v_x^4|v|^4}=189$ give
+$\av{b_*^2}=\tfrac{44}{25}$. By \cref{lem:ce-stress} its component along
+$\vartheta$ is $\vartheta/5$, of squared norm $\tfrac{12}{25}$; it is
+even, so it has no component along $Q$. Therefore
+$\Lambda^+b_*=\vartheta/(5\nu_s)+(b_*-\vartheta/5)/\nu$,
+$C_\perp=\tfrac{32}{25}\nu^{-1}$, and \eqref{eq:ce-constants} follows.
+\Cref{lem:ce-solv} supplies the hypotheses of
+\cref{thm:leading,thm:th-leading}, and \eqref{eq:ce-Keig} gives
+\eqref{eq:ce-K}. If $K<0$, \eqref{eq:leading} gives
+$\chi_\pot/\F=1+|K|k^2+O(|k|^3)>1$ for small $k\ne0$.
+\end{proof}
+
+So $\chi_\pot\leq\F$ is not a consequence of symmetry, nonnegativity,
+conservation and isotropy. In the ellipsoidal-statistical model the
+violation requires a Prandtl number $\nu/\nu_s$ above $4$. The thermal
+coefficient $K_\thr$ is positive for all rates, as \cref{cor:th-bounds}
+requires.
+
+\subsection{The stationary response in closed form}\label{sec:ce-closed}
+
+The operator \eqref{eq:ce-op} is a finite-rank perturbation of BGK, and
+its stationary response reduces to the one Gaussian integral that
+already appears in \cref{sec:3d,app:bgk}. Put
+\[
+ a=\frac{k^2}{\nu^2},\quad
+ c=\av{\frac{\nu^2}{\nu^2+k^2v_x^2}}\in(0,1),\quad
+ \delta=1-c,\quad
+ D=c-\frac\delta a,\quad
+ \sigma=\frac{\nu_s}\nu,\quad
+ \omega=\frac{2(\nu-\nu_q)\nu}{5k^2}.
+\]
+Here $D=\tfrac{a}{1+a}\av{(v_x^2-1)^2/(1+av_x^2)}>0$; it is the quantity
+$D$ of \cref{app:bgk} with $s=1/a$. Let
+\[
+ \Delta=3\delta+c\sigma,\qquad
+ \Gamma=2\delta\Delta-D\bigl(3\delta+\sigma(3c-2)\bigr).
+\]
+
+\begin{proposition}[Closed form]\label[proposition]{prop:ce-closed}
+For the operator \eqref{eq:ce-op} and $k\ne0$, $\Gamma>0$ and the
+potential-driven response of \cref{sec:3d} is
+\begin{equation}
+ \nu n_1=\frac{2D\Delta
+   +\omega\bigl[\Delta(D-2\delta)-2\sigma\delta D\bigr]}{\Gamma},\qquad
+ \nu T_{\perp1}=\frac{3\omega\delta-c\sigma\,\nu n_1}{\Delta},\qquad
+ T_1=\frac{2T_{\perp1}-n_1}3 .
+ \label{eq:ce-closed}
+\end{equation}
+For $\nu_q=\nu$ the response matrix of \cref{prop:th-matrix} is
+\begin{equation}
+ \nu M_{\parallel\parallel}=\frac{2\Delta D}\Gamma,\qquad
+ \nu M_{\parallel\perp}=\frac{2c\sigma D}\Gamma,\qquad
+ \nu M_{\perp\perp}=\frac{c\,[6\delta-(3-2\sigma)D]}\Gamma .
+ \label{eq:ce-M}
+\end{equation}
+Moreover
+\begin{equation}
+ \lim_{|k|\to\infty}k^2T_{\perp1}
+   =\frac25(\nu-\nu_q)-\frac\pi6\,\nu_s .
+ \label{eq:ce-perplimit}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Let $R=(\nu+ikv_x)^{-1}$, $\xi=a_\perp=v_\perp^2/2-1$ and
+$X=\av{\vartheta g}$. By \eqref{eq:stationarymom},
+$\av{v_xg}=1/(ik)$ and $\av{Qg}=i/k$, and
+$\av{(v_x^2-1)g}=-n_1$, so $X=2(T_{\perp1}+n_1)$. With
+$|v|^2-3=\He_2(v_x)+2\xi$, $\vartheta=2\xi-2\He_2(v_x)$ and
+$Q=\tfrac12\He_3(v_x)+v_x\xi$, the equation $\A_kg=1$ reads
+$g=R\,[p_0(v_x)+p_1(v_x)\xi]$ with
+\begin{align*}
+ p_1&=\nu T_1+\tfrac16(\nu-\nu_s)X+\frac{2i}{5k}(\nu-\nu_q)v_x,\\
+ p_0&=1+\nu n_1+\frac{\nu v_x}{ik}
+     +\Bigl[\tfrac12\nu T_1-\tfrac16(\nu-\nu_s)X\Bigr]\He_2(v_x)
+     +\frac{i}{5k}(\nu-\nu_q)\He_3(v_x).
+\end{align*}
+The identity $v_xR=(1-\nu R)/(ik)$ and $\av R=c/\nu$ give, for the
+one-dimensional Gaussian average,
+\[
+ \av{v_xR}=\frac\delta{ik},\quad
+ \av{R\,\He_2}=-\frac D\nu,\quad
+ \av{R\bigl(1+\tfrac{\nu v_x}{ik}\bigr)}=\frac D\nu,\quad
+ \av{R\,\He_3}=\frac{D-2\delta}{ik}.
+\]
+Since $\av\xi=0$ and $\av{\xi^2}=1$ in the perpendicular variables,
+$T_{\perp1}=\av{Rp_1}$ and $n_1=\av{Rp_0}$, that is,
+\begin{align*}
+ \nu T_{\perp1}&=c\bigl[\nu T_1+\tfrac16(1-\sigma)\nu X\bigr]+\omega\delta,\\
+ \delta\,\nu n_1&=D\bigl[1-\tfrac12\nu T_1+\tfrac16(1-\sigma)\nu X\bigr]
+     +\tfrac12\omega(D-2\delta).
+\end{align*}
+Insert $X=2(T_{\perp1}+n_1)$ and $T_1=(2T_{\perp1}-n_1)/3$. The first
+equation becomes $\Delta\,\nu T_{\perp1}=3\omega\delta-c\sigma\,\nu n_1$.
+Substituting it in the second and multiplying by $6\Delta$ gives
+$3\Gamma\,\nu n_1=6D\Delta-6\sigma\omega\delta D+3\omega\Delta(D-2\delta)$,
+because
+$6\delta\Delta-(3-2\sigma)D\Delta-2c\sigma^2D=3\Gamma$. This is
+\eqref{eq:ce-closed}. For $\omega=0$ it gives
+$\Gamma=2D\Delta/(\nu n_1)$, which is positive because $n_1>0$; and
+$\Gamma$ does not depend on $\nu_q$.
+
+For \eqref{eq:ce-M} take $\nu_q=\nu$ and the source $a_\perp$. Now
+$\av{v_xg}=\av{v_x^2g}=0$, so with $n=\av g$ and $T_q=\av{\xi g}$ we have
+$M_{\perp\perp}=T_q$, $M_{\parallel\perp}=-n$, and the same two averages
+give
+\[
+ \nu T_q=c+\tfrac c3\bigl[(3-\sigma)\nu T_q-\sigma\,\nu n\bigr],\qquad
+ 6\delta\,\nu n=D\bigl[(3-2\sigma)\nu n-2\sigma\,\nu T_q\bigr].
+\]
+Solving this system gives the last two entries;
+$M_{\parallel\parallel}=n_1$ by \cref{prop:th-matrix}.
+
+For \eqref{eq:ce-perplimit}, $c=\sqrt{\pi/(2a)}\,(1+o(1))$ as
+$a\to\infty$, so $\delta\to1$, $D=c+O(1/a)$, $\Delta\to3$,
+$\Gamma\to6$ and $\omega=O(1/a)$. Then $\nu n_1=c+O(1/a)$ and
+$a\,\nu T_{\perp1}\to\tfrac13\bigl[\tfrac65(1-\nu_q/\nu)
+-\tfrac\pi2\sigma\bigr]$.
+\end{proof}
+
+For the ellipsoidal-statistical operator the closed form settles every
+question that we asked about the perpendicular channel.
+
+\begin{corollary}[The ellipsoidal-statistical operator]\label[corollary]{cor:ce-es}
+Let $\nu_q=\nu$ in \eqref{eq:ce-op}, and let $k\ne0$.
+\begin{enumerate}[label=(\alph*)]
+\item $T_{\perp1}=-\dfrac{c\sigma}{3\delta+c\sigma}\,n_1$. Thus
+condition~(a) of \cref{prop:intermediate} holds at every wavenumber,
+$\chi_\pot(k)>0$, and
+\[
+ \chi_\pot(k)=\frac{\nu\,\Gamma}{2k^2D\,(\delta+c\sigma)},\qquad
+ \frac1{k^2n_1}\leq\chi_\pot(k)\leq\frac3{k^2n_1}.
+\]
+\item $\chi_\pot(k)>\chi_\thr(k)$. More precisely,
+\[
+ 2M_{\perp\perp}-M_{\parallel\parallel}-M_{\parallel\perp}
+  =\frac{12}{\nu\Gamma}\Bigl[\av{(1+av_x^2)^{-2}}-\av{(1+av_x^2)^{-1}}^2\Bigr]>0 .
+\]
+\item If $\nu_s\leq\nu/4$, then $\chi_\pot$ is not a Stieltjes function of
+$k^2$, and if $\nu_s<\nu/4$ it is not monotone in $|k|$.
+\item $N_\vartheta<9n_1$ if and only if
+$4c\delta-2cD-5\delta D<3c\sigma D$. For every sufficiently small $a>0$
+this fails when $\sigma\leq a/3+O(a^2)$. So condition~(b) of
+\cref{prop:intermediate} can fail where condition~(a) holds.
+\item For fixed $k$, $\chi_\pot/\F\to3(2\delta-D)/(5aD)$ as
+$\nu_s/\nu\to0$, and this limit tends to $\tfrac95$ as $k\to0$. Hence
+$\chi_\pot/\F$ takes values arbitrarily close to $\tfrac95$ in this
+family.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(a) Put $\omega=0$ in \eqref{eq:ce-closed}; then
+$-T_1=n_1(\delta+c\sigma)/\Delta$, and the two-sided bound is
+\cref{prop:intermediate}(a).
+(b) By \cref{prop:th-matrix} and (a), both denominators in
+\eqref{eq:th-chithM} and \eqref{eq:th-chipotM} are positive, and
+$\chi_\pot\geq\chi_\thr$ is equivalent to
+$2M_{\perp\perp}\geq M_{\parallel\parallel}+M_{\parallel\perp}$. From
+\eqref{eq:ce-M},
+\[
+ \nu\Gamma\,(2M_{\perp\perp}-M_{\parallel\parallel}-M_{\parallel\perp})
+ =2c[6\delta-(3-2\sigma)D]-2D(\Delta+c\sigma)=6\,(2c\delta-D),
+\]
+in which $\sigma$ has cancelled. Gaussian integration by parts,
+$\av{vf(v)}=\av{f'(v)}$ with $f=v/(1+av^2)$, gives
+$\delta/a=2\av{(1+av_x^2)^{-2}}-c$. Hence
+$2c\delta-D=c-2c^2+\delta/a=2\av{(1+av_x^2)^{-2}}-2c^2$, twice a
+variance.
+(c) A Stieltjes function is nonincreasing, and $\chi_\pot(0+)=\F$, so
+$\chi_\pot>\F$ excludes it when $K<0$; in that case
+$\chi_\pot$ increases near $k=0$ and tends to zero at infinity. If $K=0$
+and $\chi_\pot$ were Stieltjes, the argument of \cref{cor:st-chi}(c)
+would give $\int\mu^{-2}\dd\rho=\F K=0$, so $\rho=0$ and $\chi_\pot$
+would be constant.
+(d) $N_\vartheta=4(M_{\parallel\parallel}-2M_{\parallel\perp}
++M_{\perp\perp})$, and \eqref{eq:ce-M} turns $N_\vartheta<9n_1$ into the
+inequality $4c[6\delta-(3-2\sigma)D]-16c\sigma D<10\Delta D$, which is
+six times the stated one. The expansion
+$c=1-a+3a^2+O(a^3)$, whose remainder is bounded by the next Gaussian
+moment, gives $\delta=a-3a^2+O(a^3)$, $D=2a-12a^2+O(a^3)$,
+$4c\delta-2cD-5\delta D=2a^2+O(a^3)$ and $3cD=6a+O(a^2)$, so the
+inequality fails exactly when $\sigma\leq a/3+O(a^2)$.
+(e) As $\sigma\to0$, $\Gamma\to3\delta(2\delta-D)$ and
+$\delta+c\sigma\to\delta$, and $\F=5/(2\nu)$. The same expansions give
+$2\delta-D=6a^2+O(a^3)$.
+\end{proof}
+
+Part (b) contains three-dimensional BGK as the case $\sigma=1$.
+The stress rate drops out of the comparison of the two drives, and what
+remains is the variance of the relaxation factor $(1+av_x^2)^{-1}$.
+
+\subsection{Negative potential-driven conductivity}\label{sec:ce-negative}
+
+Positivity fails when both the stress and the heat flux relax slowly
+compared with everything else. In that regime the kinetic equation
+approaches the linearized thirteen-moment system, and for that system
+\eqref{eq:3dT} can be evaluated by hand.
+
+\begin{theorem}[The potential-driven conductivity can be negative]\label{thm:ce-negative}
+For the operator \eqref{eq:ce-op} and every $k\ne0$,
+\begin{equation}
+ \Bigl|\,T_1-\Bigl(\frac8{25\nu_s}-\frac{2\nu_q}{5k^2}\Bigr)\Bigr|
+ \leq\frac45\Bigl(\sqrt{\tfrac35}\,\frac{|k|}{\nu_s}+\sqrt2\Bigr)
+     \sqrt{\frac{n_1}{\nu}},\qquad
+ n_1\leq\frac{2\nu_q}{5k^2}+\frac{12}{25\nu_s}+\frac{32}{25\nu}.
+ \label{eq:ce-grad}
+\end{equation}
+Consequently, for fixed $\nu_s$, $\nu_q$ and fixed $k$ with
+$k^2>\tfrac54\nu_q\nu_s$, that is, $k^2\F\eta>\tfrac{25}8$, we have
+$T_1>0$ and $\chi_\pot(k)<0$ for all sufficiently large $\nu$. An
+explicit instance is
+\[
+ \nu_q=\nu_s,\qquad k=2\nu_s,\qquad \nu\geq100\,\nu_s:\qquad
+ \nu_sT_1\geq0.037,\quad\chi_\pot(k)<0 .
+\]
+At such a wavenumber $T_{\perp1}>n_1/2>0$ and $N_\vartheta\geq9n_1$, so
+both conditions of \cref{prop:intermediate} fail.
+\end{theorem}
+
+\begin{proof}
+Let $S=H\oplus\operatorname{span}\{\vartheta,Q\}$ within the axisymmetric
+class and let $P$ be the orthogonal projection onto $S^\perp$. The
+operator \eqref{eq:ce-op} maps $S$ to itself and equals $\nu$ on
+$S^\perp$, so $\D[f]\geq\nu\norm{Pf}^2$, and the energy identity
+\eqref{eq:energy} gives
+\begin{equation}
+ \norm{Pg_e}^2+\norm{Pw}^2\leq\frac{n_1}\nu .
+ \label{eq:ce-small}
+\end{equation}
+Gaussian moments give the decompositions
+\begin{equation}
+ v_x\vartheta=-4v_x-\tfrac85Q+P(v_x\vartheta),\qquad
+ v_xQ=\tfrac56(|v|^2-3)-\tfrac13\vartheta+P(v_xQ),
+ \label{eq:ce-decomp}
+\end{equation}
+with $\norm{P(v_x\vartheta)}^2=44-16-\tfrac{32}5=\tfrac{108}5$ and
+$\norm{P(v_xQ)}^2=\tfrac{27}2-\tfrac{25}6-\tfrac43=8$. Pair $\A_kg=1$
+with $\vartheta$ and with $Q$. Both are eigenfunctions of $\Lambda$ with
+zero mean, so
+\[
+ ik\av{v_x\vartheta\,g}+\nu_sX=0,\qquad
+ ik\av{v_xQ\,g}+\nu_q\av{Qg}=0 .
+\]
+By \eqref{eq:stationarymom}, $\av{v_xg}=1/(ik)$ and $\av{Qg}=-1/(ik)$.
+The first equation and \eqref{eq:ce-decomp} give
+\[
+ \nu_sX=\frac{12}5+k\av{P(v_x\vartheta)\,w},
+\]
+and the second gives
+$\tfrac52T_1-\tfrac13X+\av{P(v_xQ)\,g_e}=-\nu_q/k^2$. Eliminating $X$,
+\[
+ T_1=\frac8{25\nu_s}-\frac{2\nu_q}{5k^2}
+     +\frac25\Bigl[\frac{k}{3\nu_s}\av{P(v_x\vartheta)\,w}
+       -\av{P(v_xQ)\,g_e}\Bigr].
+\]
+The Cauchy--Schwarz inequality and \eqref{eq:ce-small} bound the bracket
+by $\bigl(\tfrac{|k|}{3\nu_s}\sqrt{108/5}+\sqrt8\bigr)\sqrt{n_1/\nu}$, which
+is the first inequality in \eqref{eq:ce-grad}. The second is
+$n_1\leq1/(k^2\F)+C$ from \eqref{eq:nandT} with the constants
+\eqref{eq:ce-constants}.
+
+The right side of \eqref{eq:ce-grad} tends to zero as $\nu\to\infty$ with
+the other quantities fixed, and the limit of $T_1$ is positive exactly
+when $k^2>\tfrac54\nu_q\nu_s$. The operator is homogeneous: multiplying
+$\nu$, $\nu_s$, $\nu_q$ and $k$ by $\lambda$ multiplies $T_1$ by
+$\lambda^{-1}$. So take $\nu_s=\nu_q=1$ and $k=2$. The limit is
+$\tfrac8{25}-\tfrac1{10}=0.22$, the prefactor is
+$\tfrac45(2\sqrt{3/5}+\sqrt2)<2.371$, and for $\nu\geq100$ the bound on
+$n_1$ is at most $0.5928$, so the error is at most
+$2.371\sqrt{0.005928}<0.1826$. The last statement is \eqref{eq:perptest}
+and the contrapositive of \cref{prop:intermediate}(b).
+\end{proof}
+
+Three remarks. First, \cref{thm:3dbounds} is consistent with this: it
+gives $\chi_\pot>0$ for $k^2\F\eta<3$, and the sign change in the limit
+$\nu\to\infty$ sits at $k^2\F\eta=\tfrac{25}8$. In that limit
+$-T_1=1/(k^2\F)-\tfrac8{25}\eta$, the leading two terms of the
+small-wavenumber expansion with $K=-\tfrac8{25}\F\eta$ from
+\eqref{eq:ce-Keig}, and nothing else. So the constant $3$ in the criterion of \cref{thm:3dbounds} cannot be
+raised above $\tfrac{25}8$ within the class. Second, $T_1$ is negative at small $|k|$ and
+continuous in $k$ by \cref{prop:ce-closed}, so in the situation of the
+theorem it vanishes at some wavenumber. There the potential drive
+produces a heat flux and no temperature perturbation, the ratio
+\eqref{eq:chi} is undefined, and $\chi_\pot$ has a pole. Third, the
+thermal drive is unaffected: \cref{cor:th-bounds} holds for
+\eqref{eq:ce-op} at every wavenumber, with $K_\thr$ from
+\eqref{eq:ce-K}.
+
+Condition~(a) of \cref{prop:intermediate} fails more easily than
+positivity does. By \eqref{eq:ce-perplimit}, $T_{\perp1}>0$ for all
+sufficiently large $|k|$ whenever $12(\nu-\nu_q)>5\pi\nu_s$. So the
+answer to the question at the end of \cref{sec:intermediate} is no:
+condition~(a) is a property of BGK, of the ellipsoidal-statistical
+operator and of Dougherty, and not of the class.
+
+\subsection{Comparing the two drives}\label{sec:ce-compare}
+
+In the Landau table (\cref{tab:matrix}) the potential-driven
+conductivity is the larger of the two at every computed wavenumber. By
+\cref{prop:th-matrix}, when $M_{\parallel\parallel}+2M_{\parallel\perp}>0$,
+\begin{equation}
+ \chi_\pot\geq\chi_\thr\quad\Longleftrightarrow\quad
+ 2M_{\perp\perp}\geq M_{\parallel\parallel}+M_{\parallel\perp},
+ \label{eq:ce-compare}
+\end{equation}
+and $M_{\perp\perp}\geq M_{\parallel\parallel}$ is sufficient, since then
+$M_{\parallel\perp}\leq(M_{\parallel\parallel}M_{\perp\perp})^{1/2}
+\leq M_{\perp\perp}$. Is the ordering general? No, but it holds for the
+explicit models and, at small wavenumber, under one inequality between
+transport constants.
+
+\begin{proposition}[Ordering of the two conductivities]\label[proposition]{prop:ce-order}
+\leavevmode
+\begin{enumerate}[label=(\alph*)]
+\item For three-dimensional constant-frequency BGK, for the
+ellipsoidal-statistical operator with any $\nu_s>0$, and for the
+Dougherty operator, $\chi_\pot(k)>\chi_\thr(k)$ at every $k\ne0$.
+\item For a conserving, isotropic operator satisfying the hypotheses of
+\cref{thm:leading,thm:th-leading}, as $k\to0$,
+\[
+ \chi_\pot(k)-\chi_\thr(k)
+   =\frac{\F^2}3\,(4\eta-X_0)\,k^2+O(|k|^3).
+\]
+If $\vartheta$ is an eigenfunction of $\Lambda$ the coefficient is
+$\tfrac8{15}\F^2\eta>0$.
+\item The ordering is not general. For the operator \eqref{eq:ce-op} in
+the situation of \cref{thm:ce-negative},
+$\chi_\pot<0<\chi_\thr$. And there are conserving, isotropic,
+nonnegative operators with $X_0>4\eta$, for which
+$0<\chi_\pot(k)<\chi_\thr(k)$ at all sufficiently small $k\ne0$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) BGK and the ellipsoidal-statistical operator are
+\cref{cor:ce-es}(b). For Dougherty, divide the formula for $\theta_3$ in
+\eqref{eq:doughertyclosed} by \eqref{eq:th-dougherty}:
+\[
+ \frac{\chi_\pot}{\chi_\thr}
+  =\frac{\int_0^1(5-4s)E_a(s)\dd s}{3\int_0^1E_a(s)\dd s}
+  =1+\frac23\,\frac{\int_0^1(1-2s)E_a(s)\dd s}{\int_0^1E_a(s)\dd s},
+\]
+and $\int_0^1(1-2s)E_a\dd s=\int_0^{1/2}(1-2s)[E_a(s)-E_a(1-s)]\dd s>0$
+because $E_a$ is strictly decreasing.
+(b) Subtract \eqref{eq:th-leading} from \eqref{eq:leading} and use
+\cref{prop:ce-K}.
+(c) The first statement is \cref{thm:ce-negative,thm:th-dual}. For the
+second, let $e_0=\vartheta/\sqrt{12}$ and
+$e_1=\vartheta(|v|^2-7)/\sqrt{168}$; these are orthonormal, they span the
+$l=2$ polynomials of degree at most four in the axisymmetric class, and
+$\av{\vartheta b_\thr}=\tfrac85$,
+$\av{\vartheta(|v|^2-7)\,b_\thr}=\tfrac{56}5$ when $\Xi=Q/\nu$. Let
+$\mathsf B$ be a symmetric positive definite $2\times2$ matrix and let
+$\Lambda$ equal $\nu(I-\Pi_H)$ except on the two radial $l=2$ modes
+$e_0,e_1$ and their rotations, where it acts by $\mathsf B$. This
+operator is covered by \cref{lem:ce-solv}, $\F=5/(2\nu)$, and
+\eqref{eq:ce-Kdiff} reads
+\[
+ K_\thr-K=\frac{\F}3\Bigl[\frac85(\mathsf B^{-1})_{00}
+     +\frac{4\sqrt{14}}5(\mathsf B^{-1})_{01}\Bigr]
+   =\frac{4\F}{15\det\mathsf B}\bigl[2\mathsf B_{11}-\sqrt{14}\,\mathsf B_{01}\bigr].
+\]
+It is negative when $\mathsf B_{01}>\sqrt{2/7}\,\mathsf B_{11}$, which is
+compatible with $\mathsf B_{01}^2<\mathsf B_{00}\mathsf B_{11}$ whenever
+$\mathsf B_{11}<\tfrac72\mathsf B_{00}$. Then (b) gives
+$\chi_\thr>\chi_\pot$ for small $k\ne0$, and $\chi_\pot>0$ there by
+\cref{thm:3dbounds}.
+\end{proof}
+
+For the Dougherty operator the calculation of \cref{app:dougherty} gives
+the whole matrix. With $S_j=\int_0^1(1-s)^jE_a(s)\dd s$ and
+$Z=3-S_0-4S_1$,
+\[
+ \nu M_{\parallel\parallel}=\frac{S_0(3-4S_1)}Z,\qquad
+ \nu M_{\parallel\perp}=\frac{2S_0S_1}Z,\qquad
+ \nu M_{\perp\perp}=\frac{S_1(3-S_0)}Z,
+\]
+and $2M_{\perp\perp}-M_{\parallel\parallel}-M_{\parallel\perp}
+=3(2S_1-S_0)/(\nu Z)$, the same integral as in the proof.
+
+For like-particle Landau collisions we can prove neither the ordering
+nor its failure. The small-wavenumber criterion $X_0<4\eta$ holds with a
+wide margin in the Galerkin calculation, and the ordering holds at every
+wavenumber we computed (\cref{sec:ce-numerics}).
+
+\subsection{Numerical checks}\label{sec:ce-numerics}
+
+We evaluated the response of \eqref{eq:ce-op} in three independent ways:
+the closed form of \cref{prop:ce-closed}; a direct solution of the
+finite-rank linear system in the polynomials of degree at most four, with
+the Gaussian integrals of $(\nu+ikv_x)^{-1}$ done by adaptive quadrature;
+and the polynomial Galerkin method of \cref{sec:numerics} at degrees $12$
+and $16$. The first two agree to a relative $4.4\times10^{-13}$ at the
+cross-check points and to $1.2\times10^{-10}$ over the three-rate scan
+for $|k|/\nu\geq0.05$. The quadrature raised $351$ roundoff warnings at
+the requested tolerance, which these agreements bound. For
+$|k|/\nu<0.05$ the finite-rank system is ill conditioned and the closed
+form loses digits by cancellation, so there we used the Galerkin solve;
+it agrees with the finite-rank solution to $3.1\times10^{-13}$ on the
+overlap $0.05\leq|k|/\nu<0.1$. The Galerkin method is not usable for
+these operators at larger $|k|/\nu$: for BGK at degree $16$ it differs
+from the exact response by $1.7\%$ at $|k|/\nu=1$ and by $46\%$ at
+$|k|/\nu=3$. We report eleven such cases, for these operators and for
+Dougherty at $|k|/\nu\geq3$, as nonconverged and take no conclusions
+from them. Collision solves in the Galerkin basis reproduce
+\eqref{eq:ce-constants}, \eqref{eq:ce-K} and \eqref{eq:ce-stress} to
+$10^{-13}$, including $K=12/(5\nu^2)$ for BGK, $2/(15\nu^2)$ for
+Dougherty, and $\av{\vartheta b_*}=\tfrac{12}5$ for the cached Landau
+matrices.
+
+\emph{Ellipsoidal-statistical operator.} On the grid
+$10^{-2}\leq|k|/\nu\leq10^2$ and $10^{-3}\leq\nu_s/\nu\leq5$,
+$T_{\perp1}/n_1$ stays in $(-1,0)$, $\chi_\pot>\chi_\thr>0$, and the
+thermal response obeys \cref{cor:th-bounds}, as the theory requires. At
+$\nu_s/\nu=0.1$ and $|k|/\nu=0.01$ the computed deficit
+$(1-\chi_\pot/\F)/k^2$ is $-4.789\,\nu^{-2}$, against $K=-4.8\,\nu^{-2}$.
+The largest value of $\chi_\pot/\F$ on the grid is $1.09$ for
+$\nu_s/\nu=0.1$, $1.20$ for $0.05$ and $1.66$ for $10^{-3}$; in each case
+it is attained for $|k|/\nu$ between $0.1$ and $0.25$. The inequality
+$N_\vartheta<9n_1$ fails on the grid only for $\nu_s/\nu\leq0.01$. For
+$\nu_s/\nu\geq0.25$, $\chi_\pot$ is decreasing on the grid, but it is
+still not a Stieltjes function for a range of rates above $\tfrac14$: in
+a sign test of $\Imag\chi_\pot$ at $2178$ complex values of $k^2$ we
+found violations for every sampled $\nu_s/\nu\leq0.5$, all close to the
+negative real axis, and none for $\nu_s/\nu\geq0.6$, which includes BGK.
+The first grid we used stopped at argument $0.9\pi$ and missed the
+violations for $0.4\leq\nu_s/\nu\leq0.5$; the absence of violations at
+$\nu_s/\nu\geq0.6$ is an observation on a finite grid and not a proof.
+
+\emph{Three rates.} With $\nu_q=\nu_s$, the potential-driven conductivity
+is negative at some wavenumber once $\nu/\nu_s$ exceeds $10.79$; the
+threshold is $6.75$ for $\nu_q/\nu_s=\tfrac14$ and $22.4$ for
+$\nu_q/\nu_s=4$. These thresholds are numerical. At
+$\nu=100\nu_s$, $\nu_q=\nu_s$ and $k=2\nu_s$, the instance of
+\cref{thm:ce-negative}, we find $\nu_sT_1=0.1857$ and
+$\chi_\pot=-1.346\,\nu_s^{-1}$, against the limit $0.22$ and the proved
+lower bound $0.037$. At $\nu=20\nu_s$ the conductivity is negative for
+$1.4\lesssim|k|/\nu_s\lesssim9.4$. Across the scan $T_{\perp1}/n_1$
+reaches $1.49$ and $N_\vartheta/(9n_1)$ reaches $2.76$. Condition~(a)
+fails without a sign change of $\chi_\pot$ at, for instance,
+$\nu=3\nu_s$, $\nu_q=\nu_s$, where $T_{\perp1}/n_1$ reaches $0.022$; the
+sign of $T_{\perp1}$ at the largest wavenumber of the scan agrees with
+\eqref{eq:ce-perplimit} in all forty cases. Wherever $\chi_\pot$ is
+positive on this scan it exceeds $\chi_\thr$, and \cref{cor:th-bounds}
+holds throughout.
+
+\emph{The ordering of the drives.} For the coupled operator of
+\cref{prop:ce-order}(c) with $\mathsf B=\nu\bigl(\begin{smallmatrix}1&0.8\\0.8&1\end{smallmatrix}\bigr)$,
+the Galerkin constants are $K=5.405\,\nu^{-2}$ and
+$K_\thr=3.565\,\nu^{-2}$, and the formula gives
+$K_\thr-K=-1.839\,\nu^{-2}$. The exact response has
+$\chi_\thr>\chi_\pot>0$ for $|k|/\nu\leq0.5$, for example
+$\chi_\thr/\F=0.968$ and $\chi_\pot/\F=0.954$ at $|k|/\nu=0.1$, and the
+order reverses by $|k|/\nu=1$. For the Dougherty operator the Galerkin
+matrix agrees with the closed form above to $10^{-12}$ for $|k|/\nu\leq0.3$.
+For like-particle Landau collisions at degree $16$,
+$4\eta-X_0=3.046\,\tau$ and $K_\thr-K=4.011\,\tau^2$, and at the seven
+wavenumbers of \cref{tab:matrix} we find
+$M_{\perp\perp}\geq M_{\parallel\parallel}\geq M_{\parallel\perp}$ at
+degrees $12$ and $16$, and $\chi_\pot/\chi_\thr$ between $1.03$ and
+$1.65$ at degree $16$. This is a finite-degree observation.
+
+\FloatBarrier
 \section{Electron--electron and electron--ion collisions}\label{sec:th-electron}
 
 Electrons collide with ions as well as with each other. Electron--ion
@@ -2223,7 +2897,9 @@ $q_{\rm m}(0)=-ik\chi$. The initial velocity distribution carries
 information that the slow-forcing ratio does not specify. We read this
 experiment as a negative result about transferring a response formula,
 without restriction, to an evolution law. It is not evidence against the
-response formula itself.
+response formula itself. \Cref{sec:memory} identifies the exact law, a
+convolution in time whose zero-frequency value is $\chi(k)$, and bounds
+the error of replacing it by that value.
 
 \FloatBarrier
 \section{Numerical results for the thermal drive and electron collisions}\label{sec:th-numerics}
@@ -2364,7 +3040,10 @@ leading deficit coefficients for the potential and thermal drives.}
 like-particle collisions. For Landau the thermal coefficient is
 $K_\thr/\tau^2\simeq26.36$, compared with $K_\pot/\tau^2\simeq22.35$, a
 ratio of $1.18$. For Dougherty the ratio is $(16/45)/(2/15)=8/3$. In all
-of our computations $\chi_\pot\geq\chi_\thr$; we have not proved this.
+of our Landau computations $\chi_\pot\geq\chi_\thr$. We prove this
+ordering for BGK, the ellipsoidal-statistical operator and Dougherty, and
+show that it is not general (\cref{prop:ce-order}); for Landau it is an
+observation.
 The thermally driven Landau response is positive and below $\kap$ at
 every sampled $k$, which \cref{cor:th-bounds} guarantees for the Galerkin
 problem at any $k$ and, by \cref{prop:th-solv}, for the continuum.
@@ -2572,7 +3251,8 @@ refinement difference, which there reflects the $0.3\%$ change in $\kap$
 between degrees.
 
 This is a much better outcome than the embedded test of \cref{sec:embedded}, where the exact quasi-static closure had errors of $24\%$ and
-$34\%$. Why? We think the difference is the time scale. There, the temperature
+$34\%$. Why? The difference is the time scale, and \cref{sec:memory} turns
+this into a bound. There, the temperature
 was coupled to sound waves with frequencies comparable to the collision
 rate. Here, quasi-neutrality removes the acoustic dynamics and the
 temperature decays over $10$ to several thousand collision times
@@ -2580,6 +3260,673 @@ temperature decays over $10$ to several thousand collision times
 one. The quasi-static closure is also at least as accurate as the
 least-damped-mode closure, which matches the late-time rate exactly but
 not the initial layer.
+
+\FloatBarrier
+\section{A frequency-dependent closure and the error of the quasi-static one}\label{sec:memory}
+
+The quasi-static coefficient is the value at zero frequency of a
+frequency-dependent response. In this section we write that response as a
+resolvent of the kinetic operator compressed to the unresolved subspace,
+show that it is positive real, and bound the error that the quasi-static
+closure makes in an initial-value problem by the variation of the response
+over the frequencies that the closed model excites. The bound is small in
+the quasi-neutral test of \cref{sec:th-embedded} and of order one in the
+sound-wave test of \cref{sec:embedded}.
+
+\subsection{Setting}
+
+Let $d=1$ or $3$. Let $\mathcal Y$ be the orthogonal complement of
+$\operatorname{span}\{1,v_x,|v|^2\}$ in complex $L^2(M_d)$, restricted to
+axisymmetric functions when $d=3$, and let $\Pi$ be the orthogonal
+projection onto $\mathcal Y$. We write $\av{fg}$ for the bilinear pairing,
+$(f,g)=\av{\bar fg}$ for the Hermitian one, and $\norm f^2=(f,f)$. In this
+section $s$ is a Laplace variable. It is related to the frequency of
+\cref{sec:setting} by $s=-i\omega$, so that $\Real s=\Imag\omega$ and
+$\widehat h(s)=\int_0^\infty e^{-st}h(t)\dd t$; it is not the scaled
+wavenumber of \eqref{eq:units}. Define the compressed operator, the two
+unresolved flux functions, and the kernel
+\begin{equation}
+ B_k=\Pi\,\A_k\,\Pi\big|_{\mathcal Y},\qquad
+ Q=Q_d,\qquad \varsigma=v_x^2-\tfrac13|v|^2=-\tfrac13\vartheta\quad(d=3),
+ \label{eq:mem-B}
+\end{equation}
+\begin{equation}
+ \chi(k,s)=\av{Q\,(B_k+s)^{-1}Q},\qquad
+ \mathsf K(k,s)=
+ \begin{pmatrix}
+ \av{Q\,(B_k+s)^{-1}Q}&\av{Q\,(B_k+s)^{-1}\varsigma}\\[2pt]
+ \av{\varsigma\,(B_k+s)^{-1}Q}&\av{\varsigma\,(B_k+s)^{-1}\varsigma}
+ \end{pmatrix}.
+ \label{eq:mem-chi}
+\end{equation}
+Both $Q$ and $\varsigma$ lie in $\mathcal Y$, and $\pi=\av{\varsigma h}$ is
+the stress of \eqref{eq:hierarchy}. The projections that produce them are
+\begin{equation}
+ \Pi(v_x)=0,\qquad \Pi(v_x^2)=\varsigma\ \ (d=3),\quad \Pi(v^2)=0\ \ (d=1),
+ \qquad \Pi(v_x\zeta_d)=\tfrac2d\,Q_d .
+ \label{eq:mem-proj}
+\end{equation}
+The last one follows from $v_x\zeta_d=\tfrac2d(Q_d+v_x)$.
+
+\begin{assumption}[Evolution]\label[assumption]{ass:mem-evolution}
+One of the following holds.
+\begin{enumerate}[label=(\alph*)]
+\item \emph{Galerkin.} $L^2(M_d)$ is replaced by a finite-dimensional space
+of polynomials that contains every polynomial of degree at most three and
+is invariant under reflection in $v_x$ and under complex conjugation, and
+$\A_k$ is the Galerkin compression of $ikv_x+\Lambda$ to it.
+\item \emph{Continuum.} $-\A_k$ generates a contraction semigroup on
+$L^2(M_d)$; the polynomials of degree at most three lie in the domains of
+$\A_k$ and $\A_k^*$, on which these operators act as $ikv_x+\Lambda$ and
+$-ikv_x+\Lambda$; and $\A_k^*=\overline{\A_k}$, the complex conjugate
+operator.
+\end{enumerate}
+\end{assumption}
+
+Alternative~(b) holds for constant-frequency BGK and for the Dougherty
+operator, which are finite-rank perturbations of $ikv_x+\nu$ and of
+$ikv_x+\nu N$. This is standard, and we do not write out the
+generation argument. We do not verify it for the Landau operator. For
+$\Lambda_Z$ it fails as stated, because
+$\Lambda_{ei}v_x=\nu_{ei}(v)v_x$ grows like $|v|^{-2}$ at the origin and is
+not in $L^2(M)$; a form version of the reduction below would be needed,
+and we do not supply one. For the Landau and electron operators the
+results of this section are therefore statements about the Galerkin
+truncations of \cref{sec:numerics,sec:th-numerics}.
+
+Under either alternative $B_k$ is accretive,
+\begin{equation}
+ \Real\,(y,B_ky)=\Real\,(y,\A_ky)\ \geq0,\qquad
+ \Real\,(y,B_ky)=\D[\Real y]+\D[\Imag y]\ \text{ in case (a)},
+ \label{eq:mem-accretive}
+\end{equation}
+and $B_k+s$ is boundedly invertible on $\mathcal Y$ for $\Real s>0$, with
+$\norm{(B_k+s)^{-1}}\leq1/\Real s$. In case~(a) this is immediate. In
+case~(b), $1-\Pi$ has finite rank with range in the domains of $\A_k$ and
+$\A_k^*$, so $\A_k-\Pi\A_k\Pi$ is bounded; a bounded perturbation of a
+generator is a generator, and an accretive generator generates a
+contraction semigroup. We write $e^{-tB_k}$ for this semigroup on
+$\mathcal Y$.
+
+\subsection{The exact closure for data in the retained space}
+
+\begin{theorem}[Memory form of the closure]\label{thm:mem-closure}
+Assume \cref{ass:mem-evolution}. Let $h$ solve
+\begin{equation}
+ \partial_th+\A_kh=p(t)\,\zeta_d+a(t)\,v_x,\qquad
+ h(0)\in\operatorname{span}\{1,v_x,|v|^2\},
+ \label{eq:mem-kinetic}
+\end{equation}
+with bounded $p$ and $a$. Then for $\Real s>0$:
+\begin{enumerate}[label=(\roman*)]
+\item If $d=1$ and $\Lambda$ conserves mass, momentum and energy,
+\begin{equation}
+ \widehat q(s)=-ik\,\chi(k,s)\,\widehat T(s).
+ \label{eq:mem-1d}
+\end{equation}
+\item If $d=3$ and $\Lambda$ conserves mass, momentum and energy,
+\begin{equation}
+ \begin{pmatrix}\widehat q\\ \widehat\pi\end{pmatrix}
+ =-ik\,\mathsf K(k,s)
+ \begin{pmatrix}\widehat T\\ \widehat u\end{pmatrix}.
+ \label{eq:mem-3d}
+\end{equation}
+\item If $d=3$, $\Lambda$ satisfies \eqref{eq:th-kernel}, $\av{v_xh(0)}=0$,
+and the force $a(t)$ is the one that keeps $u(t)=0$ for all $t$, which is
+the quasi-neutral model \eqref{eq:th-kineticqn} with a heating source
+added, then $\widehat q=-ik\,\chi(k,s)\,\widehat T$ with the same
+$\chi=\mathsf K_{qq}$, and
+\begin{equation}
+ \widehat T(s)=\frac{T(0)+\tfrac23\widehat p(s)}
+                    {s+\tfrac23k^2\chi(k,s)} .
+ \label{eq:mem-T}
+\end{equation}
+\end{enumerate}
+In each case the unresolved part of the solution is
+$\Pi\widehat h=-ik\,(B_k+s)^{-1}(\widehat T\,Q+\widehat u\,\varsigma)$,
+with the term in $\varsigma$ absent when $d=1$ or $u=0$. In the time
+domain, with $K_k(t)=\av{Q\,e^{-tB_k}Q}$,
+\begin{equation}
+ q(t)=-ik\int_0^tK_k(t-t')\,T(t')\dd t'
+ \label{eq:mem-time}
+\end{equation}
+in cases (i) and (iii), and the same with the matrix kernel
+$\av{b_i\,e^{-tB_k}b_j}$, $b=(Q,\varsigma)$, in case (ii).
+\end{theorem}
+
+\begin{proof}
+The solution grows at most linearly in $L^2(M_d)$, so its transform exists
+for $\Real s>0$ and satisfies
+$s\widehat h-h(0)+\A_k\widehat h=\widehat p\,\zeta_d+\widehat a\,v_x$.
+Apply $\Pi$. It annihilates $h(0)$, $\zeta_d$ and $v_x$, so
+$s\,\Pi\widehat h+\Pi\A_k\widehat h=0$: neither the data nor the sources,
+and in particular not the force, enter the unresolved equation. Write
+$\widehat h=(1-\Pi)\widehat h+y$ with $y=\Pi\widehat h$. Since
+$\norm{\zeta_d}^2=2/d$,
+\[
+ (1-\Pi)\widehat h=\widehat n+\widehat u\,v_x+\tfrac d2\,\widehat T\,\zeta_d .
+\]
+In cases (i) and (ii) $\Lambda$ annihilates this function. In case (iii)
+it need not annihilate $v_x$, but $\widehat u=0$. In all cases, therefore,
+$\A_k(1-\Pi)\widehat h=ikv_x(1-\Pi)\widehat h$, and \eqref{eq:mem-proj}
+gives
+\[
+ \Pi\A_k(1-\Pi)\widehat h=ik\bigl(\widehat u\,\varsigma+\widehat T\,Q\bigr),
+\]
+with $\varsigma$ replaced by zero when $d=1$. Hence
+$(B_k+s)y=-ik(\widehat T\,Q+\widehat u\,\varsigma)$, and $B_k+s$ is
+invertible. Because $Q$ and $\varsigma$ lie in $\mathcal Y$,
+$\widehat q=\av{Qy}$ and $\widehat\pi=\av{\varsigma y}$. This proves
+\eqref{eq:mem-1d} and \eqref{eq:mem-3d} and the first statement of (iii).
+In case (iii) pair \eqref{eq:mem-kinetic} with the collision invariant
+$\tfrac12(|v|^2-3)=\tfrac32\zeta$ and use
+$\tfrac12v_x(|v|^2-3)=Q+v_x$ and $u=0$:
+$\tfrac32(s\widehat T-T(0))=-ik\widehat q+\widehat p$. Inserting
+$\widehat q=-ik\chi\widehat T$ gives \eqref{eq:mem-T}. Finally
+$(B_k+s)^{-1}=\int_0^\infty e^{-st}e^{-tB_k}\dd t$ for $\Real s>0$, and a
+product of transforms is the transform of a convolution, which is
+\eqref{eq:mem-time}.
+\end{proof}
+
+Three remarks. First, \cref{sec:setting} says that the ratio
+$\widehat q/\widehat T$ is tied to its input. The theorem makes this
+precise in one dimension: the ratio is the same function
+$-ik\chi(k,s)$ for every force $a(t)$ and for every initial condition in
+$\operatorname{span}\{1,v,v^2\}$. What changes it is initial data, or a
+source, with a component $h_\perp$ in $\mathcal Y$, which adds
+$\av{Q\,(B_k+s)^{-1}h_\perp}$ to $\widehat q$. Second, the initial
+condition of \cref{sec:embedded} lies in the retained space, so
+\eqref{eq:mem-time} applies to it and gives $q(0)=0$: the mismatch
+$q_{\rm m}(0)=-ik\chi$ noted there is the difference between a convolution
+and its instantaneous replacement. Third, for constant-frequency BGK,
+$\Lambda=\nu(1-\Pi_H)$ with $\Pi_H$ the projection on the collision
+invariants, so $\Lambda=\nu$ on $\mathcal Y$ and
+$B_k+s=ik\,\Pi v\Pi+(\nu+s)$: the kernel depends on $s$ and $\nu$ only
+through $s+\nu$. This is the statement after \eqref{eq:bgkfrequency} that
+the collisional response is a collisionless one at a shifted phase
+velocity. Comparing \eqref{eq:mem-1d} with \eqref{eq:bgkfrequency}, which
+is derived in \cref{app:bgk} for the same forced problem,
+\begin{equation}
+ -ik\,\chi(k,-i\omega)=\sgn(k)\,\Phi\Bigl(\frac{\omega+i\nu}{|k|}\Bigr),
+ \qquad \Imag\omega>0,
+ \label{eq:mem-bgk}
+\end{equation}
+since two exact expressions for $\widehat q/\widehat T$ must agree
+wherever $\widehat T\ne0$, and both sides are analytic.
+
+\subsection{The static value, and one kernel for two drives}
+
+\begin{proposition}[Zero frequency]\label[proposition]{prop:mem-static}
+Assume \cref{ass:mem-evolution}, and suppose that $B_k$ is invertible on
+$\mathcal Y$ and that the stationary solutions used below exist. In
+case~(a) both hold for every $k\ne0$ when the kernel of $\Lambda$
+satisfies \eqref{eq:th-kernel}.
+\begin{enumerate}[label=(\roman*)]
+\item For $d=1$, $\chi(k,0)$ is the quasi-static coefficient $\chi(k)$ of
+\eqref{eq:chi}.
+\item For $d=3$ and $\Lambda$ satisfying \eqref{eq:th-kernel},
+$\mathsf K_{qq}(k,0)=\chi_\thr(k)$.
+\item For $d=3$ and $\Lambda$ conserving momentum,
+\begin{equation}
+ \chi_\pot(k)=\frac{\mathsf K_{qq}(k,0)}{1-ik\,\mathsf K_{q\pi}(k,0)},
+ \label{eq:mem-chipot}
+\end{equation}
+where $\mathsf K_{q\pi}$ is the off-diagonal entry of $\mathsf K$.
+\end{enumerate}
+For real $s\geq0$ the matrix $\mathsf K(k,s)$ is symmetric, its diagonal
+entries are real, even in $k$ and nonnegative (positive in case~(a)), and
+$\mathsf K_{q\pi}$ is purely imaginary and odd in $k$.
+\end{proposition}
+
+\begin{proof}
+In case~(a), if $B_ky=0$ then $\D[\Real y]+\D[\Imag y]=0$ by
+\eqref{eq:mem-accretive}, so $y\in\N\cap\mathcal Y=\{0\}$; the same
+argument with \eqref{eq:th-kernel} shows that $\A_kg=0$ forces
+$g\in\N$, so $\Lambda g=0$ and then $v_xg=0$, hence $g=0$, so the stationary
+problems are solvable.
+
+Let $g=\A_k^{-1}\zeta$ be the thermal solution \eqref{eq:th-g}. By
+\eqref{eq:th-identities}, $\av{v_xg}=0$ and $\av{Qg}=1/(ik)$. Apply $\Pi$
+to $\A_kg=\zeta$ and repeat the computation in the proof of
+\cref{thm:mem-closure} with $s=0$, $\widehat u=0$ and
+$\widehat T=T_\thr$: $\Pi g=-ikT_\thr B_k^{-1}Q$. Pairing with $Q$ gives
+$1/(ik)=-ikT_\thr\mathsf K_{qq}(k,0)$, that is
+$\mathsf K_{qq}(k,0)=1/(k^2T_\thr)=\chi_\thr$. This is (ii).
+
+Let now $g=\A_k^{-1}1$ with $\Lambda$ conserving momentum. By
+\eqref{eq:stationarymom}, $\av{v_xg}=1/(ik)$ and $\av{Qg}=i/k$. The same
+computation, now with $\widehat u=1/(ik)$ and $\widehat T=T_1$, gives
+$\Pi g=-B_k^{-1}(\varsigma+ikT_1Q)$, and pairing with $Q$,
+\[
+ \frac ik=-\mathsf K_{q\pi}-ikT_1\mathsf K_{qq},
+ \qquad
+ T_1=-\frac{1-ik\,\mathsf K_{q\pi}}{k^2\,\mathsf K_{qq}} ,
+\]
+which with $\chi_\pot=-1/(k^2T_1)$ is \eqref{eq:mem-chipot}. For $d=1$
+there is no $\varsigma$, and the same lines give (i).
+
+Symmetry of $\mathsf K$ follows from $\av{f\,B_kg}=\av{g\,B_kf}$. Let
+$\mathcal R$ be reflection in $v_x$. Then
+$\overline{B_k}=B_{-k}=\mathcal RB_k\mathcal R$, $\mathcal RQ=-Q$ and
+$\mathcal R\varsigma=\varsigma$. Hence
+$\overline{\mathsf K_{ij}(k,s)}=\mathsf K_{ij}(-k,\bar s)
+ =\epsilon_i\epsilon_j\mathsf K_{ij}(k,\bar s)$ with
+$\epsilon_q=-1$, $\epsilon_\pi=1$. At real $s$ the diagonal entries are
+real and even in $k$ and the off-diagonal one is imaginary and odd.
+The sign is \cref{prop:mem-positive} below; at $s=0$ the identity
+\eqref{eq:mem-positive} still holds because $B_k$ is invertible.
+\end{proof}
+
+So $\chi_\thr$ is a diagonal entry of the static kernel, and $\chi_\pot$
+is not. A potential drive sets up a flow together with the temperature
+perturbation, with $\widehat u/\widehat T\to(ikT_1)^{-1}$ as
+$\omega\to0$, and by \eqref{eq:mem-3d} the heat flux responds to the
+velocity gradient through $\mathsf K_{q\pi}$. The ratio
+$\widehat q/\widehat T$ then mixes two entries of $\mathsf K$. This is
+the obstruction of \cref{sec:3d,prop:th-matrix} seen from the unresolved
+side: \cref{prop:mem-positive} controls the quadratic form of
+$\mathsf K$, and it does not control the sign of
+$1-ik\mathsf K_{q\pi}$. A closure for a three-dimensional
+momentum-conserving plasma with flow needs the three independent entries of $\mathsf K$, as functions of $k$ and
+$s$. In one dimension, and under the zero-current constraint, a single
+scalar suffices.
+
+\subsection{Positivity and dissipation}
+
+\begin{proposition}[Positive-real kernel]\label[proposition]{prop:mem-positive}
+Assume \cref{ass:mem-evolution}. For $\Real s>0$ and $c\in\mathbb C^2$,
+\begin{equation}
+ \Real\sum_{i,j}\bar c_i\,\mathsf K_{ij}(k,s)\,c_j
+ =\Real s\,\norm y^2+\Real\,(y,B_ky)\ \geq\ \Real s\,\norm y^2,
+ \qquad y=(B_k+s)^{-1}(c_1Q+c_2\varsigma).
+ \label{eq:mem-positive}
+\end{equation}
+In particular $\Real\chi(k,s)>0$ for $\Real s>0$, and the Hermitian part
+of $\mathsf K(k,s)$ is positive definite. In case~(a) the right side is
+$\Real s\,\norm y^2+\D[\Real y]+\D[\Imag y]$, the identity extends to
+$\Real s=0$, and $\Real\chi(k,-i\omega)>0$ for every real $\omega$.
+\end{proposition}
+
+\begin{proof}
+Let $b=c_1Q+c_2\varsigma$. The functions $Q$ and $\varsigma$ are real, so
+$\sum\bar c_i\mathsf K_{ij}c_j=\av{\bar b\,y}=(b,y)=((B_k+s)y,y)$, whose
+real part is $\Real s\norm y^2+\Real(y,B_ky)$. This is the energy identity
+\eqref{eq:st-key} with the frequency in place of the wavenumber. If the
+left side vanishes with $\Real s>0$ then $y=0$ and $b=0$. In case~(a),
+$B_k-i\omega$ is invertible because a vector in its kernel has
+$\D[\Real y]+\D[\Imag y]=0$, lies in $\N\cap\mathcal Y$ and vanishes; and
+if $\D[\Real y]+\D[\Imag y]=0$ for $y=(B_k-i\omega)^{-1}b$, the same
+argument gives $y=0$.
+\end{proof}
+
+\begin{corollary}[Positive type and energy]\label[corollary]{cor:mem-energy}
+Assume \cref{ass:mem-evolution}. The kernel $K_k$ is real, even in $k$,
+bounded by $\norm Q^2$, and of positive type: for $\tau>0$ and
+$T\in L^2(0,\tau)$, with
+$Y(t)=\int_0^te^{-(t-t')B_k}Q\,T(t')\dd t'$,
+\begin{equation}
+ \Real\int_0^\tau\overline{T(t)}\int_0^tK_k(t-t')T(t')\dd t'\dd t
+ =\tfrac12\norm{Y(\tau)}^2+\int_0^\tau\Real\,(Y,B_kY)\dd t\ \geq0 .
+ \label{eq:mem-postype}
+\end{equation}
+Consequently the exactly closed equations, \eqref{eq:hierarchy} with $a=0$
+and \eqref{eq:mem-time}, satisfy
+$\mathcal E(\tau)\leq\mathcal E(0)$ for the resolved energy
+$\mathcal E=\tfrac12(|n|^2+|u|^2+\tfrac d2|T|^2)$, and
+$\mathcal E+\tfrac12k^2\norm Y^2$ is nonincreasing. The same holds for the
+matrix kernel in case (ii) of \cref{thm:mem-closure}, with
+$Y$ driven by $Q\,T+\varsigma\,u$, and for $\mathcal E=\tfrac34|T|^2$ in
+case (iii).
+\end{corollary}
+
+\begin{proof}
+Reality and evenness follow from
+$\overline{B_k}=\mathcal RB_k\mathcal R$ and $\mathcal RQ=-Q$, as in the
+proof of \cref{prop:mem-static}, and the bound from contractivity. The
+function $Y$ solves $\dot Y=-B_kY+Q\,T$, $Y(0)=0$, and
+$\av{QY}=K_k*T$. Therefore
+\[
+ \tfrac12\tfrac{\dd}{\dd t}\norm Y^2
+ =-\Real\,(Y,B_kY)+\Real\bigl(\overline{\av{QY}}\,T\bigr)
+ =-\Real\,(Y,B_kY)+\Real\bigl(\overline T\,(K_k*T)\bigr),
+\]
+and integration gives \eqref{eq:mem-postype}. For the energy, multiply the
+three equations of \eqref{eq:hierarchy} by $\bar n$, $\bar u$ and
+$\bar T$ and take real parts. The terms $-ik(\bar nu+\bar un)$ and
+$-ik(\bar uT+\bar Tu)$ are imaginary, and what remains is
+\[
+ \dot{\mathcal E}=\Real\bigl(-ik\,\bar u\,\pi-ik\,\bar T\,q\bigr)
+ =-k^2\,\Real\bigl(\overline T\,(K_k*T)\bigr)
+\]
+when $\pi=0$, and the analogous quadratic form of the matrix kernel
+otherwise. Since $\Pi h=-ikY$, the conserved-or-decreasing quantity
+$\mathcal E+\tfrac12k^2\norm Y^2$ is the kinetic energy
+$\tfrac12\norm h^2$.
+\end{proof}
+
+The energy inequality is a statement about the exact kernel. The
+quasi-static model replaces $K_k$ by $\chi(k,0)\,\delta(t)$; it is also
+dissipative, but it is a different equation, and we now estimate the
+difference.
+
+\subsection{The error of the quasi-static closure}
+
+Fix $k\ne0$ and a number $\chi_0>0$; the case of interest is
+$\chi_0=\chi(k,0)$, but the next theorem does not use this. For $d=1$ let
+$U=(n,u,T)$ be the moments of the kinetic solution of
+\eqref{eq:mem-kinetic} with $p=a=0$, and let $U_{\rm c}$ solve the closed
+equations \eqref{eq:embedded} with $\chi=\chi_0$ and the same initial
+values:
+\[
+ \dot U_{\rm c}=-M_0U_{\rm c},\qquad
+ M_0=\begin{pmatrix}0&ik&0\\ ik&0&ik\\ 0&2ik&2k^2\chi_0\end{pmatrix},
+ \qquad e_T=(0,0,1)^{\mathsf T}.
+\]
+For $\Real s\geq0$ put
+\begin{equation}
+ r(s)=(s+M_0)^{-1}e_T,\qquad
+ \mu_U(s)=2k^2\,|\chi(k,s)-\chi_0|\,\|r(s)\|_2,\qquad
+ \mu_T(s)=2k^2\,|\chi(k,s)-\chi_0|\,|e_T\cdot r(s)| ,
+ \label{eq:mem-mu}
+\end{equation}
+and
+\[
+ \eta_U=\sup_{\Real s>0}\mu_U(s),\qquad
+ \eta_T=\sup_{\Real s>0}\mu_T(s)\ \leq\eta_U ,
+\]
+which may be infinite. The matrix $s+M_0$ is invertible for
+$\Real s\geq0$: if $M_0x=\lambda x$, the weighted energy gives
+$\Real\lambda\,(|x_1|^2+|x_2|^2+\tfrac12|x_3|^2)=k^2\chi_0|x_3|^2$, and
+$\Real\lambda=0$ forces $x_3=0$, then $x_2=0$ and $x_1=0$ from the third
+and second rows. The vector $r(-i\omega)$ is the response of the closed
+model to a temperature source at frequency $\omega$. Norms without a
+subscript are those of $L^2(0,\infty)$ in time, with the Euclidean norm
+for vectors.
+
+\begin{theorem}[Transfer bound]\label{thm:mem-transfer}
+Assume \cref{ass:mem-evolution}, $d=1$, a conserving $\Lambda$, and
+$h(0)\in\operatorname{span}\{1,v,v^2\}$. Then:
+\begin{enumerate}[label=(\roman*)]
+\item $\norm{U-U_{\rm c}}\leq\eta_U\,\norm T\leq\eta_U\,\norm U$.
+\item Suppose in addition that $\chi(k,\cdot)$ extends to a bounded
+continuous function on $\Real s\geq0$ and that $\eta_T<1$. Then
+\begin{equation}
+ \norm{U-U_{\rm c}}\leq\frac{W}{1-\eta_T},\qquad
+ W^2=\frac1{2\pi}\int_{-\infty}^\infty
+ \mu_U(-i\omega)^2\,|\widehat T_{\rm c}(-i\omega)|^2\dd\omega ,
+ \label{eq:mem-W}
+\end{equation}
+where $\widehat T_{\rm c}(s)=e_T\cdot(s+M_0)^{-1}U(0)$. Under the same
+continuity hypothesis $\eta_U$ and $\eta_T$ are the suprema of
+$\mu_U$ and $\mu_T$ over the imaginary axis.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+The moments $U$ are bounded, so their transforms exist for $\Real s>0$.
+By \eqref{eq:hierarchy} and \eqref{eq:mem-1d},
+$(s+M(s))\widehat U=U(0)$, where $M(s)$ is $M_0$ with $\chi_0$ replaced by
+$\chi(k,s)$, and $(s+M_0)\widehat U_{\rm c}=U(0)$. Subtracting,
+\begin{equation}
+ \widehat U-\widehat U_{\rm c}
+ =-2k^2\bigl(\chi(k,s)-\chi_0\bigr)\,\widehat T(s)\,r(s) .
+ \label{eq:mem-diff}
+\end{equation}
+Fix $\varepsilon>0$. Plancherel's theorem on the line
+$\Real s=\varepsilon$ and \eqref{eq:mem-diff} give
+\[
+ \int_0^\infty e^{-2\varepsilon t}\|U-U_{\rm c}\|_2^2\dd t
+ =\frac1{2\pi}\int\|(\widehat U-\widehat U_{\rm c})(\varepsilon-i\omega)\|_2^2\dd\omega
+ \leq\eta_U^2\int_0^\infty e^{-2\varepsilon t}|T|^2\dd t
+ \leq\eta_U^2\norm T^2 .
+\]
+Let $\varepsilon\downarrow0$ and use monotone convergence. This is (i);
+no boundary values of $\chi$ are involved.
+
+For (ii), take the third component of \eqref{eq:mem-diff}:
+$\widehat T\,[1+2k^2(\chi-\chi_0)\,e_T\cdot r]=\widehat T_{\rm c}$, so
+$|\widehat T|\leq|\widehat T_{\rm c}|/(1-\eta_T)$ for $\Real s>0$.
+Insert this in \eqref{eq:mem-diff} and apply Plancherel on
+$\Real s=\varepsilon$ as before:
+\[
+ \int_0^\infty e^{-2\varepsilon t}\|U-U_{\rm c}\|_2^2\dd t
+ \leq\frac1{(1-\eta_T)^2}\,\frac1{2\pi}\int
+ \mu_U(\varepsilon-i\omega)^2\,|\widehat T_{\rm c}(\varepsilon-i\omega)|^2\dd\omega .
+\]
+The rational function $\widehat T_{\rm c}$ has no poles in
+$\Real s\geq0$ and decays like $1/|s|$, so
+$|\widehat T_{\rm c}(\varepsilon-i\omega)|^2\leq C/(1+\omega^2)$ for
+$0\leq\varepsilon\leq1$; $\mu_U$ is bounded and continuous on the closed
+half-plane. Dominated convergence gives \eqref{eq:mem-W}. For the last
+statement, $(\chi(k,s)-\chi_0)\,r(s)$ is a bounded analytic vector function
+in the half-plane, continuous up to the boundary, and the norm of such a
+function is subharmonic; the Phragm\'en--Lindel\"of form of the maximum
+principle puts its supremum on the imaginary axis.
+\end{proof}
+
+The proof uses only that the two models differ in one coefficient of the
+retained equations. It applies verbatim, with $U=T$, to the quasi-neutral
+problem, where every quantity is explicit.
+
+\begin{corollary}[Zero-current decay]\label[corollary]{cor:mem-zero}
+In case (iii) of \cref{thm:mem-closure} with $p=0$, let
+$\gamma_0=\tfrac23k^2\chi_0$ and
+$T_{\rm c}(t)=T(0)e^{-\gamma_0t}$, the solution of \eqref{eq:th-closed}
+with $\chi=\chi_0$. Put
+\begin{equation}
+ \eta=\sup_{\Real s>0}
+ \left|\frac{\chi(k,s)}{\chi_0}-1\right|\frac{\gamma_0}{|s+\gamma_0|},
+ \qquad
+ \eta_2^2=\frac{\gamma_0}{\pi}\int_{-\infty}^{\infty}
+ \left|\frac{\chi(k,-i\omega)}{\chi_0}-1\right|^2
+ \frac{\gamma_0^2}{(\gamma_0^2+\omega^2)^2}\dd\omega .
+ \label{eq:mem-eta}
+\end{equation}
+Then $\norm{T-T_{\rm c}}\leq\eta\,\norm T$. If $\chi(k,\cdot)$ is bounded
+and continuous on $\Real s\geq0$ and $\eta<1$, then also
+$\norm{T-T_{\rm c}}\leq\eta_2\,\norm{T_{\rm c}}/(1-\eta)$, and
+$\eta_2\leq\eta$.
+\end{corollary}
+
+\begin{proof}
+By \eqref{eq:mem-T},
+$\widehat T-\widehat T_{\rm c}
+ =-\tfrac23k^2(\chi-\chi_0)\,\widehat T/(s+\gamma_0)$, which is
+\eqref{eq:mem-diff} with $r=1/(s+\gamma_0)$ and $2k^2$ replaced by
+$\tfrac23k^2$. The proof of \cref{thm:mem-transfer} applies, with
+$\mu_U=\mu_T$. Here $|\widehat T_{\rm c}(-i\omega)|^2
+ =|T(0)|^2/(\gamma_0^2+\omega^2)$ and
+$\norm{T_{\rm c}}^2=|T(0)|^2/(2\gamma_0)$, so $W=\eta_2\norm{T_{\rm c}}$.
+The weight $\gamma_0\pi^{-1}(\gamma_0^2+\omega^2)^{-1}$ has unit mass,
+whence $\eta_2\leq\eta$.
+\end{proof}
+
+The factor $\gamma_0/|s+\gamma_0|$ is what distinguishes the two embedded
+tests. In the quasi-neutral problem the closed model is a single decaying
+exponential, and the kernel is sampled, with a Lorentzian weight, at
+frequencies of the order of the decay rate $\gamma_0\propto k^2\chi$. In
+the sound-wave problem $r(-i\omega)$ is resonant near the acoustic
+frequency $\sqrt3\,|k|$, which is not small compared with the collision
+rate unless $|k|\ll\nu$, however slowly the temperature decays.
+
+The bounds can be reduced to a product of a rate and a time when the
+collision operator has a gap on the unresolved space.
+
+\begin{corollary}[Rate times memory time]\label[corollary]{cor:mem-time}
+Assume \cref{ass:mem-evolution} and
+\begin{equation}
+ (y,\Lambda y)\geq\lambda_*\norm y^2\quad\text{for }y\in\mathcal Y,
+ \qquad\lambda_*>0 .
+ \label{eq:mem-gap}
+\end{equation}
+Then $B_k+s$ is invertible for $\Real s>-\lambda_*$,
+$\chi(k,\cdot)$ is analytic there, and with $y_0=B_k^{-1}Q$ and
+$\chi_0=\chi(k,0)$,
+\begin{equation}
+ |\chi(k,s)-\chi(k,0)|\leq|s|\,\tau_*\,\chi(k,0)\quad(\Real s\geq0),
+ \qquad
+ \tau_*=\frac{\norm Q\,\norm{y_0}}{\lambda_*\,\chi(k,0)} .
+ \label{eq:mem-lip}
+\end{equation}
+Consequently $\eta\leq\gamma_0\tau_*$ and
+$\eta_2\leq\gamma_0\tau_*/\sqrt2$ in \cref{cor:mem-zero}, and
+$\eta_U\leq\Omega_k\tau_*$ in \cref{thm:mem-transfer}, where
+$\Omega_k=\sup_{\omega}2k^2\chi_0\,|\omega|\,\|r(-i\omega)\|_2$ depends
+only on the closed model. Moreover $y_0=y_o+iy_e$ with $y_o$ real and odd
+in $v_x$ and $y_e$ real and even, and the memory time
+\begin{equation}
+ \tau_{\rm m}:=-\partial_s\log\chi(k,s)\Big|_{s=0}
+ =\frac{\norm{y_o}^2-\norm{y_e}^2}{\chi(k,0)}
+ \qquad\text{satisfies}\qquad
+ |\tau_{\rm m}|\leq\frac{\norm{y_0}^2}{\chi(k,0)}\leq\tau_* .
+ \label{eq:mem-taum}
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+By \eqref{eq:mem-accretive} and \eqref{eq:mem-gap},
+$\Real(y,(B_k+s)y)\geq(\lambda_*+\Real s)\norm y^2$, so $B_k+s$ is
+invertible with $\norm{(B_k+s)^{-1}}\leq(\lambda_*+\Real s)^{-1}$; in
+case~(b) surjectivity holds because $B_k+s$ is a shift of a generator.
+The resolvent identity gives
+$\chi(k,s)-\chi(k,0)=-s\,\av{Q\,(B_k+s)^{-1}y_0}$, which is at most
+$|s|\norm Q\norm{y_0}/\lambda_*$ in modulus when $\Real s\geq0$. Then
+$|\chi/\chi_0-1|\,\gamma_0/|s+\gamma_0|\leq\gamma_0\tau_*|s|/|s+\gamma_0|
+ \leq\gamma_0\tau_*$, and
+\[
+ \eta_2^2\leq\frac{\gamma_0}{\pi}\int
+ \frac{\tau_*^2\omega^2\gamma_0^2}{(\gamma_0^2+\omega^2)^2}\dd\omega
+ =\frac{\gamma_0^2\tau_*^2}2 ,
+\]
+because $\int\omega^2(\gamma_0^2+\omega^2)^{-2}\dd\omega=\pi/(2\gamma_0)$.
+The bound on $\eta_U$ is the definition of $\Omega_k$; it is finite
+because $|\omega|\,\|r(-i\omega)\|_2\to1$ as $|\omega|\to\infty$. For the
+memory time, $\partial_s\chi(k,0)=-\av{Q\,B_k^{-2}Q}=-\av{y_0^2}$ by the
+bilinear symmetry of $B_k$. From
+$\overline{B_k}=\mathcal RB_k\mathcal R$ and $\mathcal RQ=-Q$ we get
+$\mathcal R\overline{y_0}=-y_0$, which is the stated parity, so
+$\av{y_oy_e}=0$ and $\av{y_0^2}=\norm{y_o}^2-\norm{y_e}^2$. Finally
+$\norm{y_0}\leq\norm Q/\lambda_*$.
+\end{proof}
+
+The gap \eqref{eq:mem-gap} holds for constant-frequency BGK with
+$\lambda_*=\nu$, and for the one-dimensional Dougherty operator with
+$\lambda_*=3\nu$, since there $\Lambda\He_n=\nu n\He_n$ for $n\geq3$. As
+$k\to0$ the Dougherty values tend to $y_0=Q/(3\nu)$ and
+$\tau_*=\tau_{\rm m}=1/(3\nu)$, so \eqref{eq:mem-lip} is sharp to first
+order. Every Galerkin truncation has a gap, but for Coulomb collisions it
+is not uniform in the degree, and we do not have \eqref{eq:mem-gap} for
+the Landau or electron operators in the continuum. For those operators
+\cref{thm:mem-transfer}(i) and the first bound of \cref{cor:mem-zero}
+remain valid under \cref{ass:mem-evolution}(b) alone, with the supremum
+over the open half-plane; we do not claim that this supremum is attained
+on, or is even finite near, the imaginary axis. \Cref{prop:landauwell}
+gives the parabolic region \eqref{eq:sector} only. Note also that $\tau_{\rm m}$ has no sign.
+It is positive as $k\to0$, where $y_0\to\Lambda^+Q$ is odd, and it is
+negative in some of the electron cases below.
+
+\subsection{Numerical evaluation for the two embedded tests}\label{sec:mem-numerics}
+
+The script \texttt{frequency\_response.py} evaluates these quantities in
+the Galerkin spaces of the two embedded tests: Hermite degrees $64$ and
+$128$ for the one-dimensional Dougherty model with $\nu=1$, and
+polynomial degrees $12$ and $16$ for $\Lambda_Z$ with $Z=1$ and $8$. In
+these spaces every statement above is a theorem, with
+$\chi_0=\chi(k,0)$. The checks are as follows. The kernel
+\eqref{eq:mem-chi} for constant-frequency BGK, computed at Hermite degree
+$6000$, agrees with the closed form \eqref{eq:mem-bgk} to
+$2.1\times10^{-11}$ at fifteen pairs $(k,\omega)$, nine of them with real
+$\omega$. The identities of \cref{thm:mem-closure}, tested against the
+kinetic resolvent at six values of $s$ per case, hold with relative
+residual below $3\times10^{-11}$, and so do those of
+\cref{prop:mem-static}, including \eqref{eq:mem-chipot} for the
+three-dimensional Dougherty and Landau operators at three wavenumbers. For the electron cases the
+reduced system for $(T,Y)$ reproduces the saved kinetic temperature
+histories of \cref{sec:th-embedded} to $3\times10^{-11}$. On every
+frequency grid $\Real\chi(k,-i\omega)>0$, and the Hermitian part of
+$\mathsf K(k,-i\omega)$ is positive definite. The suprema in
+\eqref{eq:mem-mu} and \eqref{eq:mem-eta} are taken on a grid of about
+$1.9\times10^4$ frequencies and refined locally; they are numerical
+suprema, not certified ones. Exact $L^2(0,\infty)$ norms come from
+Lyapunov equations, and the same error computed from
+\eqref{eq:mem-diff} by quadrature in $\omega$ agrees to a relative
+$2\times10^{-5}$ or better.
+
+\begin{table}[tb]
+\centering
+\caption{Quasi-static closure: measured error and a priori bounds.
+$E_{\rm saved}$ is the finite-window error of
+\cref{tab:embedded,tab:th-embedded}; $E_\infty$ is the same relative error
+over $0\leq t<\infty$. ``Sup'' is $\eta_U$ of \cref{thm:mem-transfer}(i)
+for the sound-wave test and $\eta$ of \cref{cor:mem-zero} for the
+electron test. ``Weighted'' is $W/(1-\eta_T)$, respectively
+$\eta_2\norm{T_{\rm c}}/(1-\eta)$, divided by the kinetic norm. The last
+two columns are $\Omega_k\tau_{\rm m}$ and $\Omega_k\tau_*$, with
+$\Omega_k=\gamma_0$ for the electron test; $\tau_*$ uses the gap of the
+Galerkin matrix for electrons. Hermite degree $128$; polynomial degree
+$16$.}
+\label{tab:mem-bounds}
+\small
+\begin{tabular}{llrrrrrr}\toprule
+Test & $k$ & $E_{\rm saved}$ & $E_\infty$ & Sup & Weighted
+ & Rate${}\times\tau_{\rm m}$ & Rate${}\times\tau_*$\\\midrule
+Sound, $\nu=1$ & $0.1$ & 0.0203 & 0.0332 & 0.0810 & 0.0351 & 0.0812 & 0.0818\\
+               & $1$   & 0.237 & 0.237 & 0.523 & 0.329 & 0.546 & 0.894\\
+               & $3$   & 0.338 & 0.338 & 0.670 & 0.509 & 0.680 & 3.36\\\midrule
+Electrons, $Z=1$ & $0.01$ & 0.00028 & 0.00028 & 0.00039 & 0.00028 & 0.00039 & 0.0018\\
+ ($|k|\lambda_e$) & $0.03$ & 0.0021 & 0.0021 & 0.0030 & 0.0021 & 0.0030 & 0.016\\
+                 & $0.1$  & 0.0103 & 0.0103 & 0.0179 & 0.0104 & 0.0142 & 0.148\\
+                 & $0.3$  & 0.0202 & 0.0202 & 0.0578 & 0.0208 & 0.0132 & 0.903\\\midrule
+Electrons, $Z=8$ & $0.01$ & 0.0015 & 0.0015 & 0.0029 & 0.0015 & 0.0020 & 0.046\\
+                 & $0.03$ & 0.0038 & 0.0038 & 0.0142 & 0.0038 & $-0.0031$ & 0.353\\
+                 & $0.1$  & 0.0401 & 0.0401 & 0.0604 & 0.0441 & $-0.0585$ & 2.46\\
+                 & $0.3$  & 0.114 & 0.114 & 0.165 & 0.150 & $-0.186$ & 11.7\\
+\bottomrule\end{tabular}
+\end{table}
+
+\Cref{tab:mem-bounds} compares the bounds with the errors that
+\cref{sec:embedded,sec:th-embedded} reported. The supremum bound exceeds
+$E_\infty$ by a factor between $1.4$ and $3.8$ in the electron test and
+between $2.0$ and $2.4$ in the sound-wave test; using
+$\norm T\leq\norm U$ less wastefully, as $\eta_U\norm T/\norm U$, the
+latter factors are $1.5$ to $1.7$. The weighted bound exceeds $E_\infty$
+by at most $32\%$ in the electron test, and by $6\%$, $39\%$ and $51\%$
+at $k=0.1,1,3$ in the sound-wave test. So the bounds are not loose, and
+they order the two experiments correctly: $0.0004$ to $0.06$ for
+electrons with $Z=1$, and $0.5$ to $0.7$ for sound waves at $k\geq1$,
+where they say only that the error may be of order one. The explanation
+offered in \cref{sec:th-embedded}, that the difference is the time scale,
+is correct, in the sense that the error is controlled by the variation of
+$\chi(k,-i\omega)$ over the frequencies excited by the closed model, and
+those are $|\omega|\lesssim\gamma_0$ in one test and
+$|\omega|\approx\sqrt3\,|k|$ in the other.
+
+Four qualifications. First, the theorem is about the infinite time
+window. At $k=0.1$ the window $|k|t\leq30$ of \cref{tab:embedded} contains
+$86.5\%$ of $\norm U^2$, and the error on it, $0.020$, is smaller than
+$E_\infty=0.033$; a bound for the window follows by dividing by
+$\sqrt{0.865}$. Second, the product of a rate and the memory time
+$\tau_{\rm m}$ is a good estimate at small values, where
+$E_\infty\approx\gamma_0\tau_{\rm m}/\sqrt2$ in the first two electron
+rows, but it is not a bound: at $Z=1$, $|k|\lambda_e=0.3$ it is $0.013$
+and the error is $0.020$, and for $Z=8$ the memory time is negative at
+the three larger wavenumbers. Third, the rigorous product
+$\gamma_0\tau_*$ is useful for the Dougherty model at small $k$ and
+useless for the electron operator, where it exceeds the supremum bound by
+factors of $4.5$ to $71$ and rests on a Galerkin gap that decreases from
+$0.247$ at degree $12$ to $0.206$ at degree $16$. Fourth, the row
+$Z=8$, $|k|\lambda_e=0.3$ is not resolved: at degree $12$ the same
+quantities are $E_\infty=0.143$, $0.210$ and $0.206$, consistent with the
+$5\%$ refinement difference of \cref{tab:th-embedded}. Degree differences
+are diagnostics and not error bars.
+
+None of this repairs the quasi-static closure where it fails. What it
+gives is a computable criterion, in terms of the closed model and one
+kernel, for when a zero-frequency response can be used as an evolution
+law, and the exact object, \eqref{eq:mem-time} or \eqref{eq:mem-3d}, that
+a closure with memory would have to approximate. By
+\cref{prop:mem-positive,cor:mem-energy} that object is positive real, so
+passivity is the constraint a fitted or learned kernel should satisfy.
 
 \section{Implications for closure benchmarks and model design}\label{sec:discussion}
 
@@ -2603,7 +3950,8 @@ correction, together with its $O(k^3)$ long-wavelength scaling.
 A learned symbol could build in these properties by construction.
 In three dimensions the answer depends on the drive. For the potential
 drive, enforcing $0<\chi\leq\F$ for every conserving collision operator
-would add an assumption that the abstract theorem does not justify. For
+would be wrong: both inequalities fail for admissible operators
+(\cref{thm:ce-fourier,thm:ce-negative}). For
 the thermal drive, $0<\chi_\thr\leq\kap$ holds at every wavenumber for a
 large class of collision operators, so a learned symbol can build in
 positivity and the Fourier upper bound without that assumption. It can
@@ -2629,7 +3977,7 @@ with the error bound \eqref{eq:LZ-chi}, which is a test that a closure
 with $Z$ as an input either passes or does not.
 
 The two embedded tests point in different directions, and the difference
-is the time scale. When the temperature is coupled to dynamics at
+is the time scale (\cref{thm:mem-transfer,cor:mem-zero}). When the temperature is coupled to dynamics at
 frequencies comparable to the collision rate (\cref{sec:embedded}), the
 transient results suggest retaining the heat flux as a state, or
 learning a causal memory kernel. When quasi-neutrality removes those
@@ -2675,8 +4023,11 @@ multigroup diffusion and convolution closures
 \cite{LMV1983,EpperleinShort1991,Brodrick2017}.
 \item \emph{Frequency dependence.} The quasi-neutral embedded test
 succeeds because the dynamics are slow. Driven problems with frequencies
-comparable to the collision rate need $\chi(k,\omega)$ or a retained
-heat flux.
+comparable to the collision rate need the kernel $\chi(k,s)$ of
+\cref{sec:memory} or a retained heat flux. For the Landau and electron
+operators that section is proved only in Galerkin truncations; the
+continuum statement needs resolvent bounds on the imaginary axis that we
+do not have.
 \item \emph{Magnetization, ion dynamics, and nonlinear temperature
 contrasts.} None of these is addressed here.
 \end{enumerate}
@@ -2711,12 +4062,15 @@ in proportion to the ion charge, a law we prove together with the
 diffusive limit of the response at large charge. The one-dimensional embedded experiment
 shows that matching an exact quasi-static response does not guarantee an
 accurate transient. (The quasi-neutral electron experiment shows that it
-sometimes does, when the dynamics are slow.) Anyone who uses a simple
+sometimes does, when the dynamics are slow, and the transfer bound of
+\cref{sec:memory} says how slow.) Anyone who uses a simple
 conserving collision model to evaluate a closure meant for plasma
 transport should keep both in mind. Four analytical problems remain:
 certified continuum bounds for the Landau and electron constants,
-positivity at intermediate wavenumbers for the potential drive, a
-convergence rate for the collisionless limits, and the spectral measure
+positivity at intermediate wavenumbers for the potential-driven Landau
+response (which, by the counterexamples of \cref{sec:ce}, cannot follow
+from conservation, symmetry and isotropy alone), the
+true rate and an explicit constant in the collisionless limits, and the spectral measure
 of the thermal closure beyond its first two moments. None of them is
 settled here.
 
@@ -3558,7 +4912,590 @@ Two remarks. The proof uses coercivity, a local diffusion form with a
 relatively compact remainder, and a continuous positive diffusion
 coefficient at $v_x=0$. The limit depends on none of the constants, which
 is why Landau and Dougherty share it. And the compactness step in
-\cref{lem:flux} is not constructive, so the proof gives no rate.
+\cref{lem:flux} is not constructive, so this proof gives no rate. The next
+subsection removes that step.
+
+\subsection{A rate of convergence}\label{app:rate}
+
+The proof of \cref{thm:airy} has two steps without a rate: the
+$\epsilon$-form of \eqref{eq:W5}, and the compactness argument in
+\cref{lem:flux}. Both can be replaced. The first becomes an exact identity
+for the form \eqref{eq:landauform}. The second becomes a duality argument
+that uses one more derivative of a collision inverse. We keep the notation
+of this appendix, write $c_\Lambda=3\sqrt\pi/(2\tau)$, so that
+$S=c_\Lambda\,U*M$ with $M=M_3$, and put
+\[
+ \varrho(v)=M(v)^{1/2}m(v)^2,\qquad
+ A[f]=\int MS\nabla f\cdot\nabla f\dd v
+\]
+as in \eqref{eq:aAB}. Throughout, $k\geq1$.
+
+\begin{theorem}[Rate in the boundary-layer limit]\label{thm:rate}
+For the Landau form \eqref{eq:landauform} and every even axisymmetric
+polynomial $\sigma(v_\perp)$ there is a constant $C_\sigma$ such that, for
+$|k|\geq1$,
+\begin{equation}
+ -C_\sigma\,|k|^{-2/3}\log(e+|k|)
+ \;\leq\;|k|\,N_k(\sigma)-\pi M_1(0)\av{\sigma^2}_\perp
+ \;\leq\;C_\sigma\,|k|^{-2/3}.
+ \label{eq:rate}
+\end{equation}
+\end{theorem}
+
+The constant depends on $\sigma$, on the constants in \eqref{eq:W1},
+\eqref{eq:W2} and (W6), which we cite, and on explicit integrals. We have
+not computed it. The estimate \eqref{eq:W5} is no longer used.
+
+\begin{corollary}[Rates for the Landau closures]\label[corollary]{cor:rate}
+For the like-particle Landau operator, with $c_0=\sqrt{\pi/2}$ and
+$\ell_k=|k|^{-2/3}\log(e+|k|)$, as $|k|\to\infty$
+\[
+ |k|\,M(k)=c_0\begin{pmatrix}1&0\\0&1\end{pmatrix}+O(\ell_k),
+\]
+and therefore
+\[
+ |k|\,n_1=c_0+O(\ell_k),\quad
+ |k|\,T_{\perp1}=O(\ell_k),\quad
+ \theta_{\rm L}(k)=3\sqrt{2/\pi}+O(\ell_k),\quad
+ |k|\,\chi_\thr(k)=\tfrac95\sqrt{2/\pi}+O(\ell_k).
+\]
+\end{corollary}
+
+\begin{proof}
+By the proof of \cref{cor:th-landaulimit}, $c\cdot M(k)c=N_k(\sigma_c)$ with
+$\sigma_c=-c_\parallel+c_\perp\xi$ and
+$\av{\sigma_c^2}_\perp=c_\parallel^2+c_\perp^2$. Apply \cref{thm:rate} with
+$c=(1,0)$, $(0,1)$, $(1,1)$ and $(1,-1)$; since $M(k)$ is symmetric,
+$4M_{\parallel\perp}=(1,1)\cdot M(1,1)-(1,-1)\cdot M(1,-1)$. Then
+$n_1=M_{\parallel\parallel}$ and $T_{\perp1}=-M_{\parallel\perp}$ by
+\cref{prop:th-matrix}, and the last two statements follow from
+\eqref{eq:th-chipotM} and \eqref{eq:th-chithM}, whose denominators have
+positive limits.
+\end{proof}
+
+Polarization matters here. The argument in the proof of
+\cref{cor:landaulimit}, which passes through the gap identity and a
+Cauchy--Schwarz inequality, would halve the exponent for $T_{\perp1}$.
+
+\subsubsection*{An exact splitting of the Landau form}
+
+\begin{lemma}[Local form plus an explicit remainder]\label[lemma]{lem:rate-split}
+For $f\in C_c^\infty(\RR^3)$,
+\begin{align}
+ \D[f]&=A[f]-\mathfrak k[f],\qquad
+ A[f]=\mathfrak a[f]-4\pi c_\Lambda\!\int M^2f^2\dd v,
+ \label{eq:rate-split}\\
+ \mathfrak k[f]&=8\pi c_\Lambda\!\int M^2f^2\dd v
+  +c_\Lambda\!\iint MM'\,ff'\,
+   \Bigl[\frac{|v\times v'|^2}{|v-v'|^3}-\frac{2}{|v-v'|}\Bigr]\dd v\dd v'.
+ \nonumber
+\end{align}
+Moreover
+\begin{equation}
+ |\mathfrak k[f]|\leq C_0\av{\varrho f^2},\qquad
+ C_0=c_\Lambda\Bigl[8\pi\sup\frac{M^{1/2}}{m^2}
+   +2\sup_v\!\int\!\frac{M(v)^{1/4}M(v')^{1/4}}{|v-v'|}\dd v'\Bigr].
+ \label{eq:rate-k}
+\end{equation}
+The identity and the bound extend to $f\in\HH_0$, and so does the
+polarized identity $\D(f,h)=A(f,h)-\mathfrak k(f,h)$. In particular
+\begin{equation}
+ \bigl|\D[f]-\mathfrak a[f]\bigr|\leq
+   \bigl(C_0+4\pi c_\Lambda\bigr)\av{\varrho f^2},\qquad f\in\HH_0 ,
+ \label{eq:rate-W5}
+\end{equation}
+which replaces \eqref{eq:W5}, and \eqref{eq:W4} with $\ell=0$ follows from
+\eqref{eq:W1}.
+\end{lemma}
+
+\begin{proof}
+Expanding the square in \eqref{eq:landauform} and using the symmetry in
+$(v,v')$,
+\[
+ \D[f]=\int MS\nabla f\cdot\nabla f\dd v
+   -c_\Lambda\!\iint MM'\,\nabla f\cdot U(v-v')\nabla'f'\dd v\dd v' ,
+\]
+so $\D=A-\mathfrak k$ with $\mathfrak k$ the double integral. Write
+$z=v-v'$. We use $U(z)z=0$, $\partial_iU^{ij}(z)=-2z_j/|z|^3$ and
+$\Delta|z|^{-1}=-4\pi\delta$. The kernel $U$ and its first derivatives are
+locally integrable in $\RR^3$, so the following integrations by parts have
+no boundary term at $z=0$.
+
+\emph{The term $\mathfrak k$.} For fixed $v'$,
+\[
+ \int M\,\partial_if\,U^{ij}(z)\dd v
+  =\int fM\Bigl[v_iU^{ij}(z)+\frac{2z_j}{|z|^3}\Bigr]\dd v .
+\]
+Now integrate by parts in $v'$ against $M'\partial_j'f'$. For the first
+bracket,
+$\partial_j'\bigl(M'v_iU^{ij}(z)\bigr)
+=M'\bigl[-v\cdot U(z)v'+2v\cdot z/|z|^3\bigr]$.
+For the second, $z_j/|z|^3=\partial_j'|z|^{-1}$, and
+\[
+ 2\!\int M'\nabla'f'\cdot\nabla'|z|^{-1}\dd v'
+ =-2\!\int f'\,\nabla'\!\cdot\bigl(M'\nabla'|z|^{-1}\bigr)\dd v'
+ =2\!\int f'M'\frac{v'\cdot z}{|z|^3}\dd v'+8\pi M(v)f(v).
+\]
+Adding, and using $(v'-v)\cdot z=-|z|^2$,
+\[
+ \mathfrak k[f]=c_\Lambda\!\iint MM'ff'\Bigl[v\cdot U(z)v'-\frac2{|z|}\Bigr]
+   \dd v\dd v'+8\pi c_\Lambda\!\int M^2f^2\dd v .
+\]
+Since $U(z)v'=U(z)v$, we have
+$v\cdot U(z)v'=(|z|^2|v|^2-(z\cdot v)^2)/|z|^3=|v\times v'|^2/|z|^3$.
+
+\emph{The term $A$.} With $\widetilde f=\sqrt Mf$,
+$MS\nabla f\cdot\nabla f=S\nabla\widetilde f\cdot\nabla\widetilde f
++\tfrac12Sv\cdot\nabla(\widetilde f^{\,2})+\tfrac14Sv\cdot v\,\widetilde f^{\,2}$,
+so $A[f]=\mathfrak a[f]-\tfrac12\int\nabla\!\cdot(Sv)\,\widetilde f^{\,2}$.
+Since $U(z)v=U(z)v'$ and $v'M'=-\nabla'M'$,
+\[
+ S^{ij}v_j=-c_\Lambda\!\int U^{ij}(z)\partial_j'M'\dd v'
+  =-c_\Lambda\!\int(\partial_jU^{ij})(z)M'\dd v'
+  =-2c_\Lambda\,\partial_i\bigl(|\cdot|^{-1}*M\bigr),
+\]
+and therefore $\nabla\!\cdot(Sv)=8\pi c_\Lambda M$. This gives
+\eqref{eq:rate-split}.
+
+\emph{The bound.} Since $v\times v'=-v\times z=z\times v'$,
+$|v\times v'|^2\leq|v||v'||z|^2$, and the bracket in $\mathfrak k$ is at
+most $(|v||v'|+2)/|z|\leq2mm'/|z|$ in absolute value. With
+$G=M^{3/4}m|f|$,
+\[
+ \iint MM'|f||f'|\frac{2mm'}{|z|}
+ =2\!\iint G\,G'\,\frac{M^{1/4}M'^{1/4}}{|z|}\dd v\dd v'
+ \leq2\sup_v\!\int\!\frac{M^{1/4}M'^{1/4}}{|z|}\dd v'\int G^2\dd v
+\]
+by the Schur test for a symmetric kernel, and $\int G^2=\av{\varrho f^2}$.
+Also $M^2\leq(\sup M^{1/2}m^{-2})\,M\varrho$. This is \eqref{eq:rate-k}.
+
+\emph{Extension.} By \eqref{eq:W1}, $\av{\varrho f^2}\leq C\av{m^{-1}f^2}
+\leq C\mathfrak a[f]$, and $0\leq A\leq\mathfrak a$. So $A$, $\mathfrak k$
+and $\D$ are bounded by $C\mathfrak a$ on $C_c^\infty$, and the three forms
+extend by \cref{lem:density}.
+\end{proof}
+
+As a check, at $f=1$ the four terms of
+$\mathfrak a-12\pi c_\Lambda\!\int M^2f^2-c_\Lambda\!\iint(\cdots)$ are
+$4$, $-12$, $-8$ and $+16$ times $\pi c_\Lambda\!\int M^2$, with sum zero. A
+Monte Carlo evaluation of both sides of \eqref{eq:rate-split} for three
+other functions agrees within sampling error (script
+\texttt{rate\_check.py}).
+
+\subsubsection*{One more derivative of a collision inverse}
+
+We need the following facts about $S$. It is smooth, and
+$|\partial^\alpha S^{ij}(v)|\leq c_\Lambda\!\int|z|^{-1}|\partial^\alpha
+M(v-z)|\dd z\leq C_\alpha$ for every multi-index, because $|U^{ij}(z)|\leq
+1/|z|$. With the reflection $Rv=(-v_x,v_\perp)$, $S(Rv)=RS(v)R$; so
+$S^{xx}$ and $(S^{-1})_{xx}$ are even in $v_x$ and $S^{xj}$, $j\ne x$, is odd.
+By (W6), $S\geq C^{-1}m^{-3}$ and $S^{-1}\leq Cm^3$ as matrices.
+
+For $g\in\HH_0$ with $\partial_xg\in H^1_{\rm loc}$ let
+\[
+ \mathcal N(g)^2=\int M\,m^{-9}\bigl[(\partial_xg)^2
+     +|\nabla\partial_xg|^2\bigr]\dd v .
+\]
+
+\begin{lemma}[Weighted second derivatives]\label[lemma]{lem:rate-H2}
+Let $r\perp H$ with $\av{m\,r^2}<\infty$, and let
+$g\in\HH_0\cap H^\perp$ be the solution of $\D(g,h)=\av{rh}$ for all
+$h\in\HH_0\cap H^\perp$. Then $g\in H^2_{\rm loc}$ and
+\[
+ \D[g]+\mathcal N(g)^2\leq C_{\rm H}\av{m\,r^2}.
+\]
+\end{lemma}
+
+\begin{proof}
+\emph{Energy.} By \eqref{eq:W1} and \eqref{eq:W2},
+$\D[g]=\av{rg}\leq\av{m\,r^2}^{1/2}\av{m^{-1}g^2}^{1/2}
+\leq C\av{m\,r^2}^{1/2}\D[g]^{1/2}$. Hence
+\begin{equation}
+ \D[g]+\mathfrak a[g]+\av{m^{-1}g^2}
+   +\int Mm^{-3}|\nabla g|^2\dd v\leq C\av{m\,r^2};
+ \label{eq:rate-energy}
+\end{equation}
+the last term is at most $CA[g]\leq C\mathfrak a[g]$.
+
+\emph{Local equation.} The form $\D$ vanishes when one argument is a
+collision invariant, and $r\perp H$, so $\D(g,h)=\av{rh}$ for all
+$h\in\HH_0$. By \cref{lem:rate-split}, for $h\in C_c^\infty$,
+\[
+ A(g,h)=\av{\widetilde r\,h},\qquad
+ \widetilde r=r+8\pi c_\Lambda Mg+c_\Lambda\!\int M'g'
+   \Bigl[\frac{|v\times v'|^2}{|z|^3}-\frac2{|z|}\Bigr]\dd v' .
+\]
+The integral is at most
+$2m(v)\av{m^{-1}g^2}^{1/2}\bigl(\int M'm'^3|z|^{-2}\dd v'\bigr)^{1/2}
+\leq Cm(v)\av{m^{-1}g^2}^{1/2}$, so by \eqref{eq:rate-energy}
+\begin{equation}
+ \av{\widetilde r^{\,2}}\leq C\av{m\,r^2}.
+ \label{eq:rate-rt}
+\end{equation}
+Thus $g\in H^1_{\rm loc}$ is a weak solution of
+$-\nabla\!\cdot(MS\nabla g)=M\widetilde r$ with
+$\widetilde r\in L^2_{\rm loc}$. On every ball the coefficients are smooth
+and uniformly elliptic, so $g\in H^2_{\rm loc}$ by interior regularity
+\cite[Theorem~8.8]{GilbargTrudinger}, and the equation holds almost
+everywhere.
+
+\emph{Weighted estimate.} Let $w=\partial_xg\in H^1_{\rm loc}$, let
+$\theta_R$ be the cutoff of \cref{lem:density} with $R\geq1$, and
+$\psi=m^{-3}\theta_R$. Then $|\psi|\leq m^{-3}$ and
+$|\nabla\psi|\leq Cm^{-4}$ uniformly in $R$, because
+$|\nabla\theta_R|\leq C/R\leq C/m$ on its support. Multiply the equation by
+$-M^{-1}\partial_x(M\psi^2w)$, a compactly supported $L^2$ function, and
+integrate. For smooth $g$, two integrations by parts and
+\[
+ \partial_x\bigl[M^{-1}\partial_i(MS^{ij}\partial_jg)\bigr]
+ =M^{-1}\partial_i(MS^{ij}\partial_jw)
+  +M^{-1}\partial_i\bigl(M(\partial_xS^{ij})\partial_jg\bigr)
+  -S^{xj}\partial_jg
+\]
+give
+\begin{multline}
+ \int MS\nabla w\cdot\nabla(\psi^2w)
+  +\int M(\partial_xS)\nabla g\cdot\nabla(\psi^2w)
+  +\int MS^{xj}\partial_jg\,\psi^2w\\
+ =-\int M\widetilde r\,\bigl[\psi^2\partial_xw
+    +(2\psi\partial_x\psi-v_x\psi^2)w\bigr].
+ \label{eq:rate-id}
+\end{multline}
+Here the left side equals
+$\int\partial_i(MS^{ij}\partial_jg)\,M^{-1}\partial_x(M\psi^2w)\dd v$ and
+the right side is $\int M\widetilde r\,(-M^{-1})\partial_x(M\psi^2w)\dd v$.
+Both sides of the equality between the first of these expressions and the
+left side of \eqref{eq:rate-id} are continuous quadratic forms of $g$ in
+$H^2$ of a ball containing the support of $\psi$, so
+\eqref{eq:rate-id} holds for our $g$. Let
+$Y=\int M\psi^2S\nabla w\cdot\nabla w$ and
+$G=\int Mm^{-3}|\nabla g|^2$. We bound the other terms. By
+Cauchy--Schwarz for $S$, $|\nabla w|\leq Cm^{3/2}(S\nabla w\cdot\nabla
+w)^{1/2}$ and $|\partial_xw|\leq(S^{-1})_{xx}^{1/2}(S\nabla w\cdot\nabla
+w)^{1/2}$, and $|S|+|\partial_xS|\leq C$:
+\begin{align*}
+ 2\!\int M\psi|w|\,|S\nabla w\cdot\nabla\psi|
+  &\leq\tfrac14Y+C\!\int Mm^{-8}w^2\leq\tfrac14Y+CG,\\
+ \int M\psi^2|(\partial_xS)\nabla g\cdot\nabla w|
+  &\leq\tfrac14Y+C\!\int M\psi^2m^3|\nabla g|^2\leq\tfrac14Y+CG,\\
+ \int M\bigl[2\psi|\nabla\psi|\,|\partial_xS|+|S|\psi^2\bigr]|\nabla g|\,|w|
+  &\leq CG,\\
+ \int M|\widetilde r|\psi^2|\partial_xw|
+  &\leq\tfrac14Y+\int M\widetilde r^{\,2}\psi^2(S^{-1})_{xx}
+   \leq\tfrac14Y+C\av{\widetilde r^{\,2}},\\
+ \int M|\widetilde r|\,|2\psi\partial_x\psi-v_x\psi^2|\,|w|
+  &\leq C\!\int M|\widetilde r|m^{-5}|w|\leq C\av{\widetilde r^{\,2}}+CG .
+\end{align*}
+Since $Y<\infty$, $\tfrac14Y\leq C(G+\av{\widetilde r^{\,2}})$ uniformly in
+$R$. Let $R\to\infty$ and use $S\geq C^{-1}m^{-3}$:
+$\int Mm^{-9}|\nabla w|^2\leq C(G+\av{\widetilde r^{\,2}})$. Also
+$\int Mm^{-9}w^2\leq G$. With \eqref{eq:rate-energy} and
+\eqref{eq:rate-rt} this is the claim.
+\end{proof}
+
+\subsubsection*{A quantitative flux bound}
+
+\begin{lemma}[Flux bound with remainder]\label[lemma]{lem:rate-flux}
+Let $\Phi$ be smooth with polynomially bounded derivatives,
+$b=-M^{-1}\partial_{v_x}(M\Phi)$ and
+$\mathcal I=\int M\Phi^2(S^{-1})_{xx}\dd v$. Suppose $E\geq0$ is such that
+\begin{equation}
+ \Bigl|\int M\Phi\,\partial_xg\dd v\Bigr|\leq E\,\mathcal N(g)
+ \label{eq:rate-E}
+\end{equation}
+for all $g\in\HH_0\cap H^2_{\rm loc}$ with $\mathcal N(g)<\infty$. Then
+\[
+ \nstar b^2\leq\mathcal I+C_1E^2 ,
+\]
+and for every $r$ with $\av{m\,r^2}<\infty$, with $f_r$ the Riesz
+representer of $h\mapsto\av{rh}$ in $(\HH_0\cap H^\perp,\D)$,
+\[
+ |\av{bf_r}|\leq C_1E\av{m\,r^2}^{1/2}.
+\]
+\end{lemma}
+
+\begin{proof}
+For $f\in C_c^\infty$, $\av{bf}=\int M\Phi\,\partial_xf$, and
+$|\partial_xf|\leq(S^{-1})_{xx}^{1/2}(S\nabla f\cdot\nabla f)^{1/2}$. So
+\begin{equation}
+ |\av{bf}|\leq\mathcal I^{1/2}A[f]^{1/2},
+ \label{eq:rate-fluxA}
+\end{equation}
+and both the identity and the bound extend to $\HH_0$ by
+\cref{lem:density}. The function $f_r$ is also the representer of
+$r-\Pi r\perp H$, and $\av{m(r-\Pi r)^2}\leq C\av{m\,r^2}$. By
+\cref{lem:rate-H2} and \eqref{eq:rate-E},
+$|\av{bf_r}|=|\int M\Phi\,\partial_xf_r|\leq E\,\mathcal N(f_r)
+\leq CE\av{m\,r^2}^{1/2}$. This is the second statement.
+
+Let $f_b$ be the Riesz representer of $h\mapsto\av{bh}$, so
+$s:=\nstar b^2=\D[f_b]=\av{bf_b}$. Take $r=\varrho f_b$. Since
+$f_b\perp H$ and $f_r\perp H$,
+\[
+ \av{\varrho f_b^2}=\av{(r-\Pi r)f_b}=\D(f_r,f_b)=\av{bf_r}
+ \leq CE\av{m\varrho^2f_b^2}^{1/2}\leq CE\av{\varrho f_b^2}^{1/2},
+\]
+because $m\varrho^2=Mm^5\leq C\varrho$. Hence
+$\av{\varrho f_b^2}\leq CE^2$. By \eqref{eq:rate-fluxA} and
+\cref{lem:rate-split},
+\[
+ s\leq\mathcal I^{1/2}\bigl(\D[f_b]+\mathfrak k[f_b]\bigr)^{1/2}
+  \leq\mathcal I^{1/2}\bigl(s+C_1E^2\bigr)^{1/2}.
+\]
+If $s>\mathcal I$, then $s^2\leq\mathcal Is+\mathcal IC_1E^2$ gives
+$s-\mathcal I\leq C_1E^2\mathcal I/s<C_1E^2$.
+\end{proof}
+
+Compared with \cref{lem:flux}, the weak-compactness step is gone, and so is
+the second hypothesis in \eqref{eq:fluxhyp}: we estimate with $A$ directly
+and never pass through $\mathfrak a$.
+
+\begin{lemma}[Layer functionals]\label[lemma]{lem:rate-layer}
+Let $\tau(v_\perp)$ be measurable, $\delta(v_\perp)>0$, $u=v_x/\delta$, and
+$g$ as in \eqref{eq:rate-E}. There is an absolute constant $C$ such that
+\begin{enumerate}[label=(\alph*)]
+\item if $\Phi=\tau\,\eta(u)$ with $\eta=\eta_{v_\perp}\in L^1(\RR)$, then
+$|\int M\Phi\,\partial_xg|\leq C\bigl(\int M_\perp\tau^2\delta^2
+\|\eta\|_{L^1}^2m_\perp^9\dd v_\perp\bigr)^{1/2}\mathcal N(g)$;
+\item if $\Phi=\tau\,\eta'(u)$ with $\eta$ bounded, $C^1$ and in
+$L^2(\RR)$, then
+\[
+ \Bigl|\int M\Phi\,\partial_xg\Bigr|\leq C\Bigl(\int M_\perp\tau^2\delta^3
+\|\eta\|_{L^2}^2m_\perp^9\dd v_\perp\Bigr)^{1/2}\mathcal N(g);
+\]
+\item if $|\Phi|\leq\tau\,(1+v_x^2)$, then
+$|\int M\Phi\,\partial_xg|\leq C\bigl(\int M_\perp\tau^2m_\perp^9
+\dd v_\perp\bigr)^{1/2}\mathcal N(g)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Let $w=\partial_xg$ and, for fixed $v_\perp$,
+$\omega(v_x)=M_1(v_x)w(v_x,v_\perp)$. Then
+$\omega'=M_1(\partial_xw-v_xw)$ and
+\[
+ \int(\omega^2+\omega'^2)\dd v_x\leq C\!\int M_1m_x^{-9}
+   \bigl(w^2+(\partial_xw)^2\bigr)\dd v_x,\qquad m_x=(1+v_x^2)^{1/2},
+\]
+because $M_1m_x^9(2+2v_x^2)$ is bounded. For almost every $v_\perp$ the
+right side is finite, $\omega\in H^1(\RR)$, and
+$\sup\omega^2\leq\int(\omega^2+\omega'^2)$. Since $m_\perp m_x\geq m$,
+\[
+ \int M_\perp m_\perp^{-9}\!\int(\omega^2+\omega'^2)\dd v_x\dd v_\perp
+ \leq C\mathcal N(g)^2 .
+\]
+(a) $|\int M_1\eta(v_x/\delta)w\dd v_x|\leq\delta\|\eta\|_{L^1}\sup|\omega|$;
+multiply by $M_\perp|\tau|$, integrate and use Cauchy--Schwarz with the
+weight $m_\perp^9$. (b)
+$\int\eta'(v_x/\delta)\,\omega\dd v_x=-\delta\!\int\eta(v_x/\delta)\,\omega'
+\dd v_x$, at most $\delta^{3/2}\|\eta\|_{L^2}\|\omega'\|_{L^2}$ in absolute
+value. (c) Write $M_1(1+v_x^2)|w|=\bigl[M_1^{1/2}(1+v_x^2)m_x^{9/2}\bigr]
+\bigl[M_1^{1/2}m_x^{-9/2}|w|\bigr]$; the first factor is in $L^2(\dd v_x)$.
+Apply Cauchy--Schwarz in $v$ with the weight $m_\perp^9$.
+\end{proof}
+
+\subsubsection*{Proof of \cref{thm:rate}}
+
+Let $c_\sigma=M_1(0)\av{\sigma^2}_\perp$, and recall
+$\delta=(d/k)^{1/3}\leq\bar\delta:=Ck^{-1/3}$. We go through the lower and
+upper bounds of this appendix and replace each $o(1)$ by a power.
+
+\emph{Three expansions.} By the facts about $S$ above, the bounds
+\eqref{eq:dprops}, and Taylor's formula in $v_x$ for even functions,
+\begin{gather}
+ \Bigl|\frac{S^{xx}(v_x,v_\perp)M_1(v_x)}{d(v_\perp)}-M_1(0)\Bigr|
+   \leq Cm_\perp v_x^2,\qquad
+ \bigl|d(v_\perp)(S^{-1})_{xx}(v_x,v_\perp)M_1(v_x)-M_1(0)\bigr|
+   \leq Cm_\perp^9v_x^2,\nonumber\\
+ |S^{xj}(v)|\leq C|v_x|\quad(j\ne x).
+ \label{eq:rate-taylor}
+\end{gather}
+For the second one, the second derivatives of $S^{-1}$ are bounded by
+$Cm^9$, and $m(s,v_\perp)^9(1+s^2)M_1(s)\leq Cm_\perp^9$.
+
+\emph{The flux profile.} For $u>0$, by \cref{lem:profile}(c),
+\[
+ j_\delta(u)+W'(u)=\int_u^\infty tF(t)
+   \Bigl[\frac{M_1(\delta t)}{M_1(\delta u)}-1\Bigr]\dd t,\qquad
+ \Bigl|\frac{M_1(\delta t)}{M_1(\delta u)}-1\Bigr|\leq\min(1,\delta^2t^2).
+\]
+With $|F(t)|\leq C(1+t)^{-4}$ and
+$\beta(u)=\int_u^\infty t(1+t)^{-4}\min(1,\delta^2t^2)\dd t$, Fubini's
+theorem gives
+\begin{equation}
+ \|j_\delta+W'\|_{L^1(\RR)}\leq C\!\int_0^\infty\!\frac{t^2\min(1,\delta^2t^2)}
+   {(1+t)^4}\dd t\leq C\delta,\qquad
+ \sup|j_\delta+W'|\leq C\beta(0)\leq C\delta^2\log(e+1/\delta).
+ \label{eq:rate-j}
+\end{equation}
+Both functions are even.
+
+\emph{Lower bound.} Take $\varphi_k=\sigma\delta^{-1}F(u)$ as before. Since
+$|M_1(\delta u)-M_1(0)|\leq M_1(0)\delta^2u^2/2$ and $u^2F$ is integrable,
+\[
+ \bigl|\av{\sigma\varphi_k}-\pi c_\sigma\bigr|\leq Ck^{-2/3},\qquad
+ |t_k|\leq Ck^{-2/3}.
+\]
+For the collision form we use $\D[\varphi_k]\leq A[\varphi_k]
++C_0\av{\varrho\varphi_k^2}$ from \cref{lem:rate-split}. By
+\eqref{eq:rate-taylor},
+\begin{align*}
+ \int MS^{xx}(\partial_x\varphi_k)^2
+  &\leq k\,c_\sigma\!\int F'^2
+   +Ck\!\int M_\perp\sigma^2m_\perp\delta^2\dd v_\perp\!\int u^2F'^2\dd u
+   \leq k\,c_\sigma\!\int F'^2+Ck^{1/3},\\
+ 2\Bigl|\int MS^{xj}\partial_x\varphi_k\,\partial_j\varphi_k\Bigr|
+  &\leq C\!\int M_\perp(|\sigma|+|\nabla\sigma|)^2\delta^{-1}\dd v_\perp
+    \!\int|u||F'|\bigl(|F|+|uF'|\bigr)\dd u\leq Ck^{1/3},
+\end{align*}
+and the perpendicular part of $A[\varphi_k]$ and $\int M\varphi_k^2$ are
+$O(k^{1/3})$ as in the proof of the lower bound. So
+\begin{equation}
+ \D[\varphi_k]\leq k\,c_\sigma\!\int F'^2+Ck^{1/3}.
+ \label{eq:rate-lowerD}
+\end{equation}
+For the streaming term, $\Phi_k=\sigma\delta j_\delta(u)$ and, by
+\eqref{eq:rate-taylor} and \eqref{eq:rate-j},
+\begin{align*}
+ \mathcal I_k&=\frac1k\int M_\perp\sigma^2\!\int d\,(S^{-1})_{xx}M_1(\delta u)\,
+   j_\delta^2\dd u\dd v_\perp\\
+ &\leq\frac1k\Bigl[c_\sigma\!\int W'^2
+   +C\bar\delta^2\!\int u^2(W'^2+j_\delta^2)\dd u
+   +C\sup|j_\delta+W'|\!\int(|j_\delta|+|W'|)\dd u\Bigr]\\
+ &\leq\frac1k\,c_\sigma\!\int W'^2+Ck^{-5/3}\log(e+k).
+\end{align*}
+We used $|j_\delta|+|W'|\leq C(1+u^2)^{-1}$ and that
+$\delta\mapsto\delta^2\log(e+1/\delta)$ is increasing. For
+\eqref{eq:rate-E}, split
+$\Phi_k=-\sigma\delta W'(u)+\sigma\delta\,(j_\delta+W')(u)$ and apply
+\cref{lem:rate-layer}(b) with $\tau=-\sigma\delta$, $\eta=W$, and (a) with
+$\tau=\sigma\delta$, $\eta=j_\delta+W'$:
+\[
+ E_k\leq C\Bigl(\int M_\perp\sigma^2\delta^5m_\perp^9\Bigr)^{1/2}
+   +C\Bigl(\int M_\perp\sigma^2\delta^6m_\perp^9\Bigr)^{1/2}\leq Ck^{-5/6}.
+\]
+\Cref{lem:rate-flux} gives
+$k^2\nstar{v_x\varphi_k}^2\leq k^2\mathcal I_k+Ck^{1/3}$. With
+\eqref{eq:rate-lowerD} and \cref{lem:profile}(d),
+\[
+ \mathcal Q_k[\varphi_k]\leq\pi c_\sigma\,k+Ck^{1/3}\log(e+k),
+\]
+and \cref{lem:twosided}(a) gives
+$kN_k(\sigma)\geq(\pi c_\sigma-Ck^{-2/3})_+^2\,k/\mathcal Q_k[\varphi_k]
+\geq\pi c_\sigma-Ck^{-2/3}\log(e+k)$.
+
+\emph{Upper bound.} Take $\psi_k$, $b_k=b_k^0+r_k$ and $\Phi_k^0$ as before.
+The same three steps with $W'$ in place of $F'$ give
+\[
+ A[\psi_k^0]\leq\frac1k\,c_\sigma\!\int W'^2+Ck^{-5/3},\qquad
+ \av{\varrho(\psi_k^0)^2}\leq Ck^{-5/3};
+\]
+the integrals $\int u^2W'^2$ and $\int|u||W'|(|W|+|uW'|)$ converge by
+\cref{lem:profile}(b). The polynomial correction changes $A^{1/2}$ and
+$\av{\varrho\,\cdot^2}^{1/2}$ by $O(k^{-2})$, so
+\begin{equation}
+ \D[\psi_k]\leq\frac1k\,c_\sigma\!\int W'^2+Ck^{-5/3}.
+ \label{eq:rate-upperD}
+\end{equation}
+For the dual seminorm, let $f^0$ and $f^r$ be the Riesz representers of
+$b_k^0$ and $r_k$, so that
+\[
+ \nstar{b_k}^2=\nstar{b_k^0}^2+2\av{b_k^0f^r}+\nstar{r_k}^2 .
+\]
+Here $\av{m\,r_k^2}\leq Ck^{-2}$, so $\nstar{r_k}^2\leq Ck^{-2}$. Since
+$|\Phi_k^0-\sigma\delta F'(u)|\leq C|\sigma|\delta^3(1+v_x^2)$,
+\cref{lem:rate-layer}(b) with $\tau=\sigma\delta$, $\eta=F$ and (c) with
+$\tau=C|\sigma|\delta^3$ give \eqref{eq:rate-E} for $\Phi_k^0$ with
+$E_k^0\leq Ck^{-5/6}$. By the second statement of \cref{lem:rate-flux},
+$|\av{b_k^0f^r}|\leq CE_k^0\av{m\,r_k^2}^{1/2}\leq Ck^{-11/6}$. By
+\eqref{eq:rate-taylor},
+\[
+ \mathcal I_k^0\leq\frac1k\Bigl[c_\sigma\!\int F'^2
+   +C\bar\delta^2\!\int u^2F'^2\Bigr]
+   +C\bar\delta^5\!\int|F'|\dd u+C\bar\delta^6
+ \leq\frac1k\,c_\sigma\!\int F'^2+Ck^{-5/3},
+\]
+where the last two terms come from the error in $\Phi_k^0$ and
+$(S^{-1})_{xx}\leq Cm^3$. \Cref{lem:rate-flux} gives
+$\nstar{b_k^0}^2\leq\mathcal I_k^0+Ck^{-5/3}$. Altogether
+$\nstar{b_k}^2\leq k^{-1}c_\sigma\!\int F'^2+Ck^{-5/3}$, and with
+\eqref{eq:rate-upperD}, \cref{lem:twosided}(b) and \cref{lem:profile}(d),
+$kN_k(\sigma)\leq\pi c_\sigma+Ck^{-2/3}$. \qed
+
+\begin{remark}[What limits the exponent]\label{rem:rate-limits}
+Every error term above has relative size $k^{-2/3}=\bar\delta^2$: the
+variation of $S^{xx}$, $(S^{-1})_{xx}$ and $M_1$ across the layer,
+perpendicular diffusion of the trial functions, and the remainder
+$C_1E^2$ of \cref{lem:rate-flux}. The logarithm comes from the tail
+$F\sim-2u^{-4}$ in $j_\delta$. We bounded these terms in absolute value. We
+do not know that $2/3$ is the true exponent, and the Dougherty operator
+suggests that it is not: see \cref{prop:rate-dougherty}. To improve the
+exponent one would have to evaluate the $\bar\delta^2$ terms rather than
+bound them, correct the trial functions at the next order, and sharpen
+\eqref{eq:rate-E}, which would need more than two derivatives of the
+collision inverse. We have not done this.
+\end{remark}
+
+\begin{remark}[What is not covered]\label{rem:rate-gaps}
+(i) The constant $C_\sigma$ is not explicit, so \cref{cor:rate} still gives
+no explicit wavenumber beyond which the potential-driven conductivity is
+positive. It depends on the constants of \eqref{eq:W1}, \eqref{eq:W2} and
+(W6), which we cite and do not reprove. (ii) We have not proved a rate for
+the electron operator $\Lambda_Z$ of \cref{prop:airyZ}. Two things break.
+The Lorentz diffusion matrix $c_ZU(v)$ is singular at $v=0$, so
+\cref{lem:rate-H2} does not apply as written; and the regularized width of
+that proof has constants that depend on $\rho_0$, with $\rho_0\to0$ taken
+after $k\to\infty$. A rate would need the dependence on $\rho_0$ made
+explicit and then optimized.
+\end{remark}
+
+\subsubsection*{The exact rate for the Dougherty operator}
+
+\begin{proposition}[Dougherty: first correction]\label[proposition]{prop:rate-dougherty}
+For the conserving Dougherty operator, with $y=\nu/|k|\to0$ and
+$c_0=\sqrt{\pi/2}$,
+\begin{align*}
+ d=1:&\quad |k|\,n_1=c_0+\Bigl(\frac\pi2-\frac23\Bigr)y+O(y^2),\\
+ d=3:&\quad \theta_3=3\sqrt{\frac2\pi}\Bigl[1-\Bigl(\frac{5c_0}3
+      -\frac2{3c_0}\Bigr)y+O(y^2)\Bigr],\qquad
+   |k|\,T_{\perp1}=-\frac\pi3\,y+O(y^2),\\
+ &\quad |k|\,\chi_\thr=\frac95\sqrt{\frac2\pi}\Bigl[1-\Bigl(\frac{5c_0}3
+      -\frac{22}{15c_0}\Bigr)y+O(y^2)\Bigr].
+\end{align*}
+So the approach to the collisionless limit is exactly of first order in
+$\nu/|k|$, with nonzero coefficients.
+\end{proposition}
+
+\begin{proof}
+Let $a=y^{-2}$ and $S_j=\int_0^1(1-s)^jE_a$. Write
+$E_a(s)=e^{-as^2/2}e^{-aR(s)}$ with
+$R(s)=-\log(1-s)-s-s^2/2=\sum_{n\geq3}s^n/n\geq0$. On $[0,\tfrac12]$,
+$|R-s^3/3|\leq Cs^4$ and $|e^{-x}-1+x|\leq x^2/2$ for $x\geq0$; on
+$[\tfrac12,1]$, $E_a\leq e^{-a/8}$. Hence
+\[
+ S_0=\int_0^{1/2}e^{-as^2/2}\Bigl(1-\frac{as^3}3\Bigr)\dd s+O(a^{-3/2})
+  =c_0y-\frac23y^2+O(y^3),
+\]
+using $\int_0^\infty u^3e^{-u^2/2}\dd u=2$. Integration by parts gives
+$a\int_0^1sE_a=1-S_0$, so $S_1=S_0-y^2(1-S_0)$. Insert these in the
+formulas of \cref{app:dougherty} and of the proof of
+\cref{thm:th-dougherty}: $\nu n_1=S_0/(1-S_0)$ for $d=1$;
+$\theta_3=y(3-S_0-4S_1)/S_0$, $\nu T_1=-S_0/(3-S_0-4S_1)$ and
+$T_{\perp1}=2S_1T_1$ for $d=3$; and
+$|k|\chi_\thr=3y(3-S_0-4S_1)/(S_0+4S_1)$.
+\end{proof}
+
+Numerically, the four coefficients are reproduced to within $0.5\%$ at
+$y=0.005$. For the one-dimensional Dougherty operator the collision form is
+exactly local and the flux bound is an equality, so the trial functions of
+this appendix can be inserted in \cref{thm:dual} and compared with the
+exact $n_1$. The relative gaps of the lower and upper certificates
+decrease with local logarithmic slopes $-0.94$ and $-0.99$ between
+$k/\nu=3000$ and $10^4$, and the slopes are still steepening. So for
+Dougherty the certificates themselves converge faster than the $k^{-2/3}$
+that we can prove for them, which supports \cref{rem:rate-limits}. These
+are computations, not proofs; see \texttt{rate\_check.py} and
+\texttt{results/2026-11-18-rate/metrics.json}.
 
 \subsection{Electron--ion collisions}\label{app:airyZ}
 
@@ -3951,10 +5888,10 @@ limits and leading coefficients
 Landau--Coulomb
  & Weighted stationary realization, stated low-frequency moment limit,
 small-$k$ bounds and coefficient formula; collisionless limit
-$|k|\chi\to3\sqrt{2/\pi}$ and positivity for all sufficiently large $|k|$,
-given the cited operator estimates
- & Positivity at intermediate $k$, global Fourier upper bound, a
-convergence rate or explicit large-$k$ threshold\\
+$|k|\chi\to3\sqrt{2/\pi}$ with rate $O(|k|^{-2/3}\log|k|)$ and positivity
+for all sufficiently large $|k|$, given the cited operator estimates
+ & Positivity at intermediate $k$, global Fourier upper bound, the sharp
+rate, an explicit constant or large-$k$ threshold\\
 \addlinespace
 Landau numerical values
  & Reproducible finite-dimensional solves and degree comparisons
@@ -3967,8 +5904,9 @@ exact Dougherty response and both limits. Under the same condition:
 Stieltjes representation in $k^2$, monotonicity, positive real-space
 kernel, Pad\'e bounds. For Landau: solvability, hence
 all of these, and the collisionless limit
-$|k|\chi_\thr\to\tfrac95\sqrt{2/\pi}$, given the cited operator estimates
- & Solvability for a general operator in the class; a convergence rate;
+$|k|\chi_\thr\to\tfrac95\sqrt{2/\pi}$ with the same rate, given the
+cited operator estimates
+ & Solvability for a general operator in the class; the sharp rate;
 the spectral measure beyond two moments; any Stieltjes property of the
 potential-driven response in three dimensions\\
 \addlinespace
@@ -3985,6 +5923,26 @@ independent radial solver; quasi-neutral embedded test
  & Certified constants; a convergence rate for the collisionless limit;
 converged curves at large $|k|\lambda_e$; the decay of $X(s)$ at large
 $s$; the size of the $O(1)$ term in the linear law\\
+\addlinespace
+Relaxation operators with separate stress and heat-flux rates
+ & Closed-form response; $\chi_\pot>\F$ at small $k$ when
+$\nu_s<\nu/4$; $\chi_\pot<0$ and failure of both conditions of
+\cref{prop:intermediate} for slow stress and heat flux; $\chi_\pot>\chi_\thr$
+at every $k$ for BGK, the ellipsoidal-statistical operator and Dougherty,
+and an operator with $0<\chi_\pot<\chi_\thr$ at small $k$
+ & Sharp thresholds for the sign change (numerical only); whether
+$\chi_\pot$ is a Stieltjes function for three-dimensional BGK; the
+ordering of the drives for Landau\\
+\addlinespace
+Frequency-dependent closure
+ & Exact memory form for data in the retained moments, positive-real
+kernel, static contractions giving $\chi_\thr$ and $\chi_\pot$, and
+bounds on the quasi-static closure error; in Galerkin truncations, and
+in the continuum for BGK and Dougherty. Numerical bounds within a factor
+$1.4$ to $3.8$ (supremum) and $1.0$ to $1.5$ (weighted) of the measured
+errors
+ & The continuum statements for Landau and $\Lambda_Z$; certified
+suprema; an error bound for three-dimensional problems with flow\\
 \bottomrule
 \end{tabularx}
 \end{table}

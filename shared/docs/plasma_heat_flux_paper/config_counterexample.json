@@ -1,0 +1,37 @@
+{
+  "schema_version": "plasma-heat-flux-counterexample-v1",
+  "seed": 0,
+  "stochastic_sampling": false,
+  "units": "v_t = 1. Relaxation models: background rate nu = 1 in the stress-rate (ES) scans, stress rate nu_s = 1 in the three-rate scans. Landau: tau = 1 as in landau3d.py.",
+  "galerkin_degrees": [12, 16],
+  "landau_degrees": [12, 16],
+  "landau_k": [0.1, 0.3, 0.5, 1.0, 2.0, 3.0, 5.0],
+  "constants_sigma": [0.1, 0.2, 0.25, 0.5, 1.0, 2.0],
+  "constants_three_rate": [[20.0, 1.0, 1.0], [5.0, 1.0, 2.0], [3.0, 0.5, 1.5]],
+  "es_sigma": [0.001, 0.01, 0.02, 0.05, 0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.6, 1.0, 2.0, 5.0],
+  "es_k_log10_range": [-2.0, 2.0],
+  "es_k_points": 81,
+  "small_k_slope_k": [0.01, 0.02, 0.05],
+  "crosscheck_es": {"sigma": [0.1, 0.25, 1.0], "k": [0.1, 0.3, 1.0, 3.0]},
+  "crosscheck_three_rate": {"params": [[20.0, 1.0, 1.0], [5.0, 1.0, 2.0]], "k": [0.5, 1.0, 2.0, 3.0]},
+  "crosscheck_tolerance_exact": 1e-8,
+  "stieltjes": {
+    "sigma": [0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.6, 1.0, 2.0, 5.0],
+    "radii_log10_range": [-3.0, 3.0],
+    "radii_points": 121,
+    "angles_over_pi": [0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 0.98, 0.99, 0.995, 0.998, 0.999, 0.9995, 0.9999],
+    "tolerance": 1e-8
+  },
+  "three_rate_scan": {
+    "nu_over_nus": [2.0, 3.0, 5.0, 10.0, 20.0, 50.0, 100.0, 1000.0],
+    "nuq_over_nus": [0.25, 0.5, 1.0, 2.0, 4.0],
+    "k_log10_range": [-1.5, 2.0],
+    "k_points": 141,
+    "galerkin_below_k_over_nu": 0.05
+  },
+  "rigorous_example": {"nu": 100.0, "nu_s": 1.0, "nu_q": 1.0, "k": 2.0},
+  "offdiagonal_example": {"nu": 1.0, "b0": 1.0, "b1": 1.0, "beta": 0.8, "k": [0.05, 0.1, 0.2, 0.5, 1.0, 2.0, 5.0]},
+  "dougherty_k": [0.05, 0.1, 0.3, 1.0, 3.0, 10.0, 30.0],
+  "bgk_inequality_a_log10_range": [-4.0, 4.0],
+  "bgk_inequality_points": 161
+}
