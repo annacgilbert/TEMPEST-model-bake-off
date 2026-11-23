@@ -48,6 +48,11 @@ A's first assignment is a fetch command that pulls the runs from the lab's
 shared folder into a local git-ignored cache and checks them against a
 committed manifest. When it exists, its usage goes here.
 
+Before the sprint starts, make sure you can push to this repository and
+that you are in the TEMPEST Slack. Then copy `.env.example` to `.env` and set
+`BURTON_DATA_URL` to the folder link from the TEMPEST Slack. `.env` is
+git-ignored. Check that you can open the folder in a browser.
+
 ## Open items
 
 See "Open items from the kickoff" and "Still owed by the lab" in the sprint

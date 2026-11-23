@@ -56,6 +56,11 @@ the code. That includes the code that gets the data.
 - **Handing in.** Work is handed in as commits to this repository: code,
   tests, a committed configuration for each experiment, and a short written
   note of what was run, what failed, and what was not checked.
+- **Git and Slack are part of the exercise.** Every participant needs a
+  GitHub account with push access to this repository, a working clone, and
+  membership of the TEMPEST Slack, where the data link and day-to-day
+  coordination live. Anyone new to either should get set up, and make one
+  practice commit, before 30 November.
 
 ## What changed since the 2026-11-09 draft
 
@@ -130,8 +135,9 @@ lead's handwritten notes.
 ## Data shared by the lab
 
 Justin shared a Google Drive folder on 2026-11-12 with three of the five
-published runs. The link was posted in the TEMPEST Slack; it is not recorded
-in this public repository. The table is taken from the lab's metadata sheets
+published runs. The link is posted in the TEMPEST Slack. It is not recorded
+in this public repository; each participant puts it in a git-ignored
+`burton-sprint/.env` file as `BURTON_DATA_URL` (see `../.env.example`). The table is taken from the lab's metadata sheets
 as reported in the kickoff deck. Nobody on the sprint has opened the `.cine`
 files yet; doing so is workstream A's first task.
 
@@ -196,8 +202,8 @@ and also where a wrong answer is easiest to miss.
 Assignment: write the code that gets the lab's data to everyone on the
 sprint, and document it so the other four workstreams can use it on day 2.
 
-- Day 1: a fetch command that takes the lab's shared-folder link from local
-  configuration (an environment variable or a git-ignored file), downloads
+- Day 1: a fetch command that takes the lab's shared-folder link from
+  `BURTON_DATA_URL`, set in the git-ignored `../.env`, downloads
   the three runs and their metadata sheets into a local git-ignored cache,
   and verifies what it downloaded. It must be safe to run twice and must
   fail loudly on a partial or changed file.
@@ -376,8 +382,9 @@ Put to the team on 2026-11-16. Record each outcome here and in
    keep a small version? The lead's recommendation is to park it.
 2. **Who takes which workstream.**
 3. **Tools and access before 30 November.** Which agent tools each person
-   uses, who still needs the team plan, and whether every participant can
-   open the lab's shared data folder.
+   uses, who still needs the team plan, whether every participant can open
+   the lab's shared data folder, and who still needs GitHub push access or
+   to join the TEMPEST Slack.
 4. **The deliverable.** A scorecard and a short report; does the sprint also
    build the easy-to-use tracker?
 5. **Follow-ups with the lab.** Who chases the 3D imaging paper and SPIFF.

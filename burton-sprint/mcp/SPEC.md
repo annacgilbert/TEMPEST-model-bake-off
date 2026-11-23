@@ -13,8 +13,8 @@ lab's `.cine` camera video without copying the dataset into this repository.
 The server reads from a local cache. Filling that cache is a separate step:
 a fetch command, also written by workstream A, that downloads the runs from
 the lab's shared folder and verifies them against the committed manifest.
-The folder link is supplied through local configuration and is never
-committed.
+The folder link is read from `BURTON_DATA_URL` in the git-ignored
+`burton-sprint/.env` and is never committed.
 
 ## Data description (_open_)
 

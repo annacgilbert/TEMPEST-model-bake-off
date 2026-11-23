@@ -15,7 +15,8 @@ each slide includes speaker notes and source links.
 ## Agentic AI tutorial and Burton sprint kickoff
 
 `AI_agent_tutorial.pptx` is a 19-slide deck presented at the TEMPEST agentic
-AI tutorial on 2026-11-16. The first part (about 15 minutes) uses this
+AI tutorial on 2026-11-16 and revised on 2026-11-23 to match the updated
+sprint plan (the version as presented is in Git history at `1140243`). The first part (about 15 minutes) uses this
 repository as a worked example of working with AI agents: `AGENTS.md`, the
 MCP specification, how meeting notes are fed back into the repository, and
 how agent output is checked. The second part is the kickoff for the
