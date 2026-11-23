@@ -22,5 +22,6 @@ how agent output is checked. The second part is the kickoff for the
 three-week Burton sprint starting 2026-11-30: what changed after the
 2026-11-11 meeting with the Burton lab, the data in hand, proposed
 workstreams, the tracking scorecard, the schedule, and which tasks to hand
-to agents. The workstreams and schedule in the deck are proposals and are
-not yet reflected in `burton-sprint/docs/SPRINT_PLAN.md`.
+to agents. The workstreams and schedule in the deck are proposals; they are
+reflected, marked as such, in `burton-sprint/docs/SPRINT_PLAN.md` as revised
+on 2026-11-23.

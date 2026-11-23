@@ -7,7 +7,7 @@ unless it says so. Each entry records who reported it and when.
 
 | Source | Kind | Dimensions | Held by | Status |
 |---|---|---|---|---|
-| Burton lab image stacks | Raw TIFF camera frames | 3D via laser-sheet scan | Emory (Burton) | Raw version of the published data offered 2026-11-11; new data also on offer |
+| Burton lab image data | Raw `.cine` camera video | 3D via laser-sheet scan | Emory (Burton) | Three of the five published runs shared 2026-11-12, as reported by the sprint lead; files not yet inspected. New data expected later |
 | Burton lab published trajectories | Tracked particle positions, five runs | 3D | Public repository | Verified 2026-11-09 |
 | PK-4 experiment tracks | Tracked particle positions | 2D, and lower-resolution 3D | Auburn and Baylor | Offered to the collaboration |
 | DRIAD simulation | Simulated dust and ion dynamics | 3D | Baylor (Lorin's group) | Offered to the collaboration |
@@ -24,9 +24,11 @@ See `burton-sprint/README.md` and `burton-sprint/docs/SPRINT_PLAN.md`.
   range. The published analysis assumes pairwise forces and does not test
   for many-body effects. The repository contains no simulator and no
   simulated trajectories.
-- Raw image stacks: Justin offered the raw version of the published data
-  first, and new data with complete metadata later (2026-11-11). To be
-  served through the MCP server specified in `burton-sprint/mcp/SPEC.md`.
+- Raw image data: Justin offered the raw version of the published data
+  first, and new data with complete metadata later (2026-11-11). On
+  2026-11-12 he shared the 9-, 13-, and 15-particle runs as zipped `.cine`
+  video with metadata sheets. Sprint participants fetch them with code they
+  write themselves; see `burton-sprint/docs/SPRINT_PLAN.md`.
 - Metadata: pressure, power, and particle sizes are known. The laser-sheet
   phase was not recorded per frame and is derived from a calibration.
 - Updated lab code will be provided directly and is not public.

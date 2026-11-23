@@ -98,6 +98,27 @@ relevant design document until accepted.
   that pipeline is shared across model families inside `model-bakeoff/`, not
   across the three projects.
 
+## 2026-11-23 — Burton sprint direction and conduct
+
+- The sprint's question is particle tracking: how well the dust particles
+  can be found and followed. Agreed with the Burton lab on 2026-11-11.
+- Force inference is out of scope for the sprint; it is the lab's own line
+  of work. The pairwise baseline and beyond-pairwise test in the 2026-11-09
+  plan are parked. Whether a small version is kept is still open.
+- The sprint runs from 2026-11-30 to 2026-12-18 with a checkpoint every
+  Friday morning, live or asynchronous.
+- The sprint is run as an exercise for its participants. They write the
+  code, including the code that fetches the lab's data. The repository
+  provides the plan and specification only; nothing is built ahead of the
+  sprint by the lead or the lead's agents.
+- The lab's data are raw `.cine` video, not TIFF stacks. Each participant
+  fetches them from the lab's shared folder with the sprint's own code into
+  a local git-ignored cache. The data, the lab's code, and the folder link
+  are never committed or redistributed. This amends the 2026-11-09 bullet on
+  image stacks.
+- Workstream assignments, the tracking tool, and the scorecard contents in
+  `burton-sprint/docs/SPRINT_PLAN.md` remain proposals until recorded here.
+
 ## Open decisions
 
 - Canonical solver choices for hard-sphere/Boltzmann and NLS/wave-kinetic

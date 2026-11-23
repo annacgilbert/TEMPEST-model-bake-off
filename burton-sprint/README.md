@@ -1,23 +1,28 @@
 # Burton Sprint
 
-A short, focused project built on three inputs from Justin Burton's lab:
+A three-week sprint, 2026-11-30 to 2026-12-18, on tracking dust particles
+in image data from Justin Burton's lab. It is built on three inputs:
 
-1. his paper (`paper/`);
-2. his stack of TIFF images (reached through an MCP server, see `mcp/`); and
-3. whatever analysis software the lab already has (`external/`).
+1. the lab's paper (`paper/`);
+2. raw `.cine` camera video for three of the paper's five runs, shared by
+   the lab; and
+3. the lab's own analysis software, where it can be shared (`external/`).
 
-The sprint design is in [`docs/SPRINT_PLAN.md`](docs/SPRINT_PLAN.md): three weeks,
-six people, covering automated data access, a tracking-method benchmark, and
-a test for forces beyond the paper's pairwise model, framed as a test of the
-pairwise closure.
+The sprint design is in [`docs/SPRINT_PLAN.md`](docs/SPRINT_PLAN.md): six
+people in five workstreams covering data access, synthetic ground truth,
+detection, linking, and a scorecard that every tracker is held to.
+
+The sprint is run as an exercise for its participants. This folder is
+scaffolding: the plan, the MCP specification, the paper, and an empty
+package. The participants write the code, starting with the code that
+fetches the data. Nothing here downloads the data for you yet.
 
 ## Directory map
 
 - `paper/`: the paper PDF and reading notes.
 - `mcp/SPEC.md`: specification for the MCP server that will serve the image
-  data. The server itself is to be written by others.
-- `data/samples/`: a few local TIFFs for getting started before the MCP server
-  exists. Git-ignored.
+  data. Writing the server is part of workstream A.
+- `data/samples/`: local cache for fetched data. Git-ignored.
 - `data/manifests/`: committed manifests (filenames, checksums, acquisition
   metadata) for any data used.
 - `external/`: slot for the Burton lab's software; how it is brought in is
@@ -35,8 +40,15 @@ source .venv/bin/activate
 python -m pip install -e '.[dev]'
 ```
 
+## Getting the data
+
+The lab's data are unpublished. They are not in this repository, the link to
+them is not in this repository, and nobody passes copies around. Workstream
+A's first assignment is a fetch command that pulls the runs from the lab's
+shared folder into a local git-ignored cache and checks them against a
+committed manifest. When it exists, its usage goes here.
+
 ## Open items
 
-See "Questions for Justin Burton" in the sprint plan: what the TIFF stack
-contains, whether the lab's tracking code can be shared, and licensing of the
-public force-inference code.
+See "Open items from the kickoff" and "Still owed by the lab" in the sprint
+plan.

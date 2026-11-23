@@ -1,23 +1,39 @@
 # MCP server for the Burton image data: specification
 
-Status: draft skeleton. The server will be written by others; this document
-is the contract they implement and the sprint code relies on. Sections marked
-_open_ need input from the Burton lab or the sprint lead.
+Status: draft skeleton, revised 2026-11-23. The server is written by the
+sprint participants in workstream A (see `../docs/SPRINT_PLAN.md`); this
+document is the contract they implement and the other workstreams rely on.
+Sections marked _open_ are filled in by workstream A from the data itself.
 
 ## Purpose
 
-Give analysis code and AI agents read-only, structured access to Justin
-Burton's TIFF image stacks without copying the full dataset into this
-repository.
+Give analysis code and AI agents read-only, structured access to the Burton
+lab's `.cine` camera video without copying the dataset into this repository.
+
+The server reads from a local cache. Filling that cache is a separate step:
+a fetch command, also written by workstream A, that downloads the runs from
+the lab's shared folder and verifies them against the committed manifest.
+The folder link is supplied through local configuration and is never
+committed.
 
 ## Data description (_open_)
 
-- Experiments / runs covered:
-- Number of stacks and frames per stack:
-- Frame rate, exposure, pixel scale (with physical units):
+Known from the lab's metadata sheets, as reported on 2026-11-16 and not yet
+checked against the files:
+
+- Runs covered: three of the paper's five, with 9, 13, and 15 particles.
+- Format: one zipped `.cine` video per run, each with a one-row metadata
+  sheet; about 1.6 GB zipped in total.
+- Camera and scan rates, frames per volume, and pixel scales: see the table
+  in `../docs/SPRINT_PLAN.md`.
+
+To be filled in by workstream A from the `.cine` headers:
+
+- Number of frames per run:
+- Exposure:
 - Image dimensions, bit depth, channels:
-- Total size and where it is hosted:
-- Associated metadata (pressure, power, particle size, camera settings):
+- z scale for the 9-particle run:
+- Any disagreement between the headers and the metadata sheets:
 
 ## Proposed tools
 
@@ -28,6 +44,7 @@ repository.
 | `list_frames` | run id, optional range | frame indices and timestamps |
 | `get_frame` | run id, frame index, optional crop / downsample | image data plus dtype, shape, pixel scale |
 | `get_frames` | run id, index range, stride | a batch of frames |
+| `get_volume` | run id, sweep index | all frames of one laser-sheet sweep, in order |
 | `get_checksum` | run id, optional frame index | content hash for manifests |
 
 The tool list is a proposal; revise once the data layout is known.
@@ -48,5 +65,6 @@ The tool list is a proposal; revise once the data layout is known.
 - Transport and hosting (local stdio server vs. remote HTTP), and who runs it.
 - Authentication and who may access the data.
 - Image encoding for transfer (raw array, TIFF bytes, PNG).
+- Which `.cine` reader is used and how it is validated.
 - Whether derived products (particle positions, tracks) are also served.
 - Where the server code lives (`burton-sprint/mcp/` or its own repository).
