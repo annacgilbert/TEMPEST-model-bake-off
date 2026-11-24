@@ -144,5 +144,70 @@ line; the author is not recorded here.
   the remainder and have not been checked against the PDF. No local PDF is
   stored.
 
+## Related work: fusion transport surrogates
+
+- Higginbottom, Antony (Zenithon AI), Z. Li (MIT), and L. Lu (Yale),
+  *Physics Informed Function-Space Diffusion for Rapid Gyrokinetic Turbulence
+  Modelling*, talk at the IAEA Workshop on Digital Engineering, 10 December
+  2025. BibTeX key `higginbottom2025fundiffgk`. Local slides:
+  `IAEA_Zenithon_AI.pdf` (20 pages: an 8-slide company introduction followed
+  by the 12-slide talk).
+- Antony and Higginbottom (Zenithon AI),
+  [Development of a Neural Operator-Based Surrogate Model for Accelerated
+  Gyrokinetic Transport
+  Calculations](https://conferences.iaea.org/event/412/contributions/38155/),
+  the abstract submitted to the same workshop. BibTeX key
+  `antony2025gksurrogate`.
+
+  Same group as the ModeCast entry above.
+
+  What the slides propose ("TurboTGLF"): TGLF, a quasilinear gyrofluid
+  reduced model, maps an equilibrium to a state r (growth rates,
+  frequencies, and flux predictions). A function autoencoder maps Fourier
+  fields U(k_x, k_y) to a latent code, enforcing Hermitian symmetry and
+  spectral constraints. A conditional latent diffusion transformer learns
+  p(z | r), so that decoding yields fields and a flux Q "consistent with the
+  TGLF state". An ensemble of samples at fixed r is offered as credible
+  intervals for transport. Distillation to millisecond inference is listed
+  as future work.
+
+  What the slides actually show: no gyrokinetic result. No gyrokinetic code,
+  dataset, parameter range, or accuracy figure appears. The only benchmark is
+  2D Kolmogorov flow (incompressible Navier-Stokes on a periodic box), where
+  the task is to reconstruct the flow from sparse, noisy, downsampled
+  observations, described as "simulating ROM conditioning". There the method
+  is reported to beat a set of neural-operator baselines in relative L2
+  error, and a stream-function decoder gives divergence-free output by
+  construction. On the noise-robustness slide the caption's colours appear
+  to be swapped relative to the plot legend. Next steps listed: larger
+  heterogeneous datasets, ablations over physics constraints, flow matching,
+  integration with full-core transport solvers, and distillation.
+
+  How to read it against the bake-off:
+
+  1. In design it is a learned closure with a higher-fidelity reference:
+     nonlinear gyrokinetics above TGLF, with the turbulent flux as the
+     closure quantity. That is closer to family 8 than ModeCast is.
+  2. "Physics informed" here means constraints built into the decoder
+     (Hermitian symmetry, divergence-free). No gyrokinetic residual,
+     conservation law, or classical-limit recovery is imposed or tested.
+  3. Conditioning only on the TGLF state is an identifiability assumption:
+     two equilibria with the same TGLF output but different nonlinear
+     saturation cannot be told apart. The slides do not test it.
+  4. The ensemble spread is a property of the learned conditional density.
+     It is not shown to be calibrated against gyrokinetic variability, and
+     it does not include model-form or discretization error.
+  5. The submitted abstract describes physics-informed neural operators
+     trained on delta-f flux-tube gyrokinetic runs; the talk as given
+     describes latent diffusion validated on Kolmogorov flow. Treat the
+     gyrokinetic claims as a proposal, not a result.
+
+  Provenance: slides saved by the user from
+  <https://conferences.iaea.org/event/412/contributions/39509/attachments/21971/37781/IAEA_Zenithon_AI.pdf>
+  on 2026-11-24 and read in full (all 20 pages); SHA-256 (first 12)
+  `ecd9e4eaa38a`. The PDF is a local copy and is not committed. The abstract
+  page returned HTTP 403 and was not read; its description above comes from
+  search-index excerpts only.
+
 Do not silently replace or edit source documents. Record provenance, version,
 and retrieval date when a reference is added.
