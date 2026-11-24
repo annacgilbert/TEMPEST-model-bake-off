@@ -5,7 +5,7 @@ Ornstein-Uhlenbeck field (docs/orbit_kinetic_limit_theorem.tex).
 Model:  dx = v dt,  dv = eps F(x,t) dt,
         F(x,t) = sum_k Re( f_k a_k(t) exp(i k.x) ),
         da_k = -(gamma_k + i omega_k) a_k dt + sqrt(2 gamma_k) dB_k.
-Kinetic time: t = tau / eps^2.  Limit generator (Theorem 1 of the note):
+Kinetic time: t = tau / eps^2.  Limit generator (Proposition 2 of the note):
         L = div_v( D(v) grad_v ) + c(v).grad_v,
         D = (1/2) sum_k Re(1/lambda_k) Re(f_k (x) conj f_k),
         c_i = -(1/2) sum_k Im( f_k^i (k.conj f_k) ) Re(1/lambda_k^2),

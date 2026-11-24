@@ -2,6 +2,7 @@
 \usepackage[a4paper,margin=1in]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{hyperref}
+\emergencystretch=2em
 
 \newcommand{\dd}{\mathrm{d}}
 \newcommand{\E}{\mathbb{E}}
@@ -62,8 +63,9 @@ $|w_\tau|\lesssim\eps\tau$. The following is proved here.
     (Corollary~\ref{cor:third}); in the natural scaling
     $(Y_t/\eps t^{3/2}, w_t/\eps t^{1/2})$ the Gaussian law holds with error
     $O(t^{-1} + \eps\sqrt t)$, that is for all $1\ll t\ll N$
-    (Corollary~\ref{cor:natural}); and for fixed $q$ the formula of the first
-    note holds uniformly on $0\le t\ll N$ (Corollary~\ref{cor:uniform}).
+    (Corollary~\ref{cor:natural}); and for fixed $q$ with $q\cdot Dq>0$ the
+    formula of the first note holds uniformly on $0\le t\ll N$
+    (Corollary~\ref{cor:uniform}).
   \item \textbf{First correction, with its coefficient}
     (Theorem~\ref{thm:first}):
     \[
@@ -178,7 +180,10 @@ Let $\cP$ be the set of functions
 $h(w,z) = \sum_{m,n}c_{mn}(w)\,z^m\bar z^n$ (finite sum over multi-indices
 $m,n\in\mathbb{N}^K$) with $c_{mn}\in C_b^\infty(\mathbb{R}^d;\mathbb{C})$,
 that is, bounded with all derivatives. $\cP$ is an algebra, stable under
-$\nabla_w$, $\cA_w$ and $\avg{\cdot}$, and $\avg{h}\in C_b^\infty$. An
+$\nabla_w$ and under multiplication by functions in $C_b^\infty$, and
+$\avg{h}\in C_b^\infty$. (It is not stable under $\cA_w$, because $\mu_k(w)$
+is unbounded; $\cA_w$ is only ever applied to solutions of Poisson equations,
+for which $\cA_w\psi\in\cP$ by construction.) An
 $h\in\cP$ is \emph{odd} (\emph{even}) if only monomials with $|m|+|n|$ odd
 (even) occur; odd elements have $\avg h = 0$.
 
@@ -199,7 +204,8 @@ On monomials,
 \]
 and $\Re\sigma_{mn} = \sum_k(m_k+n_k)\gamma_k\ge\gamma_*(|m|+|n|)$. Since
 $\sigma_{mn}$ is affine in $w$ with $|\sigma_{mn}|\ge\gamma_*$ when
-$|m|+|n|\ge1$, $1/\sigma_{mn}\in C_b^\infty$.
+$|m|+|n|\ge1$, $1/\sigma_{mn}\in C_b^\infty$ (its derivatives are constants
+times powers of $1/\sigma_{mn}$).
 Invariance of $\nu$: $\avg{z^m\bar z^n} = \delta_{mn}\,m!$, so
 $\avg{\cA_w(z^m\bar z^m)} = -2\sum_k\gamma_km_k\,m!
  + \sum_k2\gamma_km_k^2\,(m-e_k)! = 0$, and the mean vanishes trivially for
@@ -403,8 +409,11 @@ $\nrm{\rho_\tau}{2}\le C(\eps+\eps^2\tau)$. By \eqref{eq:bracket},
 $\E|\eps M_\tau|^2 = 2\eps^2\int_0^\tau\E\tr D(w_\sigma)\dd\sigma$, and
 $|\tr D(w)-\tr D|\le C|w|$, so by (ii)
 $|\E|\eps M_\tau|^2 - 2\eps^2\tau\tr D|\le C\eps^2\tau\,\omega(\tau)$. Finally
-$|\E|w_\tau|^2 - \E|\eps M_\tau|^2|\le2\nrm{\eps M_\tau}{2}\nrm{\rho_\tau}{2}
-+ \nrm{\rho_\tau}{2}^2\le C\eps\sqrt\tau(\eps+\eps^2\tau) + C(\eps+\eps^2\tau)^2$.
+\[
+  \bigl|\E|w_\tau|^2 - \E|\eps M_\tau|^2\bigr|
+  \le2\nrm{\eps M_\tau}{2}\nrm{\rho_\tau}{2} + \nrm{\rho_\tau}{2}^2
+  \le C\eps\sqrt\tau\,(\eps+\eps^2\tau) + C(\eps+\eps^2\tau)^2 .
+\]
 Collect terms, using $\eps\le1$.
 \end{proof}
 
@@ -779,10 +788,13 @@ so that $\int_0^t\E|T|\,\dd\tau\le C_{T,R}\,\lambda_1^{\,I-2}\lambda_2^{\,J}$.
 By the Cauchy--Schwarz inequality, \eqref{eq:hbound} and
 Theorem~\ref{thm:apriori}(ii) (with $\omega(\tau)\le3\eps\sqrt t$),
 $\E|w^Lh_{AL}|\le\nrm{w_\tau}{2f}^f\nrm{h_{AL}}{2}\le C(\eps\sqrt t)^f$.
-Hence $\E|T|\le C\eps^at^b(R/\eps t^{3/2})^e(\eps\sqrt t)^f
-= CR^e\,\eps^{a-e+f}\,t^{\,b-3e/2+f/2}$, and
-$\lambda_1^I\lambda_2^J = \eps^{a-e+f}t^{-(a-2b+2e)/2+(a-e+f)/2}$ is the same
-power.
+Hence
+\[
+  \E|T|\le C\eps^at^b\Bigl(\frac{R}{\eps t^{3/2}}\Bigr)^e(\eps\sqrt t)^f
+  = CR^e\,\eps^{a-e+f}\,t^{\,b-3e/2+f/2},
+\]
+and $\lambda_1^I\lambda_2^J = \eps^{a-e+f}\,t^{-(a-2b+2e)/2+(a-e+f)/2}$ is the
+same power of $\eps$ and $t$.
 \end{proof}
 
 \begin{lemma}[Operations]\label{lem:ops}
@@ -963,11 +975,16 @@ contains a factor $\theta$. Define
 which by Lemma~\ref{lem:ops}(e) is a sum of graded terms of grades $(4,0)$,
 $(2,1)$ with the parity property, has $\nu$-mean zero, and vanishes at
 $\theta=0$. Then
-$\cR[\Phi_4] = -(W-\avg W) + \bigl(-\partial_\theta + \eps^2n + i\eps g
- + \eps G\cdot\nabla_w\bigr)\Phi_4$, and by Lemma~\ref{lem:ops}(a)--(d) the
-last bracket has grades in $\{(6,0),(4,1),(5,0),(3,1),(5,1),(3,2)\}$.
-Altogether $\cR[\Phi] = W' + \avg W + (\cR[\Phi_4] + W - \avg W)$ satisfies
-\eqref{eq:goodgrades}.
+\[
+  \cR[\Phi_4] = -(W-\avg W) + \bigl(-\partial_\theta + \eps^2n + i\eps g
+   + \eps G\cdot\nabla_w\bigr)\Phi_4 ,
+\]
+and by Lemma~\ref{lem:ops}(a)--(d) the last term has grades in
+$\{(6,0),(4,1),(5,0),(3,1),(5,1),(3,2)\}$. Altogether
+\[
+  \cR[\Phi] = W' + \avg W + \bigl(\cR[\Phi_4] + W - \avg W\bigr)
+\]
+satisfies \eqref{eq:goodgrades}.
 \end{proof}
 
 \subsection{Proof of Theorem~\ref{thm:first}}
@@ -1083,11 +1100,14 @@ $\E\sup_s\eps^{4/3}\int_0^\tau|Q|\le\eps^{4/3}\,S\eps^{-2/3}\,\nrm{\Gamma_2}{1}\
 
 \emph{The bracket.} $\mathsf{M}^\eps$ is a continuous martingale (for the
 time-changed filtration) and by \eqref{eq:bracket}
-$\langle\mathsf{M}^{\eps,i},\mathsf{M}^{\eps,j}\rangle_s
-= 2\int_0^sD_{ij}(\eps^{2/3}\mathsf{W}^\eps_r)\dd r$. Since
-$|D(w)-D|\le C|w|$ and, by Theorem~\ref{thm:apriori},
-$\sup_{\tau\le S\eps^{-2/3}}\nrm{w_\tau}{1}\le C_S\eps^{2/3}$,
-$\E\sup_{s\le S}|\langle\mathsf{M}^\eps\rangle_s - 2Ds|\le C_S\eps^{2/3}\to0$.
+\[
+  \langle\mathsf{M}^{\eps,i},\mathsf{M}^{\eps,j}\rangle_s
+  = 2\int_0^sD_{ij}(\eps^{2/3}\mathsf{W}^\eps_r)\,\dd r .
+\]
+Since $|D(w)-D|\le C|w|$ and, by Theorem~\ref{thm:apriori},
+$\sup_{\tau\le S\eps^{-2/3}}\nrm{w_\tau}{1}\le C_S\eps^{2/3}$, we get
+$\E\sup_{s\le S}|\langle\mathsf{M}^\eps\rangle_s - 2Ds|
+\le C_S\eps^{2/3}\to0$.
 
 \emph{Conclusion.} By the martingale central limit theorem
 (\cite{EK}, Chapter~7, Theorem~1.4; for continuous martingales the
@@ -1159,9 +1179,12 @@ the second term has expected supremum at most $C\eps^3T_0\eps^{-2}\to0$; and
 by Doob's inequality $\E\sup|\eps^2M'|^2\le C\eps^4T_0\eps^{-2}\to0$.
 
 \emph{Conclusion.} $\beta$ and $D$ are Lipschitz, so
-$\sup_{T\le T_0}|B^\eps_T - \int_0^T\beta(X^\eps)|$ and
-$\sup_{T\le T_0}|A^\eps_T - 2\int_0^TD(X^\eps)|$ are at most
-$CT_0\sup_{T\le T_0}|v^\eps_T-X^\eps_T|\to0$ in probability. All processes
+\[
+  \sup_{T\le T_0}\Bigl|B^\eps_T - \int_0^T\beta(X^\eps)\Bigr|
+  + \sup_{T\le T_0}\Bigl|A^\eps_T - 2\int_0^TD(X^\eps)\Bigr|
+  \le CT_0\sup_{T\le T_0}|v^\eps_T-X^\eps_T|\to0
+\]
+in probability. All processes
 are continuous and $X^\eps_0 = 0$. The diffusion approximation theorem
 (\cite{EK}, Chapter~7, Theorem~4.1, with $b = \beta$ and $a = 2D$) gives
 $X^\eps\Rightarrow V$, hence $v^\eps\Rightarrow V$. The statement on $Y$
@@ -1192,12 +1215,15 @@ exactly as long as $f$ has not relaxed.
 \section{Numerical check}
 \label{sec:num}
 
-Script: \texttt{hani-to-algorithms/scripts/orbit\_long\_time\_check.py}
-(numpy only; master seed $20261124$; run on 24 November 2026; $32$\,s with 8
-worker processes, about $3.5$ minutes with one; the numbers do not depend on
-the number of workers). Output:
-\texttt{hani-to-algorithms/results/orbit\_long\_time/orbit\_long\_time\_check.json}.
-All numbers below are copied from that file.
+Script and output (paths relative to \texttt{hani-to-algorithms/}):
+\begin{center}
+\texttt{scripts/orbit\_long\_time\_check.py},\qquad
+\texttt{results/orbit\_long\_time/orbit\_long\_time\_check.json}.
+\end{center}
+The script uses numpy only, master seed $20261124$, and was run on
+24 November 2026: $32$\,s with 8 worker processes, about $3.5$ minutes with
+one; the numbers do not depend on the number of workers. All numbers below
+are copied from the output file.
 
 \emph{Model.} $d=2$, three modes $k = (1,0),(0,1),(1,1)$,
 $\omega = (0.6,-0.5,0.5)$, $\gamma = (0.8,1.0,0.7)$, $v_0 = (0.3,-0.2)$,
@@ -1345,8 +1371,8 @@ Ornstein--Uhlenbeck. In the particle system the analogue is the resolvent of
 the linearized Vlasov operator along the \emph{perturbed} orbit; gap~3 (no
 Markov structure) is therefore felt more strongly by the results of this
 note than by the main theorem of the first note.
-\item The drift $\beta$ is the model's version of dynamical friction's
-counterpart from the gradient of $D$ (for a potential field
+\item The drift $\beta$ is the part of the Fokker--Planck drift that comes
+from the velocity gradient of $D$ (for a potential field
 $\beta = \nabla_v\cdot D$). The polarization friction of gap~2 is absent
 from the model. Both are of relative size $N^{-1/3}$ at $t\sim N^{1/3}$, so
 a particle version of Theorem~\ref{thm:first} would have a further term at

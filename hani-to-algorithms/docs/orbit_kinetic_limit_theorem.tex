@@ -1,0 +1,1379 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\cG}{\mathcal{G}}
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\fm}{\mathfrak{m}}
+\newcommand{\fM}{\mathfrak{M}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+\newcommand{\nrm}[2]{\|#1\|_{#2}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{The kinetic time scale $t\sim N$:\\
+a proved closure with a defect bound in the prescribed-field model}
+\author{Working note}
+\date{24 November 2026}
+
+\begin{document}
+\maketitle
+
+\section{What is and is not proved}
+
+This note continues \texttt{orbit\_decorrelation\_theorem.tex} (below: the
+first note) in the same model: a tagged particle $\dot x=v$,
+$\dot v=\eps F(x,t)$, $\eps=N^{-1/2}$, in a \emph{prescribed} stationary
+Gaussian field with Ornstein--Uhlenbeck mode amplitudes. The first note
+treats $t\sim\eps^{-2/3}=N^{1/3}$. Here the time is $t=\tau\eps^{-2}=\tau N$,
+on which the velocity changes by $O(1)$. It addresses gap~6 of the first
+note (from decorrelation to closure) in the model, and only in the model.
+
+\paragraph{Proved.}
+\begin{itemize}
+  \item \textbf{The limit operator} (Proposition~\ref{prop:L}). The
+    generator is $L=\nabla_v\cdot(D\nabla_v)+c\cdot\nabla_v$ with $D$ the
+    resonance-broadened matrix of the first note and an explicit
+    divergence-free drift $c$. $L=\nabla_v\cdot(D\nabla_v)$ if and only if
+    $c\equiv0$; this holds for potential fields, in $d=1$, for solenoidal
+    and for linearly polarised modes, and fails for an explicit circularly
+    polarised example. Lebesgue measure is invariant in all cases.
+  \item \textbf{Kinetic limit with rate, position included}
+    (Theorem~\ref{thm:kin}). For $\psi\in C_b^5(\R^{2d})$ and
+    $Z=(\eps^2x,v)$, $|\E\psi(Z_{\tau/\eps^2})-\E(P_\tau\psi)(Z_0)|\le
+    C\eps^2(1+\tau)^2e^{c\tau}\nrm{\psi}{C_b^5}$ when the field starts in its
+    stationary law; for a general initial field state the error is
+    $\eps\,\ell+O(\eps^2)$ with $\ell$ explicit (an initial slip of the
+    velocity). $P_\tau$ is the semigroup of
+    $\partial_\tau+v\cdot\nabla_X-L$.
+  \item \textbf{A diffusive moment bound} (Proposition~\ref{prop:mom}):
+    $\E|v_t-v_0|^2\le C(1+\eps^2t)^2$, uniformly in $\eps$.
+  \item \textbf{Closure and its defect} (Theorem~\ref{thm:closure},
+    Proposition~\ref{prop:inst}). With retained state the one-particle law
+    $f$ and closed equation
+    $\partial_\tau f+v\cdot\nabla_Xf=\nabla_v\cdot(D\nabla_vf)-c\cdot\nabla_vf$,
+    the defect in a dual $C_b^5$ norm is $O(\eps^2)$ (stationary field) or
+    $O(\eps)$ with identified leading term (otherwise); both rates are
+    attained. The instantaneous defect is $O(1)$ during the first few
+    correlation times and $O(\eps)$ afterwards.
+  \item \textbf{The $\eps^2$ term: memory correction}
+    (Theorem~\ref{thm:second}, Corollary~\ref{cor:corrected},
+    Proposition~\ref{prop:uniform}). The coefficient of $\eps^2$ is
+    $\int_0^\tau P_{\tau-s}L_1P_s\psi\,\dd s-P_\tau B\psi$ with explicit
+    operators $B$ (second order, built from $\Re(f_k\otimes\bar
+    f_k/\lambda_k^2)$, the first moment in time of the force correlation)
+    and $L_1$ (fourth order); the remainder is $O(\eps^3)$. An exactly
+    solvable case confirms the formula and the sharpness of $\eps^2$.
+  \item \textbf{Matching} (Proposition~\ref{prop:match}): the limit kinetic
+    equation, read at $\tau\sim\eps^{4/3}$ and wavenumbers $\sim\eps^{-2}$,
+    gives the law $\exp(-\eps^2t^3q\cdot Dq/3)$ of the first note with error
+    $O(|q|\eps^2t^2)$.
+\end{itemize}
+
+\paragraph{Not proved.}
+\begin{itemize}
+  \item Nothing about the particle system: the field is prescribed, Gaussian
+    and Markovian (gaps 1--5 of the first note are untouched).
+  \item No uniformity as $\gamma_k\to0$: every constant is a polynomial in
+    $1/\min_k\gamma_k$. No uniformity in $\tau$: the constants grow like
+    $e^{c\tau}$ through derivative bounds for the limit semigroup, which
+    are not claimed to be sharp.
+  \item The corrected equation is proved only in Duhamel form
+    (Corollary~\ref{cor:corrected}). The evolution equation
+    $\partial_\tau f=(\cL^*+\eps^2L_1^*)f$ contains a fourth-order operator
+    of no definite sign and is not shown to be well posed
+    (Remark~\ref{rem:gauge} is a heuristic).
+  \item The instantaneous defect is expected to be $O(\eps^2)$ after the
+    initial layer; only $O(\eps)$ is proved.
+  \item Proposition~\ref{prop:match} matches the two \emph{limit} laws.
+    Theorem~\ref{thm:kin} is for fixed smooth $\psi$ and does not cover
+    observables oscillating at wavenumber $\eps^{-2}$, so the particle
+    itself is not shown to follow the kinetic prediction for such
+    observables at $\eps^{-3/4}\lesssim t\ll\eps^{-2}$.
+  \item Lemma~\ref{lem:semigroup}(a), smoothness of the limit flow in its
+    initial point, is quoted from the literature, not reproved.
+\end{itemize}
+
+\paragraph{Prior art.} {\sloppy This is the classical stochastic-acceleration, or
+diffusion-approximation, setting: Khasminskii~\cite{Khas};
+Papanicolaou--Stroock--Varadhan~\cite{PSV};
+Kesten--Papanicolaou~\cite{KP} (time-independent fields, $d\ge3$);
+D\"urr--Goldstein--Lebowitz~\cite{DGL}; Kushner~\cite{Kushner};
+Ethier--Kurtz~\cite{EK}; Pavliotis--Stuart~\cite{PS};
+Komorowski--Ryzhik~\cite{KR}; and, for quasilinear diffusion from Vlasov
+dynamics, Bardos--Besse~\cite{BB}. A time-dependent Markovian field with a
+spectral gap, as here, is the easiest case in that literature; convergence
+to a diffusion with a Green--Kubo generator, and the method of perturbed
+test functions, are not new. What this note adds for the benchmark is: the
+explicit rates $\eps^2$ and $\eps$ with their dependence on $\tau$ and on
+the initial field state; the antisymmetric part of the Green--Kubo matrix
+and the criterion for divergence form; the identified $\eps^2$ term; and the
+formulation as a closure defect with a known constant. I have not found the
+$\eps^2$ term in this form in the sources above, which is a statement about
+a limited search and not a priority claim. Bibliographic details in the
+reference list are from memory and were not checked against the sources in
+this session; no theorem numbers are quoted for that reason.\par}
+
+\section{Model, kinetic variables and the reduced system}
+
+Fix a finite set $K\subset\R^d$ (the value $k=0$ is allowed here, unlike in
+the first note), vectors $f_k\in\C^d$, and numbers $\gamma_k>0$,
+$\omega_k\in\R$. Put $\gamma_*=\min_k\gamma_k$. Let $(B_k)_{k\in K}$ be
+independent complex Brownian motions with $\E|B_k(t)|^2=t$, $\E B_k(t)^2=0$,
+\[
+  \dd a_k=-(\gamma_k+i\omega_k)a_k\,\dd t+\sqrt{2\gamma_k}\,\dd B_k,\qquad
+  F(x,t)=\sum_{k\in K}\Re\bigl(f_ka_k(t)e^{ik\cdot x}\bigr),
+\]
+and $\dot x=v$, $\dot v=\eps F(x,t)$ with $\eps\in(0,1]$. The field is a
+potential field when $f_k=-i\varphi_kk$ with $\varphi_k\in\C$.
+
+\paragraph{Hypothesis (H).} The initial data $(x_0,v_0,a(0))$ are random
+and independent of $(B_k)$, and they satisfy
+$\E|a(0)|^{12}+\E|v_0|^2<\infty$.
+The \emph{stationary ensemble} is the case in which $a(0)$ is independent
+of $(x_0,v_0)$ and is a standard complex Gaussian vector: its components
+are independent with $\E|a_k|^2=1$ and $\E a_k^2=0$.
+
+\paragraph{Kinetic variables.} $\tau=\eps^2t$, $X=\eps^2x$, $Z=(X,v)\in
+\R^{2d}$, and
+\[
+  b_k(t)=a_k(t)\,e^{ik\cdot x(t)},\qquad
+  \lambda_k(v)=\gamma_k+i(\omega_k-k\cdot v),\qquad
+  G(b)=\sum_k\Re(f_kb_k).
+\]
+$|b|$ is the Euclidean norm on $\C^K$ and $\Gamma(b)=\sum_k|f_k||b_k|\ge
+|G(b)|$. For $p\ge1$ put
+\[
+  \fm_p=\sup_{t\ge0}\E(1+|b_t|)^p ,\qquad
+  \fM(\tau)=\fm_{12}\,\bigl(1+(\E|v_0|^2)^{1/2}+\tau\bigr).
+\]
+
+\begin{lemma}[Reduced system]\label{lem:reduced}
+Under (H) the equations have a unique global solution, and
+\begin{equation}
+  \dd X=\eps^2v\,\dd t,\qquad \dd v=\eps\,G(b)\,\dd t,\qquad
+  \dd b_k=-\lambda_k(v)\,b_k\,\dd t+\sqrt{2\gamma_k}\,\dd\tilde B_k ,
+  \label{eq:reduced}
+\end{equation}
+where $\tilde B_k=\int_0^\cdot e^{ik\cdot x_s}\dd B_k(s)$ are independent
+complex Brownian motions with the law of $(B_k)$. Moreover $|b_k(t)|=
+|a_k(t)|$, $\fm_p^{1/p}\le(\E(1+|a(0)|)^p)^{1/p}+C_p$ for $p\le12$, and
+$1\le\fm_p\le\fm_q$ for $p\le q$. In the stationary ensemble, $b_0$ is a
+standard complex Gaussian vector independent of $Z_0$.
+\end{lemma}
+
+\begin{proof}
+For each continuous path of $a$ the system $\dot x=v$, $\dot v=\eps F$ has
+a smooth right-hand side, globally Lipschitz in $x$ and bounded by
+$\Gamma(a_t)$, so it has a unique global solution, adapted to the filtration
+of $(B_k)$ and the initial data. Since $x$ has finite variation, It\^o's
+formula gives $\dd b_k=e^{ik\cdot x}\dd a_k+ik\cdot v\,b_k\dd t$, which is
+\eqref{eq:reduced}. The $\tilde B_k$ are continuous martingales with
+$\dd\langle\tilde B_k,\overline{\tilde B_l}\rangle=\delta_{kl}\dd t$ and
+$\dd\langle\tilde B_k,\tilde B_l\rangle=0$, hence independent complex
+Brownian motions by L\'evy's characterisation. Next,
+$a_k(t)=e^{-(\gamma_k+i\omega_k)t}a_k(0)+\xi_k(t)$ with $\xi_k(t)$ a centred
+complex Gaussian variable of variance $1-e^{-2\gamma_kt}\le1$, so
+Minkowski's inequality gives the bound on $\fm_p$; $\fm_p\ge1$ because
+$1+|b|\ge1$, and $\fm_p\le\fm_q^{p/q}\le\fm_q$ by Jensen. Finally, the
+standard complex Gaussian law is invariant under multiplication of each
+component by a phase, so conditionally on $(x_0,v_0)$ the vector
+$b_0=(a_k(0)e^{ik\cdot x_0})$ is standard Gaussian.
+\end{proof}
+
+The point of \eqref{eq:reduced} is that $(v,b)$, and $(Z,b)$, are closed
+systems: the fast position enters only through the phase carried by $b$.
+The price is that the fast generator
+\[
+  A_v=\sum_k\bigl(-\lambda_k(v)b_k\partial_{b_k}
+     -\bar\lambda_k(v)\bar b_k\partial_{\bar b_k}
+     +2\gamma_k\partial_{b_k}\partial_{\bar b_k}\bigr)
+\]
+depends on the slow variable $v$. Its invariant law, the standard complex
+Gaussian, does not. Write
+\[
+  \cK=\partial_t+\eps^2v\cdot\nabla_X+\eps\,\cG+A_v,\qquad
+  \cG=G(b)\cdot\nabla_v,\qquad \cG_X=G(b)\cdot\nabla_X .
+\]
+
+\section{The limit operator}
+
+Write $f_k^i\bar f_k^j=S^k_{ij}+iT^k_{ij}$ with $S^k=\Re(f_k\otimes\bar f_k)$
+symmetric and $T^k=\Im(f_k\otimes\bar f_k)$ antisymmetric, and define
+\begin{align}
+  M_{ij}(v)&=\frac12\sum_k\Re\Bigl(\frac{f_k^i\bar f_k^j}{\lambda_k(v)}\Bigr)
+     =D_{ij}(v)+\Omega_{ij}(v), \notag\\
+  D&=\frac12\sum_k\frac{\gamma_k}{\gamma_k^2+(\omega_k-k\cdot v)^2}\,S^k,
+  \qquad
+  \Omega=\frac12\sum_k\frac{\omega_k-k\cdot v}{\gamma_k^2+(\omega_k-k\cdot v)^2}\,T^k,
+  \label{eq:M}\\
+  c_i(v)&=\sum_j\partial_{v_j}\Omega_{ij}
+     =-\frac12\sum_k\Im\bigl(f_k^i\,(k\cdot\bar f_k)\bigr)\,
+       \Re\Bigl(\frac1{\lambda_k(v)^2}\Bigr),
+  \label{eq:c}\\
+  Lw&=\sum_{i,j}\partial_{v_j}\bigl(M_{ij}\,\partial_{v_i}w\bigr).
+  \label{eq:L}
+\end{align}
+$D$ is the matrix of the first note, now evaluated at the current velocity.
+The matrix $M$ is the Green--Kubo matrix along the free orbit,
+\[
+  M_{ij}(v)=\int_0^\infty\E\bigl[F_i(vu,u)\,F_j(0,0)\bigr]\,\dd u ,
+\]
+and $D$ and $\Omega$ are its symmetric and antisymmetric parts.
+
+\begin{proposition}[Structure of $L$]\label{prop:L}
+\begin{enumerate}
+  \item[(a)] $Lw=\nabla_v\cdot(D\nabla_vw)+c\cdot\nabla_vw
+    =D:\nabla_v^2w+\beta\cdot\nabla_vw$, where
+    \[
+      \beta_i=(\nabla_v\cdot D)_i+c_i
+      =\frac12\sum_k\Re\Bigl(\frac{i\,f_k^i\,(k\cdot\bar f_k)}{\lambda_k(v)^2}\Bigr).
+    \]
+  \item[(b)] $\nabla_v\cdot c=0$. Hence the formal adjoint is
+    $L^*g=\nabla_v\cdot(D\nabla_vg)-c\cdot\nabla_vg$, and $L^*1=0$:
+    Lebesgue measure in $v$ is invariant.
+  \item[(c)] $L=\nabla_v\cdot(D\nabla_v)$ if and only if $c\equiv0$. This
+    holds if for every $k$ the vector $f_k\,(k\cdot\bar f_k)$ is real; in
+    particular for potential fields ($f_k=-i\varphi_kk$), for solenoidal
+    modes ($k\cdot f_k=0$), for linearly polarised modes
+    ($f_k\in\C\,\R^d$), and always in $d=1$. It fails for $d=2$,
+    $K=\{(1,0)\}$, $f=(1,i)$, where $c=-\tfrac12\Re(\lambda^{-2})\,(0,1)$.
+  \item[(d)] $2D=\sigma\sigma^{\mathsf T}$, where $\sigma(v)$ is the
+    $d\times2|K|$ matrix with columns $\sqrt{r_k(v)}\,\Re f_k$ and
+    $\sqrt{r_k(v)}\,\Im f_k$, $r_k=\Re(1/\lambda_k)$. The functions
+    $\sigma$, $D$, $\Omega$, $c$, $\beta$ are bounded with bounded
+    derivatives of all orders. $D$ may be degenerate: its range lies in the
+    real span of the $\Re f_k,\Im f_k$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+$\Re((S+iT)/\lambda)=S\Re(1/\lambda)-T\Im(1/\lambda)$ and
+$\Im(1/\lambda_k)=-(\omega_k-k\cdot v)/|\lambda_k|^2$ give \eqref{eq:M}.
+Since $\partial_{v_j}\lambda_k=-ik_j$,
+$\partial_{v_j}(1/\lambda_k)=ik_j/\lambda_k^2$. Therefore
+$\sum_j\partial_{v_j}M_{ij}=\frac12\sum_k\Re(if_k^i(k\cdot\bar
+f_k)/\lambda_k^2)=\beta_i$, and
+$\sum_j\partial_{v_j}\Omega_{ij}=-\frac12\sum_k\sum_jT^k_{ij}k_j\,
+\Im(i/\lambda_k^2)$, which is \eqref{eq:c} because
+$\sum_jT^k_{ij}k_j=\Im(f_k^i(k\cdot\bar f_k))$ and
+$\Im(i/\lambda^2)=\Re(1/\lambda^2)$. Expanding \eqref{eq:L},
+$Lw=\sum M_{ij}\partial_i\partial_jw+\sum_i(\sum_j\partial_jM_{ij})\partial_iw$;
+the Hessian is symmetric, so only $D$ survives in the first sum, and
+$\sum_j\partial_jD_{ij}=(\nabla\cdot D)_i$ by symmetry of $D$. This is (a).
+(b): $\nabla\cdot c=\sum_{i,j}\partial_i\partial_j\Omega_{ij}=0$ by
+antisymmetry; the adjoint follows by integration by parts. (c): by (a),
+$L-\nabla\cdot(D\nabla)=c\cdot\nabla$. If $f_k(k\cdot\bar f_k)$ is real the
+$k$-th term of \eqref{eq:c} vanishes. For a potential field
+$f_k^i(k\cdot\bar f_k)=|\varphi_k|^2|k|^2k_i$; for $f_k=zr$ with $r$ real it
+is $|z|^2(k\cdot r)r_i$; in $d=1$ it is $|f_k|^2k$. In the example,
+$f^i(k\cdot\bar f)=f^i$, whose imaginary part is $(0,1)$. (d):
+$S^k=\Re f_k\otimes\Re f_k+\Im f_k\otimes\Im f_k$. The functions
+$\varsigma\mapsto(\gamma^2+\varsigma^2)^{-1/2}$ and $1/\lambda_k$ have
+bounded derivatives of all orders.
+\end{proof}
+
+The limit process is the diffusion on $\R^{2d}$
+\begin{equation}
+  \dd\bar X=\bar V\,\dd\tau,\qquad
+  \dd\bar V=\beta(\bar V)\,\dd\tau+\sigma(\bar V)\,\dd W,
+  \label{eq:limit}
+\end{equation}
+with generator $\cL=v\cdot\nabla_X+L$ and semigroup
+$(P_\tau\psi)(z)=\E\psi(\bar Z^z_\tau)$.
+
+\section{Function classes and the operators $\Pi$, $Q$, $\cG$}
+
+\subsection{Wick monomials}
+
+For $m,n\in\mathbb{N}_0$ and $\zeta\in\C$ let
+$h_{m,n}(\zeta)=\sum_{j\ge0}(-1)^jj!\binom mj\binom nj
+\zeta^{m-j}\bar\zeta^{\,n-j}$, so that
+\begin{equation}
+  \sum_{m,n\ge0}h_{m,n}(\zeta)\frac{s^mt^n}{m!\,n!}
+  =\exp(s\zeta+t\bar\zeta-st),
+  \label{eq:gen}
+\end{equation}
+and for multi-indices $m,n\in\mathbb{N}_0^K$ let
+$H_{m,n}(b)=\prod_kh_{m_k,n_k}(b_k)$, of degree $|m|+|n|$.
+
+\begin{lemma}\label{lem:wick}
+\begin{enumerate}
+  \item[(i)] $\{H_{m,n}:|m|+|n|\le N\}$ is a basis of the polynomials in
+    $(b,\bar b)$ of degree at most $N$, and
+    $H_{m,n}(-b)=(-1)^{|m|+|n|}H_{m,n}(b)$.
+  \item[(ii)] If $g$ is a standard complex Gaussian vector,
+    $\E H_{m,n}(g)=0$ unless $(m,n)=(0,0)$.
+  \item[(iii)] $A_vH_{m,n}=-\mu_{m,n}(v)H_{m,n}$ with
+    $\mu_{m,n}(v)=\sum_k(m_k\lambda_k(v)+n_k\bar\lambda_k(v))$, and
+    $\Re\mu_{m,n}=\sum_k(m_k+n_k)\gamma_k\ge\gamma_*(|m|+|n|)$.
+  \item[(iv)] $b_kH_{m,n}=H_{m+e_k,n}+n_kH_{m,n-e_k}$ and
+    $\bar b_kH_{m,n}=H_{m,n+e_k}+m_kH_{m-e_k,n}$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) $h_{m,n}$ has leading term $\zeta^m\bar\zeta^n$ and lower terms of the
+same parity. (ii) For one mode, $g=(\xi+i\eta)/\sqrt2$ with independent
+standard real Gaussians, so
+$\E e^{sg+t\bar g}=\exp(\tfrac14(s+t)^2-\tfrac14(s-t)^2)=e^{st}$ and the
+expectation of \eqref{eq:gen} is $1$; the series converges absolutely.
+(iii) For one mode let $e=\exp(s\zeta+t\bar\zeta-st)$ and
+$A=-\lambda\zeta\partial_\zeta-\bar\lambda\bar\zeta\partial_{\bar\zeta}
++2\gamma\partial_\zeta\partial_{\bar\zeta}$. Then
+$Ae=(-\lambda s\zeta-\bar\lambda t\bar\zeta+2\gamma st)e$ and
+$-(\lambda s\partial_s+\bar\lambda t\partial_t)e
+=(-\lambda s\zeta-\bar\lambda t\bar\zeta+(\lambda+\bar\lambda)st)e$. These
+agree because $\lambda+\bar\lambda=2\gamma$; comparing coefficients of
+$s^mt^n$ gives $Ah_{m,n}=-(m\lambda+n\bar\lambda)h_{m,n}$. The general case
+follows since $A_v$ is a sum over modes. (iv) $\zeta e=\partial_se+te$;
+compare coefficients.
+\end{proof}
+
+\subsection{Polynomial classes}
+
+For $N,j\ge0$ let $\cA_N^j$ be the set of functions
+\[
+  \chi(z,b)=\sum_{|m|+|n|\le N}c_{m,n}(z)\,H_{m,n}(b),\qquad
+  c_{m,n}\in C_b^j(\R^{2d};\C),\qquad
+  \nrm{\chi}{N,j}=\sum_{m,n}\nrm{c_{m,n}}{C_b^j},
+\]
+where $\nrm{c}{C_b^j}=\sum_{|\alpha|\le j}\sup|\partial_z^\alpha c|$. Define
+\[
+  \Pi\chi=c_{0,0},\qquad
+  e^{sA}\chi=\sum c_{m,n}\,e^{-\mu_{m,n}(v)s}H_{m,n},\qquad
+  Q\chi=-\sum_{(m,n)\ne0}\frac{c_{m,n}}{\mu_{m,n}(v)}\,H_{m,n}.
+\]
+$\chi$ is called even (odd) if only even (odd) $|m|+|n|$ occur. In the
+rest of the note $C$ denotes a constant depending only on the model
+$(K,f,\gamma,\omega)$ and on the indices $N,j$ in play.
+
+\begin{lemma}[Calculus]\label{lem:calc}
+Let $\chi\in\cA_N^j$.
+\begin{enumerate}
+  \item[(a)] $|\partial_z^\alpha\chi(z,b)|\le C\nrm{\chi}{N,j}(1+|b|)^N$
+    for $|\alpha|\le j$. If $g$ is standard complex Gaussian,
+    $\E\chi(z,g)=\Pi\chi(z)$.
+  \item[(b)] $Q\chi\in\cA_N^j$, $\nrm{Q\chi}{N,j}\le C\nrm{\chi}{N,j}$,
+    $\Pi Q\chi=0$ and $A_vQ\chi=\chi-\Pi\chi$.
+  \item[(c)] $(\partial_s-A_v)e^{sA}\chi=0$;
+    $\nrm{e^{sA}(\chi-\Pi\chi)}{N,j}\le C(1+s)^je^{-\gamma_*s}\nrm{\chi}{N,j}$,
+    and without the factor $(1+s)^j$ if only $X$-derivatives are counted;
+    $\int_0^Se^{sA}(\chi-\Pi\chi)\,\dd s=-Q\chi+Qe^{SA}\chi$.
+  \item[(d)] If $j\ge1$, $\cG\chi$ and $\cG_X\chi$ belong to
+    $\cA_{N+1}^{j-1}$ with norms at most $C\nrm{\chi}{N,j}$.
+  \item[(e)] $Q$ and $e^{sA}$ preserve parity, $\cG$ and $\cG_X$ reverse
+    it, and $\Pi\chi=0$ for odd $\chi$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) is immediate from Lemma~\ref{lem:wick}(ii). (b), (c):
+$\mu_{m,n}(v)=\mu_{m,n}(0)-i\kappa\cdot v$ with
+$\kappa=\sum_k(m_k-n_k)k$, and $|\mu_{m,n}|\ge\gamma_*$ for $(m,n)\ne0$, so
+$\partial_v^\alpha(1/\mu)=|\alpha|!\,(i\kappa)^\alpha\mu^{-|\alpha|-1}$ and
+$\partial_v^\alpha e^{-\mu s}=(is\kappa)^\alpha e^{-\mu s}$ are bounded by
+$C$ and $C s^{|\alpha|}e^{-\gamma_*s}$; apply Leibniz' rule. The identities
+follow from Lemma~\ref{lem:wick}(iii) term by term, using
+$\int_0^Se^{-\mu s}\dd s=(1-e^{-\mu S})/\mu$. (d): $G(b)=\frac12\sum_k(f_kb_k+
+\bar f_k\bar b_k)$ and Lemma~\ref{lem:wick}(iv). (e): parity of $H_{m,n}$
+and of $G$.
+\end{proof}
+
+\subsection{Admissible operators}
+
+Let $\cD_N^r$ be the set of operators
+$R=\sum_{|\alpha|\le r}\rho_\alpha(v,b)\,\partial_z^\alpha$ whose coefficients
+are polynomials in $(b,\bar b)$ of degree at most $N$ with coefficients in
+$C_b^\infty(\R^d_v)$ (no dependence on $X$). Then for $w\in C_b^{r+j}$,
+$Rw\in\cA_N^j$ and $\nrm{Rw}{N,j}\le C_R\nrm{w}{C_b^{r+j}}$. The operations
+$Q$ and $\Pi$ act on coefficients, so $QR\in\cD_N^r$ and
+$\Pi R\in\cD_0^r$; $\cG R,\cG_XR\in\cD_{N+1}^{r+1}$; $RS\in\cD_N^{r+r'}$
+for $S\in\cD_0^{r'}$; and
+$[v\cdot\nabla_X,R]\in\cD_N^r$, because
+$[v\cdot\nabla_X,\rho\,\partial_z^\alpha]
+=-\rho\sum_i\alpha_{v_i}\partial_z^{\alpha-e_{v_i}+e_{X_i}}$. For
+$R\in\cD_N^r$ put
+\begin{equation}
+  R^\sharp=-RL+[v\cdot\nabla_X,R]\ \in\cD_N^{r+2}.
+\end{equation}
+Define
+\begin{equation}
+\begin{aligned}
+  R_1&=-Q\cG, & R_2&=-Q\cG R_1, & R_3&=-Q(\cG R_2+R_1^\sharp), &
+  R_4&=-Q(\cG R_3+R_2^\sharp),\\
+  B&=-\Pi\cG QR_1, & B_X&=\Pi\cG Q^2\cG_X, &
+  L_1&=\Pi\cG R_3 .
+\end{aligned}
+\label{eq:ops}
+\end{equation}
+Thus $R_n\in\cD_n^n$, $B,B_X\in\cD_0^2$, $L_1\in\cD_0^4$; $R_1,R_3$ are
+odd and $R_2,R_4$ even.
+
+\begin{lemma}[Explicit forms]\label{lem:explicit}
+For real $w$,
+\begin{align*}
+  R_1w&=\sum_k\Re\Bigl(b_k\,\frac{f_k\cdot\nabla_vw}{\lambda_k(v)}\Bigr),
+  \qquad \Pi\cG R_1=L\ \text{ of \eqref{eq:L}},\\
+  Bw&=\sum_{i,j}\partial_{v_j}\bigl(M^{(2)}_{ij}\partial_{v_i}w\bigr),\quad
+  B_Xw=\sum_{i,j}\partial_{v_j}\bigl(M^{(2)}_{ij}\partial_{X_i}w\bigr),\quad
+  M^{(2)}_{ij}=\frac12\sum_k\Re\Bigl(\frac{f_k^i\bar f_k^j}{\lambda_k(v)^2}\Bigr),\\
+  L_1&=-\Pi\,\cG Q\cG Q\cG Q\cG-BL-B_X .
+\end{align*}
+Moreover $\Pi(\cG R_2+R_1^\sharp)=0$, $\Pi R_2^\sharp=0$ and
+$\Pi(\cG R_3+R_2^\sharp)=L_1$.
+\end{lemma}
+
+\begin{proof}
+$H_{e_k,0}=b_k$, so $\cG w=\frac12\sum_k(b_kf_k+\bar b_k\bar f_k)\cdot
+\nabla_vw$ and $Q$ divides the two terms by $-\lambda_k$, $-\bar\lambda_k$:
+this gives $R_1$, and $QR_1w=-\frac12\sum_k(b_kf_k\cdot\nabla_vw/\lambda_k^2
++\bar b_k\bar f_k\cdot\nabla_vw/\bar\lambda_k^2)$. Since
+$\Pi(b_l\bar b_k)=\delta_{kl}$ and $\Pi(b_lb_k)=0$,
+\[
+  \Pi\cG R_1w=\frac14\sum_k\Bigl[\bar f_k\cdot\nabla_v
+    \Bigl(\frac{f_k\cdot\nabla_vw}{\lambda_k}\Bigr)
+   +f_k\cdot\nabla_v\Bigl(\frac{\bar f_k\cdot\nabla_vw}{\bar\lambda_k}\Bigr)\Bigr]
+  =\sum_{i,j}\partial_{v_j}\Bigl(\frac12\sum_k
+    \Re\Bigl(\frac{f_k^i\bar f_k^j}{\lambda_k}\Bigr)\partial_{v_i}w\Bigr),
+\]
+which is $Lw$; the same computation with $\lambda_k^2$ gives $B$ and $B_X$.
+$R_2=Q\cG Q\cG$ and, since $[v\cdot\nabla_X,\cG]=-\cG_X$ and $Q$ commutes
+with $v\cdot\nabla_X$, $R_1^\sharp=Q\cG L+Q\cG_X$; inserting in $L_1=\Pi\cG
+R_3$ gives the formula. $\cG R_2+R_1^\sharp$ is odd, so its mean vanishes
+(Lemma~\ref{lem:calc}(e)). $\Pi R_2=0$ and $\Pi$ commutes with
+$v\cdot\nabla_X$ and with right multiplication by $L$, so $\Pi R_2^\sharp=0$.
+\end{proof}
+
+\begin{remark}\label{rem:sym}
+These identities, the formulas of Proposition~\ref{prop:L}, and the explicit
+form
+$R_2w=\frac14\sum_{k,l}\bigl[\frac{f_l\cdot\nabla_vh_k}{\lambda_k+\lambda_l}
+b_kb_l+\frac{f_l\cdot\nabla_vh_k^-}{\lambda_l+\bar\lambda_k}
+(b_l\bar b_k-\delta_{kl})\bigr]+\text{c.c.}$, with
+$h_k=f_k\cdot\nabla_vw/\lambda_k$ and
+$h_k^-=\bar f_k\cdot\nabla_vw/\bar\lambda_k$, were checked with
+\texttt{sympy} (exact differentiation, 30-digit evaluation at random
+rational parameters; $d=1,2$, two modes, general complex $f_k$): all
+residuals were below $10^{-130}$. The same script confirmed $c=0$ for
+potential fields, $c\ne0$ for generic $f_k$ in $d=2$, and $L_1=0$ when all
+$k=0$ (Proposition~\ref{prop:uniform}).
+\end{remark}
+
+\subsection{Dynkin's formula}
+
+\begin{lemma}\label{lem:dynkin}
+Assume (H). Let
+$\Phi(t,z,b)=\sum_{|m|+|n|\le N}c_{m,n}(t,z)H_{m,n}(b)$, where $N\le6$ and
+the coefficients $c_{m,n}$ are $C^1$ on $[0,T]\times\R^{2d}$; they may
+depend on the initial data as parameters. Suppose that, with $v_0$ the
+initial velocity,
+\[
+  |c_{m,n}(t,z)|\le C_\Phi(1+|v-v_0|)\quad\text{on }[0,T]\times\R^{2d},
+  \qquad
+  \E\int_0^T|\cK\Phi|(t,Z_t,b_t)\,\dd t<\infty .
+\]
+Then
+\[
+  \E\Phi(T,Z_T,b_T)-\E\Phi(0,Z_0,b_0)=\E\int_0^T(\cK\Phi)(t,Z_t,b_t)\,\dd t .
+\]
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:reduced}, $Z$ is $C^1$ in $t$ and $b$ is an It\^o process,
+so It\^o's formula applies to $\Phi$, which is $C^1$ in $(t,z)$ and
+polynomial in $b$; the second-order term is
+$\sum_k2\gamma_k\partial_{b_k}\partial_{\bar b_k}\Phi$ because
+$\dd\langle\tilde B_k,\overline{\tilde B_k}\rangle=\dd t$ and
+$\dd\langle\tilde B_k,\tilde B_k\rangle=0$. The drift is $\cK\Phi$. The
+stochastic integral has integrands $\sqrt{2\gamma_k}\,\partial_{b_k}\Phi$ and
+conjugates, bounded by $CC_\Phi(1+|v_t-v_0|)(1+|b_t|)^{5}$. Since
+$|v_t-v_0|\le\eps\int_0^t\Gamma(b_s)\dd s$ and $\fm_{12}<\infty$, H\"older's
+inequality (exponents $6$ and $6/5$) shows that these are square integrable
+on $[0,T]\times\Omega$, so the stochastic integral is a martingale with
+zero mean.
+\end{proof}
+
+\section{A diffusive moment bound}
+
+The trivial bound $|v_t-v_0|\le\eps\int_0^t\Gamma$ is of size $\eps t$,
+that is $\eps^{-1}$ at kinetic times. The true size is $O(1)$.
+
+\begin{proposition}\label{prop:mom}
+Assume (H). There is $C_0$ depending only on the model such that for all
+$\eps\in(0,1]$ and $t\ge0$,
+\[
+  \sup_{s\le t}\bigl(\E|v_s-v_0|^2\bigr)^{1/2}
+  \le C_0\,\fm_6^{1/2}\bigl(\eps+\eps\sqrt t+\eps^2t\bigr)
+  \le 3C_0\,\fm_6^{1/2}\,(1+\eps^2t).
+\]
+Consequently $\sup_{t\le\tau/\eps^2}\E\bigl[|v_t|(1+|b_t|)^N\bigr]\le
+C\,\fM(\tau)$ for $N\le5$.
+\end{proposition}
+
+\begin{proof}
+Let $w=v-v_0$ and $g=|w|^2$. Define $\Phi=g+\eps R_1g+\eps^2R_2g$ by the
+formulas \eqref{eq:ops}; the coefficients are no longer bounded, but
+$\nabla_vg=2w$ and $\nabla_v^2g=2I$, so $R_1g$ has coefficients of the form
+$\rho(v)\cdot w$ and $\cG R_1g$, $R_2g$, $\cG R_2g$ have coefficients of
+the form $\rho_0(v)+\rho_1(v)\cdot w$ with $\rho,\rho_0,\rho_1\in
+C_b^\infty$. Hence
+\[
+  |R_1g|\le C|b||w|,\quad |R_2g|\le C(1+|b|)^2(1+|w|),\quad
+  |\cG R_2g|\le C(1+|b|)^3(1+|w|),\quad |Lg|\le C(1+|w|),
+\]
+with $Lg=\Pi\cG R_1g=2\operatorname{tr}D+2\beta\cdot w$. By
+Lemma~\ref{lem:calc}(b), which is an identity between coefficients,
+\[
+  (\eps\cG+A_v)\Phi=\eps\cG g+\eps A_vR_1g+\eps^2\cG R_1g+\eps^2A_vR_2g
+    +\eps^3\cG R_2g=\eps^2Lg+\eps^3\cG R_2g .
+\]
+Lemma~\ref{lem:dynkin} applies ($\Phi$ does not depend on $t$ or $X$, $v_0$
+is a parameter measurable at time $0$, and $\cK\Phi$ is integrable by the
+bounds just listed and the trivial bound on $w$). Let $y(t)=\sup_{s\le
+t}(\E|w_s|^2)^{1/2}$, finite by the trivial bound, and write
+$\fm=\fm_6^{1/2}$. Since $\Phi(0)=\eps^2R_2g(v_0,b_0)$ and by
+Cauchy--Schwarz, for $s\le t$,
+\begin{align*}
+  \E|w_s|^2&=\E\Phi(s)-\eps\,\E R_1g(s)-\eps^2\E R_2g(s)\\
+  &\le C\eps^2\fm+C\eps^2s\,(1+y)(1+\eps\fm)+C\eps\fm\,y+C\eps^2\fm(1+y)
+  \le a+(a+c)\,y,
+\end{align*}
+with $a=C\fm\eps^2(1+t)$ and $c=C\fm\eps$. Taking the supremum over $s\le t$,
+$y^2\le a+(a+c)y$, hence $y\le a+c+\sqrt a$. The last claim follows from
+$\E[|v_t|(1+|b_t|)^N]\le(\E|v_t|^2)^{1/2}\fm_{10}^{1/2}$.
+\end{proof}
+
+\begin{remark}
+The last remark of the proof section of the first note says that a
+diffusive a priori bound would extend the range of its theorem beyond
+$t\ll N^{3/8}$. Proposition~\ref{prop:mom} is such a bound. The extension
+itself is not carried out here.
+\end{remark}
+
+\section{The limit semigroup}
+
+\begin{lemma}\label{lem:semigroup}
+For every $m\ge0$ there are $C_m,c_m$ depending only on the model such that
+for $\psi\in C_b^m(\R^{2d})$ and $u(\tau,z)=(P_\tau\psi)(z)$:
+\begin{enumerate}
+  \item[(a)] $\partial_z^\alpha u$ exists and is jointly continuous on
+    $[0,\infty)\times\R^{2d}$ for $|\alpha|\le m$, and
+    $\sup_{s\le\tau}\nrm{u(s)}{C_b^m}\le C_me^{c_m\tau}\nrm{\psi}{C_b^m}$.
+    More precisely $\partial_z^\alpha(P_rg)(z)=\sum_{1\le|\beta|\le|\alpha|}
+    \E[(\partial^\beta g)(\bar Z^z_r)\,J_{\alpha,\beta}(r,z)]$ for
+    $1\le|\alpha|\le m$, with random variables $J_{\alpha,\beta}$ not
+    depending on $g$, continuous in $(r,z)$ in every $L^p$, and
+    $\E|J_{\alpha,\beta}(r,z)|^p\le C_{m,p}e^{c_{m,p}r}$.
+  \item[(b)] If $m\ge2$, then for $|\alpha|\le m-2$ the derivative
+    $\partial_\tau\partial_z^\alpha u$ exists, is continuous, and equals
+    $\partial_z^\alpha(\cL u)$. In particular $\partial_\tau u=v\cdot\nabla_X
+    u+Lu$, and $\partial_\tau P_\tau\psi=P_\tau\cL\psi$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) By Proposition~\ref{prop:L}(d) the coefficients of \eqref{eq:limit} are
+smooth with bounded derivatives of all orders $\ge1$ (the drift $(v,\beta)$
+is unbounded but linear in the unbounded direction). For such equations the
+solution is differentiable in the initial point to all orders in every
+$L^p$; the derivative processes solve the linear equations obtained by
+formal differentiation, are continuous in $(r,z)$ in $L^p$, and have
+$p$-th moments bounded by $C e^{cr}$ uniformly in $z$ (Gr\"onwall and
+Burkholder--Davis--Gundy on those linear equations). This is classical;
+see Kunita~\cite{Kunita} or Friedman~\cite{Friedman}. The chain rule under
+the expectation gives the representation, with $J_{\alpha,\beta}$
+polynomials in the derivative processes, and hence the bound; joint
+continuity follows from the continuity of $\partial^\beta g$, of the paths,
+and of $J_{\alpha,\beta}$ in $L^p$.
+
+(b) Let $g\in C^2$ with bounded first and second derivatives. It\^o's
+formula and the moment bounds for \eqref{eq:limit} give
+$P_hg-g=\int_0^hP_s\cL g\,\dd s$, and $s\mapsto(P_s\cL g)(z)$ is continuous
+because $\cL g$ is continuous with at most linear growth. Applying this to
+$g=u(\tau)$ and using the semigroup property,
+$h^{-1}(u(\tau+h)-u(\tau))\to\cL u(\tau)$ as $h\downarrow0$. By (a) the
+right derivative $\cL u$ is continuous in $(\tau,z)$, so $u$ is $C^1$ in
+$\tau$ and $u(\tau)-u(\tau')=\int_{\tau'}^\tau\cL u(s)\,\dd s$. For
+$|\alpha|\le m-2$ the function $\partial_z^\alpha\cL u(s,z)$ involves
+derivatives of $u$ of order at most $m$, so it is continuous and locally
+bounded by (a); differentiating under the integral gives
+$\partial_z^\alpha u(\tau)-\partial_z^\alpha u(\tau')=\int_{\tau'}^\tau
+\partial_z^\alpha\cL u\,\dd s$. Finally
+$P_h P_\tau\psi-P_\tau\psi=P_\tau(P_h\psi-\psi)=\int_0^hP_{\tau+s}\cL\psi\,\dd
+s$ gives $\partial_\tau P_\tau\psi=P_\tau\cL\psi$.
+\end{proof}
+
+For $R\in\cD_N^r$ and $\psi\in C_b^m$ with $r\le m-2$, write
+$\cT=-\partial_s+v\cdot\nabla_X$ on functions of $(s,z,b)$. By
+Lemma~\ref{lem:semigroup}(b),
+\begin{equation}
+  \cT u=-Lu,\qquad
+  \cT(Ru)=R(\cT u)+[v\cdot\nabla_X,R]u=R^\sharp u .
+  \label{eq:sharp}
+\end{equation}
+The unbounded coefficient $v$ of $\cL$ has disappeared: this is why $\cT$
+is treated as a unit. If $\Phi^\eps(t,z,b)=\phi(\tau-\eps^2t,z,b)$ then
+$\cK\Phi^\eps=(\eps^2\cT+\eps\cG+A_v)\phi$, evaluated at $s=\tau-\eps^2t$.
+
+\section{Terminal layers}
+
+The correctors do not vanish at the final time. Their means there are
+controlled by a layer of width $O(1)$ in $t$ at the end of the interval.
+
+\begin{lemma}[First order]\label{lem:T1}
+Assume (H). Let $N\le5$, $\chi\in\cA_N^1$ with $\Pi\chi=0$, $T\ge0$,
+$\tau=\eps^2T$. Then
+\[
+  \bigl|\E\chi(Z_T,b_T)-\E(e^{TA}\chi)(Z_0,b_0)\bigr|
+  \le C\,\eps\,\nrm{\chi}{N,1}\,\fM(\tau).
+\]
+In the stationary ensemble $\E(e^{TA}\chi)(Z_0,b_0)=0$; in general it is
+bounded by $Ce^{-\gamma_*T}\nrm{\chi}{N,0}\fm_5$. If $\chi$ does not depend
+on $X$, $\fM(\tau)$ can be replaced by $\fm_{12}$.
+\end{lemma}
+
+\begin{proof}
+Let $W(t,z,b)=(e^{(T-t)A}\chi)(z,b)$. Its coefficients
+$c_{m,n}(z)e^{-\mu_{m,n}(v)(T-t)}$ are $C^1$ and bounded with bounded
+derivatives on $[0,T]\times\R^{2d}$, and $(\partial_t+A_v)W=0$ by
+Lemma~\ref{lem:calc}(c), so that $\cK W=\eps\,\cG W+\eps^2v\cdot\nabla_XW$,
+which is integrable because $\E|v_t|^2<\infty$. Lemma~\ref{lem:dynkin}
+gives
+\[
+  \E\chi(Z_T,b_T)-\E W(0,Z_0,b_0)
+  =\E\int_0^T\bigl(\eps\,\cG W+\eps^2v\cdot\nabla_XW\bigr)(t,Z_t,b_t)\,\dd t .
+\]
+With $s=T-t$, Lemma~\ref{lem:calc}(a),(c),(d) give
+$|\cG W|\le C(1+|b|)^{N+1}(1+s)e^{-\gamma_*s}\nrm{\chi}{N,1}$ and
+$|v\cdot\nabla_XW|\le C|v|(1+|b|)^Ne^{-\gamma_*s}\nrm{\chi}{N,1}$. Integrate
+in $t$ and use Proposition~\ref{prop:mom} for the second term. In the
+stationary ensemble $b_0$ is standard Gaussian and independent of $Z_0$, and
+$\Pi e^{TA}\chi=0$, so $\E W(0,Z_0,b_0)=0$ by Lemma~\ref{lem:calc}(a).
+\end{proof}
+
+\begin{lemma}[Second order]\label{lem:T2}
+Assume (H). Let $N\le4$, $\chi\in\cA_N^2$ with $\Pi\chi=0$. Then
+\[
+  \Bigl|\E\chi(Z_T,b_T)-\E(e^{TA}\chi)(Z_0,b_0)
+     +\eps\,\E\bigl[(\Pi\cG Q\chi)(Z_T)\bigr]\Bigr|
+  \le C\,\nrm{\chi}{N,2}\,\bigl(\eps^2+\eps\,e^{-\gamma_*T/2}\bigr)\,\fM(\tau).
+\]
+\end{lemma}
+
+\begin{proof}
+Keep the notation of the previous proof. The term with $v\cdot\nabla_XW$
+is $O(\eps^2\nrm{\chi}{N,1}\fM)$. Decompose, for $s=T-t$,
+\[
+  \cG e^{sA}\chi=g_s+\chi_s,\qquad g_s=\Pi\cG e^{sA}\chi\in C_b^1,\qquad
+  \chi_s\in\cA_{N+1}^1,\ \ \Pi\chi_s=0,
+\]
+with $\nrm{g_s}{C_b^1}+\nrm{\chi_s}{N+1,1}\le
+C(1+s)^2e^{-\gamma_*s}\nrm{\chi}{N,2}$ by Lemma~\ref{lem:calc}(c),(d).
+
+\emph{The fluctuating part.} Lemma~\ref{lem:T1} at time $t$ gives
+$|\E\chi_s(Z_t,b_t)|\le Ce^{-\gamma_*t}\nrm{\chi_s}{N+1,0}\fm_5
++C\eps\nrm{\chi_s}{N+1,1}\fM(\tau)$. Since
+$e^{-\gamma_*t}(1+s)e^{-\gamma_*s}=(1+s)e^{-\gamma_*T}$ and
+$T(1+T)e^{-\gamma_*T}\le Ce^{-\gamma_*T/2}$, the contribution to
+$\eps\int_0^T\E\chi_{T-t}(Z_t,b_t)\dd t$ is at most
+$C\nrm{\chi}{N,2}(\eps e^{-\gamma_*T/2}+\eps^2)\fM(\tau)$.
+
+\emph{The mean part.} $|Z_T-Z_t|\le\eps^2\int_t^T|v_r|\dd r
++\eps\int_t^T\Gamma(b_r)\dd r$, so by Proposition~\ref{prop:mom},
+$|\E g_s(Z_t)-\E g_s(Z_T)|\le C\nrm{g_s}{C_b^1}\,\eps s\,\fM(\tau)$, and
+$\eps\int_0^T\eps s(1+s)^2e^{-\gamma_*s}\dd s\le C\eps^2$. Finally, by
+Lemma~\ref{lem:calc}(c),
+$\int_0^Tg_s\,\dd s=\Pi\cG\int_0^Te^{sA}\chi\,\dd s=-\Pi\cG Q\chi+\Pi\cG
+Qe^{TA}\chi$, and the last term is bounded by
+$C(1+T)e^{-\gamma_*T}\nrm{\chi}{N,1}$.
+\end{proof}
+
+\section{Kinetic limit with rate}
+
+\begin{theorem}[Kinetic limit]\label{thm:kin}
+Assume (H). Let $\eps\in(0,1]$, $\tau\ge0$, $T=\tau/\eps^2$, and
+$u(\tau)=P_\tau\psi$, where $P_\tau$ is the semigroup of the diffusion
+\eqref{eq:limit}, with generator $\cL=v\cdot\nabla_X+L$ and $L$ given by
+\eqref{eq:L}.
+\begin{enumerate}
+  \item[(a)] If $\psi\in C_b^4(\R^{2d})$,
+    \[
+      \bigl|\E\psi(Z_T)-\E u(\tau,Z_0)\bigr|
+      \le C\,\eps\,(1+\tau)\,e^{c_4\tau}\,\nrm{\psi}{C_b^4}\,\fm_{12}.
+    \]
+  \item[(b)] If $\psi\in C_b^5(\R^{2d})$,
+    \begin{gather*}
+      \E\psi(Z_T)=\E u(\tau,Z_0)+\eps\,\E\,\ell^\eps_\tau(Z_0,b_0)+\mathrm{Rem},
+      \qquad
+      |\mathrm{Rem}|\le C\,\eps^2(1+\tau)\,e^{c_5\tau}\nrm{\psi}{C_b^5}\,\fM(\tau),\\
+      \ell^\eps_\tau(z,b)=\sum_k\Re\Bigl(\frac{b_k\,f_k}{\lambda_k(v)}\cdot
+        \bigl[\nabla_vu(\tau,z)-e^{-\lambda_k(v)\tau/\eps^2}\nabla_v\psi(z)\bigr]\Bigr).
+    \end{gather*}
+  \item[(c)] In the stationary ensemble $\E\ell^\eps_\tau(Z_0,b_0)=0$, so
+    \[
+      \bigl|\E\psi(Z_T)-\E u(\tau,Z_0)\bigr|
+      \le C\,\eps^2(1+\tau)\,e^{c_5\tau}\nrm{\psi}{C_b^5}\,\fM(\tau).
+    \]
+\end{enumerate}
+The constants $C$ depend only on the model. If $\psi$ depends on $v$ only,
+$\fM(\tau)$ can be replaced by $\fm_{12}$. With $\eps=N^{-1/2}$ the rates
+are $N^{-1/2}$ and $N^{-1}$ at $t=\tau N$.
+\end{theorem}
+
+\begin{proof}
+Fix $\tau$ and let $\Phi_n(s,z,b)=(R_nu(s))(z,b)$ with the operators
+\eqref{eq:ops}.
+
+\emph{(b).} Let $\phi=u+\eps\Phi_1+\eps^2\Phi_2+\eps^3\Phi_3$ and
+$\Phi^\eps(t,z,b)=\phi(\tau-\eps^2t,z,b)$. Since $\psi\in C_b^5$ and
+$R_n$ has order $n\le3$, Lemma~\ref{lem:semigroup} shows that the
+coefficients of $\Phi^\eps$ are $C^1$ in $(t,z)$ and that \eqref{eq:sharp}
+holds for $R_1,R_2,R_3$; all quantities are bounded. By
+Lemma~\ref{lem:calc}(b), $A_v\Phi_n=-(1-\Pi)(\cdots)$, and by
+Lemma~\ref{lem:explicit},
+\begin{align*}
+  \eps^1&:\ \cG u+A_v\Phi_1=\Pi\cG u=0,\\
+  \eps^2&:\ \cT u+\cG\Phi_1+A_v\Phi_2=-Lu+\Pi\cG R_1u=0,\\
+  \eps^3&:\ \cT\Phi_1+\cG\Phi_2+A_v\Phi_3=\Pi(R_1^\sharp+\cG R_2)u=0,
+\end{align*}
+so that
+$\cK\Phi^\eps=\eps^4(R_2^\sharp+\cG R_3)u+\eps^5R_3^\sharp u$. These
+operators belong to $\cD_4^4$ and $\cD_3^5$. By Lemma~\ref{lem:dynkin},
+Lemma~\ref{lem:calc}(a) and Lemma~\ref{lem:semigroup}(a),
+\[
+  \bigl|\E\Phi^\eps(T,Z_T,b_T)-\E\Phi^\eps(0,Z_0,b_0)\bigr|
+  \le T(\eps^4+\eps^5)\,C\sup_{s\le\tau}\nrm{u(s)}{C_b^5}\fm_4
+  \le C\eps^2\tau e^{c_5\tau}\nrm{\psi}{C_b^5}\fm_{12}.
+\]
+At $t=0$ and at $t=T$ respectively,
+\begin{align*}
+  \Phi^\eps&=u(\tau)+\eps R_1u(\tau)
+     +O\bigl(\eps^2\nrm{u(\tau)}{C_b^3}(1+|b_0|)^3\bigr),\\
+  \Phi^\eps&=\psi+\eps R_1\psi
+     +O\bigl(\eps^2\nrm{\psi}{C_b^3}(1+|b_T|)^3\bigr),
+\end{align*}
+and by Lemma~\ref{lem:T1} with $\chi=R_1\psi\in\cA_1^4$,
+\[
+  \E(R_1\psi)(Z_T,b_T)=\E(e^{TA}R_1\psi)(Z_0,b_0)
+    +O\bigl(\eps\nrm{\psi}{C_b^2}\fM(\tau)\bigr).
+\]
+Collecting,
+\[
+  \E\psi(Z_T)=\E u(\tau,Z_0)+\eps\,\E\bigl[R_1u(\tau)-e^{TA}R_1\psi\bigr](Z_0,b_0)
+  +\mathrm{Rem},
+\]
+and the bracket is $\ell^\eps_\tau$ by Lemma~\ref{lem:explicit} and
+$e^{TA}b_k=e^{-\lambda_k(v)T}b_k$.
+
+\emph{(c).} $\ell^\eps_\tau(z,\cdot)$ is linear in $(b,\bar b)$, and $b_0$
+is centred and independent of $Z_0$.
+
+\emph{(a).} Use $\phi=u+\eps\Phi_1+\eps^2\Phi_2$. Then
+$\cK\Phi^\eps=\eps^3(R_1^\sharp+\cG R_2)u+\eps^4R_2^\sharp u$, with
+operators of order at most $4$, and the boundary terms are bounded
+directly by $C\eps\,e^{c_4\tau}\nrm{\psi}{C_b^2}\fm_2$. No terminal lemma
+and no moment of $v$ is needed.
+\end{proof}
+
+\begin{corollary}\label{cor:law}
+Assume (H) with the law of $(Z_0,b_0)$ independent of $\eps$. Then
+$Z_{\tau/\eps^2}=(\eps^2x,v)_{t=\tau/\eps^2}$ converges in law as
+$\eps\to0$ to $\bar Z_\tau$, the solution of \eqref{eq:limit} started from
+the law of $Z_0$, for every $\tau\ge0$.
+\end{corollary}
+
+\begin{proof}
+Theorem~\ref{thm:kin}(a) gives convergence of $\E\psi$ for $\psi\in
+C_c^\infty$, which determines convergence in law since the limit is a
+probability measure.
+\end{proof}
+
+\begin{remark}[Initial slip]\label{rem:slip}
+For $\tau\gg\eps^2$ the first-order term is
+$\eps\,\E[\delta v(Z_0,b_0)\cdot\nabla_vu(\tau,Z_0)]$ with
+$\delta v=\sum_k\Re(b_{0,k}f_k/\lambda_k(v_0))
+=\int_0^\infty\E[F(x_0+v_0t,t)\mid a(0)]\,\dd t$, the impulse delivered by
+the initial field before it is forgotten. Since
+$u(\tau,X_0,v_0+\eps\delta v)=u+\eps\delta v\cdot\nabla_vu+O(\eps^2)$, a
+non-stationary initial field is equivalent, to $O(\eps^2)$, to the limit
+equation started from the shifted velocity $v_0+\eps\,\delta v$.
+\end{remark}
+
+\section{The closure and its defect}
+
+Let $f_0$ be a probability measure on $\R^{2d}$ with
+$\int|v|^2\dd f_0<\infty$, and consider an ensemble of tagged particles
+with $(X_0,v_0)\sim f_0$. Let $f^\eps_\tau$ be the law of $Z_{\tau/\eps^2}$.
+Whether each particle has its own independent field or all particles move
+in the same field, $f^\eps_\tau$ is the same object: the one-particle law,
+equal to the expected empirical measure. (In a common field the particles
+are correlated and the empirical measure need not concentrate on
+$f^\eps_\tau$; that question is not studied here.)
+
+In the vocabulary of \texttt{mathematical\_closure\_program.md}:
+\begin{itemize}
+  \item the exact state is the joint law of $(Z,b)$, which evolves by the
+    Fokker--Planck equation of \eqref{eq:reduced};
+  \item the \emph{retained state} is its marginal $f$;
+  \item the \emph{discarded information} is the conditional law of the
+    field state $b$ given $Z$, that is, the particle--field correlation;
+  \item the \emph{closed equation} is
+    \begin{equation}
+      \partial_\tau f+v\cdot\nabla_Xf=L^*f
+      =\nabla_v\cdot(D\nabla_vf)-c\cdot\nabla_vf ,
+      \label{eq:closed}
+    \end{equation}
+    a linear Landau or quasilinear equation, whose solution is
+    $S_\tau f_0$, the law of \eqref{eq:limit} started from $f_0$:
+    $\langle S_\tau f_0,\psi\rangle=\langle f_0,P_\tau\psi\rangle$. By
+    Lemma~\ref{lem:semigroup}(b) and Proposition~\ref{prop:L}(b),
+    $\frac{\dd}{\dd\tau}\langle S_\tau f_0,\psi\rangle=\langle S_\tau f_0,
+    \cL\psi\rangle$ for $\psi\in C_c^\infty$, so $S_\tau f_0$ solves
+    \eqref{eq:closed} in the sense of distributions;
+  \item the \emph{closure defect} is $f^\eps_\tau-S_\tau f_0$, measured in
+    $d_m(\mu,\nu)=\sup\{|\langle\mu-\nu,\psi\rangle|:\nrm{\psi}{C_b^m}\le1\}$.
+\end{itemize}
+
+\begin{theorem}[Closure defect]\label{thm:closure}
+Assume (H) with $(X_0,v_0)\sim f_0$, $\eps\in(0,1]$, $\tau\ge0$.
+\begin{enumerate}
+  \item[(a)] In the stationary ensemble,
+    \[
+      d_5\bigl(f^\eps_\tau,S_\tau f_0\bigr)\le
+      C\,\eps^2\,(1+\tau)\,e^{c_5\tau}\,\fM(\tau),
+    \]
+    uniformly on bounded intervals of $\tau$. If $f_0$ and the test
+    functions depend on $v$ only (space-homogeneous case),
+    $\fM(\tau)$ is replaced by $\fm_{12}$.
+  \item[(b)] For a general initial field,
+    $d_4(f^\eps_\tau,S_\tau f_0)\le C\eps(1+\tau)e^{c_4\tau}\fm_{12}$, and
+    $f^\eps_\tau=S_\tau f_0+\eps\,\mathfrak f^\eps_\tau+r^\eps_\tau$, where
+    $\langle\mathfrak f^\eps_\tau,\psi\rangle=\E\,\ell^\eps_\tau(Z_0,b_0)$
+    and $\sup\{|\langle r^\eps_\tau,\psi\rangle|:\nrm{\psi}{C_b^5}\le1\}\le
+    C\eps^2(1+\tau)e^{c_5\tau}\fM(\tau)$.
+  \item[(c)] The rate $\eps$ in (b) is attained: if $(Z_0,b_0)=(z_0,b_0)$
+    is deterministic, independent of $\eps$, and
+    $\delta v=\sum_k\Re(b_{0,k}f_k/\lambda_k(v_0))\ne0$, there is
+    $\tau_1>0$ such that
+    $\liminf_{\eps\to0}\eps^{-1}d_5(f^\eps_\tau,S_\tau\delta_{z_0})>0$ for
+    every $\tau\in(0,\tau_1]$. The rate $\eps^2$ in (a) is attained in the
+    example of Proposition~\ref{prop:uniform}.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a), (b): apply Theorem~\ref{thm:kin} with $(X_0,v_0)\sim f_0$; the
+left-hand sides there are $\langle f^\eps_\tau,\psi\rangle-\langle S_\tau
+f_0,\psi\rangle$. (c): let $\psi(z)=\kappa\sin(\delta v\cdot(v-v_0))$ with
+$\kappa>0$ so small that $\nrm{\psi}{C_b^5}\le1$; then
+$\nabla_v\psi(z_0)=\kappa\,\delta v$. By Lemma~\ref{lem:semigroup}(a),
+$\nabla_vu(\tau,z_0)$ is continuous in $\tau$, so there is $\tau_1$ with
+$\delta v\cdot\nabla_vu(\tau,z_0)\ge\kappa|\delta v|^2/2$ on $[0,\tau_1]$.
+By Theorem~\ref{thm:kin}(b), for $\tau\in(0,\tau_1]$,
+$\langle f^\eps_\tau-S_\tau\delta_{z_0},\psi\rangle\ge
+\eps\kappa|\delta v|^2/2-C\eps e^{-\gamma_*\tau/\eps^2}-C\eps^2$.
+\end{proof}
+
+The differential form of the defect, the residual of the closed equation
+evaluated on the exact evolution, is for $\psi\in C_b^2$
+\begin{equation}
+  \cR^\eps_\tau(\psi)=\frac{\dd}{\dd\tau}\langle f^\eps_\tau,\psi\rangle
+    -\langle f^\eps_\tau,\cL\psi\rangle
+  =\frac1\eps\,\E\bigl[(\cG\psi)(Z_T,b_T)\bigr]-\E\bigl[(L\psi)(Z_T)\bigr],
+  \qquad T=\tau/\eps^2,
+  \label{eq:resid}
+\end{equation}
+where the second expression follows from Lemma~\ref{lem:dynkin} applied to
+$\psi$: $\frac{\dd}{\dd t}\E\psi(Z_t)=\E[\eps^2v\cdot\nabla_X\psi
++\eps\,\cG\psi]$. The first term is the exact particle--field correlation;
+the closure replaces it by a functional of $f$.
+
+\begin{proposition}[Instantaneous defect]\label{prop:inst}
+In the stationary ensemble, for $\psi\in C_b^3$,
+\[
+  |\cR^\eps_\tau(\psi)|\le C\,\nrm{\psi}{C_b^3}\,
+  \bigl(\eps+e^{-\gamma_*\tau/(2\eps^2)}\bigr)\,\fM(\tau),
+  \qquad\text{while}\qquad
+  \cR^\eps_0(\psi)=-\E\,(L\psi)(Z_0).
+\]
+\end{proposition}
+
+\begin{proof}
+$\chi=\cG\psi\in\cA_1^2$ has $\Pi\chi=0$ and $\Pi\cG Q\chi=-L\psi$
+(Lemma~\ref{lem:explicit}). Lemma~\ref{lem:T2} gives
+$\E\chi(Z_T,b_T)=\eps\,\E(L\psi)(Z_T)+O(\nrm{\psi}{C_b^3}(\eps^2+\eps
+e^{-\gamma_*T/2})\fM)$; divide by $\eps$. At $\tau=0$, $\E\cG\psi(Z_0,b_0)=0$.
+\end{proof}
+
+So the closed equation is wrong by $O(1)$ during the first few correlation
+times ($\tau\lesssim\eps^2\log(1/\eps)$: the motion is still ballistic and
+the correlation between particle and field has not formed), and its
+residual is $O(\eps)$ afterwards; the accumulated effect of the initial
+layer is the $O(\eps^2)$ term $-\eps^2P_\tau B\psi$ of
+Theorem~\ref{thm:second}. This is the model counterpart of ``$g$ relaxes to
+its Bogoliubov form within $O(1)$ time'' in \texttt{plasma\_extension.tex},
+technique T2, and it is the reason a layer length there must exceed the
+correlation time.
+
+\begin{remark}[Heuristic]
+Parity suggests that the residual after the layer is $O(\eps^2)$, not
+$O(\eps)$: differentiating Theorem~\ref{thm:second} formally in $\tau$
+gives $\cR^\eps_\tau(\psi)\approx\eps^2\langle f_0,P_\tau(L_1+[B,\cL])
+\psi\rangle$. Proving it needs a third-order terminal lemma, which was not
+attempted.
+\end{remark}
+
+\section{The $\eps^2$ term: the first memory correction}
+
+The closed equation \eqref{eq:closed} is Markovian; it discards the finite
+correlation time $1/\gamma_k$ of the field. The first trace of that memory
+is at relative order $\eps^2$.
+
+\begin{lemma}\label{lem:u2}
+Let $\psi\in C_b^8$, $u(s)=P_s\psi$, $g(s)=L_1u(s)$, and
+$u_2(\tau,z)=\int_0^\tau(P_{\tau-s}g(s))(z)\,\dd s$. Then
+$\partial_z^\alpha u_2$ is jointly continuous for $|\alpha|\le4$,
+$\sup_{s\le\tau}\nrm{u_2(s)}{C_b^4}\le C\tau e^{c\tau}\nrm{\psi}{C_b^8}$,
+$u_2(0)=0$, and for $|\alpha|\le2$ the derivative
+$\partial_\tau\partial_z^\alpha u_2$ exists, is continuous, and equals
+$\partial_z^\alpha(\cL u_2+L_1u)$.
+\end{lemma}
+
+\begin{proof}
+$L_1\in\cD_0^4$, so by Lemma~\ref{lem:semigroup}(a) the derivatives
+$\partial_z^\beta g$, $|\beta|\le4$, are jointly continuous and bounded by
+$Ce^{c_8s}\nrm{\psi}{C_b^8}$. By the representation in
+Lemma~\ref{lem:semigroup}(a), $(s,r,z)\mapsto\partial_z^\alpha(P_rg(s))(z)$
+is jointly continuous for $|\alpha|\le4$ and bounded by
+$Ce^{c_4r}\nrm{g(s)}{C_b^4}$; differentiation under the integral gives the
+first two claims. For $|\alpha|\le2$, Lemma~\ref{lem:semigroup}(b) with
+$m=4$ shows that $k_\alpha(\tau,s)=\partial_z^\alpha(P_{\tau-s}g(s))(z)$ has
+the continuous derivative $\partial_\tau k_\alpha=\partial_z^\alpha
+\cL P_{\tau-s}g(s)$ on $\{s\le\tau\}$, so by Leibniz' rule
+$\partial_\tau\partial_z^\alpha u_2=k_\alpha(\tau,\tau)+\int_0^\tau
+\partial_\tau k_\alpha\,\dd s=\partial_z^\alpha g(\tau)+\partial_z^\alpha
+\cL u_2$.
+\end{proof}
+
+\begin{theorem}[Second-order expansion]\label{thm:second}
+Assume (H). Let $\psi\in C_b^8(\R^{2d})$, $\eps\in(0,1]$, $\tau\ge0$,
+$T=\tau/\eps^2$, and let $B$, $L_1$ be the operators of \eqref{eq:ops} and
+Lemma~\ref{lem:explicit}. Then
+\begin{multline*}
+  \E\psi(Z_T)=\E\Bigl[u(\tau,Z_0)+\eps\,(R_1u(\tau))(Z_0,b_0)\\
+   +\eps^2\Bigl((R_2u(\tau))(Z_0,b_0)+u_2(\tau,Z_0)-(P_\tau B\psi)(Z_0)\Bigr)\Bigr]
+   +\mathrm{Rem},\\
+  |\mathrm{Rem}|\le C\,(1+\tau)^2e^{c\tau}\,\nrm{\psi}{C_b^8}\,
+  \bigl(\eps^3+\eps\,e^{-\gamma_*\tau/(2\eps^2)}\bigr)\,\fM(\tau).
+\end{multline*}
+In the stationary ensemble the terms with $R_1$ and $R_2$ vanish and
+\begin{equation}
+  \E\psi(Z_T)=\E\Bigl[P_\tau\psi
+    +\eps^2\Bigl(\int_0^\tau P_{\tau-s}L_1P_s\psi\,\dd s-P_\tau B\psi\Bigr)\Bigr](Z_0)
+  +O\bigl(\eps^3+\eps^2e^{-\gamma_*\tau/(2\eps^2)}\bigr),
+  \label{eq:second}
+\end{equation}
+with the same constant in the error term.
+\end{theorem}
+
+\begin{proof}
+Let $\Phi_n=R_nu$ as before and
+\[
+  \phi=u+\eps\Phi_1+\eps^2(\Phi_2+u_2)+\eps^3(\Phi_3+R_1u_2)
+     +\eps^4(\Phi_4+R_2u_2),\qquad \Phi^\eps(t,\cdot)=\phi(\tau-\eps^2t,\cdot).
+\]
+By Lemmas~\ref{lem:semigroup} and \ref{lem:u2} (orders: $R_4$ on $u$ with
+$4\le8-2$; $R_2$ on $u_2$ with $2\le4-2$) the coefficients are $C^1$,
+\eqref{eq:sharp} holds for $R_1,\dots,R_4$, and
+$\cT(Ru_2)=R(\cT u_2)+[v\cdot\nabla_X,R]u_2=R^\sharp u_2-RL_1u$ for
+$R=R_1,R_2$, because $\cT u_2=-Lu_2-L_1u$. The orders $\eps^1,\eps^2$
+vanish as in Theorem~\ref{thm:kin} ($A_vu_2=0$). Further, using
+Lemma~\ref{lem:explicit},
+\begin{align*}
+  \eps^3&:\ \cT\Phi_1+\cG(\Phi_2+u_2)+A_v(\Phi_3+R_1u_2)
+     =(R_1^\sharp+\cG R_2)u+\cG u_2-(\cG R_2+R_1^\sharp)u-\cG u_2=0,\\
+  \eps^4&:\ \cT(\Phi_2+u_2)+\cG(\Phi_3+R_1u_2)+A_v(\Phi_4+R_2u_2)\\
+     &\quad=(R_2^\sharp+\cG R_3)u+\cT u_2+\cG R_1u_2
+       -\bigl[(\cG R_3+R_2^\sharp)u-L_1u\bigr]-\bigl[\cG R_1u_2-Lu_2\bigr]\\
+     &\quad=\cT u_2+Lu_2+L_1u=0 .
+\end{align*}
+Hence
+\[
+  \cK\Phi^\eps=\eps^5\bigl[(R_3^\sharp+\cG R_4-R_1L_1)u+(R_1^\sharp+\cG R_2)u_2\bigr]
+  +\eps^6\bigl[(R_4^\sharp-R_2L_1)u+R_2^\sharp u_2\bigr],
+\]
+with operators of order at most $6$ on $u$ and at most $4$ on $u_2$, and
+polynomial degree at most $5$. By Lemmas~\ref{lem:dynkin},
+\ref{lem:semigroup}(a) and \ref{lem:u2},
+$|\E\Phi^\eps(T)-\E\Phi^\eps(0)|\le C\eps^3\tau(1+\tau)e^{c\tau}
+\nrm{\psi}{C_b^8}\fm_{12}$.
+
+\emph{At $t=0$:} $\E\Phi^\eps(0,Z_0,b_0)=\E[u+\eps R_1u+\eps^2(R_2u+u_2)]
+(\tau,Z_0,b_0)+O(\eps^3)$.
+
+\emph{At $t=T$:} $u_2(0)=0$, so $\Phi^\eps(T)=\psi+\eps R_1\psi+\eps^2R_2\psi
++O(\eps^3)$ at $(Z_T,b_T)$. By Lemma~\ref{lem:T2} with $\chi=R_1\psi$, and
+$-\Pi\cG QR_1=B$,
+\[
+  \E(R_1\psi)(Z_T,b_T)=\eps\,\E(B\psi)(Z_T)
+   +O\bigl(e^{-\gamma_*T}+\eps^2+\eps e^{-\gamma_*T/2}\bigr),
+\]
+where the term $e^{-\gamma_*T}$, the bound for $\E(e^{TA}R_1\psi)(Z_0,b_0)$,
+is absent in the stationary ensemble. By Theorem~\ref{thm:kin}(a) applied to
+$B\psi\in C_b^6$, $\E(B\psi)(Z_T)=\E(P_\tau B\psi)(Z_0)+O(\eps)$. By
+Lemma~\ref{lem:T1} with $\chi=R_2\psi$ ($\Pi R_2=0$),
+$\E(R_2\psi)(Z_T,b_T)=O(\eps+e^{-\gamma_*T})$, again without the exponential
+in the stationary ensemble. Collecting the terms gives the statement. In
+the stationary ensemble the means of $R_1u$ and $R_2u$ at $(Z_0,b_0)$ vanish
+by Lemma~\ref{lem:calc}(a), and $u_2=\int_0^\tau P_{\tau-s}L_1P_s\psi\,\dd s$.
+\end{proof}
+
+\begin{corollary}[A corrected closure with smaller defect]\label{cor:corrected}
+In the stationary ensemble define the distribution
+\[
+  f^{(2),\eps}_\tau=S_\tau f_0+\eps^2\Bigl(\int_0^\tau S_{\tau-s}L_1^*S_sf_0\,\dd s
+  -B^*S_\tau f_0\Bigr),
+\]
+that is, $\langle f^{(2),\eps}_\tau,\psi\rangle=\langle f_0,P_\tau\psi
++\eps^2(\int_0^\tau P_{\tau-s}L_1P_s\psi\,\dd s-P_\tau B\psi)\rangle$. Then
+\[
+  \sup_{\nrm{\psi}{C_b^8}\le1}\bigl|\langle f^\eps_\tau-f^{(2),\eps}_\tau,
+  \psi\rangle\bigr|\le C(1+\tau)^2e^{c\tau}\,
+  \bigl(\eps^3+\eps^2e^{-\gamma_*\tau/(2\eps^2)}\bigr)\fM(\tau),
+\]
+against $O(\eps^2)$ for the uncorrected closure. $f^{(2),\eps}_\tau$ is the
+expansion to first order in $\eps^2$ of the solution of
+$\partial_\tau f=(\cL^*+\eps^2L_1^*)f$, $f(0)=f_0$, observed through
+$1-\eps^2B^*$.
+\end{corollary}
+
+\begin{proof}
+Theorem~\ref{thm:second} integrated against $f_0$; the last sentence is
+Duhamel's formula at first order and is a statement about formal
+expansions.
+\end{proof}
+
+\paragraph{Meaning of the two operators.}
+$M^{(2)}=\frac12\sum_k\Re(f_k\otimes\bar f_k/\lambda_k^2)
+=\int_0^\infty u\,\E[F(vu,u)\otimes F(0,0)]\,\dd u$ is the first moment in
+time of the force correlation, where $M$ is its integral. $-\eps^2P_\tau B$
+is the deficit of velocity diffusion accumulated while the particle--field
+correlation builds up: in the simplest case below it is the term
+$-\eps^2\Re(1/\lambda^2)|f|^2$ in $\operatorname{Var}(v_T)=2D\tau-\dots$. It
+vanishes in the white-noise limit $\gamma\to\infty$ at fixed $D$. $L_1$ is
+a fourth-order operator which collects the non-Gaussian fourth-order
+statistics of the force along the perturbed orbit,
+$-\Pi(\cG Q)^3\cG$, minus the reducible part $BL$, and the
+position--velocity cross term $B_X$.
+
+\begin{remark}[Heuristic: the correction is not unique]\label{rem:gauge}
+Formally, a factor $1-\eps^2B^*$ can be moved through
+$e^{\tau(\cL+\eps^2L_1)^*}$ at the cost of a commutator in the generator,
+so $L_1$ is determined only modulo commutators $[\cL,\cdot\,]$ once a
+renormalisation of the initial data or of the observable is allowed. Only
+the combination in \eqref{eq:second} is proved, and no well-posedness is
+claimed for an evolution equation containing $L_1^*$.
+\end{remark}
+
+\begin{proposition}[Uniform field: an exact case]\label{prop:uniform}
+Suppose every $k\in K$ is $0$ and the ensemble is stationary. Then $D$ is
+constant, $c=0$, and for bounded measurable $\psi$ on $\R^d$,
+\[
+  \E\psi(v_T)=\E\bigl(\psi*\mathcal N_{\Sigma}\bigr)(v_0),\qquad
+  \Sigma=2\tau D-2\eps^2\mathfrak B_T,\qquad
+  \mathfrak B_T=\frac12\sum_k\Re(f_k\otimes\bar f_k)\,
+     \Re\Bigl(\frac{1-e^{-\lambda_kT}}{\lambda_k^2}\Bigr),
+\]
+where $\mathcal N_\Sigma$ is the centred Gaussian law with covariance
+$\Sigma$. Consequently, for $\psi\in C_b^4$,
+\[
+  \E\psi(v_T)-\E P_\tau\psi(v_0)
+  =-\eps^2\,\E P_\tau\bigl(\mathfrak B_\infty:\nabla^2\psi\bigr)(v_0)
+   +O\bigl((\eps^4+\eps^2e^{-\gamma_*T})\nrm{\psi}{C_b^4}\bigr).
+\]
+Here $B=\mathfrak B_\infty:\nabla_v^2$ and $L_1=0$ on functions of $v$. If
+$\mathfrak B_\infty\ne0$ (for example one mode with $\omega=0$, where
+$\Re\lambda^{-2}=\gamma^{-2}$), the rate $\eps^2$ in
+Theorems~\ref{thm:kin}(c) and \ref{thm:closure}(a) cannot be improved.
+\end{proposition}
+
+\begin{proof}
+$v_T-v_0=\eps\int_0^T\sum_k\Re(f_ka_k(s))\dd s$ is a centred Gaussian
+vector independent of $v_0$. For $s>r$,
+$\E[\Re(f_ka_k(s))_i\Re(f_ka_k(r))_j]=\frac12\Re(f_k^i\bar f_k^je^{-\lambda_k
+(s-r)})$; symmetrising in $(i,j)$ removes the antisymmetric part, so the
+covariance is $\eps^2\sum_kS^k\int_0^T(T-u)\Re e^{-\lambda_ku}\dd u
+=\eps^2\sum_kS^k\Re[T/\lambda_k-(1-e^{-\lambda_kT})/\lambda_k^2]=\Sigma$. For
+the expansion, $\Sigma(\theta)=2\tau D-2\theta\mathfrak B_T$ is positive
+semidefinite for $\theta\in[0,\eps^2]$ (a convex combination of $2\tau D$
+and $\Sigma$), $\frac{\dd}{\dd\theta}\psi*\mathcal N_{\Sigma(\theta)}
+=-\mathfrak B_T:\nabla^2(\psi*\mathcal N_{\Sigma(\theta)})$ (by Fourier
+transform for Schwartz $\psi$, then by approximation), and
+$|\mathfrak B_T-\mathfrak B_\infty|\le Ce^{-\gamma_*T}$; Taylor's formula to
+second order in $\theta$ gives the claim. $B=\mathfrak B_\infty:\nabla^2$ by
+Lemma~\ref{lem:explicit} with constant $\lambda_k$. Comparing with
+\eqref{eq:second} for $\psi\in C_b^8(\R^d)$ and letting $\eps\to0$ gives
+$\int_0^\tau P_{\tau-s}L_1P_s\psi\,\dd s=0$ for all $\tau$; dividing by
+$\tau$ and letting $\tau\to0$ gives $L_1\psi=0$ for $\psi\in C_b^8$, hence
+$L_1=0$ as a differential operator.
+\end{proof}
+
+\section{Matching to the $N^{1/3}$ layer}
+
+\begin{proposition}\label{prop:match}
+Let $(\bar X,\bar V)$ solve \eqref{eq:limit} from a deterministic point
+$(X_0,v_0)$. There is $C$ depending only on the model such that for
+$\kappa\in\R^d$ and $\tau\in[0,1]$,
+\[
+  \Bigl|\E\exp\bigl(i\kappa\cdot(\bar X_\tau-X_0-v_0\tau)\bigr)
+   -\exp\bigl(-\tfrac13\tau^3\,\kappa\cdot D(v_0)\kappa\bigr)\Bigr|
+  \le C\,|\kappa|\,\tau^2 .
+\]
+In the microscopic variables $\bar Y=(\bar X_{\eps^2t}-X_0)/\eps^2-v_0t$,
+$\kappa=q/\eps^2$, $\tau=\eps^2t\le1$:
+\[
+  \Bigl|\E e^{iq\cdot\bar Y}-\exp\bigl(-\tfrac13\eps^2t^3\,q\cdot D(v_0)q\bigr)\Bigr|
+  \le C|q|\,\eps^2t^2,
+\]
+which is $C|q|s^2\eps^{2/3}$ at $t=s\eps^{-2/3}$.
+\end{proposition}
+
+\begin{proof}
+$\bar X_\tau-X_0-v_0\tau=\int_0^\tau(\bar V_s-v_0)\dd s=\sigma(v_0)\int_0^\tau
+W_s\dd s+E_1+E_2$, with $E_1=\int_0^\tau\!\int_0^s\beta(\bar V_r)\dd r\dd s$
+and $E_2=\int_0^\tau m_s\dd s$, $m_s=\int_0^s(\sigma(\bar V_r)-\sigma(v_0))
+\dd W_r$. $|E_1|\le\frac12\nrm{\beta}{\infty}\tau^2$. For $r\le1$,
+$\E|\bar V_r-v_0|^2\le2\nrm{\beta}{\infty}^2r^2+4r\sup\operatorname{tr}D\le
+C_1r$, so $\E|m_s|^2\le\frac12\operatorname{Lip}(\sigma)^2C_1s^2$ and
+$\E|E_2|\le C\tau^2$. The Gaussian variable $\kappa\cdot\sigma(v_0)\int_0^\tau
+W_s\dd s$ has variance $\kappa\cdot\sigma\sigma^{\mathsf T}\kappa\,\tau^3/3
+=\tfrac23\tau^3\kappa\cdot D(v_0)\kappa$. Finally $|e^{i(a+e)}-e^{ia}|\le|e|$.
+\end{proof}
+
+So the closed kinetic equation contains the orbit-decorrelation law of the
+first note as its short-time, high-wavenumber limit, and it says where that
+law stops: the cubic exponential holds for the limit process as long as
+$\eps^2t^2\ll1$, that is $t\ll N^{1/2}$ ($\tau\ll\eps$); beyond that the
+variation of $D$ along the path and the drift $\beta$ enter. The two
+theorems (first note, valid for $t\ll N^{3/8}$; Theorem~\ref{thm:kin}, valid
+for fixed smooth observables at $t\sim N$) do not overlap as statements
+about the particle, since an observable $e^{iq\cdot x}=e^{i(q/\eps^2)\cdot
+X}$ has $C_b^5$ norm of order $\eps^{-10}$. Bridging them needs a version
+of Theorem~\ref{thm:kin} with constants tracked in the wavenumber. That is
+open.
+
+\section{Numerical check}
+
+Script and output (numpy only; master seed 20261124; exact
+Ornstein--Uhlenbeck updates; velocity-Verlet for the particle with step
+$0.05$):
+\begin{center}
+\texttt{hani-to-algorithms/scripts/orbit\_kinetic\_limit\_check.py}\\
+\texttt{hani-to-algorithms/results/orbit\_kinetic\_limit/orbit\_kinetic\_limit\_check.json}
+\end{center}
+Run on 24 November 2026, 133 s with 10 worker processes. All runs have
+$\tau=1$ and the stationary ensemble unless stated. ``s.e.'' is one Monte
+Carlo standard error.
+
+\paragraph{Limit solvers and their own errors.} In $d=1$ the equation
+$\partial_\tau u=(Du')'+(\theta-1)D'u'$ is solved on a grid of 961 points
+on $[-12,12]$, exactly in time for $\theta=1$. Halving the grid changes
+$u(1,v_0)$ by less than $2\times10^{-5}$ in the two models below
+($2\times10^{-4}$ for $\theta=2$). An independent Euler--Maruyama solution
+of \eqref{eq:limit} (step $1/200$, $9.6\times10^5$ paths) agrees with the
+grid within its standard error in the broad model
+($-5\times10^{-4}\pm8\times10^{-4}$ and $2\times10^{-5}\pm4\times10^{-4}$)
+and within $2.5$ s.e.\ in the sharp one; its step error, estimated by
+doubling the step, is at most $1.7\times10^{-3}$. In $d=2$ only
+Euler--Maruyama is used, with estimated step error at most
+$2.2\times10^{-3}$.
+
+\paragraph{Particle time step.} A run with step $0.1$ against step $0.05$
+on the same field paths ($\eps=0.3536$, $9.6\times10^5$ samples) differs by
+$(-2.5\pm2.1)\times10^{-4}$ for $\tanh v$ and $(2.4\pm1.3)\times10^{-4}$ for
+$e^{-v^2/2}$. The scheme is weakly second order, so the error at step
+$0.05$ is estimated below $10^{-4}$.
+
+\paragraph{A. $d=1$, divergence form and the $\eps^2$ coefficient.}
+``Broad'' model: $k=(1,-0.8,1.5)$, $\gamma=(1.5,2,1.2)$,
+$\omega=(0.5,0.3,-1)$, $f_k=-i\varphi_kk$, $\varphi=(1.8,2.2,1.4)$,
+$v_0=1.2$, where $D=1.726$, $D'=-0.911$. Limit values of
+$(\E\tanh v,\ \E e^{-v^2/2})$:
+\begin{center}
+\begin{tabular}{lll}
+  drift $\theta D'$ & $\tanh v$ & $e^{-v^2/2}$ \\ \hline
+  $\theta=1$: $L=\partial_v(D\partial_v)$ (Proposition~\ref{prop:L}) & 0.29210 & 0.43802 \\
+  $\theta=0$: $L=D\partial_v^2$ & 0.48532 & 0.31335 \\
+  $\theta=2$: $L=\partial_v^2(D\,\cdot)$ & 0.10575 & 0.56066 \\
+\end{tabular}
+\end{center}
+Particle ($2.4\times10^6$ samples per row), with $K_2$ the coefficient of
+$\eps^2$ in \eqref{eq:second} computed from the definitions \eqref{eq:ops}
+on the grid:
+\begin{center}
+\begin{tabular}{rrrrrr}
+  $\eps$ & $t$ & $\E\tanh v$ (s.e.) & error$/\eps^2$ (s.e.) &
+  $\E e^{-v^2/2}$ (s.e.) & error$/\eps^2$ (s.e.) \\ \hline
+  0.5 & 4 & 0.30923 (0.00048) & 0.0685 (0.0019) & 0.43343 (0.00023) & $-0.0184$ (0.0009) \\
+  0.3536 & 8 & 0.30027 (0.00048) & 0.0653 (0.0039) & 0.43542 (0.00023) & $-0.0208$ (0.0018) \\
+  0.25 & 16 & 0.29691 (0.00048) & 0.0770 (0.0077) & 0.43657 (0.00023) & $-0.0232$ (0.0037) \\ \hline
+  \multicolumn{3}{r}{predicted $K_2$ (Theorem~\ref{thm:second})} & 0.0702 & & $-0.0209$ \\
+\end{tabular}
+\end{center}
+The particle selects $\theta=1$ by several hundred standard errors, and the
+error is $\eps^2K_2$ with the predicted $K_2$: the measured ratio is within
+$1.5$ standard errors of $K_2$ in five of the six entries and $2.7$ standard
+errors away for $e^{-v^2/2}$ at $\eps=0.5$, where the $O(\eps^3)$ remainder
+is not negligible. $K_2$ is $-0.0044+0.0746$ for $\tanh v$ and
+$-0.0408+0.0199$ for $e^{-v^2/2}$ (generator part plus terminal part
+$-P_\tau B\psi$); on the coarser grid it is $0.0687$ and $-0.0214$. The
+position-dependent observable $\cos X$, $X=\eps^2x$, differs from its
+Euler--Maruyama limit value $0.3520\pm0.0006$ by $-0.0448$, $-0.0260$,
+$-0.0143$ (s.e.\ $0.0007$): ratios to $\eps^2$ of $-0.18$, $-0.21$,
+$-0.23$, consistent with Theorem~\ref{thm:kin}(c) given the reference's
+step error of $0.0015$.
+
+``Sharp'' model: $k=(1,-0.7,1.6)$, $\gamma=(0.6,0.9,0.5)$, same $\omega$,
+$\varphi=(1.2,1,0.8)$, $1.2\times10^6$ samples. Limit values:
+$\theta=1$: $(0.37239,0.55592)$; $\theta=0$: $(0.61005,0.38010)$;
+$\theta=2$: $(0.15552,0.70812)$.
+\begin{center}
+\begin{tabular}{rrrrr}
+  $\eps$ & $\E\tanh v$ (s.e.) & error$/\eps^2$ (s.e.) &
+  $\E e^{-v^2/2}$ (s.e.) & error$/\eps^2$ (s.e.) \\ \hline
+  0.5 & 0.42763 (0.00057) & 0.221 (0.002) & 0.53131 (0.00030) & $-0.098$ (0.001) \\
+  0.3536 & 0.39612 (0.00058) & 0.190 (0.005) & 0.54243 (0.00029) & $-0.108$ (0.002) \\
+  0.25 & 0.38250 (0.00059) & 0.162 (0.009) & 0.54825 (0.00029) & $-0.123$ (0.005) \\
+  0.1768 & 0.37614 (0.00059) & 0.120 (0.019) & 0.55129 (0.00029) & $-0.148$ (0.009) \\ \hline
+  \multicolumn{2}{r}{predicted $K_2$} & $-0.100$ & & $-0.165$ \\
+\end{tabular}
+\end{center}
+Again $\theta=1$ is selected and the error decreases at least as fast as
+$\eps^2$, but the asymptotic coefficient is \emph{not} reached for
+$\tanh v$ (the measured ratio has not yet changed sign). This is the
+non-uniformity in $\gamma$ listed in Section~1: the next terms carry
+powers of $\eps^2k^2/\gamma^3$, about $0.6$ at $\eps=0.1768$ here. The
+sharp-model rows are therefore a test of the limit and of the bound, not of
+$K_2$.
+
+\paragraph{B. Deterministic initial field (broad model).} $a(0)=(1.5,\,-i,\,
+0.8+0.6i)$, $x_0=0$, $9.6\times10^5$ samples. Remark~\ref{rem:slip} gives
+$\delta v=1.990$ and first-order coefficients $(0.6580,-0.1625)$;
+Theorem~\ref{thm:second} gives second-order coefficients
+$R_2u+K_2=(0.2726,-0.1827)$.
+\begin{center}
+\begin{tabular}{rrrrrrr}
+  & \multicolumn{3}{c}{$\E\tanh v-u$} & \multicolumn{3}{c}{$\E e^{-v^2/2}-u$} \\
+  $\eps$ & measured (s.e.) & order $\eps$ & to $\eps^2$ &
+  measured (s.e.) & order $\eps$ & to $\eps^2$ \\ \hline
+  0.3536 & 0.2537 (0.0007) & 0.2327 & 0.2667 & $-0.0817$ (0.0004) & $-0.0575$ & $-0.0803$ \\
+  0.25 & 0.1772 (0.0007) & 0.1645 & 0.1815 & $-0.0530$ (0.0004) & $-0.0406$ & $-0.0520$ \\
+  0.1768 & 0.1231 (0.0007) & 0.1163 & 0.1248 & $-0.0352$ (0.0004) & $-0.0287$ & $-0.0344$ \\
+\end{tabular}
+\end{center}
+The defect is $O(\eps)$ with the predicted coefficient; the residual after
+the second-order prediction for $\tanh v$, $-0.0130$, $-0.0043$, $-0.0018$,
+scales as $\eps^3$ (ratios $-0.29$, $-0.28$, $-0.32$).
+
+\paragraph{C. $d=2$, a non-divergence drift.} Four circularly polarised
+modes $f_k=\hat k+i\hat k^\perp$ with $|k|\in[1.8,2.2]$ and directions
+within $\pm0.55$ rad of the first axis, $\gamma_k\in[1.8,2.2]$,
+$v_0=(0.2,0)$. There $D=0.999\,I$, $\nabla\cdot D=(0.015,-0.022)$ and
+$c=(0.014,-0.902)$. Limit by Euler--Maruyama and particle
+($9.6\times10^5$ samples each; s.e.\ $0.0007$, $0.0007$, $0.0003$,
+$0.0012$ in the four columns):
+\begin{center}
+\begin{tabular}{lrrrr}
+  & $\tanh v_1$ & $\tanh v_2$ & $e^{-|v|^2/2}$ & $v_2$ (unbounded) \\ \hline
+  limit, drift $\nabla\cdot D+c$ (Proposition~\ref{prop:L}) & 0.1191 & $-0.2258$ & 0.4118 & $-0.4171$ \\
+  limit, drift $\nabla\cdot D$ only & 0.1154 & $-0.0017$ & 0.4311 & $-0.0049$ \\
+  limit, no drift & 0.0951 & $-0.0004$ & 0.3737 & $-0.0018$ \\ \hline
+  particle, $\eps=0.5$ & 0.1211 & $-0.2074$ & 0.4288 & $-0.3708$ \\
+  particle, $\eps=0.3536$ & 0.1197 & $-0.2168$ & 0.4200 & $-0.3952$ \\
+  particle, $\eps=0.25$ & 0.1195 & $-0.2202$ & 0.4158 & $-0.4041$ \\
+\end{tabular}
+\end{center}
+The particle converges to the limit with the drift $c$ and is far from
+both alternatives; the errors in $\tanh v_2$ ($0.0184$, $0.0090$, $0.0056$)
+and in $e^{-|v|^2/2}$ ($0.0170$, $0.0082$, $0.0040$) are $0.07\,\eps^2$ to
+$0.09\,\eps^2$. The mean of $v_2$ is outside the hypotheses ($\psi$
+unbounded) and is shown only for interpretation.
+
+\paragraph{Separation of errors.} At $\eps=0.25$ in the broad model: model
+error $\eps^2K_2\approx4.4\times10^{-3}$ and $-1.3\times10^{-3}$; Monte
+Carlo s.e.\ $4.8\times10^{-4}$ and $2.3\times10^{-4}$; particle time-step
+error below $10^{-4}$; limit-solver error below $10^{-5}$.
+
+\section{What this gives the benchmark, and what remains}
+
+\begin{enumerate}
+  \item \textbf{A case where the closure defect is a theorem with a known
+    constant.} For the linear kinetic closure \eqref{eq:closed} of the
+    prescribed-field model, the weak defect is $\eps^2K_2+O(\eps^3)$ with
+    $K_2$ computable from \eqref{eq:ops}; a learned or history-aware
+    correction to the closure can be scored against $K_2$, and a method
+    that claims a defect below $\eps^2$ without modelling $B$ and $L_1$ is
+    wrong in this model.
+  \item \textbf{Initial layers.} The defect is $O(1)$ for a few correlation
+    times and depends on the initial field state at $O(\eps)$. Any layered
+    scheme must either start layers from the relaxed (stationary) field
+    state or carry the slip $\eps\,\delta v$.
+  \item \textbf{Still missing.} Self-consistency, back-reaction, absence
+    of Markov structure, sharp resonances and non-Gaussian data, as in the
+    first note; uniformity in $\gamma$; uniformity in wavenumber (the
+    bridge to the first note); and concentration of the empirical measure
+    in a common field.
+\end{enumerate}
+
+\begin{thebibliography}{99}
+\bibitem{BB} C.~Bardos and N.~Besse, Diffusion limit of the Vlasov
+  equation in the weak turbulent regime, \emph{J. Math. Phys.} 62 (2021).
+  [Details not verified.]
+\bibitem{DGL} D.~D\"urr, S.~Goldstein and J.~L.~Lebowitz, Asymptotic
+  motion of a classical particle in a random potential in two dimensions:
+  Landau model, \emph{Comm. Math. Phys.} 113 (1987). [Details not verified.]
+\bibitem{EK} S.~N.~Ethier and T.~G.~Kurtz, \emph{Markov Processes:
+  Characterization and Convergence}, Wiley, 1986.
+\bibitem{Friedman} A.~Friedman, \emph{Stochastic Differential Equations
+  and Applications}, vol.~1, Academic Press, 1975. [Chapter on dependence
+  on initial data; theorem number not checked.]
+\bibitem{KP} H.~Kesten and G.~C.~Papanicolaou, A limit theorem for
+  stochastic acceleration, \emph{Comm. Math. Phys.} 78 (1980).
+\bibitem{Khas} R.~Z.~Khasminskii, A limit theorem for solutions of
+  differential equations with random right-hand side, \emph{Theory Probab.
+  Appl.} 11 (1966).
+\bibitem{KR} T.~Komorowski and L.~Ryzhik, Diffusion in a weakly random
+  Hamiltonian flow, \emph{Comm. Math. Phys.} 263 (2006). [Details not
+  verified.]
+\bibitem{Kunita} H.~Kunita, \emph{Stochastic Flows and Stochastic
+  Differential Equations}, Cambridge University Press, 1990. [Theorem
+  number not checked.]
+\bibitem{Kushner} H.~J.~Kushner, \emph{Approximation and Weak Convergence
+  Methods for Random Processes}, MIT Press, 1984.
+\bibitem{PSV} G.~C.~Papanicolaou, D.~Stroock and S.~R.~S.~Varadhan,
+  Martingale approach to some limit theorems, in \emph{Papers from the Duke
+  Turbulence Conference}, Duke Univ.\ Math.\ Ser.~III, 1977. [Details not
+  verified.]
+\bibitem{PS} G.~A.~Pavliotis and A.~M.~Stuart, \emph{Multiscale Methods:
+  Averaging and Homogenization}, Springer, 2008.
+\end{thebibliography}
+
+\end{document}
