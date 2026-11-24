@@ -1,0 +1,1360 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\cE}{\mathcal{E}}
+\newcommand{\sE}{\mathsf{E}}
+\newcommand{\sL}{\mathsf{L}}
+\newcommand{\sW}{\mathsf{W}}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+\newcommand{\nrm}[2]{\|#1\|_{#2}}
+\newcommand{\rhoeff}{\varrho}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Orbit decorrelation without Markov structure\\
+and with sharp resonances}
+\author{Working note}
+\date{24 November 2026}
+
+\begin{document}
+\maketitle
+
+This note extends \texttt{orbit\_decorrelation\_theorem.tex} (cited as
+\cite{Note}), whose Theorem~1 treats a particle in a Gaussian field with
+finitely many Fourier modes whose amplitudes are Ornstein--Uhlenbeck
+processes with damping $\gamma_k>0$. It addresses gaps 3 (no Markov
+structure) and 4 (sharp resonances) of the last section of \cite{Note}.
+
+\section{What is and is not proved}
+
+\paragraph{Proved.}
+\begin{itemize}
+  \item \textbf{Theorem~\ref{thm:main}} (no Markov assumption). The field
+    has finitely many spatial Fourier modes; the mode amplitudes are
+    arbitrary independent stationary circular Gaussian processes. The only
+    quantitative hypothesis is on the time covariances $r_k(u)$:
+    $\int_0^\infty u^3e^{a u^\beta/2}|r_k(u)|\,\dd u<\infty$ for some $a>0$,
+    $\beta\in(0,1]$. Then
+    $\E e^{iq\cdot Y_t} = \exp(-\tfrac13\eps^2t^3\,q\cdot Dq)$ up to
+    $C_2\eps^2t^2 + C_3\eps^3t^{7/2}$ (for $t\ge1$), with
+    $D = \int_0^\infty\E[F(v_0u,u)\otimes F(0,0)]_{\mathrm{sym}}\dd u$. The
+    constants are explicit and depend on $\eps,t$ only through
+    $\chi = \eps\max(t,t^{2-\beta})$, which stays bounded at
+    $t\sim\eps^{-2/3}$ when $\beta\ge\frac12$. At $t = sN^{1/3}$,
+    $\eps = N^{-1/2}$, the error is $O(N^{-1/3})$. This also improves the
+    rate $O(N^{-1/6})$ and the range $t\ll N^{3/8}$ of \cite[Theorem~1]{Note}
+    to $O(N^{-1/3})$ and $t\ll N^{3/7}$ (Corollary~\ref{cor:ou}).
+  \item \textbf{Proposition~\ref{prop:second}} (second-order terms). The
+    part of the error of order $\eps^2t^2$ is identified:
+    $\E e^{iq\cdot Y_t} = e^{-\eps^2t^3d/3}(1+\frac12\eps^2t^2(\kappa_1-i\kappa_2))$
+    up to $O(\eps^2t+\eps^3t^{7/2})$, with explicit $\kappa_1$ (the
+    first-iterate variance correction) and $\kappa_2$ (a drift). The
+    Monte Carlo deviations agree with it.
+  \item \textbf{Corollary~\ref{cor:sharp}} (sharp resonance). For
+    \emph{undamped} modes with a continuum of frequencies, spectral density
+    $S_k(\omega)$, the theorem applies with
+    $D = \frac\pi2\sum_k\Re(f_k\otimes\bar f_k)\,S_k(k\cdot v_0)$: a genuine
+    delta-function resonance. The constants depend on the decay of the
+    Fourier transform of $S_k$, i.e.\ on its smoothness in $\omega$, and on
+    no damping. The smoothness required is analytic or Gevrey of order at
+    most $2$ (covariance decay $e^{-a|u|^\beta}$, $\beta\ge\frac12$).
+  \item \textbf{Proposition~\ref{prop:pp}} (necessity of the continuum). For
+    one undamped mode (pure point spectrum) the conclusion fails: on
+    resonance the particle is trapped, $|Y_t|<2\pi/|k|$ for all time, the
+    law of $Y_t$ depends on $(\eps,t)$ only through $\eps^{1/2}t$, and no
+    $t^3$ law holds for any $D\in[0,\infty]$; off resonance
+    $|Y_t|\le C\eps t$ and the time integral defining $D$ does not converge.
+  \item \textbf{Theorem~\ref{thm:joint}} and
+    \textbf{Proposition~\ref{prop:trap}} (narrow lines; the threshold
+    $\eps^{1/2}$). For spectral lines of width $a\to0$ jointly with
+    $\eps\to0$, the $t^3$ law holds at the diffusion time
+    $(a/\eps^2)^{1/3}$ with error $O((\eps^{1/2}/a)^{4/3})$. For one resonant
+    Ornstein--Uhlenbeck mode with $\gamma\le c_*(\eps|k||f|)^{1/2}$ it fails
+    by at least $\frac14$. So the condition ``width $\gg\eps^{1/2}$'' is
+    sharp in its power of $\eps$.
+\end{itemize}
+
+\paragraph{Not proved.}
+\begin{itemize}
+  \item Covariances decaying only polynomially, or like $e^{-a|u|^\beta}$
+    with $\beta<\frac12$ (spectral densities of finite smoothness). The
+    missing step is one specific estimate, a moment bound for the tangent
+    flow of the orbit over lags between $\eps^{-1/2}$ and $\eps^{-2/3}$; see
+    Section~\ref{sec:open}. Stated as Conjecture~\ref{conj:poly}; a numerical
+    test is consistent with it.
+  \item Fields with a continuous \emph{spatial} spectrum on $\mathbb{R}^d$.
+    The proof uses $\sup_y|\nabla^jG(y,\tau)|$, which is finite for finitely
+    many (or summably many) wavevectors and infinite for a generic
+    stationary field on $\mathbb{R}^d$.
+  \item The resonance-broadening regime proper (many lines, each narrower
+    than $\eps^{1/2}$, overlapping after broadening). Only heuristics are
+    given (Section~\ref{sec:dupree}).
+  \item Everything else in \cite[Section~8]{Note}: self-consistency,
+    back-reaction, non-Gaussian data, and the closure itself.
+\end{itemize}
+
+\paragraph{Prior art; what is claimed.} The themes are classical. The
+diffusion limit for a particle in a weak random force field is the
+stochastic acceleration problem: Kesten and Papanicolaou \cite{KP}, D\"urr,
+Goldstein and Lebowitz \cite{DGL}, Komorowski and Ryzhik \cite{KR}, and, for
+waves, Bal, Komorowski and Ryzhik \cite{BKR}; perturbed test functions for
+non-Markov noise are due to Kushner \cite{Kushner} and Papanicolaou, Stroock
+and Varadhan \cite{PSV}; the quasilinear diffusion limit of the Vlasov
+equation is treated by Bardos and Besse \cite{BardosBesse}, and particles in
+a field of waves with random phases by Elskens and Pardoux
+\cite{ElskensPardoux}. The tool used here, Gaussian integration by parts, is
+the Furutsu--Novikov formula \cite{Furutsu,Novikov}, i.e.\ the
+Cameron--Martin theorem. Trapping in a single wave is \cite{ONeil65}; the
+overlap criterion is \cite{Chirikov}; resonance broadening is \cite{Dupree}.
+No novelty of method is claimed. What this note contributes is a set of
+complete proofs, with explicit constants, of statements in the form needed
+by \cite{Note} and \texttt{plasma\_extension.tex}: an explicit error at the
+scale $t\sim N^{1/3}$ under covariance hypotheses only, including processes
+that are deterministic in the sense of prediction theory, for which mixing
+hypotheses fail. The references were cited from memory and were not
+re-checked against the sources in this session; the statements attributed to
+them above are deliberately generic.
+
+\section{Setting}
+
+\subsection{The field}
+
+Fix a finite set $K\subset\mathbb{R}^d\setminus\{0\}$ and vectors
+$f_k\in\mathbb{C}^d$. Let $(a_k)_{k\in K}$ be complex-valued stochastic
+processes on $\mathbb{R}$ such that the real and imaginary parts of all
+$a_k(\tau)$ are jointly Gaussian and centred, the $a_k$ have continuous
+sample paths, and
+\begin{equation}
+  \E\,a_k(\tau)\overline{a_l(\sigma)} = \delta_{kl}\,r_k(\tau-\sigma),
+  \qquad \E\,a_k(\tau)a_l(\sigma) = 0, \qquad r_k(0) = 1 .
+  \label{eq:cov}
+\end{equation}
+So the $a_k$ are independent, stationary and circular; $r_k$ is continuous,
+positive definite, $r_k(-u) = \overline{r_k(u)}$. No Markov property and no
+mixing property is assumed. The field is
+\begin{equation}
+  F(x,\tau) = \sum_{k\in K}\Re\bigl(f_k\,a_k(\tau)\,e^{ik\cdot x}\bigr),
+\end{equation}
+a centred Gaussian field, stationary in space and time, with covariance
+\begin{equation}
+  R(x,u) := \E\bigl[F(x,u)\otimes F(0,0)\bigr]
+  = \frac12\sum_{k\in K}\Re\bigl(f_k\otimes\bar f_k\;r_k(u)\,e^{ik\cdot x}\bigr).
+  \label{eq:R}
+\end{equation}
+The law of $F$ is determined by $R$, and every hypothesis below is a
+hypothesis on $R$ (apart from continuity of paths, which follows for
+instance from $\int|\omega|\,\mu_k(\dd\omega)<\infty$ for the spectral
+measure $\mu_k$ of $a_k$, by Kolmogorov's criterion). The model of
+\cite{Note} is the case $r_k(u) = e^{-\gamma_k|u| - i\omega_ku}$.
+
+The particle obeys $\dot x = v$, $\dot v = \eps F(x,\tau)$,
+$(x,v)(0) = (x_0,v_0)$. As in \cite{Note} put $Y = x-x_0-v_0\tau$,
+$w = v-v_0$, $b_k(\tau) = a_k(\tau)e^{ik\cdot(x_0+v_0\tau)}$. Then $(b_k)$
+has the same properties as $(a_k)$ with $r_k$ replaced by
+\begin{equation}
+  \rho_k(u) = r_k(u)\,e^{ik\cdot v_0u}, \qquad |\rho_k| = |r_k| ,
+\end{equation}
+and
+\begin{equation}
+  \dot Y = w,\qquad \dot w = \eps\,G(Y,\tau),\qquad
+  G(y,\tau) = \sum_{k\in K}\Re\bigl(f_k\,b_k(\tau)\,e^{ik\cdot y}\bigr),
+  \qquad Y_0 = w_0 = 0 .
+  \label{eq:Yw}
+\end{equation}
+For every continuous path $b$ this has a unique global $C^1$ solution, since
+$G$ is smooth in $y$, continuous in $\tau$ and $|G(y,\tau)|\le\Gamma_0(\tau)$
+with
+\begin{equation}
+  \Gamma_j(\tau) = \sum_{k\in K}|f_k|\,|k|^j\,|b_k(\tau)|, \qquad j = 0,1 .
+\end{equation}
+Also $|\nabla_yG(y,\tau)|\le\Gamma_1(\tau)$ in operator norm. The processes
+$\Gamma_j$ are stationary, and since $|b_k(\tau)|^2$ is exponentially
+distributed with mean $1$, $\E\exp(c\,\Gamma_j(0))<\infty$ for every
+$c\in\mathbb{R}$.
+
+\subsection{The diffusion matrix}
+
+Let
+\begin{equation}
+  D = \int_0^\infty \E\bigl[F(v_0u,u)\otimes F(0,0)\bigr]_{\mathrm{sym}}\dd u
+    = \frac12\sum_{k\in K}\Re\bigl(f_k\otimes\bar f_k\bigr)
+      \int_0^\infty\Re\rho_k(u)\,\dd u ,
+  \label{eq:D}
+\end{equation}
+whenever $r_k\in L^1$. (By \eqref{eq:R},
+$R(v_0u,u) = \frac12\sum\Re(f_k\otimes\bar f_k\rho_k(u))$; the real part of
+$f_k\otimes\bar f_k$ is symmetric and its imaginary part antisymmetric.) For
+$q\in\mathbb{R}^d$ write $B_k = q\cdot f_k$ and
+\begin{equation}
+  c(u) = \E\bigl[q\cdot G(0,u)\;q\cdot G(0,0)\bigr]
+       = \frac12\sum_k|B_k|^2\,\Re\rho_k(u),
+  \qquad d = q\cdot Dq = \int_0^\infty c(u)\,\dd u .
+\end{equation}
+The function $c$ is even, continuous, positive definite and integrable, so
+$d = \frac12\int_{\mathbb{R}}c\ge0$ (it is $\pi$ times the spectral density
+of $q\cdot G(0,\cdot)$ at frequency zero). In the model of \cite{Note},
+$\int_0^\infty\Re\rho_k = \Re(1/\lambda_k)$ and \eqref{eq:D} is the matrix
+of \cite{Note}.
+
+\subsection{Hypothesis and constants}
+
+\noindent\textbf{Hypothesis (H).} There are $a>0$ and $\beta\in(0,1]$ such
+that for every $k\in K$
+\begin{equation}
+  \vartheta_k(j) := \int_0^\infty u^j\,e^{a u^\beta/2}\,|r_k(u)|\,\dd u<\infty
+  \qquad\text{for } j = 3 \text{ (hence for all } 0\le j\le3).
+\end{equation}
+Given $\eps>0$, $t>0$ put
+\begin{equation}
+  \chi = \eps\max(t,\,t^{2-\beta}),
+\end{equation}
+and define, with $M_2 = (\E\Gamma_0(0)^2)^{1/2}$,
+\begin{align}
+  \sE &= \bigl(\E\,e^{\chi\Gamma_1(0)/a}\bigr)^{1/2}, &
+  \sL &= \bigl(\E\,\Gamma_1(0)^2e^{\chi\Gamma_1(0)/a}\bigr)^{1/2}, \notag\\
+  W_0 &= \sE\sum_k|f_k|^2\vartheta_k(0), &
+  W_1 &= \frac{M_2\sE}{2a}\sum_k|f_k|^2|k|\,\vartheta_k(1-\beta), \qquad
+  \sW = (W_0+\chi W_1)^{1/2}.
+  \label{eq:EL}
+\end{align}
+These are finite and nondecreasing in $\chi$. Finally let
+$m_k(j) = \int_0^\infty u^j|r_k(u)|\,\dd u$ and
+\begin{equation}
+\begin{aligned}
+  C_2 &= \frac34\sum_k|B_k|^2m_k(1) + \frac14\sum_k|B_k||f_k||k|\,m_k(1), \\
+  C_{3a} &= \frac{\sL}{4a}\sum_k|B_k||f_k|(|q|+|k|)\,\vartheta_k(3-\beta), &
+  C_{3b} &= \frac{2}{15}\,\sW\sum_k|B_k|^2|k|\,m_k(2), \\
+  C_{3c} &= \frac{\sL|q|}{6a}\sum_k|B_k||f_k|\,\vartheta_k(2-\beta), &
+  C_{3d} &= \frac{8}{105}\,\sW\sum_k|B_k|^2|k|\,m_k(1).
+\end{aligned}
+\label{eq:consts}
+\end{equation}
+
+\section{Results}
+
+\begin{theorem}[Orbit decorrelation without Markov structure]\label{thm:main}
+Assume \eqref{eq:cov} and \textup{(H)}. For every $q\in\mathbb{R}^d$,
+$\eps>0$ and $t>0$,
+\begin{equation}
+  \Bigl|\,\E\,e^{iq\cdot Y_t} - \exp\!\Bigl(-\tfrac13\,\eps^2t^3\,q\cdot Dq\Bigr)\Bigr|
+  \;\le\; C_2\,\eps^2t^2
+  + \eps^3\bigl(C_{3a}t^2 + C_{3b}t^{5/2} + C_{3c}t^3 + C_{3d}t^{7/2}\bigr),
+  \label{eq:main}
+\end{equation}
+with $D$ given by \eqref{eq:D} and the constants by \eqref{eq:consts}; they
+depend on $q$, $K$, $(f_k)$, $(|r_k|)$, $a$, $\beta$ and, through $\sE$,
+$\sL$, $\sW$ only, on $\chi = \eps\max(t,t^{2-\beta})$, monotonically. The
+bound does not depend on $x_0$, and depends on $v_0$ only through $D$.
+\end{theorem}
+
+\begin{corollary}[The scale $N^{1/3}$]\label{cor:law}
+Assume \textup{(H)} with $\beta\ge\frac12$. Let $\eps = N^{-1/2}\le1$ and
+$t = sN^{1/3}\ge1$. Then $\chi\le\max(s,s^{2-\beta})$ and
+\[
+  \Bigl|\E\,e^{iq\cdot Y_t} - \exp\!\bigl(-\tfrac13s^3\,q\cdot Dq\bigr)\Bigr|
+  \le \bigl(C_2s^2 + (C_{3a}+C_{3b}+C_{3c}+C_{3d})\,s^{7/2}\bigr)N^{-1/3},
+\]
+with the constants evaluated at $\chi = \max(s,s^{2-\beta})$. Hence $Y_t$
+converges in law to a centred Gaussian vector with covariance
+$\frac23s^3D$. For $\beta=1$ the bound \eqref{eq:main} is non-trivial for
+$1\ll t\ll N^{3/7}$.
+\end{corollary}
+
+\begin{proof}
+$\eps t^{2-\beta} = s^{2-\beta}\eps^{1-\frac23(2-\beta)}
+= s^{2-\beta}\eps^{(2\beta-1)/3}\le s^{2-\beta}$ and
+$\eps t = s\eps^{1/3}\le s$. Since $t\ge1$, each power of $t$ inside the
+bracket of \eqref{eq:main} is at most $t^{7/2}$;
+$\eps^2t^2 = s^2\eps^{2/3}$ and $\eps^3t^{7/2} = s^{7/2}\eps^{2/3}$.
+Convergence in law follows from L\'evy's theorem. For $\beta=1$,
+$\chi=\eps t$ is bounded for $t\le\eps^{-1}$ and
+$\eps^3t^{7/2}\ll1$ iff $t\ll\eps^{-6/7}$.
+\end{proof}
+
+\begin{corollary}[The Markov model, improved rate]\label{cor:ou}
+In the model of \cite{Note} \textup{(}$r_k(u) = e^{-\gamma_k|u|-i\omega_ku}$,
+$\gamma_k>0$\textup{)}, \textup{(H)} holds with $\beta=1$ and
+$a = \min_k\gamma_k$. Hence the conclusion of \cite[Theorem~1]{Note} holds
+with error $O((s^2+s^{7/2})N^{-1/3})$ at $t = sN^{1/3}$, instead of
+$O((s+s^4)N^{-1/6})$, and is non-trivial for $1\ll t\ll N^{3/7}$ instead of
+$N^{3/8}$.
+\end{corollary}
+
+\begin{proof}
+Ornstein--Uhlenbeck processes have continuous paths and
+$e^{au/2}|r_k(u)|\le e^{-\gamma_ku/2}$. Apply Corollary~\ref{cor:law}.
+\end{proof}
+
+The gain over \cite{Note} comes from two places: integration by parts uses
+the vanishing mean of the first-order term (there is no $C_1\eps t$ term),
+and the same integration by parts yields the diffusive bound
+$\E|w_\tau|^2\lesssim\eps^2\tau$ (Lemma~\ref{lem:w}), which the Remark after
+the proof in \cite{Note} asked for. The price: as $a\to0$ the constants here
+grow like $\exp(c/a^2)$ at fixed $\chi$, through $\sE$. Used at the right
+scale they do not (Theorem~\ref{thm:joint}).
+
+\begin{corollary}[Sharp resonance]\label{cor:sharp}
+Let $a_k(\tau) = \int e^{-i\omega\tau}Z_k(\dd\omega)$ be undamped
+superpositions of oscillations: $r_k(u) = \int e^{-i\omega u}S_k(\omega)\,\dd\omega$
+with $S_k$ a probability density. Assume \textup{(H)} and continuity of
+paths. Then $S_k$ has a continuous version, Theorem~\ref{thm:main} and
+Corollary~\ref{cor:law} hold, and
+\begin{equation}
+  D = \frac\pi2\sum_{k\in K}\Re\bigl(f_k\otimes\bar f_k\bigr)\,S_k(k\cdot v_0),
+  \qquad
+  q\cdot Dq = \pi\sum_{k\in K}\tfrac12|q\cdot f_k|^2
+     \int S_k(\omega)\,\delta(\omega-k\cdot v_0)\,\dd\omega .
+  \label{eq:Dsharp}
+\end{equation}
+The constants in \eqref{eq:main} depend on $S_k$ only through the weighted
+integrals $\vartheta_k(j)$, $m_k(j)$ of $|r_k| = |\widehat{S_k}|$, uniformly
+in $v_0$.
+\end{corollary}
+
+\begin{proof}
+$r_k\in L^1$ by (H), so $S_k(\omega) = (2\pi)^{-1}\int r_k(u)e^{i\omega u}\dd u$
+is a continuous version. Since $\rho_k(-u) = \overline{\rho_k(u)}$,
+$\int_0^\infty\Re\rho_k = \frac12\int_{\mathbb{R}}\rho_k(u)\,\dd u
+= \frac12\int_{\mathbb{R}}r_k(u)e^{ik\cdot v_0u}\dd u = \pi S_k(k\cdot v_0)$.
+Insert in \eqref{eq:D}.
+\end{proof}
+
+\begin{remark}[Which spectral densities]\label{rem:spec}
+(i) Gaussian lines $S_k(\omega) = (2\pi\sigma_k^2)^{-1/2}
+e^{-(\omega-\omega_k)^2/2\sigma_k^2}$ give
+$r_k(u) = e^{-i\omega_ku-\sigma_k^2u^2/2}$: (H) holds with $\beta=1$ and
+every $a$. These processes have no damping in any sense: since
+$\int\log S_k(\omega)\,(1+\omega^2)^{-1}\dd\omega = -\infty$ they are
+deterministic in the sense of prediction theory (the future is a function of
+the past), so the $\sigma$-fields of past and future are not asymptotically
+independent (no strong or $\rho$-mixing) and conditional-expectation
+correctors are not available (Remark~\ref{rem:kushner}). Decorrelation along the orbit
+is phase mixing only.
+
+(ii) (H) with $\beta=1$ holds if $S_k$ extends analytically to a strip
+$|\Im\omega|<a'$, $a'>a/2$, with $\int|S_k(\omega+i\eta)|\dd\omega$ bounded
+for $|\eta|<a'$ (shift the contour; then $|r_k(u)|\le Ce^{-a''|u|}$ for
+$a''<a'$).
+
+(iii) Compactly supported densities cannot be analytic. By a standard fact
+that is not reproved here, a compactly supported density of Gevrey class
+$s>1$ has $|r_k(u)|\le Ce^{-c|u|^{1/s}}$, so (H) holds with $\beta = 1/s$,
+and Corollary~\ref{cor:law} applies for $s\le2$.
+
+(iv) Finite smoothness, $S_k\in C^m$ with compact support, gives only
+$|r_k(u)|\lesssim|u|^{-m}$ and is not covered (Section~\ref{sec:open}).
+\end{remark}
+
+\section{Tools}
+
+\subsection{Gaussian integration by parts}
+
+Fix $\tau>0$ and let $\mathcal{C} = C([0,\tau];\mathbb{C}^K)$ with the
+supremum norm; $b|_{[0,\tau]}$ is a random element of $\mathcal{C}$.
+
+\begin{lemma}[Cameron--Martin]\label{lem:ibp}
+Let $\xi$ be a real random variable in the closed real-linear span of
+$\{\Re b_l(\sigma),\Im b_l(\sigma)\}$, with variance $\varsigma^2$, and let
+$h\in\mathcal{C}$, $h_l(\sigma) = \E[\xi\,b_l(\sigma)]$. Let
+$\Phi:\mathcal{C}\to\mathbb{C}$ be Borel with $\Phi(b)\in L^2$, and suppose
+that almost surely $s\mapsto\Phi(b+sh)$ is $C^1$ on $[-1,1]$ with
+$\sup_{|s|\le1}|\partial_s\Phi(b+sh)|\le\Xi$, $\E\,\Xi<\infty$. Then
+\[
+  \E\bigl[\xi\,\Phi(b)\bigr] = \E\bigl[\partial_s\Phi(b+sh)\big|_{s=0}\bigr].
+\]
+\end{lemma}
+
+\begin{proof}
+Let $\dd\PP_s = e^{s\xi-s^2\varsigma^2/2}\dd\PP$, a probability measure.
+For a finite vector $X$ of real coordinates of $b$ (real and imaginary parts
+at finitely many times), $(\xi,X)$ is centred Gaussian, so for
+$\lambda$ real
+\[
+  \E_s\,e^{i\lambda\cdot X}
+  = e^{-s^2\varsigma^2/2}\,\E\,e^{s\xi+i\lambda\cdot X}
+  = \exp\bigl(is\,\lambda\cdot\E[\xi X] - \tfrac12\E(\lambda\cdot X)^2\bigr),
+\]
+which is the characteristic function of $X+s\E[\xi X]$ under $\PP$. Finite
+dimensional distributions determine a Borel law on $\mathcal{C}$, so the law
+of $b$ under $\PP_s$ is the law of $b+sh$ under $\PP$. Since
+$\Phi(b)\in L^2$ and $e^{s\xi}\in L^2$, applying this to $|\Phi|$ and then
+to $\Phi$ gives $\Phi(b+sh)\in L^1$ and
+\[
+  \E\,\Phi(b+sh) = \E\bigl[\Phi(b)\,e^{s\xi-s^2\varsigma^2/2}\bigr],
+  \qquad|s|\le1 .
+\]
+Differentiate at $s=0$. On the right, $|e^x-1|\le|x|e^{|x|}$ gives
+$|s|^{-1}|e^{s\xi-s^2\varsigma^2/2}-1|\le(|\xi|+\varsigma^2)e^{|\xi|+\varsigma^2}\in L^2$,
+so dominated convergence yields $\E[\Phi\,\xi]$. On the left the difference
+quotients are bounded by $\Xi$.
+\end{proof}
+
+\subsection{Variations of the orbit}
+
+For $h\in\mathcal{C}$ let $H_h(y,\sigma) = \sum_l\Re(f_lh_l(\sigma)e^{il\cdot y})$
+be the corresponding shift of the field. Let
+$A(\sigma) = \nabla_yG(Y_\sigma,\sigma)$ (the matrix
+$\partial_{y_j}G_i$), so $|A(\sigma)|\le\Gamma_1(\sigma)$, and for
+$0\le\sigma\le\tau$ let $J(\tau,\sigma)$ be the real $d\times d$ matrix
+solving
+\begin{equation}
+  \partial_\tau^2J(\tau,\sigma) = \eps A(\tau)J(\tau,\sigma),\qquad
+  J(\sigma,\sigma) = 0,\quad\partial_\tau J(\sigma,\sigma) = I .
+  \label{eq:J}
+\end{equation}
+
+\begin{lemma}[First variation]\label{lem:var}
+Let $(Y^s,w^s)$ be the solution of \eqref{eq:Yw} for the path $b+sh$. It is
+$C^1$ in $s$, and $(\delta Y,\delta w) = \partial_s(Y^s,w^s)|_{s=0}$ is
+\begin{equation}
+  \delta Y_\tau = \eps\int_0^\tau J(\tau,\sigma)\,H_h(Y_\sigma,\sigma)\,\dd\sigma,
+  \qquad
+  \delta w_\tau = \eps\int_0^\tau\partial_\tau J(\tau,\sigma)\,H_h(Y_\sigma,\sigma)\,\dd\sigma .
+  \label{eq:var}
+\end{equation}
+Moreover, with $c_h = \sum_l|f_l|(1+|l|)\sup_{[0,\tau]}|h_l|$, for $|s|\le1$,
+\[
+  |\partial_sY^s_\tau| + |\partial_sw^s_\tau|
+  \le 2\eps\tau c_h\exp\Bigl(\tfrac{\tau}{2}
+     + \tfrac{\eps}{2}\int_0^\tau(\Gamma_1(r)+c_h)\,\dd r\Bigr),
+  \qquad
+  |w^s_\tau|\le\eps\int_0^\tau(\Gamma_0(r)+c_h)\,\dd r ,
+\]
+and the right-hand sides have finite moments of all orders.
+\end{lemma}
+
+\begin{proof}
+The vector field $(w,\eps G(y,\sigma)+s\eps H_h(y,\sigma))$ is smooth in
+$(y,w,s)$ and continuous in $\sigma$, so the solution is $C^1$ in $s$ and
+its derivative solves the linearized system
+$\partial_\sigma\delta Y = \delta w$,
+$\partial_\sigma\delta w = \eps\nabla(G+sH_h)(Y^s_\sigma,\sigma)\delta Y
++ \eps H_h(Y^s_\sigma,\sigma)$ with zero initial data. At $s=0$, variation
+of constants gives \eqref{eq:var}: the solution of the homogeneous system
+started at time $\sigma$ from $(0,e)$ is $(J(\cdot,\sigma)e,\partial J(\cdot,\sigma)e)$.
+For $|s|\le1$, $|\nabla(G+sH_h)|\le\Gamma_1+c_h$ and $|H_h|\le c_h$; the
+bound follows from the same formula and Lemma~\ref{lem:tangent} below with
+$\nu=1$, applied to the propagator of the perturbed system. Moments: by
+Jensen's inequality in the time average and stationarity,
+$\E\exp(p\frac\eps2\int_0^\tau\Gamma_1)\le\E\exp(p\frac{\eps\tau}{2}\Gamma_1(0))<\infty$,
+and $\int_0^\tau\Gamma_0$ has all moments by Minkowski's inequality.
+\end{proof}
+
+\begin{lemma}[Tangent flow]\label{lem:tangent}
+Let $x$ solve $\ddot x = \eps A(s)x$ on $[\sigma,\tau]$ with
+$|A(s)|\le\Gamma(s)$, $\Gamma\ge0$ continuous. For every $\nu>0$ and
+$s\in[\sigma,\tau]$,
+\[
+  \bigl(\nu^2|x(s)|^2+|\dot x(s)|^2\bigr)^{1/2}
+  \le\bigl(\nu^2|x(\sigma)|^2+|\dot x(\sigma)|^2\bigr)^{1/2}
+  \exp\Bigl(\frac\nu2(s-\sigma)+\frac{\eps}{2\nu}\int_\sigma^s\Gamma(r)\,\dd r\Bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+Let $n^2 = \nu^2|x|^2+|\dot x|^2$. Then
+$\frac{\dd}{\dd s}n^2 = 2\nu^2x\cdot\dot x+2\eps\,\dot x\cdot Ax
+\le(\nu^2+\eps\Gamma)\,2|x||\dot x|\le(\nu+\eps\Gamma/\nu)\,n^2$, because
+$2\nu|x||\dot x|\le n^2$. Apply Gr\"onwall's inequality.
+\end{proof}
+
+Write $J = uI + N$ with $u = \tau-\sigma$, so that by \eqref{eq:J}
+\begin{equation}
+  N(\tau,\sigma) = \eps\int_\sigma^\tau(\tau-s)A(s)J(s,\sigma)\,\dd s,
+  \qquad
+  \partial_\tau N(\tau,\sigma) = \eps\int_\sigma^\tau A(s)J(s,\sigma)\,\dd s .
+  \label{eq:N}
+\end{equation}
+
+\begin{lemma}[Moments of the tangent flow]\label{lem:Jmom}
+Assume $0\le\sigma<\tau\le t$, $u = \tau-\sigma$, and let $a,\beta,\chi,\sE,\sL$
+be as in \eqref{eq:EL}. Then, in $L^2(\PP)$ norm,
+\begin{align*}
+  \nrm{J(\tau,\sigma)}{2} &\le a^{-1}u^{1-\beta}e^{au^\beta/2}\,\sE, &
+  \nrm{\partial_\tau J(\tau,\sigma)}{2} &\le e^{au^\beta/2}\,\sE,\\
+  \nrm{N(\tau,\sigma)}{2} &\le\eps\,a^{-1}u^{3-\beta}e^{au^\beta/2}\,\sL, &
+  \nrm{\partial_\tau N(\tau,\sigma)}{2} &\le\eps\,a^{-1}u^{2-\beta}e^{au^\beta/2}\,\sL .
+\end{align*}
+\end{lemma}
+
+\begin{proof}
+Apply Lemma~\ref{lem:tangent} with $\Gamma=\Gamma_1$,
+$\nu = a u^{\beta-1}$ and initial data $(0,e)$, $|e|=1$: for
+$s\in[\sigma,\tau]$,
+\[
+  \nu|J(s,\sigma)|,\ |\partial_sJ(s,\sigma)|\ \le\ \cE
+  := \exp\Bigl(\frac{a u^\beta}{2}+\frac{\eps u^{1-\beta}}{2a}X\Bigr),
+  \qquad X = \int_\sigma^\tau\Gamma_1(r)\,\dd r ,
+\]
+where $\nu(s-\sigma)\le\nu u = au^\beta$ was used. By \eqref{eq:N},
+$|N(\tau,\sigma)|\le\eps u\,\nu^{-1}\cE X$ and
+$|\partial_\tau N(\tau,\sigma)|\le\eps\,\nu^{-1}\cE X$. For $p\in\{0,2\}$ the
+function $x\mapsto(ux)^p\exp(\eps u^{2-\beta}x/a)$ is convex and
+nondecreasing on $[0,\infty)$; applying Jensen's inequality to the time
+average $X/u$ of $\Gamma_1$ over $[\sigma,\tau]$ and then stationarity,
+\[
+  \E\bigl[X^p\exp(\eps u^{1-\beta}X/a)\bigr]
+  \le u^p\,\E\bigl[\Gamma_1(0)^p\exp(\eps u^{2-\beta}\Gamma_1(0)/a)\bigr]
+  \le u^p\,\E\bigl[\Gamma_1(0)^pe^{\chi\Gamma_1(0)/a}\bigr],
+\]
+because $\eps u^{2-\beta}\le\eps t^{2-\beta}\le\chi$. Hence
+$\nrm{\cE}{2}\le e^{au^\beta/2}\sE$ and $\nrm{\cE X}{2}\le u\,e^{au^\beta/2}\sL$,
+and $\nu^{-1} = a^{-1}u^{1-\beta}$.
+\end{proof}
+
+\begin{remark}
+The choice $\nu = au^{\beta-1}$ is the point where the decay of the
+covariance is spent: the weight $e^{au^\beta/2}$ will be absorbed by
+$|r_k(u)|$, and what remains of the Gr\"onwall exponent,
+$\eps u^{2-\beta}\Gamma_1/a$, must stay bounded for $u\le t$. With only
+polynomial weights one is forced to $\nu\sim1/u$ and to $\eps u^2\lesssim1$,
+i.e.\ $t\lesssim\eps^{-1/2}$, short of $\eps^{-2/3}$.
+\end{remark}
+
+\subsection{Integration by parts along the orbit}
+
+\begin{lemma}\label{lem:ibp2}
+Let $\tau\in(0,t]$, $k\in K$, and let $\phi:\mathbb{R}^d\times\mathbb{R}^d\to\mathbb{C}$
+be smooth with $|\phi(y,w)| + |\nabla\phi(y,w)|\le C(1+|w|)$. Then
+\begin{equation}
+  \E\bigl[b_k(\tau)\,\phi(Y_\tau,w_\tau)\bigr]
+  = \E\bigl[\nabla_y\phi(Y_\tau,w_\tau)\cdot\delta Y_\tau
+          + \nabla_w\phi(Y_\tau,w_\tau)\cdot\delta w_\tau\bigr],
+  \label{eq:ibp2}
+\end{equation}
+where $(\delta Y,\delta w)$ is given by \eqref{eq:var} with $H_h$ replaced
+by the complex field
+\begin{equation}
+  H(y,\sigma) = \E\bigl[b_k(\tau)\,G(y,\sigma)\bigr]
+  = \tfrac12\,\bar f_k\,e^{-ik\cdot y}\,\rho_k(\tau-\sigma).
+  \label{eq:H}
+\end{equation}
+The same holds with $b_k(\tau)$ replaced by $\overline{b_k(\tau)}$ and $H$
+by $\overline H = \frac12f_ke^{ik\cdot y}\overline{\rho_k(\tau-\sigma)}$.
+\end{lemma}
+
+\begin{proof}
+Apply Lemma~\ref{lem:ibp} with $\xi_1 = \Re b_k(\tau)$ and
+$\xi_2 = \Im b_k(\tau)$. By \eqref{eq:cov} the corresponding paths are
+$h^{(1)}_l(\sigma) = \frac12\delta_{kl}\,\rho_k(\sigma-\tau)$ and
+$h^{(2)}_l(\sigma) = \frac i2\delta_{kl}\,\rho_k(\sigma-\tau)$, which are
+continuous. The functional $\Phi(b) = \phi(Y_\tau,w_\tau)$ is continuous on
+$\mathcal{C}$, lies in $L^2$, and by Lemma~\ref{lem:var} is $C^1$ along
+$b+sh^{(j)}$ with derivative dominated by an integrable variable. So
+$\E[\xi_j\Phi] = \E[\nabla\phi\cdot(\delta^{(j)}Y,\delta^{(j)}w)]$ with
+$(\delta^{(j)}Y,\delta^{(j)}w)$ given by \eqref{eq:var} for the real fields
+$H^{(j)} = H_{h^{(j)}} = \E[\xi_jG]$. Formula \eqref{eq:var} is linear in the
+forcing, so adding the first identity to $i$ times the second gives
+\eqref{eq:ibp2} with $H = H^{(1)}+iH^{(2)} = \E[b_k(\tau)G(y,\sigma)]$. By
+\eqref{eq:cov},
+$\E[b_k(\tau)G(y,\sigma)] = \frac12\bar f_ke^{-ik\cdot y}\E[b_k(\tau)\overline{b_k(\sigma)}]$,
+which is \eqref{eq:H}. The conjugate statement is $\xi_1-i\xi_2$.
+\end{proof}
+
+\begin{lemma}[Diffusive a priori bound]\label{lem:w}
+For $0\le\tau\le t$: $(\E|w_\tau|^2)^{1/2}\le\eps\tau M_2$ and
+\[
+  \E|w_\tau|^2\le\eps^2\tau\bigl(W_0+\eps\tau W_1\bigr)\le\eps^2\tau\,\sW^2 .
+\]
+\end{lemma}
+
+\begin{proof}
+The first bound is $|w_\tau|\le\eps\int_0^\tau\Gamma_0$ and Minkowski's
+inequality. For the second,
+$\frac{\dd}{\dd s}|w_s|^2 = 2\eps\,w_s\cdot G(Y_s,s)
+= 2\eps\sum_k\Re\bigl[b_k(s)\,(w_s\cdot f_k)e^{ik\cdot Y_s}\bigr]$.
+Lemma~\ref{lem:ibp2} with $\phi(y,w) = (w\cdot f_k)e^{ik\cdot y}$ at time
+$s$ gives
+\[
+  \E\bigl[b_k(s)(w_s\cdot f_k)e^{ik\cdot Y_s}\bigr]
+  = \E\bigl[e^{ik\cdot Y_s}\bigl((\delta w_s\cdot f_k)
+     + i(w_s\cdot f_k)(k\cdot\delta Y_s)\bigr)\bigr],
+\]
+with, by \eqref{eq:var}, \eqref{eq:H} and Lemma~\ref{lem:Jmom}
+(Minkowski's inequality in the $\sigma$ integral),
+\[
+  \nrm{\delta w_s}{2}\le\frac{\eps|f_k|}{2}\,\sE\,\vartheta_k(0),
+  \qquad
+  \nrm{\delta Y_s}{2}\le\frac{\eps|f_k|}{2a}\,\sE\,\vartheta_k(1-\beta).
+\]
+With $\nrm{w_s}{2}\le\eps sM_2$ and the Cauchy--Schwarz inequality,
+\[
+  \Bigl|\E\bigl[b_k(s)(w_s\cdot f_k)e^{ik\cdot Y_s}\bigr]\Bigr|
+  \le\frac{\eps|f_k|^2}{2}\,\sE\,\vartheta_k(0)
+   + \eps^2s\,\frac{M_2|f_k|^2|k|}{2a}\,\sE\,\vartheta_k(1-\beta).
+\]
+Sum over $k$, multiply by $2\eps$ and integrate over $s\in[0,\tau]$, using
+$\int_0^\tau2s\,\dd s = \tau^2$:
+\[
+  \E|w_\tau|^2\le\eps^2\tau\,\sE\sum_k|f_k|^2\vartheta_k(0)
+   + \eps^3\tau^2\,\frac{M_2\sE}{2a}\sum_k|f_k|^2|k|\,\vartheta_k(1-\beta)
+  = \eps^2\tau W_0+\eps^3\tau^2W_1 .
+\]
+Finally $\eps\tau\le\eps t\le\chi$.
+\end{proof}
+
+\section{Proof of Theorem~\ref{thm:main}}
+
+Fix $q$, $t$; write $\theta = t-\tau$, $g = q\cdot G$, and
+\[
+  U(\tau,Y,w) = \exp\bigl(iq\cdot Y+i\theta\,q\cdot w-\tfrac13\eps^2\theta^3d\bigr),
+  \qquad U_\tau = U(\tau,Y_\tau,w_\tau).
+\]
+Since $d\ge0$, $|U|\le1$. As in \cite{Note},
+$(\partial_\tau+w\cdot\nabla_Y)U = \eps^2\theta^2d\,U$ and
+$\nabla_wU = i\theta q\,U$, so along the orbit
+$\frac{\dd}{\dd\tau}U_\tau = \bigl(\eps^2\theta^2d+i\eps\theta\,g(Y_\tau,\tau)\bigr)U_\tau$.
+$U_t = e^{iq\cdot Y_t}$ and $U_0 = \exp(-\frac13\eps^2t^3d)$ is
+deterministic, and $|g|\le|q|\Gamma_0$ is integrable, so
+\begin{equation}
+  \E\,e^{iq\cdot Y_t}-\exp\bigl(-\tfrac13\eps^2t^3d\bigr)
+  = \int_0^t\Bigl(\eps^2\theta^2d\;\E U_\tau
+     + i\eps\theta\;\E\bigl[g(Y_\tau,\tau)U_\tau\bigr]\Bigr)\dd\tau .
+  \label{eq:start}
+\end{equation}
+
+\subsection{The exact formula for $\E[gU]$}
+
+We have
+\[
+  g(Y_\tau,\tau) = \frac12\sum_k\bigl(B_k\,b_k(\tau)e^{ik\cdot Y_\tau}
+  +\bar B_k\,\overline{b_k(\tau)}e^{-ik\cdot Y_\tau}\bigr).
+\]
+Apply Lemma~\ref{lem:ibp2} to
+$\phi^\pm(y,w) = e^{\pm ik\cdot y}U(\tau,y,w)$, for which
+$\nabla_y\phi^\pm = i(q\pm k)\phi^\pm$ and
+$\nabla_w\phi^\pm = i\theta q\,\phi^\pm$. With \eqref{eq:var}, \eqref{eq:H}
+and $\Delta = Y_\tau-Y_\sigma$,
+\begin{equation}
+  \E\bigl[g(Y_\tau,\tau)U_\tau\bigr]
+  = \frac{i\eps}{4}\sum_k\E\Bigl[U_\tau\int_0^\tau
+     \bigl(\rho_k(\tau-\sigma)\Lambda_k^+
+     + \overline{\rho_k(\tau-\sigma)}\Lambda_k^-\bigr)\dd\sigma\Bigr],
+  \label{eq:exact}
+\end{equation}
+\[
+  \Lambda_k^+ = e^{ik\cdot\Delta}\,B_k\bigl[(q+k)^{\!\top}J(\tau,\sigma)
+     + \theta\,q^{\!\top}\partial_\tau J(\tau,\sigma)\bigr]\bar f_k,
+  \qquad
+  \Lambda_k^- = e^{-ik\cdot\Delta}\,\bar B_k\bigl[(q-k)^{\!\top}J
+     + \theta\,q^{\!\top}\partial_\tau J\bigr]f_k .
+\]
+(Here $v^{\top}Mz = \sum_{ij}v_iM_{ij}z_j$, without conjugation.) Insert
+$J = uI+N$, $\partial_\tau J = I+\partial_\tau N$, $u = \tau-\sigma$:
+\begin{equation}
+  \Lambda_k^\pm = |B_k|^2(u+\theta)+\cR_k^\pm,
+  \label{eq:Lam}
+\end{equation}
+\[
+  \cR_k^+ = |B_k|^2(u+\theta)\bigl(e^{ik\cdot\Delta}-1\bigr)
+   + e^{ik\cdot\Delta}\,u\,B_k(k\cdot\bar f_k)
+   + e^{ik\cdot\Delta}B_k\bigl[(q+k)^{\!\top}N+\theta\,q^{\!\top}\partial_\tau N\bigr]\bar f_k ,
+\]
+and $\cR_k^-$ is obtained by $k\to-k$, $f_k\to\bar f_k$, $B_k\to\bar B_k$.
+Since $\frac14\sum_k|B_k|^2(\rho_k+\bar\rho_k) = c$,
+\begin{equation}
+  \E\bigl[gU_\tau\bigr]
+  = i\eps\;\E U_\tau\int_0^\tau c(u)(u+\theta)\,\dd u+\cE_\tau,
+  \qquad
+  |\cE_\tau|\le\frac\eps4\sum_k\int_0^\tau|\rho_k(u)|\,
+     \E\bigl(|\cR_k^+|+|\cR_k^-|\bigr)\dd u .
+  \label{eq:split}
+\end{equation}
+Using $d = \int_0^\infty c$, the integrand of \eqref{eq:start} becomes
+\begin{equation}
+  \eps^2\theta\;\E U_\tau\Bigl(\theta\int_\tau^\infty c(u)\,\dd u
+     - \int_0^\tau u\,c(u)\,\dd u\Bigr)+i\eps\theta\,\cE_\tau .
+  \label{eq:integrand}
+\end{equation}
+The leading term $\eps^2\theta^2d$ has cancelled exactly; this is the
+non-Markov form of the cancellation produced by the corrector $\beta$ in
+\cite{Note}.
+
+\subsection{Estimates}
+
+\emph{Deterministic part.} Let $c_1 = \int_0^\infty u|c(u)|\dd u
+\le\frac12\sum_k|B_k|^2m_k(1)$. Since
+$\int_0^t\theta^2\int_\tau^\infty|c|\,\dd u\,\dd\tau
+\le t^2\int_0^\infty\!\int_\tau^\infty|c|\,\dd u\,\dd\tau = t^2c_1$ and
+$\int_0^t\theta\,\dd\tau = \frac12t^2$, the first term of
+\eqref{eq:integrand} contributes at most $\frac32c_1\eps^2t^2$.
+
+\emph{The remainder $\cR_k^\pm$.} Three pieces.
+
+(i) $|e^{\pm ik\cdot\Delta}-1|\le|k||\Delta|$ and
+$\Delta = \int_\sigma^\tau w_s\,\dd s$, so by Lemma~\ref{lem:w}
+$\E|\Delta|\le u\,\eps\tau^{1/2}\sW$.
+
+(ii) $|u\,B_k(k\cdot\bar f_k)|\le u|B_k||k||f_k|$.
+
+(iii) By Lemma~\ref{lem:Jmom},
+$\E|N|\le\eps a^{-1}u^{3-\beta}e^{au^\beta/2}\sL$ and
+$\E|\partial_\tau N|\le\eps a^{-1}u^{2-\beta}e^{au^\beta/2}\sL$.
+
+Hence, for both signs,
+\[
+  \E|\cR_k^\pm|\le|B_k|^2|k|\,(u^2+\theta u)\,\eps\tau^{1/2}\sW
+   + u|B_k||k||f_k|
+   + \frac{\eps\sL}{a}|B_k||f_k|\,e^{au^\beta/2}
+     \bigl[(|q|+|k|)u^{3-\beta}+\theta|q|u^{2-\beta}\bigr],
+\]
+and by \eqref{eq:split}, with $|\rho_k| = |r_k|$,
+\begin{align*}
+  \eps\theta|\cE_\tau|\le{}&
+   \frac{\eps^3\sW}{2}\sum_k|B_k|^2|k|\bigl(\theta\tau^{1/2}m_k(2)+\theta^2\tau^{1/2}m_k(1)\bigr)
+   + \frac{\eps^2\theta}{2}\sum_k|B_k||k||f_k|m_k(1)\\
+  &+ \frac{\eps^3\sL}{2a}\sum_k|B_k||f_k|\bigl[\theta(|q|+|k|)\vartheta_k(3-\beta)
+      + \theta^2|q|\,\vartheta_k(2-\beta)\bigr].
+\end{align*}
+Integrate over $\tau\in[0,t]$ with
+$\int_0^t\theta\tau^{1/2}\dd\tau = \frac4{15}t^{5/2}$,
+$\int_0^t\theta^2\tau^{1/2}\dd\tau = \frac{16}{105}t^{7/2}$,
+$\int_0^t\theta\,\dd\tau = \frac12t^2$,
+$\int_0^t\theta^2\dd\tau = \frac13t^3$, and add the deterministic part. This
+is \eqref{eq:main} with the constants \eqref{eq:consts}. \qed
+
+\subsection{The terms of order $\eps^2t^2$}
+
+The proof identifies the part of the error that is of order $\eps^2t^2$.
+Let
+\begin{equation}
+  \kappa_1 = \int_0^\infty u\,c(u)\,\dd u,\qquad
+  \kappa_2 = \frac12\sum_k\int_0^\infty u\,
+     \Im\bigl(\rho_k(u)\,B_k\,(k\cdot\bar f_k)\bigr)\dd u ,
+\end{equation}
+and let $\mathrm{Err}(t)$ denote the right-hand side of \eqref{eq:main}.
+
+\begin{proposition}[Second-order terms]\label{prop:second}
+Assume \textup{(H)}. Then for all $q$, $\eps>0$, $t>0$,
+\begin{multline}
+  \Bigl|\E\,e^{iq\cdot Y_t}-e^{-\eps^2t^3d/3}
+     \Bigl(1+\tfrac12\eps^2t^2(\kappa_1-i\kappa_2)\Bigr)\Bigr| \\
+  \le\eps^2(c_0'+c_1't)
+   +\eps^3\bigl(C_{3a}t^2+C_{3b}'t^{5/2}+C_{3c}t^3+C_{3d}t^{7/2}\bigr)
+   +C_2\eps^2t^2\,\mathrm{Err}(t),
+  \label{eq:second}
+\end{multline}
+with $c_0' = \frac5{12}\sum_k|B_k|^2m_k(3)+\frac12\sum_k|B_k||k||f_k|m_k(3)$,
+$c_1' = \frac12\sum_k|B_k||k||f_k|m_k(2)$ and
+$C_{3b}' = C_{3b}+\frac2{15}\sW\sum_k|B_k||f_k||k|^2m_k(2)$. Moreover the real
+second-order term is the correction to the variance of the first Duhamel
+iterate $Y^{(1)}_t = \eps\int_0^t(t-\sigma)G(0,\sigma)\,\dd\sigma$:
+\begin{equation}
+  \Bigl|\tfrac13\eps^2t^3d-\tfrac12\operatorname{Var}(q\cdot Y^{(1)}_t)
+   -\tfrac12\eps^2t^2\kappa_1\Bigr|\le\tfrac5{12}\,\eps^2\sum_k|B_k|^2m_k(3).
+  \label{eq:var1}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+In $\cR_k^\pm$ separate the deterministic part of piece (ii):
+$\cR_k^+ = uB_k(k\cdot\bar f_k)+\cR_k'^{+}$ and
+$\cR_k^- = -u\bar B_k(k\cdot f_k)+\cR_k'^{-}$. With
+$z_k = \rho_kB_k(k\cdot\bar f_k)$ one has $z_k-\bar z_k = 2i\Im z_k$, so by
+\eqref{eq:exact} the deterministic part contributes
+$-\eps\,\E U_\tau\,e(\tau)$ to $\E[gU_\tau]$, where
+$e(\tau) = \frac12\sum_k\int_0^\tau u\,\Im z_k(u)\,\dd u$. Hence the integrand
+$I(\tau)$ of \eqref{eq:start} is
+\[
+  I(\tau) = \eps^2\theta\;\E U_\tau\,\bigl(\alpha(\tau)-ie(\tau)\bigr)+i\eps\theta\,\cE_\tau',
+  \qquad\alpha(\tau) = \theta\int_\tau^\infty c-\int_0^\tau uc ,
+\]
+where $\cE'_\tau$ is bounded as $\cE_\tau$ was, without the term (ii) and
+with the additional term
+$|(e^{\pm ik\cdot\Delta}-1)\,uB_k(k\cdot\bar f_k)|\le u^2|B_k||f_k||k|^2\,\eps\tau^{1/2}\sW$
+in expectation; so
+$\int_0^t\eps\theta|\cE'_\tau|\dd\tau\le\eps^3(C_{3a}t^2+C_{3b}'t^{5/2}+C_{3c}t^3+C_{3d}t^{7/2})$.
+Write $\E U_\tau = U_0+(\E U_\tau-U_0)$. Since
+$\E U_\tau-U_0 = \int_0^\tau I$ and $\mathrm{Err}(t)$ was obtained by bounding
+$\int_0^t|I|$, $|\E U_\tau-U_0|\le\mathrm{Err}(t)$ for $\tau\le t$; and
+$\int_0^t\theta(|\alpha|+|e|)\dd\tau\le C_2t^2$ by the estimates of the
+deterministic part and of (ii). This gives the last term of
+\eqref{eq:second}. It remains to compute, by Fubini's theorem,
+\begin{align*}
+  \int_0^t\theta\,\alpha(\tau)\,\dd\tau
+  &= \frac{t^2}{2}\int_0^tuc-\frac16\int_0^tu^3c+\frac{t^3}{3}\int_t^\infty c ,\\
+  \int_0^t\theta\,e(\tau)\,\dd\tau
+  &= \frac12\sum_k\int_0^tu\,\Im z_k(u)\,\frac{(t-u)^2}{2}\,\dd u .
+\end{align*}
+The first differs from $\frac12t^2\kappa_1$ by at most
+$(\frac12+\frac13)\int_t^\infty u^3|c|+\frac16\int_0^tu^3|c|\le\frac56\int_0^\infty u^3|c|$,
+and the second from $\frac12t^2\kappa_2$ by at most
+$\frac12\sum_k|B_k||k||f_k|\,(t\,m_k(2)+m_k(3))$; $|U_0|\le1$. For
+\eqref{eq:var1}: as in \cite[Proposition~7]{Note},
+$\operatorname{Var}(q\cdot Y^{(1)}_t)
+= 2\eps^2\int_0^tc(u)[\frac13(t-u)^3+\frac12u(t-u)^2]\dd u
+= 2\eps^2\int_0^tc(u)[\frac13t^3-\frac12t^2u+\frac16u^3]\dd u$, so
+$\frac13t^3d-\operatorname{Var}/(2\eps^2)$ equals the first integral above.
+\end{proof}
+
+\begin{remark}\label{rem:second}
+(i) At $t = s\eps^{-2/3}$ the second-order term and the remainder
+$\eps^3t^{7/2}$ in \eqref{eq:second} are both of order $\eps^{2/3}$;
+Proposition~\ref{prop:second} is an asymptotic expansion only for
+$t\ll\eps^{-2/3}$. The remainder comes from piece (i) of $\cR$, the
+displacement $e^{ik\cdot\Delta}-1$ with $\Delta\approx uw_\tau$; it is the
+effect of the velocity dependence of $D$ over the range of velocities
+visited, and a heuristic Gaussian calculation suggests that its leading part
+is imaginary and of size $\eps^4t^5$. This is not proved.
+
+(ii) $\kappa_2\ne0$ produces a mean displacement
+$\E\,q\cdot Y_t\approx-\frac12\eps^2t^2\kappa_2$: a drift of the particle at
+second order in a prescribed field, present even for potential fields
+unless every $\rho_k$ is real (all lines symmetric about the resonance).
+\end{remark}
+
+\begin{remark}[Checks made]\label{rem:checks}
+The identity \eqref{eq:ibp2}--\eqref{eq:H} (signs, the factor $\frac12$, the
+conjugations) was tested by Monte Carlo for one mode with a Gaussian line
+and complex $f$, at $\eps=0.7$, $\tau=3$, $\theta=1$, with $4\times10^5$
+samples: left side $0.0053-0.0190i$, right side $0.0046-0.0201i$, standard
+error $0.0016$ on each. Lemma~\ref{lem:tangent} was tested on random
+coefficient paths (ratio of the two sides at most $0.995$). These were
+scratch runs, not in the repository. The Beta integrals are
+$B(2,\frac32) = \frac4{15}$ and $B(3,\frac32) = \frac{16}{105}$.
+\end{remark}
+
+\section{Pure point spectrum: the continuum is necessary}
+\label{sec:pp}
+
+Hypothesis (H) forces $r_k\in L^1$, so the spectral measure of each
+amplitude has a continuous density. For finitely many undamped modes with
+fixed frequencies, $a_k(\tau) = \zeta_ke^{-i\omega_k\tau}$ with $\zeta_k$
+independent standard circular complex Gaussians, one has
+$r_k(u) = e^{-i\omega_ku}$, $|r_k|\equiv1$, and
+\[
+  c(u) = \tfrac12\sum_k|B_k|^2\cos(\Omega_ku),\qquad\Omega_k = \omega_k-k\cdot v_0 ,
+\]
+is almost periodic and not integrable. $\int_0^Tc(u)\,\dd u
+= \frac12\sum_k|B_k|^2\sin(\Omega_kT)/\Omega_k$ has no limit as $T\to\infty$
+if all $\Omega_k\ne0$ and diverges linearly if some $\Omega_k = 0$; the
+$\gamma\to0$ limit of the matrix $D$ of \cite{Note} is $0$ in the first
+case and $+\infty$ in the second. The next proposition shows that the
+conclusion of Theorem~\ref{thm:main} then fails already for one mode.
+
+\begin{proposition}[One undamped mode]\label{prop:pp}
+Let $d=1$, $K=\{k\}$, $k>0$, $f\in\mathbb{C}\setminus\{0\}$,
+$a(\tau) = \zeta e^{-i\omega\tau}$, $\Omega = \omega-kv_0$. Write
+$f\zeta e^{ikx_0} = Ae^{i\varphi}$, so that $A = |f||\zeta|$,
+$\varphi$ is uniform on the circle and independent of $A$, and
+$\ddot Y = \eps A\cos(kY-\Omega\tau+\varphi)$.
+\begin{enumerate}
+\item[(a)] \textup{(Resonant, $\Omega=0$.)} Almost surely $|Y_t|<2\pi/k$ for
+  all $t\ge0$ and all $\eps$. Moreover $Y_t = P(\eps^{1/2}t)$, where $P$
+  solves $P'' = A\cos(kP+\varphi)$, $P(0)=P'(0)=0$ and does not depend on
+  $\eps$. Consequently, with $\Psi_q(T) = \E e^{iqP(T)}$,
+  \begin{gather*}
+    \E\,e^{iqY_t} = \Psi_q(\eps^{1/2}t),\\
+    \Re\Psi_q(T)\ge\cos(2\pi q/k)\ \ (|q|\le k/2,\ T\ge0),\qquad
+    \Re\Psi_q(T)<1\ \ (0<|q|\le k/2,\ T>0).
+  \end{gather*}
+  There is no $D\in[0,\infty]$ for which
+  $\sup_{t\le s\eps^{-2/3}}|\E e^{iqY_t}-\exp(-\frac13\eps^2t^3Dq^2)|\to0$ as
+  $\eps\to0$ for all $s>0$ and all small $q$. The first Duhamel iterate has
+  variance $\eps^2|f|^2t^4/8$.
+\item[(b)] \textup{(Non-resonant, $\Omega\ne0$.)} On the event
+  $\{4\eps kA<\Omega^2\}$ one has, for all $t\ge0$,
+  \[
+    |w_t|\le4\eps A/|\Omega|,\qquad|Y_t|\le4\eps At/|\Omega| .
+  \]
+  The event has probability
+  $1-\exp\bigl(-\Omega^4/(16\eps^2k^2|f|^2)\bigr)$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) The energy $\frac12w^2-\eps(A/k)\sin(kY+\varphi)$ is conserved and equals
+$-\eps(A/k)\sin\varphi$, so $\sin(kY_\tau+\varphi)\ge\sin\varphi$ for all
+$\tau$. Almost surely $A>0$ and $\sin\varphi>-1$; then
+$\{\vartheta:\sin\vartheta\ge\sin\varphi\}$ is a disjoint union of closed
+intervals of length $\pi-2\arcsin(\sin\varphi)<2\pi$, and the continuous
+path $kY_\tau+\varphi$ starts at $\varphi$ and stays in one of them. So
+$|kY_\tau|<2\pi$. The scaling is immediate:
+$\frac{\dd^2}{\dd\tau^2}P(\eps^{1/2}\tau) = \eps A\cos(kP+\varphi)$. For
+$|q|\le k/2$, $|qY_t|<\pi$ and $\cos$ is decreasing on $[0,\pi]$, so
+$\Re e^{iqY_t}\ge\cos(2\pi q/k)$. Next,
+$|P''-A\cos\varphi|\le Ak|P|\le A^2kT^2/2$, so
+$|P(T)-\frac12A\cos(\varphi)T^2|\le A^2kT^4/24$; on the event
+$\{AkT^2<6,\ |\cos\varphi|>\frac12\}$, which has positive probability for
+every $T>0$, $|P(T)|>\frac14AT^2-\frac14AT^2 = 0$, and since $0<|qP(T)|<\pi$
+there, $\Re\Psi_q(T)<1$. (The bound $|P|\le AT^2/2$ used here follows from
+$|P''|\le A$.)
+
+Suppose the $t^3$ law held with some $D$. If $D<\infty$, take
+$t = T\eps^{-1/2}\le s\eps^{-2/3}$ with $T>0$ fixed and $\eps$ small: the prediction
+tends to $1$ and the left side has real part $\Re\Psi_q(T)<1$. If
+$D=\infty$ the prediction is $0$ for $t>0$ while
+$\Re\Psi_q\ge\cos(2\pi q/k)>0$ for $|q|<k/4$. The first iterate is
+$\frac12\eps A\cos(\varphi)t^2$, with variance
+$\frac14\eps^2t^4\,\E A^2\,\E\cos^2\varphi = \eps^2|f|^2t^4/8$.
+
+(b) Let $\psi = kY-\Omega\tau$. Then $\psi'' = \eps kA\cos(\psi+\varphi)$,
+$\psi(0)=0$, $\psi'(0) = -\Omega$, and conservation of energy gives
+$\psi'^2 = \Omega^2+2\eps kA(\sin(\psi+\varphi)-\sin\varphi)\ge\Omega^2-4\eps kA>0$.
+So $\psi'$ never vanishes and keeps the sign of $-\Omega$, whence
+$|\psi'-\Omega|\ge|\Omega|$ and
+$|\psi'+\Omega| = |\psi'^2-\Omega^2|/|\psi'-\Omega|\le4\eps kA/|\Omega|$.
+Finally $w = (\psi'+\Omega)/k$. The probability is
+$\PP(|\zeta|^2<\Omega^4/(16\eps^2k^2|f|^2))$.
+\end{proof}
+
+So for a single resonant undamped mode the only time scale is the bounce
+time $\eps^{-1/2} = N^{1/4}$, which is the worst-case threshold of
+\cite[Proposition~7]{Note}, and the motion saturates by trapping instead of
+diffusing; for a non-resonant one the orbit is perturbed by $O(\eps t)$
+only. Neither is a $t^3$ law with $D>0$ finite. For several undamped modes
+the dynamics is that of a Hamiltonian with $1\frac12$ degrees of freedom,
+and whether it is diffusive is the question of resonance overlap
+\cite{Chirikov}; nothing is proved about that here.
+
+\section{Narrow lines: the threshold $\eps^{1/2}$}
+
+\subsection{A joint limit}
+
+Let $\tilde\rho_k$, $k\in K$, be continuous positive definite functions with
+$\tilde\rho_k(0)=1$ and
+\begin{equation}
+  \tilde\vartheta_k(j) := \int_0^\infty u^je^{u/2}|\tilde\rho_k(u)|\,\dd u<\infty,
+  \qquad j\le3 .
+  \label{eq:tilde}
+\end{equation}
+For $a\in(0,1]$ consider the model \eqref{eq:cov} with
+\begin{equation}
+  \rho_k(u) = r_k(u)e^{ik\cdot v_0u} = \tilde\rho_k(a u):
+\end{equation}
+spectral lines of width $a$, centred within $O(a)$ of the resonance
+$\omega = k\cdot v_0$. For Ornstein--Uhlenbeck modes this is
+$\gamma_k = a\tilde\gamma_k$, $\omega_k-k\cdot v_0 = a\tilde\Omega_k$ with
+$\tilde\gamma_k>\frac12$. Then $D = \tilde D/a$ with
+$\tilde D = \frac12\sum_k\Re(f_k\otimes\bar f_k)\int_0^\infty\Re\tilde\rho_k$,
+and the diffusion time, at which $\eps^2t^3D\sim1$, is
+\begin{equation}
+  t_a = (a/\eps^2)^{1/3}.
+\end{equation}
+
+\begin{theorem}[Joint limit $\eps\to0$, $a\to0$]\label{thm:joint}
+In this family, assume continuity of paths and \eqref{eq:tilde}. Let
+$\rhoeff = \eps^{1/2}/a\le1$ and $t = s\,t_a$, $s>0$. Then
+\begin{equation}
+  \Bigl|\E\,e^{iq\cdot Y_t}-\exp\!\bigl(-\tfrac13s^3\,q\cdot\tilde Dq\bigr)\Bigr|
+  \le\bigl(\tilde C_2s^2+\tilde C_{3a}s^2+\tilde C_{3b}s^{5/2}
+     +\tilde C_{3c}s^3+\tilde C_{3d}s^{7/2}\bigr)\,\rhoeff^{4/3},
+\end{equation}
+where the $\tilde C$ are the constants \eqref{eq:consts} computed with
+$\tilde\rho_k$ in place of $r_k$, $a=1$, $\beta=1$ and $\chi = s$; they do
+not depend on $\eps$ or $a$.
+\end{theorem}
+
+\begin{proof}
+(H) holds with $\beta=1$ and rate $a$:
+$\vartheta_k(j) = \int_0^\infty u^je^{au/2}|\tilde\rho_k(au)|\dd u
+= a^{-(j+1)}\tilde\vartheta_k(j)$, and likewise
+$m_k(j) = a^{-(j+1)}\tilde m_k(j)$. Here $\chi = \eps t$ and
+$\chi/a = \eps t/a = s\,\eps^{1/3}a^{-2/3} = s\rhoeff^{2/3}\le s$, so $\sE$
+and $\sL$, which depend on $\chi$ and $a$ only through $\chi/a$, are bounded
+by their values $\tilde\sE$, $\tilde\sL$ at $\chi/a = s$. Then
+$W_0 = a^{-1}\sE\sum|f_k|^2\tilde\vartheta_k(0)$,
+$\chi W_1 = (\chi/a)\,a^{-1}\frac{M_2\sE}{2}\sum|f_k|^2|k|\tilde\vartheta_k(0)$,
+so $\sW\le a^{-1/2}\tilde\sW$. Therefore
+\[
+  C_2\le a^{-2}\tilde C_2,\quad C_{3a}\le a^{-4}\tilde C_{3a},\quad
+  C_{3b}\le a^{-7/2}\tilde C_{3b},\quad C_{3c}\le a^{-3}\tilde C_{3c},\quad
+  C_{3d}\le a^{-5/2}\tilde C_{3d}.
+\]
+With $t = s\,a^{1/3}\eps^{-2/3}$ the five terms of \eqref{eq:main} are
+\[
+  \tilde C_2s^2\rhoeff^{4/3},\quad\tilde C_{3a}s^2\rhoeff^{10/3},\quad
+  \tilde C_{3b}s^{5/2}\rhoeff^{8/3},\quad\tilde C_{3c}s^3\rhoeff^{2},\quad
+  \tilde C_{3d}s^{7/2}\rhoeff^{4/3},
+\]
+(for instance $\eps^2t^2a^{-2} = s^2\eps^{2/3}a^{-4/3}$ and
+$\eps^3t^{7/2}a^{-5/2} = s^{7/2}\eps^{2/3}a^{-4/3}$), and $\rhoeff\le1$. The
+exponent is $\frac13\eps^2t^3d = \frac13s^3a\,d = \frac13s^3q\cdot\tilde Dq$.
+\end{proof}
+
+So the $t^3$ law, with the Lorentzian or other line shape entering only
+through $\tilde D$, holds uniformly as the line width tends to zero provided
+$a\gg\eps^{1/2}$. Three time scales meet at $a\sim\eps^{1/2}$: the
+correlation time $1/a$, the diffusion time $t_a$, and the bounce time
+$(\eps|k||f|)^{-1/2}$ of a particle in the potential well of one mode.
+
+\begin{remark}
+The constants of \cite[Theorem~1]{Note} can be tracked in the same way: with
+$\gamma_* = \min\gamma_k$ and $|1/\lambda_k|\le1/\gamma_*$,
+$|\lambda_k+\lambda_l|,|\lambda_k+\bar\lambda_l|\ge2\gamma_*$, one finds
+$C_1\lesssim\gamma_*^{-1}$, $C_2,C_3\lesssim\gamma_*^{-2}$,
+$C_4\lesssim\gamma_*^{-3}$, which at $t = st_{\gamma_*}$ gives an error
+$O((s+s^5)(\rhoeff^{2/3}+\rhoeff^{4/3}))$: the same threshold with a weaker
+power. This remark is a bookkeeping statement about \cite{Note} and is
+superseded by Theorem~\ref{thm:joint}.
+\end{remark}
+
+\subsection{Failure below the threshold}
+
+\begin{proposition}[Trapping in one weakly damped resonant mode]\label{prop:trap}
+Let $d=1$, $K=\{k\}$, $k>0$, $f>0$, and let $b$ be the stationary solution of
+$\dd b = -\gamma b\,\dd\tau+\sqrt{2\gamma}\,\dd\tilde B$ \textup{(}the model
+of \cite{Note} with one mode exactly on resonance, $\lambda=\gamma$, so
+$D = f^2/2\gamma$\textup{)}. Let $\delta\in(0,1)$, $r>0$, $t\ge0$. Then
+\begin{equation}
+  \PP\bigl(|Y_\tau|\ge2\pi/k\text{ for some }\tau\le t\bigr)
+  \le1-e^{-r^2}+\frac{2\gamma t+4\sqrt{2\gamma t}}{\delta r}
+   +\frac{\arccos(1-\delta)}{\pi} .
+  \label{eq:trap}
+\end{equation}
+Consequently, with $\mu_0 = 10^{-7}$ and
+$c_* = (\mu_0^3/2592)^{1/4}$: if $\gamma\le c_*(\eps kf)^{1/2}$, then at
+$t = \mu_0/\gamma$ and $q = k/12$,
+\[
+  \Re\,\E\,e^{iqY_t}\ge0.30\qquad\text{while}\qquad
+  \exp\bigl(-\tfrac13\eps^2t^3Dq^2\bigr)\le e^{-3}<0.05 .
+\]
+\end{proposition}
+
+\begin{proof}
+Here $G(Y,b) = f\,\Re(be^{ikY}) = \partial_Y\Psi(Y,b)$ with
+$\Psi(Y,b) = (f/k)\Im(be^{ikY})$. Let $\mathcal{H}_\tau = \frac12w_\tau^2-\eps\Psi(Y_\tau,b_\tau)$.
+$\Psi$ is linear in $b$ and $Y$ has finite variation, so It\^o's formula has
+no second-order term:
+$\dd\mathcal{H} = -\eps(f/k)\,\Im(e^{ikY_\tau}\dd b_\tau)$. With
+$\mathcal{H}_0 = -\eps(f/k)\Im b_0$,
+\[
+  0\le\frac{k}{2\eps f}w_\tau^2
+  = \Im(b_\tau e^{ikY_\tau})-\Im b_0-\Im\!\int_0^\tau e^{ikY}\dd b
+  \le\Im(b_0e^{ikY_\tau})-\Im b_0+\eta_\tau,
+\]
+\[
+  \eta_\tau = |b_\tau-b_0|+\Bigl|\int_0^\tau e^{ikY_\sigma}\dd b_\sigma\Bigr| .
+\]
+Write $b_0 = |b_0|e^{i\varphi}$; then
+$\sin(kY_\tau+\varphi)\ge\sin\varphi-\eta_\tau/|b_0|$. On the event
+$\mathcal{G} = \{\sup_{\tau\le t}\eta_\tau\le\delta|b_0|\}\cap\{\sin\varphi>-1+\delta\}$
+the path $kY_\tau+\varphi$ stays in
+$\{\vartheta:\sin\vartheta\ge\sin\varphi-\delta\}$ with
+$\sin\varphi-\delta>-1$, a disjoint union of closed intervals of length less
+than $2\pi$; so $|kY_\tau|<2\pi$ for $\tau\le t$, as in
+Proposition~\ref{prop:pp}.
+
+Both terms of $\eta$ are at most
+$\gamma\int_0^t|b_\sigma|\dd\sigma+\sqrt{2\gamma}\sup_{\tau\le t}|M_\tau|$
+with $M = \tilde B$, respectively $M = \int e^{ikY}\dd\tilde B$ (the integrand
+is adapted and of modulus one). In both cases $\E|M_t|^2 = t$, and Doob's
+inequality gives $\E\sup_{\tau\le t}|M_\tau|\le2\sqrt t$. With
+$\E|b|\le1$, $\E\sup_{\tau\le t}\eta_\tau\le2\gamma t+4\sqrt{2\gamma t}$.
+Since $|b_0|^2$ is exponential with mean one and $\varphi$ is uniform and
+independent of $|b_0|$,
+\[
+  \PP(\mathcal{G}^c)\le\PP(|b_0|<r)
+   +\PP\bigl(\sup\eta>\delta r\bigr)+\PP(\sin\varphi\le-1+\delta)
+\]
+is bounded by the right side of \eqref{eq:trap} (Markov's inequality).
+
+Take $\delta = 0.1$, $r = 0.3$, $\gamma t = \mu_0$: the bound is
+$0.0861+0.0597+0.1436<0.29$. For $q = k/12$, on $\mathcal{G}$,
+$\Re e^{iqY_t}\ge\cos(\pi/6)>0.866$, so
+$\Re\E e^{iqY_t}\ge0.866\cdot0.71-0.29>0.30$. The prediction has exponent
+$\frac13\eps^2t^3q^2f^2/(2\gamma) = \eps^2\mu_0^3k^2f^2/(864\gamma^4)\ge3$ exactly
+when $\gamma^4\le\mu_0^3\eps^2k^2f^2/2592$.
+\end{proof}
+
+Together, Theorem~\ref{thm:joint} (applied to Ornstein--Uhlenbeck modes) and
+Proposition~\ref{prop:trap} determine the regime of validity of
+\cite[Theorem~1]{Note} as $\gamma\to0$ up to constants: the conclusion holds
+at the diffusion time if $\gamma\gg\eps^{1/2}$ and fails if
+$\gamma\le c_*(\eps kf)^{1/2}$. The power $\frac43$ of $\rhoeff$ is an upper
+bound; it is not shown to be optimal, and the constant $c_*$ is far from
+optimal (the numerical crossover is at $\gamma\approx\eps^{1/2}$,
+Section~\ref{sec:num}).
+
+\subsection{Relation to resonance broadening (heuristic)}
+\label{sec:dupree}
+
+This subsection contains no proofs. Dupree's resonance broadening
+\cite{Dupree} replaces $\delta(\omega-k\cdot v)$ by a resonance function of
+width $\Delta\omega_{\mathrm{rb}}\sim(\eps^2k^2D)^{1/3}$, the inverse of the
+time $\tau_{\mathrm{mem}}$ in which the orbit diffuses by a wavelength. In
+the family above $D\sim1/a$, so
+$\Delta\omega_{\mathrm{rb}}\sim(\eps^2/a)^{1/3}$, and
+$\Delta\omega_{\mathrm{rb}}\ll a$ exactly when $a\gg\eps^{1/2}$. Thus
+Theorem~\ref{thm:joint} covers the regime in which broadening is a small
+correction to the intrinsic line width, and Corollary~\ref{cor:sharp} the
+regime of a continuum of fixed width. In the opposite regime a single line
+traps (Proposition~\ref{prop:trap}); broadening proper requires many lines,
+each of intrinsic width below $\eps^{1/2}$, whose spacing in $\omega-k\cdot v$
+is below $\Delta\omega_{\mathrm{rb}}$, so that the orbit's own diffusion
+makes them overlap. The recurrence experiment of Section~\ref{sec:num} is an
+instance: a spectral continuum sampled at spacing $2\pi/T_{\mathrm{rec}}$ is
+a pure point spectrum, the field recurs exactly after $T_{\mathrm{rec}}$,
+and yet for $T_{\mathrm{rec}} = 25.6<t = 32.3$ the measured characteristic
+function is $0.3766\pm0.0042$, against $0.3740\pm0.0030$ for the continuum,
+whereas the first iterate, which is exactly Gaussian and ignores the orbit's
+displacement between recurrences, gives $0.3317$ for the recurring field
+($0.3752$ for the continuum). The recurrence is suppressed by the orbit's
+own diffusion. A rigorous statement in this regime is open.
+
+\section{Numerical check}
+\label{sec:num}
+
+{\sloppy The script is \texttt{scripts/orbit\_nonmarkov\_check.py} in
+\texttt{hani-to-algorithms} (numpy only, seed 20261124). Its output is
+\texttt{orbit\_nonmarkov\_check.json} in the new directory
+\texttt{results/orbit\_nonmarkov/}. It was
+run on 24 November 2026; the recorded run took $210$\,s on a machine shared
+with other jobs (an earlier run of nearly identical code took $149$\,s).
+Velocity Verlet, $\dd t = 0.05$. The deterministic coefficients of
+Proposition~\ref{prop:second} are in the file
+\texttt{orbit\_nonmarkov\_second\_order.json} in the same directory
+(option \texttt{--second-order}; quadrature only).\par}
+
+\paragraph{A. Undamped continuum, Gaussian lines (inside the theorem).}
+$d=2$, five modes $k\in\{(1,0),(0,1),(1,1),(1,-1),(2,1)\}$,
+$f_k = -i\varphi_kk$, $q = (1,0.5)$; $b_k$ has Gaussian spectral density
+centred at $\Omega_k\in\{0,0.4,-0.5,0.8,1.2\}$ (frequency measured from
+resonance) with widths $\sigma_k\in\{1,0.8,1.2,1,1.5\}$; amplitudes scaled so
+that $q\cdot Dq = 0.9$ by \eqref{eq:Dsharp}. $40000$ samples.
+\begin{center}
+\begin{tabular}{rrrrrrrr}
+  $N$ & $s$ & $t$ & measured (Re) & predicted & MC s.e. & deviation &
+  Prop.~\ref{prop:second} \\ \hline
+  $10^3$ & 1.0 & 10.0 & 0.7644 & 0.7408 & 0.0015 & 0.0236 & 0.0218 \\
+  $10^3$ & 1.5 & 15.0 & 0.3914 & 0.3633 & 0.0030 & 0.0281 & 0.0240 \\
+  $10^4$ & 1.0 & 21.5 & 0.7513 & 0.7422 & 0.0015 & 0.0091 & 0.0101 \\
+  $10^4$ & 1.5 & 32.3 & 0.3740 & 0.3639 & 0.0030 & 0.0102 & 0.0112 \\
+  $10^5$ & 1.0 & 46.4 & 0.7477 & 0.7410 & 0.0016 & 0.0067 & 0.0047 \\
+  $10^5$ & 1.5 & 69.6 & 0.3702 & 0.3637 & 0.0031 & 0.0066 & 0.0052 \\
+\end{tabular}
+\end{center}
+``Predicted'' is $\exp(-\frac13\eps^2t^3q\cdot Dq)$; the last column is the
+real second-order term
+$\frac12\eps^2t^2\kappa_1e^{-\eps^2t^3d/3}$ of
+Proposition~\ref{prop:second}, with $\kappa_1 = 0.5879$ (and
+$\kappa_2 = -0.2532$) by quadrature. The measured deviation agrees with it
+within $1.4$ standard errors in every row. Imaginary parts, measured
+(s.e.) against the term $-\frac12\eps^2t^2\kappa_2\exp(-\frac13\eps^2t^3d)$,
+in the order of the table: $0.0037\,(0.0029)$ vs $0.0094$;
+$0.0020\,(0.0035)$ vs $0.0103$; $0.0036\,(0.0029)$ vs $0.0043$;
+$0.0089\,(0.0035)$ vs $0.0048$; $0.0008\,(0.0029)$ vs $0.0020$;
+$-0.0021\,(0.0035)$ vs $0.0022$. Agreement within $1.3$ s.e.\ for
+$N\ge10^4$; at $N=10^3$ the measured values are $2.0$ and $2.4$ s.e.\ below.
+The remainder of Proposition~\ref{prop:second} is of the same order as its
+second-order term at this scale, so this is not a contradiction, but it is
+also not explained. The three sources of error, separately:
+\begin{itemize}
+  \item \emph{Monte Carlo:} the s.e.\ column.
+  \item \emph{Time step:} with common random numbers at $N=10^4$, the
+    difference between $\dd t = 0.1$ and $\dd t = 0.05$ is
+    $1.9\times10^{-5}$ ($s=1$) and $2.3\times10^{-5}$ ($s=1.5$), with s.e.\
+    $10^{-6}$; for a second-order scheme the error at $\dd t=0.05$ is then
+    about $10^{-5}$.
+  \item \emph{Spectral discretization:} the continuum is sampled on a
+    uniform frequency grid $\dd\Omega = 2\pi/T_{\mathrm{rec}}$,
+    $T_{\mathrm{rec}} = 204.8$ ($589$ frequencies per mode) and synthesized
+    by FFT, so the simulated field is a pure point spectrum and is exactly
+    periodic in time with recurrence time $T_{\mathrm{rec}} = 204.8\ge2.9\,t$.
+    On $[0,69.6]$ the sampled covariances differ from the exact ones by at
+    most $1.6\times10^{-7}$, and $q\cdot Dq$ computed from the sampled
+    covariance integrated to $69.6$ differs from $0.9$ by $2\times10^{-8}$.
+\end{itemize}
+The remaining deviation is the theoretical error of
+Theorem~\ref{thm:main}, whose bound is $O(N^{-1/3})$ at fixed $s$. Measured:
+from $N=10^3$ to $10^5$ the deviation falls by a factor $3.5$ at $s=1$
+(one-s.e.\ range about $2.7$ to $4.9$) and $4.3$ at $s=1.5$ (about $2.6$ to
+$8.9$); $N^{-1/3}$ predicts $4.6$ and $N^{-1/6}$ predicts $2.2$. The data
+are consistent with $N^{-1/3}$ and do not determine the exponent sharply.
+The numerical values of the bound \eqref{eq:main} itself were not
+evaluated; its constants are far from sharp.
+
+\paragraph{A$'$. Compactly supported lines (outside the theorem).} Same
+modes, $S_k\propto(1-x^2)_+$, $x = (\Omega-\Omega_k)/2\sigma_k$, for which
+$|r_k(u)|\sim u^{-2}$: (H) fails. $T_{\mathrm{rec}} = 409.6$, covariance
+error $8\times10^{-6}$, $20000$ samples, $q\cdot Dq = 0.9$.
+\begin{center}
+\begin{tabular}{rrrrrr}
+  $N$ & $s$ & measured (Re) & predicted & MC s.e. & deviation \\ \hline
+  $10^3$ & 1.0 & 0.7628 & 0.7408 & 0.0021 & 0.0220 \\
+  $10^3$ & 1.5 & 0.3909 & 0.3633 & 0.0043 & 0.0276 \\
+  $10^4$ & 1.0 & 0.7484 & 0.7406 & 0.0022 & 0.0078 \\
+  $10^4$ & 1.5 & 0.3712 & 0.3639 & 0.0043 & 0.0073 \\
+  $10^5$ & 1.0 & 0.7432 & 0.7410 & 0.0023 & 0.0022 \\
+  $10^5$ & 1.5 & 0.3696 & 0.3637 & 0.0043 & 0.0060 \\
+\end{tabular}
+\end{center}
+Consistent with Conjecture~\ref{conj:poly}; this is evidence, not proof.
+
+\paragraph{R. Recurrence.} Experiment A at $N=10^4$, $s=1.5$, $t=32.3$
+(prediction $0.3639$), $20000$ samples, with coarser frequency grids:
+\begin{center}
+\begin{tabular}{rrrrr}
+  $T_{\mathrm{rec}}$ & frequencies per mode & measured (Re) & MC s.e. &
+  $q\cdot D_Mq$ to time $t$ \\ \hline
+  6.4 & 21 & 0.0965 & 0.0050 & 9.29 \\
+  12.8 & 39 & 0.2542 & 0.0046 & 4.50 \\
+  25.6 & 75 & 0.3766 & 0.0042 & 2.70 \\
+  51.2 & 149 & 0.3805 & 0.0043 & 0.90 \\
+  102.4 & 295 & 0.3797 & 0.0043 & 0.90 \\
+\end{tabular}
+\end{center}
+The last column is $\frac12\sum|B_k|^2\int_0^t\Re\rho_{k,M}$ for the sampled
+covariance; it exceeds $0.9$ when $T_{\mathrm{rec}}<t$ because the
+covariance recurs. For $T_{\mathrm{rec}}\ge51.2$ the result agrees with
+experiment A; for $T_{\mathrm{rec}}\le12.8$ the finite mode set is visible
+and the prediction fails, as Section~\ref{sec:pp} requires. The case
+$T_{\mathrm{rec}} = 25.6$ is discussed in Section~\ref{sec:dupree}.
+
+\paragraph{B. One undamped mode (Proposition~\ref{prop:pp}).} $d=1$,
+$k=f=1$, $q=1/12$, $t = 1.5N^{1/3}$, $20000$ samples.
+\begin{center}
+\begin{tabular}{rrrrrr}
+  $N$ & $\Omega$ & measured (Re) & MC s.e. & $\max|Y|k/2\pi$ &
+  proved \\ \hline
+  $10^3$ & 0 & 0.9877 & 0.0001 & 0.79 & $\ge0.866$, $<1$ \\
+  $10^4$ & 0 & 0.9815 & 0.0001 & 0.86 & $\ge0.866$, $<1$ \\
+  $10^5$ & 0 & 0.9760 & 0.0002 & 0.91 & $\ge0.866$, $<1$ \\
+  $10^3$ & 1 & 0.9996 & $<10^{-4}$ & 0.20 & \\
+  $10^4$ & 1 & 0.9998 & $<10^{-4}$ & 0.15 & \\
+  $10^5$ & 1 & 0.9999 & $<10^{-4}$ & 0.11 & \\
+\end{tabular}
+\end{center}
+For $\Omega=0$ the variance of $Y_t$ is $3.6$, $5.4$, $7.0$, against
+$6.3$, $13.6$, $29.4$ for the first iterate: saturation by trapping. For
+$\Omega=1$ the event of (b) had frequency $1$ and
+$\max|Y_t|/(4\eps At/|\Omega|)\le0.27$.
+
+\paragraph{C. The threshold (Theorem~\ref{thm:joint},
+Proposition~\ref{prop:trap}).} One resonant Ornstein--Uhlenbeck mode,
+$d=1$, $k=f=q=1$, $\eps = 10^{-3}$, $t = 1.5\,(\gamma/\eps^2)^{1/3}$,
+prediction $e^{-1.5^3/6} = 0.5698$ for every $\gamma$; $20000$ samples,
+exact Ornstein--Uhlenbeck updates.
+\begin{center}
+\begin{tabular}{rrrrr}
+  $\gamma/\eps^{1/2}$ & $t$ & measured (Re) & MC s.e. & deviation \\ \hline
+  0.03 & 14.7 & 0.9970 & $<10^{-4}$ & 0.4273 \\
+  0.1 & 22.0 & 0.9856 & 0.0001 & 0.4158 \\
+  0.3 & 31.8 & 0.9443 & 0.0005 & 0.3745 \\
+  1 & 47.4 & 0.8078 & 0.0017 & 0.2380 \\
+  3 & 68.4 & 0.6546 & 0.0028 & 0.0849 \\
+  10 & 102.2 & 0.5821 & 0.0033 & 0.0124 \\
+  30 & 147.4 & 0.5723 & 0.0033 & 0.0026 \\
+\end{tabular}
+\end{center}
+The $t^3$ law holds for $\gamma\gg\eps^{1/2}$ and fails below, with the
+crossover at $\gamma\approx\eps^{1/2}$. From ratio $3$ to $10$ the deviation
+falls by $6.9$ and from $10$ to $30$ by about $4.7$ (the last value is
+within one s.e.\ of zero); $\rhoeff^{4/3}$ predicts $5.0$ and $4.3$,
+$\rhoeff^{2/3}$ predicts $2.2$ and $2.1$.
+
+\section{What blocks the general case}
+\label{sec:open}
+
+\begin{remark}[Why not correctors by conditional expectation]\label{rem:kushner}
+Kushner's non-Markov corrector is
+$\alpha_\tau(Y) = \int_\tau^\infty\E[g(Y,s)\,|\,\mathcal{F}_\tau]\,\dd s$, with
+$\mathcal{F}_\tau$ generated by the field up to time $\tau$; it requires
+$\nrm{\E[g(y,\tau+u)|\mathcal{F}_\tau]}{2}$ to be integrable in $u$, a
+linear-prediction hypothesis (for Gaussian processes, a $\rho$-mixing
+hypothesis on past and future) that is not a decay hypothesis on the
+covariance. For the undamped continua
+of Remark~\ref{rem:spec}(i),(iii) the field is a deterministic function of
+its past, $\E[g(y,s)|\mathcal{F}_\tau] = g(y,s)$, and the corrector does not
+exist. Regularizing by a resolvent parameter $\lambda$ gives
+$\nrm{\alpha^\lambda}{2}\sim\lambda^{-1/2}$ and a remainder
+$\eps t^2\lambda^{1/2}$, which cannot both be small at $t\sim\eps^{-2/3}$
+(a heuristic count, not a proof of impossibility). Integration by parts
+uses the covariance only, at the price of the tangent flow.
+\end{remark}
+
+\begin{remark}[The obstruction]
+In \eqref{eq:exact} the covariance $\rho_k(\tau-\sigma)$ multiplies
+$J(\tau,\sigma)$, the sensitivity of the orbit at time $\tau$ to a kick at
+time $\sigma$. Lemma~\ref{lem:tangent} bounds $J$ pathwise by
+$\exp(u\sqrt{\eps\bar\Gamma_1})$ at best (optimizing $\nu$), which at lag
+$u\sim\eps^{-2/3}$ is $\exp(\eps^{-1/6})$. The true $J$ is of size $u$ for
+$u\lesssim\eps^{-2/3}$ in a typical realization, because
+$\nabla G(Y_s,s)$ has mean zero and its contributions cancel; but proving a
+moment bound for $J$ that sees this cancellation is a two-point-motion
+problem of the same difficulty as the theorem. Hypothesis (H) avoids it by
+making $|\rho_k(u)|$ smaller than $1/|J|$ can be large; the cost is the
+restriction $\beta\ge\frac12$. Mixing hypotheses, as in \cite{KP}, avoid it
+differently and exclude deterministic processes.
+\end{remark}
+
+\begin{conjecture}\label{conj:poly}
+Theorem~\ref{thm:main} holds, with a possibly different power of $\eps$ in
+the error at $t\sim\eps^{-2/3}$, if \textup{(H)} is replaced by
+$\int_0^\infty(1+u)^m|r_k(u)|\,\dd u<\infty$ for some finite $m$. The
+missing step: a bound $\E|N(\tau,\sigma)|\le C\eps u^{p}$,
+$\E|\partial_\tau N(\tau,\sigma)|\le C\eps u^{p-1}$ for
+$\eps^{-1/2}\le u\le s\eps^{-2/3}$, with $C$ and $p$ independent of $\eps$.
+For $u\le\eps^{-1/2}$ such a bound follows from Lemma~\ref{lem:tangent}
+with $\nu = 1/u$.
+\end{conjecture}
+
+\begin{remark}[Spatial continuum]
+For a stationary field on $\mathbb{R}^d$ with continuous spatial spectrum,
+$\sup_y|\nabla G(y,\tau)| = \infty$ almost surely, and $\Gamma_1$ must be
+replaced by a supremum over the region visited by the orbit, of radius
+polynomial in $1/\eps$; one expects the same statement with powers of
+$\log(1/\eps)$ lost. The extension to countably many modes with
+$\sum_k|f_k|(1+|k|)^2<\infty$ and a common modulus of continuity should be
+routine. Neither is written out, and neither is claimed.
+\end{remark}
+
+\begin{thebibliography}{99}
+\bibitem{Note} \emph{Orbit decorrelation at $N^{1/3}$: a proved model case
+of the plasma closure strategy}, working note, 16 November 2026
+(\texttt{orbit\_decorrelation\_theorem.tex} in this folder).
+\bibitem{KP} H.~Kesten, G.~C. Papanicolaou, \emph{A limit theorem for
+stochastic acceleration}, Comm.\ Math.\ Phys.\ \textbf{78} (1980) 19--63.
+\bibitem{DGL} D.~D\"urr, S.~Goldstein, J.~L. Lebowitz, \emph{Asymptotic
+motion of a classical particle in a random potential in two dimensions:
+Landau model}, Comm.\ Math.\ Phys.\ \textbf{113} (1987) 209--230.
+\bibitem{KR} T.~Komorowski, L.~Ryzhik, \emph{The stochastic acceleration
+problem in two dimensions}, Israel J.\ Math.\ \textbf{155} (2006) 157--203.
+\bibitem{BKR} G.~Bal, T.~Komorowski, L.~Ryzhik, \emph{Kinetic limits for
+waves in a random medium}, Kinet.\ Relat.\ Models \textbf{3} (2010) 529--644.
+\bibitem{Kushner} H.~J. Kushner, \emph{Approximation and Weak Convergence
+Methods for Random Processes, with Applications to Stochastic Systems
+Theory}, MIT Press, 1984.
+\bibitem{PSV} G.~C. Papanicolaou, D.~Stroock, S.~R.~S. Varadhan,
+\emph{Martingale approach to some limit theorems}, in: Papers from the Duke
+Turbulence Conference, Duke Univ.\ Math.\ Ser.\ III, 1977.
+\bibitem{BardosBesse} C.~Bardos, N.~Besse, \emph{Diffusion limit of the
+Vlasov equation in the weak turbulent regime}, J.\ Math.\ Phys.\ \textbf{62}
+(2021) 101505.
+\bibitem{ElskensPardoux} Y.~Elskens, E.~Pardoux, \emph{Diffusion limit for
+many particles in a periodic stochastic acceleration field}, Ann.\ Appl.\
+Probab.\ \textbf{20} (2010) 2022--2039.
+\bibitem{Furutsu} K.~Furutsu, \emph{On the statistical theory of
+electromagnetic waves in a fluctuating medium (I)}, J.\ Res.\ Nat.\ Bur.\
+Standards Sect.\ D \textbf{67} (1963) 303--323.
+\bibitem{Novikov} E.~A. Novikov, \emph{Functionals and the random-force
+method in turbulence theory}, Soviet Phys.\ JETP \textbf{20} (1965)
+1290--1294.
+\bibitem{ONeil65} T.~M. O'Neil, \emph{Collisionless damping of nonlinear
+plasma oscillations}, Phys.\ Fluids \textbf{8} (1965) 2255--2262.
+\bibitem{Chirikov} B.~V. Chirikov, \emph{A universal instability of
+many-dimensional oscillator systems}, Phys.\ Rep.\ \textbf{52} (1979)
+263--379.
+\bibitem{Dupree} T.~H. Dupree, \emph{A perturbation theory for strong plasma
+turbulence}, Phys.\ Fluids \textbf{9} (1966) 1773--1782.
+\end{thebibliography}
+\noindent\emph{All entries except \cite{Note} are cited from memory; titles
+and existence are believed correct, volume and page numbers were not
+re-verified in this session.}
+
+\end{document}

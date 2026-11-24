@@ -1,0 +1,1226 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\T}{\mathbb{T}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+\newcommand{\sY}{\mathsf{Y}}
+\newcommand{\sB}{\mathsf{B}}
+\newcommand{\bbar}{\bar\rho}
+\newcommand{\nrm}[1]{\|#1\|_\infty}
+
+\emergencystretch=3em
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Orbit decorrelation at $N^{1/3}$ in the field of a free gas:\\
+shot noise, the Landau diffusion matrix, and two tagged particles}
+\author{Working note}
+\date{24 November 2026}
+
+\begin{document}
+\maketitle
+
+\section{What is and is not proved}
+
+The note \texttt{orbit\_decorrelation\_theorem.tex} treats a tagged particle
+in a \emph{prescribed Gaussian} field with Markovian mode amplitudes. Here
+the field is the one made by $N$ independent free-streaming particles. It is
+neither Gaussian nor Markovian, and each resonance is sharp. This addresses
+gaps 3, 4 and 5 of that note, and the non-interacting half of gap 1.
+
+\paragraph{Proved.}
+\begin{itemize}
+  \item \textbf{Theorem~\ref{thm:main}} (all $d\ge1$, every fixed $s>0$): at
+    $t=sN^{1/3}$ the departure $Y_t$ from the ballistic orbit converges in law
+    to a centred Gaussian with covariance $\tfrac23 s^3D(v_0)$, where $D$ is
+    the Landau diffusion matrix \eqref{eq:D}, with a true delta function
+    $\delta(k\cdot(v_0-v_*))$. The whole rescaled path converges to the
+    Kolmogorov process. The hypothesis on the velocity law is minimal: the
+    law of $k\cdot v$ has a bounded density that is continuous at the resonant
+    value $k\cdot v_0$. \emph{No rate is proved at fixed $s$.}
+  \item \textbf{Proposition~\ref{prop:first}} (rates for the first iterate):
+    $|\E e^{iq\cdot Y^{(1)}_t}-e^{-s^3q\cdot Dq/3}|=O(N^{-1/3})$, and the
+    non-Gaussian part is $O(N^{-2/3})$: the leading resonant part of the
+    third cumulant cancels because $\phi$ is even.
+  \item \textbf{Theorem~\ref{thm:path}} (a rate when $t\ll N^{1/3}$, and
+    uniformly in $N$ for small $s$): an explicit bound
+    $|\E e^{iq\cdot Y_t}-\E e^{iq\cdot Y^{(1)}_t}|\le C|q|t^3/N+C't^6/N^2$,
+    from a pathwise comparison. It gives the normalized central limit theorem
+    with rate $O(t^{-1}+t^{3/2}N^{-1/2})$ for $1\ll t\ll N^{1/3}$.
+  \item \textbf{Theorem~\ref{thm:two}} (two tagged particles in the same
+    gas): asymptotic independence when no mode is resonant with the velocity
+    difference; when $k\cdot(v^1-v^2)=0$ for some modes, convergence to an
+    explicit correlated, non-Gaussian two-point motion.
+  \item \textbf{Theorem~\ref{thm:inf}}: Theorem~\ref{thm:main} for potentials
+    with infinitely many modes, $\sum_k|k|^3|\phi_k|<\infty$.
+\end{itemize}
+
+\paragraph{Not proved.}
+\begin{itemize}
+  \item A rate of convergence at fixed $s>0$ for the full orbit. The numerics
+    (Section~\ref{sec:num}) are consistent with $O(N^{-1/3})$.
+  \item Anything for $t\gg N^{1/3}$ (in particular the kinetic time $t\sim N$,
+    which is the setting of Bodineau and Le Bris).
+  \item Anything self-consistent. The gas particles do not feel the tagged
+    particle or each other. The case in which the tagged particle is one of
+    $N$ identical interacting particles (item (i) of the brief) is untouched.
+  \item The first non-Gaussian correction to the law of the \emph{full}
+    orbit; it is identified only for the first iterate.
+\end{itemize}
+
+\paragraph{Method, and why it is not new.} After one integration by parts in
+time the force integral $\int e^{ik\cdot Y_\sigma}b_k(\sigma)\,\dd\sigma$
+involves only the time-integrated mode amplitude
+$\beta_k=\int b_k$, because $Y$ is $C^1$ in time. The orbit at scale
+$N^{1/3}$ is therefore a \emph{continuous functional, in the uniform
+topology, of finitely many linear statistics of the gas}
+(Lemmas~\ref{lem:red} and \ref{lem:map}), and the theorem follows from a
+functional central limit theorem for sums of independent processes and the
+continuous mapping theorem. This is the standard route to diffusion limits
+for equations whose noise enters through a Young (Riemann--Stieltjes)
+integral; no expansion of the orbit, no Markov structure, and no bound on
+tangent flows is needed. The limit is identified by L\'evy's
+characterization, using translation invariance of the gas.
+
+\paragraph{Prior art.} The setting is that of Bodineau and Le
+Bris~\cite{BodineauLeBris} (tagged particle in a free gas, linear Landau
+equation on the kinetic time scale, $d\ge4$); I have not checked the details
+of that paper and rely only on the description in
+\texttt{plasma\_extension.tex}. The present statements concern the much
+shorter time $N^{1/3}$ and are far weaker in scope, but hold for all $d\ge1$
+with an elementary proof. Fluctuations of mean-field particle systems on
+times $O(1)$ are classical \cite{BraunHepp,Lancellotti}. Correlation
+estimates by Glauber calculus \cite{DuerinckxChaos} and the tagged-particle
+result \cite{DuerinckxSR} treat the interacting problem and are not used.
+Diffusion limits for a particle in a weak random force field go back to
+Kesten and Papanicolaou~\cite{KP} and, for a field made by fixed scatterers,
+D\"urr, Goldstein and Lebowitz~\cite{DGL}; those concern a field that is
+mixing in space or time, at the diffusive time scale. The formal theory for
+long-range interacting particles is reviewed in \cite{NVW}. The entries
+\cite{KP,DGL,Bill,Kall,RY} are quoted from memory and were not re-checked
+online; the others are taken from the bibliography of
+\texttt{plasma\_extension.tex}.
+
+\section{Setting and conventions}
+
+\paragraph{Torus and potential.} $\T^d=(\R/2\pi\Z)^d$. Let
+$K\subset\Z^d\setminus\{0\}$ be finite with $K=-K$, let
+$\phi_k=\phi_{-k}\in\R$ for $k\in K$, and
+\[
+  \phi(x)=\sum_{k\in K}\phi_k\,e^{ik\cdot x},
+\]
+a real, even trigonometric polynomial. Put
+\[
+  f_k=-ik\,\phi_k,\qquad
+  \Lambda_j=\sum_{k\in K}|k|^{j+1}|\phi_k|\quad(j=0,1,2).
+\]
+
+\paragraph{Gas and tagged particle.} $(x_j,v_j)_{j=1}^N$ are independent and
+identically distributed; $x_j$ is uniform on $\T^d$ (probability measure) and
+independent of $v_j$, which has law $\mu$ on $\R^d$. The gas streams freely.
+The tagged particle starts from a deterministic $(x_0,v_0)$ and obeys
+\begin{equation}
+  \dot x=v,\qquad
+  \dot v=-\frac1N\sum_{j=1}^N\nabla\phi\bigl(x-x_j-v_j\tau\bigr).
+  \label{eq:model}
+\end{equation}
+Write $\eps=N^{-1/2}$, $z_j=x_j-x_0$, $u_j=v_j-v_0$,
+$Y_\tau=x_\tau-x_0-v_0\tau$, $w_\tau=v_\tau-v_0$, and
+\[
+  b_k(\tau)=\frac1{\sqrt N}\sum_{j=1}^Ne^{-ik\cdot(z_j+u_j\tau)},\qquad
+  \beta_k(\tau)=\int_0^\tau b_k(\sigma)\,\dd\sigma .
+\]
+Since $\nabla\phi(y)=\sum_kik\phi_ke^{ik\cdot y}$ and
+$x-x_j-v_j\tau=Y-z_j-u_j\tau$, \eqref{eq:model} is
+\begin{equation}
+  \dot Y=w,\qquad \dot w=\eps\sum_{k\in K}f_k\,b_k(\tau)\,e^{ik\cdot Y},
+  \qquad Y_0=0,\ w_0=0 .
+  \label{eq:Yw}
+\end{equation}
+The $z_j$ are uniform on $\T^d$ and independent of the $u_j$. Since
+$k\in\Z^d\setminus\{0\}$, $\E e^{-ik\cdot z_j}=0$, so $\E b_k=0$: the mean
+force vanishes. Also $b_{-k}=\overline{b_k}$ and $f_{-k}=\overline{f_k}$, so
+the force is real. The field is $N^{-1/2}$ times a shot noise with
+\[
+  \E\,b_k(\tau)\overline{b_l(\tau')}
+  =\delta_{kl}\,\E e^{-ik\cdot u(\tau-\tau')}
+  =\delta_{kl}\,\hat\mu\bigl(k(\tau-\tau')\bigr)e^{ik\cdot v_0(\tau-\tau')},
+  \qquad \hat\mu(\xi)=\int e^{-i\xi\cdot v}\mu(\dd v).
+\]
+Decay of this covariance in time is phase mixing and is equivalent to
+smoothness of the law of $k\cdot v$. The proofs below work in the frequency
+variable $\omega=k\cdot u$ and never use decay of $\hat\mu$.
+
+\paragraph{Hypothesis (H).} For every $k\in K$ the law of
+$\omega=k\cdot(v-v_0)$, $v\sim\mu$, has a density $\rho_k$ on $\R$ with
+$\bbar_k:=\nrm{\rho_k}<\infty$, and $\rho_k$ is continuous at $\omega=0$.
+
+Note $\rho_{-k}(\omega)=\rho_k(-\omega)$. If $\mu$ has a continuous density
+$M$ with enough decay, then
+\[
+  \rho_k(0)=\int_{\R^d}M(v_*)\,\delta\bigl(k\cdot(v_0-v_*)\bigr)\,\dd v_*
+  =\frac1{|k|}\int_{\{v_*:\ k\cdot v_*=k\cdot v_0\}}M\,\dd\mathcal{H}^{d-1}.
+\]
+For a Maxwellian of temperature $\theta$,
+$\rho_k(\omega)=(2\pi\theta|k|^2)^{-1/2}
+\exp\bigl(-(\omega+k\cdot v_0)^2/(2\theta|k|^2)\bigr)$.
+
+\paragraph{The Landau diffusion matrix.}
+\begin{equation}
+  D(v_0)=\pi\sum_{k\in K}(k\otimes k)\,\phi_k^2\,\rho_k(0)
+  =\pi\sum_{k\in K}(k\otimes k)\,|\phi_k|^2\int M(v_*)\,
+   \delta\bigl(k\cdot(v_0-v_*)\bigr)\,\dd v_* .
+  \label{eq:D}
+\end{equation}
+It is symmetric and positive semidefinite. In $d=1$,
+$\rho_k(0)=M(v_0)/|k|$ and $D(v_0)=\pi\sum_k|k|\phi_k^2\,M(v_0)$. The
+conventions are: Fourier coefficients $\phi(x)=\sum\phi_ke^{ik\cdot x}$ on a
+torus of side $2\pi$; coupling $1/N$; spatial law of each gas particle the
+uniform \emph{probability} measure. With the gas density normalized
+differently the formula changes by the corresponding factor. Compared with
+the model of the earlier note, the broadened resonance
+$\Re(1/\lambda_k)=\gamma_k/(\gamma_k^2+(\omega_k-k\cdot v_0)^2)$ is replaced
+by $\pi\rho_k(0)$, that is, by $\pi\delta$ integrated against the velocity
+law. The constant is checked independently in Proposition~\ref{prop:first}
+(by Plancherel) and numerically in Section~\ref{sec:num}.
+
+\section{Results}
+
+\begin{theorem}[Orbit decorrelation in the field of a free gas]
+\label{thm:main}
+Assume \textup{(H)}. Let $t_N\to\infty$ with
+$\lambda_N:=N^{-1/2}t_N^{3/2}\to\lambda\in[0,\infty)$; for instance
+$t_N=sN^{1/3}$ and $\lambda=s^{3/2}$, for any fixed $s>0$. Define on
+$\sigma\in[0,1]$
+\[
+  \sY^N(\sigma)=Y_{t_N\sigma},\qquad
+  W^N(\sigma)=\frac{w_{t_N\sigma}}{N^{-1/2}t_N^{1/2}} .
+\]
+Then $(\sY^N,W^N)$ converges in law in $C([0,1];\R^{2d})$ to
+$(\lambda\int_0^\cdot W,\,W)$, where $W$ is a Brownian motion in $\R^d$ with
+$\E\,W(\sigma)\otimes W(\sigma)=2D(v_0)\,\sigma$. In particular, for every
+$q\in\R^d$ and $s>0$,
+\begin{equation}
+  \lim_{N\to\infty}\E\exp\bigl(iq\cdot Y_{sN^{1/3}}\bigr)
+  =\exp\Bigl(-\tfrac13\,s^3\,q\cdot D(v_0)\,q\Bigr),
+  \label{eq:cf}
+\end{equation}
+$Y_{sN^{1/3}}$ converges in law to a centred Gaussian vector with covariance
+$\tfrac23s^3D(v_0)$, and $N^{1/3}(v_{sN^{1/3}}-v_0)$ converges in law to a
+centred Gaussian vector with covariance $2sD(v_0)$.
+\end{theorem}
+
+\begin{remark}
+(a) There is no upper restriction on $s$. (The estimate of the earlier
+note is non-trivial only for $t\ll N^{3/8}$; Lemmas~\ref{lem:red} and
+\ref{lem:map} below are deterministic and apply to that model as well, but
+the consequence for it is not worked out here.)
+(b) The dimension enters only through \eqref{eq:D}.
+(c) If $(x_0,v_0)$ is random and independent of the gas, the theorem holds
+conditionally on $(x_0,v_0)$ wherever \textup{(H)} holds at $v_0$; the limit
+is then a mixture of Gaussians.
+(d) When $\lambda=0$ (that is, $t_N\ll N^{1/3}$) the statement is
+$\sY^N\to0$ and $W^N\Rightarrow W$: velocity diffusion with coefficient
+$D/N$ is seen before the orbit has moved.
+\end{remark}
+
+\begin{proposition}[The first iterate, with rates]\label{prop:first}
+Let $Y^{(1)}_t=\eps\int_0^t(t-\sigma)\sum_kf_kb_k(\sigma)\,\dd\sigma$ be the
+first Duhamel iterate of \eqref{eq:Yw}. Assume, in addition to
+\textup{(H)}:
+\textup{(H1)} $\rho_k\in W^{2,\infty}(\R)$ for each $k\in K$;
+\textup{(H2)} for all linearly independent $k,k'\in K$ with $k+k'\in K$, the
+pair $(k\cdot v,k'\cdot v)$ has a density on $\R^2$ bounded by
+$\bbar_{k,k'}$ (this is void in $d=1$).
+Then for all $N\ge1$, $t\ge1$, $q\in\R^d$, with
+$V_N(t)=\operatorname{Var}(q\cdot Y^{(1)}_t)$,
+\begin{align}
+  \Bigl|V_N(t)-\frac{2t^3}{3N}\,q\cdot Dq\Bigr| &\le \frac{a_2t^2}{N},
+  \label{eq:var}\\
+  \Bigl|\E e^{iq\cdot Y^{(1)}_t}-e^{-V_N(t)/2}\Bigr|
+  &\le \frac{a_3t^4}{6N^2}+\frac{a_4t^7}{24N^3}+\frac{\bar a_2^2t^6}{8N^3},
+  \label{eq:nongauss}
+\end{align}
+with constants given in \eqref{eq:aconst}; $a_j$ is homogeneous of degree
+$j$ in $q$. Consequently, at $t=sN^{1/3}$,
+\[
+  \E e^{iq\cdot Y^{(1)}_t}=e^{-s^3q\cdot Dq/3}+O\bigl(s^2N^{-1/3}\bigr)
+  +O\bigl((s^4+s^7)N^{-2/3}\bigr),
+\]
+where the $N^{-1/3}$ term is a correction to the variance and all
+non-Gaussian corrections are $O(N^{-2/3})$.
+\end{proposition}
+
+\begin{theorem}[Orbit against first iterate]\label{thm:path}
+Assume that each $\rho_k$, $k\in K$, exists and is bounded (continuity is
+not needed). There is an explicit constant $C_\beta$, depending only on
+$\max_k\bbar_k$ (see \eqref{eq:Cbeta}), such that for all $N\ge1$,
+$1\le t\le N$ and $q\in\R^d$,
+\begin{equation}
+  \Bigl|\E e^{iq\cdot Y_t}-\E e^{iq\cdot Y^{(1)}_t}\Bigr|
+  \le 4\Lambda_0\Lambda_1C_\beta^2\,|q|\,\frac{t^3}{N}
+     +512\,\Lambda_1^4C_\beta^4\,\frac{t^6}{N^2}.
+  \label{eq:path}
+\end{equation}
+More precisely, on an event of probability at least
+$1-256\Lambda_1^4C_\beta^4t^6/N^2$,
+\begin{equation}
+  \sup_{\tau\le t}|Y_\tau-Y^{(1)}_\tau|\le 4\eps^2t^2\,B\,B_0,
+  \qquad \E\,BB_0\le\Lambda_0\Lambda_1C_\beta^2\,t,
+  \label{eq:pathwise}
+\end{equation}
+with $B,B_0$ defined in \eqref{eq:BB0}.
+\end{theorem}
+
+\begin{corollary}[Rate below $N^{1/3}$]\label{cor:rate}
+Under the hypotheses of Proposition~\ref{prop:first}, for $1\le t\le N$ and
+$\kappa\in\R^d$,
+\begin{align*}
+  \Bigl|\E\exp\Bigl(i\kappa\cdot\frac{Y_t}{N^{-1/2}t^{3/2}}\Bigr)
+  -e^{-\kappa\cdot D\kappa/3}\Bigr|
+  \le{}& \frac{a_2}{2t}+\frac{a_3}{6\,t^{1/2}N^{1/2}}+\frac{a_4\,t}{24N}
+  +\frac{\bar a_2^2}{8N}\\
+  &+4\Lambda_0\Lambda_1C_\beta^2|\kappa|\,\frac{t^{3/2}}{N^{1/2}}
+  +512\Lambda_1^4C_\beta^4\,\frac{t^6}{N^2},
+\end{align*}
+with $a_j,\bar a_2$ evaluated at $q=\kappa$. For $t\le N^{1/3}$ the right
+side is $O(t^{-1}+t^{3/2}N^{-1/2})$; it is $O(N^{-1/5})$ at $t\sim N^{1/5}$,
+and at $t=sN^{1/3}$ with $s\le1$ it is $O(s^{3/2})+O(s^{-1}N^{-1/3})$,
+uniformly in $N$.
+\end{corollary}
+
+\begin{proof}
+Put $q=\kappa N^{1/2}t^{-3/2}$ in \eqref{eq:var}, \eqref{eq:nongauss} and
+\eqref{eq:path}, and use $|e^{-a}-e^{-b}|\le|a-b|$ for $a,b\ge0$.
+\end{proof}
+
+\begin{theorem}[Two tagged particles]\label{thm:two}
+Let two tagged particles start from deterministic $(x^1,v^1)$ and
+$(x^2,v^2)$ and each obey \eqref{eq:model} in the same gas (they do not act
+on the gas; see Remark~\ref{rem:mutual} for their mutual force). Assume
+\textup{(H)} at $v_0=v^1$ and at $v_0=v^2$, and let
+\[
+  K_{\rm res}=\{k\in K:\ k\cdot(v^1-v^2)=0\}.
+\]
+Let $t_N$, $\lambda$ be as in Theorem~\ref{thm:main} and define
+$(\sY^{a,N},W^{a,N})$, $a=1,2$, as there. Then
+$(\sY^{1,N},W^{1,N},\sY^{2,N},W^{2,N})$ converges in law in
+$C([0,1];\R^{4d})$ to $(\sY^1,W^1,\sY^2,W^2)$, where
+$\sY^a=\lambda\int_0^\cdot W^a$, each $W^a$ is a Brownian motion with
+covariance $2D(v^a)\sigma$, and $W^1,W^2$ are continuous martingales in a
+common filtration with
+\begin{equation}
+  \dd\langle W^1,W^2\rangle_\sigma
+  =2\,\mathcal{D}\bigl(x^1-x^2+\sY^1_\sigma-\sY^2_\sigma\bigr)\,\dd\sigma,
+  \qquad
+  \mathcal{D}(r)=\pi\sum_{k\in K_{\rm res}}(k\otimes k)\,\phi_k^2\,
+  \rho_k(0)\cos(k\cdot r).
+  \label{eq:twopoint}
+\end{equation}
+Explicitly, $\dd W^a=\sum_kf_ke^{ik\cdot\sY^a}\dd\sB^a_k$, with the Gaussian
+drivers $(\sB^1,\sB^2)$ of Lemma~\ref{lem:fclt2}. In particular:
+\begin{enumerate}
+  \item if $K_{\rm res}=\emptyset$, the two limits are independent: the
+    departures of two tagged particles whose velocity difference is not
+    resonant with any mode decorrelate;
+  \item if $K_{\rm res}\ne\emptyset$ they are correlated, and in general the
+    pair is not jointly Gaussian; as $\lambda\to0$,
+    $\E\,\sY^1(1)\otimes\sY^2(1)
+    =\tfrac23\lambda^2\,\mathcal{D}(x^1-x^2)+O(\lambda^3)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Infinitely many modes]\label{thm:inf}
+Let $K=\Z^d\setminus\{0\}$, $\phi_k=\phi_{-k}\in\R$ with
+$\sum_k|k|^3|\phi_k|<\infty$. Assume \textup{(H)} for every $k$ and
+$\sup_k\bbar_k<\infty$. Then the conclusions of Theorem~\ref{thm:main} hold,
+with $D(v_0)$ given by the (convergent) series \eqref{eq:D}.
+\end{theorem}
+
+The condition $\sup_k\bbar_k<\infty$ holds for a Maxwellian
+($\bbar_k=(2\pi\theta)^{-1/2}|k|^{-1}$) and for any $\mu$ whose
+one-dimensional marginals have uniformly bounded densities.
+
+\section{Proof of Theorem~\ref{thm:main}}
+
+For $\beta\in\C^K$ write $|\beta|=\max_k|\beta_k|$, and let
+$\C^K_{\rm sym}=\{\beta:\beta_{-k}=\overline{\beta_k}\}$. For
+$y\in\R^d$, $\beta\in\C^K_{\rm sym}$ define
+\[
+  H(y,\beta)=\sum_{k\in K}f_k\,\beta_k\,e^{ik\cdot y}\in\R^d,\qquad
+  D_yH(y,\beta)[a]=\sum_{k\in K}f_k\,(ik\cdot a)\,\beta_k\,e^{ik\cdot y}.
+\]
+Then $|H|\le\Lambda_0|\beta|$, $|D_yH[a]|\le\Lambda_1|\beta||a|$, $D_yH$
+is Lipschitz in $y$ with constant $\Lambda_2|\beta|$, and $H$, $D_yH$ are
+linear in $\beta$.
+
+\subsection{Reduction to an equation driven by the integrated field}
+
+\begin{lemma}\label{lem:red}
+Fix $N$ and $t>0$, put $\lambda=\eps t^{3/2}$, and for $\sigma\in[0,1]$
+\[
+  \sY(\sigma)=Y_{t\sigma},\quad
+  W(\sigma)=\frac{w_{t\sigma}}{\eps t^{1/2}},\quad
+  \sB_k(\sigma)=t^{-1/2}\beta_k(t\sigma),\quad
+  V(\sigma)=W(\sigma)-H\bigl(\sY(\sigma),\sB(\sigma)\bigr).
+\]
+Then $\sY(0)=0$, $V(0)=0$ and
+\begin{equation}
+  \frac{\dd\sY}{\dd\sigma}=\lambda\bigl(V+H(\sY,\sB(\sigma))\bigr),\qquad
+  \frac{\dd V}{\dd\sigma}
+  =-\lambda\,D_yH(\sY,\sB(\sigma))\bigl[V+H(\sY,\sB(\sigma))\bigr].
+  \label{eq:ode}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+By \eqref{eq:Yw}, $\dd\sY/\dd\sigma=t\,w_{t\sigma}=\eps t^{3/2}W$ and
+$\dd W/\dd\sigma=t^{1/2}\sum_kf_kb_k(t\sigma)e^{ik\cdot\sY}
+=\sum_kf_k\dot\sB_k(\sigma)e^{ik\cdot\sY}$, since
+$\dot\sB_k(\sigma)=t^{1/2}b_k(t\sigma)$. By the product rule,
+$\frac{\dd}{\dd\sigma}H(\sY,\sB)=\sum_kf_k\dot\sB_ke^{ik\cdot\sY}
++D_yH(\sY,\sB)[\dot\sY]$. Subtracting, the terms containing $\dot\sB$
+cancel and $\dot V=-D_yH(\sY,\sB)[\lambda W]$ with $W=V+H(\sY,\sB)$.
+\end{proof}
+
+The point of \eqref{eq:ode} is that the driver enters only through
+$\sB(\sigma)$, not its derivative. In the original variables the same
+computation reads
+$\int_0^\tau e^{ik\cdot Y}b_k\,\dd\sigma=e^{ik\cdot Y_\tau}\beta_k(\tau)
+-\int_0^\tau ik\cdot w_\sigma\,e^{ik\cdot Y_\sigma}\beta_k(\sigma)\,\dd\sigma$.
+The worst-case size of the force integral is $\tau$, that of $\beta_k$ is
+$\tau^{1/2}$ in mean square; this gain is exactly the difference between the
+thresholds $N^{1/4}$ and $N^{1/3}$.
+
+\begin{lemma}[The solution map]\label{lem:map}
+Let $C_0$ be the space of continuous $\beta:[0,1]\to\C^K_{\rm sym}$ with
+$\beta(0)=0$, with the norm $\nrm{\beta}=\sup_\sigma|\beta(\sigma)|$. For
+every $\lambda\ge0$ and $\beta\in C_0$ the system \eqref{eq:ode} (with
+$\sB$ replaced by $\beta$ and zero initial data) has a unique solution on
+$[0,1]$, denoted $S_\lambda(\beta)=(\sY,V)\in C([0,1];\R^{2d})$. If
+$\nrm{\beta},\nrm{\beta'}\le R$ and $0\le\lambda,\lambda'\le\bar\lambda$,
+then
+\begin{equation}
+  \nrm{S_\lambda(\beta)-S_{\lambda'}(\beta')}
+  \le e^{L}\bigl(M\nrm{\beta-\beta'}+M'|\lambda-\lambda'|\bigr),
+  \label{eq:lip}
+\end{equation}
+where, with $R_1=\Lambda_0Re^{\bar\lambda\Lambda_1R}$,
+\begin{align*}
+  L&=\bar\lambda\bigl[1+\Lambda_1R+\Lambda_2R(R_1+\Lambda_0R)
+     +\Lambda_1^2R^2\bigr],\\
+  M&=\bar\lambda\bigl[\Lambda_0+\Lambda_1(R_1+2\Lambda_0R)\bigr],\qquad
+  M'=(1+\Lambda_1R)(R_1+\Lambda_0R).
+\end{align*}
+In particular $(\lambda,\beta)\mapsto S_\lambda(\beta)$ is continuous on
+$[0,\infty)\times C_0$.
+\end{lemma}
+
+\begin{proof}
+Write \eqref{eq:ode} as $\dot\Xi=F_\lambda(\sigma,\Xi)$,
+$\Xi=(y,V)$, with
+$F_\lambda=\bigl(\lambda(V+H(y,\beta(\sigma))),\,
+-\lambda D_yH(y,\beta(\sigma))[V+H(y,\beta(\sigma))]\bigr)$. $F_\lambda$
+is continuous in $\sigma$, smooth in $\Xi$, and
+$|F_\lambda|\le\lambda(1+\Lambda_1R)(|V|+\Lambda_0R)$ grows at most linearly
+in $\Xi$. So there is a unique global solution. From the second equation,
+$\frac{\dd}{\dd\sigma}(|V|+\Lambda_0R)\le\lambda\Lambda_1R(|V|+\Lambda_0R)$
+in the sense of upper derivatives, hence
+\begin{equation}
+  |V(\sigma)|+\Lambda_0R\le\Lambda_0Re^{\lambda\Lambda_1R\sigma},\qquad
+  |V(\sigma)|\le R_1 .
+  \label{eq:apriori}
+\end{equation}
+Use the norm $|\Xi|=|y|+|V|$. On $\{|V|\le R_1\}$ and for $|\beta|\le R$:
+the first component of $F_\lambda$ changes by at most
+$\lambda(|V-V'|+\Lambda_1R|y-y'|)$ between two points. For the second,
+\begin{align*}
+  &\bigl|D_yH(y)[V+H(y)]-D_yH(y')[V'+H(y')]\bigr|\\
+  &\quad\le\Lambda_2R|y-y'|(R_1+\Lambda_0R)
+  +\Lambda_1R\bigl(|V-V'|+\Lambda_1R|y-y'|\bigr).
+\end{align*}
+So $F_\lambda$ is Lipschitz in $\Xi$ with constant at most $L$. At a fixed
+point with $|V|\le R_1$, changing $\beta$ to $\beta'$ changes the first
+component by at most $\lambda\Lambda_0|\beta-\beta'|$ and the second by at
+most
+$\lambda[\Lambda_1(R_1+\Lambda_0R)+\Lambda_1R\Lambda_0]|\beta-\beta'|$, by
+linearity of $H$ and $D_yH$ in $\beta$; in total at most $M|\beta-\beta'|$.
+Changing $\lambda$ to $\lambda'$ changes $F$ by at most
+$|\lambda-\lambda'|(1+\Lambda_1R)(R_1+\Lambda_0R)=M'|\lambda-\lambda'|$.
+Both solutions satisfy \eqref{eq:apriori}. With
+$e(\sigma)=|S_\lambda(\beta)(\sigma)-S_{\lambda'}(\beta')(\sigma)|$,
+\[
+  e(\sigma)\le\int_0^\sigma\bigl(L\,e+M\nrm{\beta-\beta'}
+  +M'|\lambda-\lambda'|\bigr)\dd r ,
+\]
+and Gr\"onwall's inequality gives
+$e\le L^{-1}(e^L-1)(M\nrm{\beta-\beta'}+M'|\lambda-\lambda'|)$, which is
+\eqref{eq:lip} since $(e^L-1)/L\le e^L$.
+\end{proof}
+
+By Lemma~\ref{lem:red}, for the particle system
+\begin{equation}
+  (\sY^N,V^N)=S_{\lambda_N}(\sB^N),\qquad
+  W^N=V^N+H(\sY^N,\sB^N),
+  \label{eq:repr}
+\end{equation}
+exactly, for every $N$ and every realization of the gas.
+
+\subsection{Moments of the integrated field}
+
+\begin{lemma}\label{lem:mom}
+Assume $\rho_k$ exists and is bounded by $\bbar_k$. For $p>1$ and $h>0$,
+\begin{equation}
+  \E\Bigl|\int_0^he^{-i\omega r}\dd r\Bigr|^p
+  \le\E\min\bigl(h,2/|\omega|\bigr)^p\le\frac{4p}{p-1}\,\bbar_k\,h^{p-1},
+  \qquad\omega=k\cdot u,\ u=v-v_0 ,
+  \label{eq:res}
+\end{equation}
+and for $0\le\tau'\le\tau$, $h=\tau-\tau'$,
+\begin{align}
+  \E|\beta_k(\tau)-\beta_k(\tau')|^2&\le8\bbar_k\,h,\notag\\
+  \E|\beta_k(\tau)-\beta_k(\tau')|^4
+  &\le\frac{16}{3}\bbar_k\frac{h^3}{N}+192\,\bbar_k^2h^2 .
+  \label{eq:fourth}
+\end{align}
+Moreover $\E|b_k(\tau)|^4\le4$.
+\end{lemma}
+
+\begin{proof}
+$|\int_0^he^{-i\omega r}\dd r|=|1-e^{-i\omega h}|/|\omega|\le\min(h,2/|\omega|)$,
+and
+\[
+  \int_\R\min(h,2/|\omega|)^p\dd\omega
+  =\frac{4}{h}\,h^p+2\cdot2^p\int_{2/h}^\infty\omega^{-p}\dd\omega
+  =\Bigl(4+\frac{4}{p-1}\Bigr)h^{p-1}.
+\]
+Now $\beta_k(\tau)-\beta_k(\tau')=\sum_{j=1}^N\xi_j$ with
+$\xi_j=N^{-1/2}e^{-ik\cdot(z_j+u_j\tau')}\int_0^he^{-ik\cdot u_jr}\dd r$.
+The $\xi_j$ are independent and identically distributed, and $\E\xi_j=0$
+because $z_j$ is uniform and independent of $u_j$. Hence
+$\E|\sum\xi_j|^2=N\E|\xi_1|^2\le8\bbar_kh$ by \eqref{eq:res} with $p=2$.
+For the fourth moment expand
+$\E|\sum_j\xi_j|^4=\sum_{a,b,c,d}\E[\xi_a\bar\xi_b\xi_c\bar\xi_d]$; a term
+vanishes unless every index occurs at least twice. The terms with
+$a=b=c=d$ give $N\E|\xi_1|^4$. Those with exactly two distinct indices are of
+three types, $(a=b\ne c=d)$, $(a=d\ne b=c)$, $(a=c\ne b=d)$, contributing
+$N(N-1)$ times $(\E|\xi_1|^2)^2$, $(\E|\xi_1|^2)^2$ and
+$|\E\xi_1^2|^2\le(\E|\xi_1|^2)^2$. So
+\[
+  \E\Bigl|\sum_j\xi_j\Bigr|^4\le N\E|\xi_1|^4+3N^2(\E|\xi_1|^2)^2
+  \le N\cdot\frac{1}{N^2}\frac{16}{3}\bbar_kh^3
+  +3N^2\Bigl(\frac{8\bbar_kh}{N}\Bigr)^2 ,
+\]
+by \eqref{eq:res} with $p=4$ and $p=2$. The bound on $\E|b_k|^4$ is the
+same computation with $|\xi_j|=N^{-1/2}$: $N\cdot N^{-2}+3\le4$.
+\end{proof}
+
+\subsection{Functional central limit theorem}
+
+\begin{lemma}\label{lem:fclt}
+Assume \textup{(H)}, $t_N\to\infty$ and $t_N/N\to0$. Then $\sB^N$ converges
+in law in $C([0,1];\C^K)$ to a centred Gaussian process
+$\sB=(\sB_k)_{k\in K}$ with continuous paths, $\sB_{-k}=\overline{\sB_k}$,
+and
+\begin{equation}
+  \E\,\sB_k(\sigma)\overline{\sB_l(\sigma')}
+  =\delta_{kl}\,2\pi\rho_k(0)\min(\sigma,\sigma'),\qquad
+  \E\,\sB_k(\sigma)\sB_l(\sigma')
+  =\delta_{k,-l}\,2\pi\rho_k(0)\min(\sigma,\sigma').
+  \label{eq:cov}
+\end{equation}
+Equivalently: choosing $K_+$ with $K=K_+\sqcup(-K_+)$, the processes
+$(\sB_k)_{k\in K_+}$ are independent,
+$\sB_k=\sqrt{\pi\rho_k(0)}\,(B'_k+iB''_k)$ with $B'_k,B''_k$ independent
+standard real Brownian motions.
+\end{lemma}
+
+\begin{proof}
+Write $t=t_N$ and $\hat\jmath_\sigma(x)=\int_0^\sigma e^{-ixr}\dd r$, so that
+$\int_0^{t\sigma}e^{-i\omega r}\dd r=t\,\hat\jmath_\sigma(t\omega)$ and
+$|\hat\jmath_\sigma(x)|\le\min(1,2/|x|)$.
+
+\emph{Covariances.} By independence of the gas particles and
+$\E e^{-ik\cdot z}=0$, only diagonal terms survive and
+$\E e^{-i(k-l)\cdot z}=\delta_{kl}$:
+\[
+  \E\,\sB^N_k(\sigma)\overline{\sB^N_l(\sigma')}
+  =\frac{\delta_{kl}}{t}\int\rho_k(\omega)\,
+   t\hat\jmath_\sigma(t\omega)\,\overline{t\hat\jmath_{\sigma'}(t\omega)}\,
+   \dd\omega
+  =\delta_{kl}\int\rho_k(x/t)\,\hat\jmath_\sigma(x)
+   \overline{\hat\jmath_{\sigma'}(x)}\,\dd x .
+\]
+The integrand is dominated by $\bbar_k\min(1,2/|x|)^2\in L^1$ and converges
+pointwise to $\rho_k(0)\hat\jmath_\sigma\overline{\hat\jmath_{\sigma'}}$ by
+continuity of $\rho_k$ at $0$. By dominated convergence and Plancherel
+($\hat\jmath_\sigma$ is the Fourier transform of $1_{[0,\sigma]}$),
+the limit is $\delta_{kl}\rho_k(0)\,2\pi\int1_{[0,\sigma]}1_{[0,\sigma']}
+=\delta_{kl}2\pi\rho_k(0)\min(\sigma,\sigma')$. The second formula in
+\eqref{eq:cov} follows from $\sB^N_{-l}=\overline{\sB^N_l}$.
+
+\emph{Finite-dimensional distributions.} Fix
+$\sigma_1,\dots,\sigma_r$ and $c_{ik}\in\C$, and let
+$L_N=\Re\sum_{i,k}c_{ik}\sB^N_k(\sigma_i)=N^{-1/2}\sum_{j=1}^N\eta^N_j$,
+$\eta^N_j=t^{-1/2}\Re\sum_{i,k}c_{ik}e^{-ik\cdot z_j}
+\int_0^{t\sigma_i}e^{-ik\cdot u_jr}\dd r$. For each $N$ the $\eta^N_j$ are
+i.i.d.\ real with mean zero; $\operatorname{Var}(\eta^N_1)=\operatorname{Var}(L_N)$
+converges, by the previous step, to the variance $\mathsf v$ of
+$\Re\sum c_{ik}\sB_k(\sigma_i)$; and by Minkowski's inequality and
+\eqref{eq:res} with $p=4$,
+\[
+  \E|\eta^N_1|^4\le t^{-2}\Bigl(\sum_{i,k}|c_{ik}|
+  \bigl(\tfrac{16}{3}\bbar_kt^3\bigr)^{1/4}\Bigr)^4\le C\,t .
+\]
+Hence $\sum_j\E|N^{-1/2}\eta^N_j|^4\le Ct_N/N\to0$, which is Lyapunov's
+condition when $\mathsf v>0$; then $L_N\Rightarrow N(0,\mathsf v)$
+\cite{Bill}. If $\mathsf v=0$, $L_N\to0$ in $L^2$. By the Cram\'er--Wold
+device the finite-dimensional distributions of $\sB^N$ converge to those of
+the centred Gaussian process with covariance \eqref{eq:cov}.
+
+\emph{Tightness.} For $N$ large, $t_N\le N$, and \eqref{eq:fourth} with
+$h=t|\sigma-\sigma'|\le t$ gives
+\[
+  \E|\sB^N_k(\sigma)-\sB^N_k(\sigma')|^4
+  \le t^{-2}\Bigl(\frac{16}{3}\bbar_k\frac{t}{N}+192\bbar_k^2\Bigr)h^2
+  \le\Bigl(\frac{16}{3}\bbar_k+192\bbar_k^2\Bigr)|\sigma-\sigma'|^2 ,
+\]
+uniformly in $N$, and $\sB^N(0)=0$. By the Kolmogorov--Chentsov criterion
+\cite{Bill,Kall} the laws of $\sB^N$ are tight in $C([0,1];\C^K)$.
+Tightness and convergence of finite-dimensional distributions give
+convergence in law in $C([0,1];\C^K)$ \cite{Bill}, and the limit has
+continuous paths. The description by Brownian motions is a restatement of
+\eqref{eq:cov} (a centred Gaussian process is determined by its
+covariances).
+\end{proof}
+
+\subsection{Identification of the limit}
+
+\begin{lemma}\label{lem:id}
+Let $\sB$ be the process of Lemma~\ref{lem:fclt}, $\lambda\ge0$,
+$(\sY,V)=S_\lambda(\sB)$ and $W=V+H(\sY,\sB)$. Then $W$ is a Brownian motion
+with covariance $2D(v_0)\sigma$ and $\sY=\lambda\int_0^\cdot W$.
+\end{lemma}
+
+\begin{proof}
+Let $(\mathcal F_\sigma)$ be the filtration generated by $\sB$. The solution
+of \eqref{eq:ode} at time $\sigma$ depends continuously on the restriction of
+the driver to $[0,\sigma]$ (Lemma~\ref{lem:map} on $[0,\sigma]$), so
+$(\sY,V)$ is adapted, with $C^1$ paths, and $\dot\sY=\lambda W$ by the first
+equation of \eqref{eq:ode}. The process $e^{ik\cdot\sY_\sigma}$ is continuous,
+adapted and of finite variation, so the It\^o product rule has no bracket
+term:
+\[
+  e^{ik\cdot\sY_\sigma}\sB_k(\sigma)
+  =\int_0^\sigma e^{ik\cdot\sY_r}\dd\sB_k(r)
+  +\int_0^\sigma\sB_k(r)\,(ik\cdot\lambda W_r)\,e^{ik\cdot\sY_r}\dd r .
+\]
+Multiplying by $f_k$ and summing over $k$,
+$H(\sY_\sigma,\sB_\sigma)=\sum_kf_k\int_0^\sigma e^{ik\cdot\sY}\dd\sB_k
++\int_0^\sigma D_yH(\sY,\sB)[\lambda W]\dd r$. The last term equals
+$-V(\sigma)$ by the second equation of \eqref{eq:ode}. Therefore
+\[
+  W(\sigma)=\sum_{k\in K}f_k\int_0^\sigma e^{ik\cdot\sY_r}\,\dd\sB_k(r),
+\]
+a real, continuous, square-integrable martingale (the integrands are
+bounded). By \eqref{eq:cov} and independence of increments, the bilinear
+brackets are $\langle\sB_k,\sB_l\rangle_\sigma
+=\delta_{k,-l}2\pi\rho_k(0)\sigma$. Hence, for components $a,b$,
+\[
+  \langle W_a,W_b\rangle_\sigma
+  =\sum_{k,l}f_k^af_l^b\int_0^\sigma e^{i(k+l)\cdot\sY_r}
+   \dd\langle\sB_k,\sB_l\rangle_r
+  =\sigma\sum_kf_k^af_{-k}^b\,2\pi\rho_k(0)
+  =2D_{ab}(v_0)\,\sigma ,
+\]
+since $f_k^af_{-k}^b=(-ik_a\phi_k)(ik_b\phi_k)=k_ak_b\phi_k^2$. The phase
+$e^{i(k+l)\cdot\sY}$ has disappeared because only $l=-k$ contributes: this
+is translation invariance of the gas. The bracket is deterministic, so by
+L\'evy's characterization \cite{RY} (applied to $\theta\cdot W$ for each
+$\theta\in\R^d$, which allows $D$ to be degenerate) $W$ is a Gaussian
+process with independent increments and covariance $2D\sigma$.
+\end{proof}
+
+\subsection{Conclusion}
+
+Since $t_N^3/N\to\lambda^2<\infty$ and $t_N\to\infty$, we have $t_N/N\to0$,
+so Lemma~\ref{lem:fclt} applies. As $\lambda_N\to\lambda$ is deterministic,
+$(\lambda_N,\sB^N)\Rightarrow(\lambda,\sB)$. The map
+$(\lambda,\beta)\mapsto\bigl(\pi_1S_\lambda(\beta),\,
+\pi_2S_\lambda(\beta)+H(\pi_1S_\lambda(\beta),\beta)\bigr)$ is continuous
+from $[0,\infty)\times C_0$ to $C([0,1];\R^{2d})$ by Lemma~\ref{lem:map}.
+By \eqref{eq:repr} and the continuous mapping theorem,
+$(\sY^N,W^N)\Rightarrow(\sY,W)$ with $(\sY,W)$ as in Lemma~\ref{lem:id}.
+Finally $\sY(1)=\lambda\int_0^1W$ is centred Gaussian with covariance
+$\lambda^2\int_0^1\!\!\int_0^12D\min(\sigma,\sigma')\,\dd\sigma\dd\sigma'
+=\tfrac23\lambda^2D$, which gives \eqref{eq:cf} with $\lambda^2=s^3$, and
+$N^{1/3}w_{sN^{1/3}}=s^{1/2}W^N(1)$. \qed
+
+\section{The first iterate: proof of Proposition~\ref{prop:first}}
+
+Let $I_t(\omega)=\int_0^t(t-\sigma)e^{-i\omega\sigma}\dd\sigma=t^2J(t\omega)$,
+$J(x)=\int_0^1(1-r)e^{-ixr}\dd r$. Integrating by parts,
+$J(x)=\frac{1}{ix}+\frac{1-e^{-ix}}{x^2}$, so
+\begin{equation}
+  |J(x)|\le m(x):=\min\bigl(\tfrac12,\tfrac2{|x|}\bigr),\qquad
+  J(-x)=\overline{J(x)},\qquad \int_\R|J|^2\dd x=2\pi\int_0^1(1-r)^2\dd r
+  =\frac{2\pi}{3}.
+  \label{eq:J}
+\end{equation}
+(For $|x|\ge2$, $|J|\le1/|x|+2/x^2\le2/|x|$; for $|x|<2$,
+$|J|\le\frac12<2/|x|$.) Elementary integrals:
+$\int m^2=4$, $\int m^4=\frac23$, $\int|x|m^3=6$,
+$\int m^{3/2}=6\sqrt2$.
+
+\paragraph{Exact law.} $Y^{(1)}_t=\frac1N\sum_{j=1}^N\xi_j$ with
+$\xi_j=\sum_kf_ke^{-ik\cdot z_j}I_t(k\cdot u_j)$ i.i.d. Put
+$g_k=q\cdot f_k=-i(q\cdot k)\phi_k$ and
+$X=q\cdot\xi_1=\sum_kg_ke^{-ik\cdot z}I_t(k\cdot u)$, a real random variable
+with $\E X=0$. Then
+\begin{equation}
+  \E e^{iq\cdot Y^{(1)}_t}=\bigl(\E e^{iX/N}\bigr)^N,\qquad
+  V_N(t)=\frac{\E X^2}{N}.
+  \label{eq:product}
+\end{equation}
+
+\paragraph{Second moment.} Averaging over $z$ selects $k'=-k$, and
+$g_kg_{-k}=|g_k|^2$, $I_t(-\omega)=\overline{I_t(\omega)}$:
+\[
+  \E X^2=\sum_k|g_k|^2\int\rho_k(\omega)|I_t(\omega)|^2\dd\omega
+  =t^3\sum_k|g_k|^2\int\rho_k(x/t)|J(x)|^2\dd x .
+\]
+Split the last integral at $|x|=t$. For $|x|\le t$, by Taylor's formula
+$|\rho_k(x/t)-\rho_k(0)-\rho_k'(0)x/t|\le\frac12\nrm{\rho_k''}x^2/t^2$; the
+term $\rho_k'(0)x/t$ integrates to zero against the even function $|J|^2$
+over $|x|\le t$; and $x^2|J(x)|^2\le4$. So
+$|\int_{|x|\le t}(\rho_k(x/t)-\rho_k(0))|J|^2|\le4\nrm{\rho_k''}/t$. For
+$|x|>t$, $|J|^2\le4/t^2$ and $\int\rho_k(x/t)\dd x=t$, so
+$\int_{|x|>t}\rho_k(x/t)|J|^2\le4/t$, while
+$\rho_k(0)\int_{|x|>t}4x^{-2}\dd x=8\rho_k(0)/t$. With \eqref{eq:J},
+\[
+  \Bigl|\int\rho_k(x/t)|J|^2\dd x-\frac{2\pi}{3}\rho_k(0)\Bigr|
+  \le\frac{4\nrm{\rho_k''}+4+8\bbar_k}{t},
+\]
+and since $\pi\sum_k|g_k|^2\rho_k(0)=\pi\sum_k(q\cdot k)^2\phi_k^2\rho_k(0)
+=q\cdot Dq$, this is \eqref{eq:var}. This also confirms the constant
+$\pi$ in \eqref{eq:D}.
+
+\paragraph{Third moment.} Averaging over $z$,
+$\E X^3=\sum g_{k_1}g_{k_2}g_{k_3}\,T(k_1,k_2,k_3)$, the sum over triads
+$k_1+k_2+k_3=0$ in $K$, with
+$T=\E\,I_t(k_1\cdot u)I_t(k_2\cdot u)I_t(k_3\cdot u)$. Replacing each $k_i$
+by $-k_i$ maps triads to triads, changes $g_{k_1}g_{k_2}g_{k_3}$ to its
+negative ($g_{-k}=-g_k$ because $\phi$ is even), and $T$ to $\overline T$.
+Averaging the sum with its image,
+\begin{equation}
+  \E X^3=i\sum_{\rm triads}g_{k_1}g_{k_2}g_{k_3}\,\Im T(k_1,k_2,k_3).
+  \label{eq:third}
+\end{equation}
+\emph{Collinear triads}: $k_2=\lambda_2k_1$, $k_3=\lambda_3k_1$,
+$1+\lambda_2+\lambda_3=0$. Then
+$T=t^5\int\rho_{k_1}(x/t)J(x)J(\lambda_2x)J(\lambda_3x)\,\dd x$. By
+\eqref{eq:J} the integral $\int J(x)J(\lambda_2x)J(\lambda_3x)\dd x$ equals
+its own complex conjugate (substitute $x\to-x$), so it is real and the
+leading term $t^5\rho_{k_1}(0)\int JJJ$ does not contribute to $\Im T$:
+\begin{align*}
+  |\Im T|&\le t^5\!\int|\rho_{k_1}(x/t)-\rho_{k_1}(0)|\,
+  |J(x)J(\lambda_2x)J(\lambda_3x)|\,\dd x\\
+  &\le t^4\nrm{\rho_{k_1}'}\prod_{i=1}^3\Bigl(\int|x|\,m(\lambda_ix)^3\dd x
+  \Bigr)^{1/3}
+  =\frac{6\,t^4\nrm{\rho_{k_1}'}}{|\lambda_2\lambda_3|^{2/3}},
+\end{align*}
+by H\"older's inequality (with $\lambda_1=1$), using
+$|\rho_{k_1}(x/t)-\rho_{k_1}(0)|\le\nrm{\rho_{k_1}'}|x|/t$ and
+$\int|x|\,m(\lambda x)^3\dd x=6\lambda^{-2}$.
+\emph{Non-collinear triads} ($d\ge2$): by \textup{(H2)} the pair
+$(k_1\cdot u,k_2\cdot u)$ has density at most $\bbar_{k_1,k_2}$, and
+\[
+  |T|\le\bbar_{k_1,k_2}\,t^4\!\iint m(x)m(y)m(x+y)\,\dd x\,\dd y
+  \le\bbar_{k_1,k_2}\,t^4\,\|m\|_{3/2}^3=72\,\bbar_{k_1,k_2}\,t^4
+\]
+by Young's convolution inequality. Hence $|\E X^3|\le a_3t^4$.
+
+\paragraph{Fourth moment.} By Minkowski's inequality and
+$\E|I_t(k\cdot u)|^p\le\bbar_kt^{2p-1}\int m^p$,
+$\E X^4\le a_4t^7$ and $\E X^2\le\bar a_2t^3$, where
+\begin{equation}
+\begin{aligned}
+  a_2&=\sum_k|g_k|^2\bigl(4\nrm{\rho_k''}+4+8\bbar_k\bigr),\qquad
+  \bar a_2=4\sum_k|g_k|^2\bbar_k,\qquad
+  a_4=\tfrac23\Bigl(\sum_k|g_k|\bbar_k^{1/4}\Bigr)^4,\\
+  a_3&=\sum_{\rm collinear}|g_{k_1}g_{k_2}g_{k_3}|\,6\nrm{\rho_{k_1}'}
+  \Bigl(\frac{|k_1|^2}{|k_2||k_3|}\Bigr)^{2/3}
+  +\sum_{\rm non\text{-}collinear}|g_{k_1}g_{k_2}g_{k_3}|\,72\,
+  \bbar_{k_1,k_2},
+\end{aligned}
+\label{eq:aconst}
+\end{equation}
+with $|g_k|=|q\cdot k||\phi_k|$.
+
+\paragraph{Conclusion.} Let $\mathsf a=\E e^{iX/N}$ and
+$\mathsf b=\exp(-\E X^2/(2N^2))$. By Taylor's formula with $\E X=0$,
+$|\mathsf a-1+\frac{\E X^2}{2N^2}+\frac{i\E X^3}{6N^3}|\le\frac{\E X^4}{24N^4}$
+and $|\mathsf b-1+\frac{\E X^2}{2N^2}|\le\frac{(\E X^2)^2}{8N^4}$. Since
+$|\mathsf a|,|\mathsf b|\le1$,
+$|\mathsf a^N-\mathsf b^N|\le N|\mathsf a-\mathsf b|$, and
+$\mathsf b^N=e^{-V_N/2}$. With \eqref{eq:product} and the moment bounds this
+is \eqref{eq:nongauss}. \qed
+
+\begin{remark}[The first non-Gaussian correction]\label{rem:ng}
+For the first iterate the third cumulant is $N^{-2}\E X^3=O(t^4/N^2)$, not
+the $t^5/N^2$ that resonant particles alone would suggest (a resonant
+particle, $|k\cdot u|\lesssim1/t$, contributes $|X|\sim t^2$ with
+probability $\sim1/t$). The $t^5$ term is proportional to
+$\rho_k(0)\sum g_{k_1}g_{k_2}g_{k_3}\int JJJ$, which vanishes by the
+symmetry $k\to-k$; what remains is proportional to $\rho_k'(0)$, the
+asymmetry of the velocity law about the resonance. A numerical evaluation in
+the setting of Section~\ref{sec:num} gave $\E X^3/t^4=0.30,0.35,0.38,0.40$
+at $t=10,20,40,80$, and $\E X^3/t^5\to0$. The fourth cumulant is
+$O(t^7/N^3)$. At $t=sN^{1/3}$ both are $O(N^{-2/3})$, below the variance
+correction $O(N^{-1/3})$ of \eqref{eq:var}. For the full orbit the
+corresponding statement is not proved.
+\end{remark}
+
+\section{Pathwise comparison: proof of Theorem~\ref{thm:path}}
+
+\begin{lemma}[Maximal inequality]\label{lem:max}
+Assume $\rho_k$ is bounded by $\bbar_k$. For $1\le t\le N$, with
+$\beta_k^*=\sup_{\tau\le t}|\beta_k(\tau)|$,
+\begin{equation}
+  \bigl(\E(\beta_k^*)^4\bigr)^{1/4}\le C_{\beta,k}\,t^{1/2},\qquad
+  C_{\beta,k}=12.6\,A_k^{1/4}+1.7,\quad
+  A_k=\tfrac{64}{3}\bbar_k+192\,\bbar_k^2 .
+  \label{eq:Cbeta}
+\end{equation}
+Put $C_\beta=\max_{k\in K}C_{\beta,k}$.
+\end{lemma}
+
+\begin{proof}
+Let $J$ be the integer with $2^{J-1}<\lceil t\rceil\le2^J$; then
+$2^J<2\lceil t\rceil\le4t\le4N$. By \eqref{eq:fourth}, for $0<h\le4N$,
+$\E|\beta_k(\tau+h)-\beta_k(\tau)|^4\le A_kh^2$. For $0\le j\le J$ let
+$\Delta_j=\max_{0\le i<2^{J-j}}|\beta_k((i+1)2^j)-\beta_k(i2^j)|$. Writing
+an integer $0\le n\le2^J$ in binary and adding the dyadic blocks from the
+largest, $|\beta_k(n)|\le\sum_{j=0}^J\Delta_j$. Since
+$\E\Delta_j^4\le2^{J-j}A_k2^{2j}=A_k2^{J+j}$,
+\[
+  \bigl\|\max_{n\le2^J}|\beta_k(n)|\bigr\|_{L^4}
+  \le A_k^{1/4}2^{J/4}\sum_{j=0}^J2^{j/4}
+  \le A_k^{1/4}\,\frac{2^{1/4}}{2^{1/4}-1}\,2^{J/2}
+  \le6.3\,A_k^{1/4}(4t)^{1/2}.
+\]
+For $\tau\in[n,n+1]$, $|\beta_k(\tau)-\beta_k(n)|\le\int_n^{n+1}|b_k|$, and
+$\E\max_{n<\lceil t\rceil}(\int_n^{n+1}|b_k|)^4
+\le\lceil t\rceil\sup_\tau\E|b_k(\tau)|^4\le8t$ by Lemma~\ref{lem:mom};
+$(8t)^{1/4}\le1.7\,t^{1/2}$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:path}]
+Let
+\begin{equation}
+  B=\sum_k|f_k||k|\,\beta_k^*,\qquad B_0=\sum_k|f_k|\,\beta_k^* ,
+  \label{eq:BB0}
+\end{equation}
+$y^*=\sup_{\tau\le t}|Y_\tau|$, $w^*=\sup_{\tau\le t}|w_\tau|$,
+$\mathsf m=y^*+tw^*$, and similarly $\mathsf m_1$ for
+$(Y^{(1)},w^{(1)})$, where
+$w^{(1)}_\tau=\eps\sum_kf_k\beta_k(\tau)$,
+$Y^{(1)}_\tau=\int_0^\tau w^{(1)}$. All these are finite. Integrating by
+parts ($Y$ is $C^1$, $\beta_k(0)=0$),
+\[
+  w_\tau-w^{(1)}_\tau=\eps\sum_kf_k\Bigl[(e^{ik\cdot Y_\tau}-1)\beta_k(\tau)
+  -\int_0^\tau ik\cdot w_\sigma\,e^{ik\cdot Y_\sigma}\beta_k(\sigma)\,
+  \dd\sigma\Bigr],
+\]
+so $|w_\tau-w^{(1)}_\tau|\le\eps B(|Y_\tau|+\tau w^*)\le\eps B\mathsf m$ and
+$|Y_\tau-Y^{(1)}_\tau|\le t\eps B\mathsf m$ for $\tau\le t$. Hence
+$\mathsf m\le\mathsf m_1+2t\eps B\mathsf m$. On the event
+$\Omega_0=\{4t\eps B\le1\}$ this gives $\mathsf m\le2\mathsf m_1$. Also
+$|w^{(1)}_\tau|\le\eps B_0$ and $|Y^{(1)}_\tau|\le t\eps B_0$, so
+$\mathsf m_1\le2t\eps B_0$. Therefore, on $\Omega_0$,
+$\sup_{\tau\le t}|Y_\tau-Y^{(1)}_\tau|\le t\eps B\cdot4t\eps B_0$, which is
+\eqref{eq:pathwise}. By Minkowski's inequality and Lemma~\ref{lem:max},
+$\|B\|_{L^4}\le\Lambda_1C_\beta t^{1/2}$,
+$\|B_0\|_{L^4}\le\Lambda_0C_\beta t^{1/2}$, so
+$\E BB_0\le\Lambda_0\Lambda_1C_\beta^2t$ and, by Markov's inequality,
+$\PP(\Omega_0^c)\le(4t\eps)^4\E B^4\le256\,\Lambda_1^4C_\beta^4\eps^4t^6$.
+Finally
+\[
+  \bigl|\E e^{iq\cdot Y_t}-\E e^{iq\cdot Y^{(1)}_t}\bigr|
+  \le|q|\,\E\bigl[|Y_t-Y^{(1)}_t|;\Omega_0\bigr]+2\PP(\Omega_0^c),
+\]
+which is \eqref{eq:path}.
+\end{proof}
+
+\begin{remark}
+At $t=sN^{1/3}$ the right side of \eqref{eq:path} is $C|q|s^3+C's^6$, of
+the same order in $s$ as the effect $\frac13s^3q\cdot Dq$ unless $|q|\gg1$.
+This is not a defect of the proof: $\E|Y_t-Y^{(1)}_t|$ really is of order
+$s^3$ (Section~\ref{sec:num} measures $0.39$ at $s=1$), while by
+Theorem~\ref{thm:main} and Proposition~\ref{prop:first} the two
+\emph{laws} agree in the limit for every $s$. The orbit is not close to its
+first iterate at $N^{1/3}$; it has the same limit law. The constants in
+\eqref{eq:path} are far from sharp: in the setting of
+Section~\ref{sec:num} ($\Lambda_1=6$) the event $\Omega_0$ has appreciable
+probability only for $s\lesssim0.1$, whereas the measured distance follows
+the $s^3$ law up to $s\approx1$. A scratch check (three gases, $N=300$ and
+$1000$) confirmed the representation \eqref{eq:repr} to $10^{-14}$. Those
+cases lay outside $\Omega_0$, so the inequality \eqref{eq:pathwise} itself
+has not been tested numerically.
+\end{remark}
+
+\section{Two tagged particles: proof of Theorem~\ref{thm:two}}
+
+For $a=1,2$ let $b^a_k,\beta^a_k,\sB^{a,N}_k$ be defined as before with
+$(x_0,v_0)=(x^a,v^a)$, and $\rho^a_k$ the density of $k\cdot(v-v^a)$. For
+$k\in K_{\rm res}$, $\rho^1_k=\rho^2_k=:\rho_k$.
+
+\begin{lemma}\label{lem:fclt2}
+Under the hypotheses of Theorem~\ref{thm:two}, $(\sB^{1,N},\sB^{2,N})$
+converges in law in $C([0,1];\C^K\times\C^K)$ to a centred Gaussian process
+$(\sB^1,\sB^2)$, each $\sB^a$ as in Lemma~\ref{lem:fclt} with
+$\rho^a_k(0)$, and
+\[
+  \E\,\sB^1_k(\sigma)\overline{\sB^2_l(\sigma')}
+  =\delta_{kl}\,1_{\{k\in K_{\rm res}\}}\,e^{ik\cdot(x^1-x^2)}\,
+   2\pi\rho_k(0)\min(\sigma,\sigma').
+\]
+Equivalently $\sB^2_k=e^{-ik\cdot(x^1-x^2)}\sB^1_k$ for $k\in K_{\rm res}$,
+and $(\sB^2_k)_{k\notin K_{\rm res}}$ is independent of $\sB^1$ and of
+$(\sB^2_k)_{k\in K_{\rm res}}$.
+\end{lemma}
+
+\begin{proof}
+Tightness holds componentwise, and the Lyapunov argument of
+Lemma~\ref{lem:fclt} applies verbatim to linear combinations of both
+families. Only the cross-covariance is new. With $\omega=k\cdot(v-v^1)$ and
+$\Delta=k\cdot(v^1-v^2)$, so that $k\cdot(v-v^2)=\omega+\Delta$,
+\[
+  \E\,\sB^{1,N}_k(\sigma)\overline{\sB^{2,N}_l(\sigma')}
+  =\delta_{kl}\,\frac{e^{ik\cdot(x^1-x^2)}}{t}
+  \int\rho^1_k(\omega)\,\hat I_{t\sigma}(\omega)\,
+  \overline{\hat I_{t\sigma'}(\omega+\Delta)}\,\dd\omega,
+  \qquad\hat I_h(\omega)=\int_0^he^{-i\omega r}\dd r .
+\]
+If $\Delta=0$ this is the integral of Lemma~\ref{lem:fclt} times the phase.
+If $\Delta\ne0$: on $\{|\omega|\le|\Delta|/2\}$,
+$|\hat I_{t\sigma'}(\omega+\Delta)|\le4/|\Delta|$; on the complement
+$|\hat I_{t\sigma}(\omega)|\le4/|\Delta|$. By the Cauchy--Schwarz inequality
+for the probability density $\rho^1_k$ and \eqref{eq:res} with $p=2$ (for
+$\rho^1_k$ and for its translate $\rho^2_k$),
+$\int\rho^1_k|\hat I_{t\sigma}|\le(8\bbar_kt)^{1/2}$ and
+$\int\rho^1_k(\omega)|\hat I_{t\sigma'}(\omega+\Delta)|\dd\omega
+\le(8\bbar_kt)^{1/2}$. So the cross-covariance is at most
+$8|\Delta|^{-1}(8\bbar_k/t)^{1/2}\to0$. The two equivalent descriptions
+follow because the limit is Gaussian: for $k\in K_{\rm res}$,
+$\E|\sB^2_k-e^{-ik\cdot(x^1-x^2)}\sB^1_k|^2=0$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:two}]
+By Lemma~\ref{lem:red} applied to each particle,
+$(\sY^{a,N},V^{a,N})=S_{\lambda_N}(\sB^{a,N})$. Lemma~\ref{lem:fclt2},
+Lemma~\ref{lem:map} and the continuous mapping theorem give joint
+convergence to $(S_\lambda(\sB^1),S_\lambda(\sB^2))$, and
+Lemma~\ref{lem:id}, in the filtration generated by $(\sB^1,\sB^2)$ (in which
+both are still martingales with independent increments), gives
+$W^a=\sum_kf_k\int e^{ik\cdot\sY^a}\dd\sB^a_k$ and the marginal laws. The
+bilinear bracket is
+$\langle\sB^1_k,\sB^2_l\rangle_\sigma
+=\delta_{k,-l}1_{\{k\in K_{\rm res}\}}e^{ik\cdot(x^1-x^2)}2\pi\rho_k(0)\sigma$,
+so
+\[
+  \dd\langle W^1_a,W^2_b\rangle
+  =\sum_{k\in K_{\rm res}}k_ak_b\phi_k^2\,2\pi\rho_k(0)\,
+   e^{ik\cdot(x^1-x^2+\sY^1-\sY^2)}\dd\sigma ,
+\]
+and the sum is real by the symmetry $k\to-k$; this is \eqref{eq:twopoint}.
+(i) If $K_{\rm res}=\emptyset$, $\sB^1$ and $\sB^2$ are independent, hence so
+are $S_\lambda(\sB^1)$ and $S_\lambda(\sB^2)$. (ii) Since
+$|\sY^a(\sigma)|\le\lambda\sup|W^a|$ and $\mathcal D$ is Lipschitz,
+$\E\,W^1(\sigma)\otimes W^2(\sigma')
+=2\mathcal D(x^1-x^2)\min(\sigma,\sigma')+O(\lambda)$, and integrating twice
+gives the stated expansion.
+\end{proof}
+
+\begin{remark}[Mutual force, and item (i) of the brief]\label{rem:mutual}
+If the two tagged particles also act on each other through
+$-(1/N)\nabla\phi(x^1-x^2)$, the scaled equation for $W^a$ gains a term
+bounded by $t^{1/2}N^{-1/2}\Lambda_0\to0$. This is a uniformly small
+perturbation of the right side of \eqref{eq:ode}, and the Gr\"onwall
+argument of Lemma~\ref{lem:map} shows that it does not change the limit
+(this is a remark; the details are not written out).
+The same holds for any fixed number of tagged particles. This is as far as
+the present method goes towards exchangeable data: once all $N$ particles
+interact, the gas is no longer free, the $b_k$ are no longer sums of
+independent terms, and Lemma~\ref{lem:fclt} is exactly what is missing.
+\end{remark}
+
+\begin{remark}[Relevance to closure]
+Theorem~\ref{thm:two} is a statement about the two-point cumulant of the
+departures. Two particles of the same velocity see the same field
+($K_{\rm res}=K$, $\mathcal D(0)=D$): with $R=x^1-x^2+\sY^1-\sY^2$ their
+relative displacement, the relative velocity $W^1-W^2$ is a martingale with
+$\dd\langle W^1-W^2\rangle=4\bigl(D-\mathcal D(R)\bigr)\dd\sigma$, which
+vanishes at $R=0$.
+Particles whose velocities differ by a non-resonant amount are independent
+on this time scale. A closure that treats orbit departures of distinct
+particles as independent is therefore correct except on the resonant set
+$\{k\cdot(v^1-v^2)=0\}$; the proof gives the width of that set only as
+$|k\cdot(v^1-v^2)|\,t\gg1$ (through the bound $O((|\Delta|^2t)^{-1/2})$ on
+the cross-covariance).
+\end{remark}
+
+\section{Infinitely many modes: proof of Theorem~\ref{thm:inf}}
+
+Let $\varpi_k=|k||\phi_k|(1+|k|)^2$, so $\sum_k\varpi_k<\infty$, and for
+$\beta=(\beta_k)_{k\in K}$ with $\beta_k\in C([0,1];\C)$ let
+$\|\beta\|_\varpi=\sum_k\varpi_k\nrm{\beta_k}$. If
+$\|\beta\|_\varpi\le R$ then for every $\sigma$,
+$|H(y,\beta(\sigma))|$, $|D_yH(y,\beta(\sigma))|$ and the Lipschitz
+constant of $D_yH(\cdot,\beta(\sigma))$ are at most $R$. The proof of
+Lemma~\ref{lem:map} uses only these three bounds and linearity in $\beta$,
+so it holds with $\Lambda_jR$ replaced by $R$ and $\nrm{\beta-\beta'}$ by
+$\|\beta-\beta'\|_\varpi$; call the resulting constants $L,M,M'$ again.
+Lemma~\ref{lem:red} holds as stated (the series converge absolutely since
+$|b_k|\le\sqrt N$).
+
+By Lemma~\ref{lem:max} (after scaling) and $\sup_k\bbar_k<\infty$,
+$\E\nrm{\sB^N_k}\le\bar C:=\sup_kC_{\beta,k}<\infty$ for all $k$ and all $N$
+with $1\le t_N\le N$. For $\mathsf R\ge1$ let $P_{\mathsf R}$ set to zero
+the components with $|k|>\mathsf R$. By Markov's inequality
+$\PP(\|\sB^N\|_\varpi>R)\le\E\|\sB^N\|_\varpi/R$, and
+\[
+  \E\|\sB^N\|_\varpi\le\bar C\sum_k\varpi_k,\qquad
+  \E\|\sB^N-P_{\mathsf R}\sB^N\|_\varpi\le\bar C\sum_{|k|>\mathsf R}\varpi_k
+  =:\bar C\,\epsilon_{\mathsf R}\to0 .
+\]
+Let $\Phi$ be bounded and Lipschitz on $C([0,1];\R^{2d})$ and let
+$\mathcal G_\lambda(\beta)$ denote the map
+$\beta\mapsto(\sY,V+H(\sY,\beta))$ built from $S_\lambda$. On
+$\{\|\sB^N\|_\varpi\le R\}$, by \eqref{eq:lip} and
+$|H(y,\beta)-H(y,\beta')|\le\|\beta-\beta'\|_\varpi$,
+\[
+  \bigl|\Phi(\mathcal G_{\lambda_N}(\sB^N))
+  -\Phi(\mathcal G_{\lambda_N}(P_{\mathsf R}\sB^N))\bigr|
+  \le{\rm Lip}(\Phi)\,\bigl((1+R)e^LM+1\bigr)\,
+  \|\sB^N-P_{\mathsf R}\sB^N\|_\varpi ,
+\]
+(the factor $1+R$ because
+$|H(y,\beta)-H(y',\beta')|\le R|y-y'|+\|\beta-\beta'\|_\varpi$; note
+$\|P_{\mathsf R}\sB^N\|_\varpi\le\|\sB^N\|_\varpi$), so
+\[
+  \bigl|\E\Phi(\mathcal G_{\lambda_N}(\sB^N))
+  -\E\Phi(\mathcal G_{\lambda_N}(P_{\mathsf R}\sB^N))\bigr|
+  \le2\nrm{\Phi}\frac{\bar C\sum_k\varpi_k}{R}
+  +{\rm Lip}(\Phi)\bigl((1+R)e^LM+1\bigr)\bar C\epsilon_{\mathsf R},
+\]
+uniformly in $N$. Now $\mathcal G_{\lambda_N}(P_{\mathsf R}\sB^N)$ is the
+rescaled orbit for the truncated potential
+$\sum_{|k|\le\mathsf R}\phi_ke^{ik\cdot x}$ in the same gas, so by
+Theorem~\ref{thm:main} it converges in law, as $N\to\infty$, to the
+Kolmogorov process with matrix
+$D_{\mathsf R}=\pi\sum_{|k|\le\mathsf R}k\otimes k\,\phi_k^2\rho_k(0)$, and
+$D_{\mathsf R}\to D$ as $\mathsf R\to\infty$ (the series converges because
+$\sum|k|^2\phi_k^2\bbar_k<\infty$), so those Gaussian laws converge to the
+one with matrix $D$. Letting $N\to\infty$, then $\mathsf R\to\infty$, then
+$R\to\infty$, $\E\Phi(\mathcal G_{\lambda_N}(\sB^N))$ converges to the
+expectation of $\Phi$ under the Kolmogorov process with matrix $D$. Bounded
+Lipschitz functions determine convergence in law. \qed
+
+\section{Numerical check}\label{sec:num}
+
+Script (numpy only, seed 20261124) and output, relative to
+\texttt{hani-to-algorithms/}:
+\begin{center}
+\texttt{scripts/orbit\_shot\_noise\_check.py},\qquad
+\texttt{results/orbit\_shot\_noise/orbit\_shot\_noise\_check.json}.
+\end{center}
+Run on 24 November 2026; 204 seconds wall time (179 seconds of CPU) on a
+machine shared with other jobs.
+
+Setting: $d=1$, $K=\{\pm1,\pm2\}$, $\phi_{\pm1}=1$, $\phi_{\pm2}=0.5$,
+standard Maxwellian, $v_0=0.5$, so
+$D(v_0)=\pi\cdot2(1+2\cdot0.25)M(0.5)=3.31814$. The $N$ gas particles are
+simulated exactly (free streaming); the tagged orbit is integrated by
+velocity Verlet with step $\approx0.1$. Four tagged particles with the same
+$v_0$ at positions $0,\pi/2,\pi,3\pi/2$ and one with velocity $v_0+1$ share
+each gas; standard errors are computed over independent gases (40000, 20000,
+3000, 240 gases for $N=250$, 2000, 16000, 128000).
+
+\paragraph{Characteristic function, $q=1$, $t=sN^{1/3}$.} ``Landau'' is
+$e^{-s^3q^2D/3}$ (Theorem~\ref{thm:main}); ``1st iter.'' is the measured
+$\E\cos(qY^{(1)}_t)$ and $e^{-V_N/2}$ its Gaussian value with the exact
+finite-$N$ variance, computed by quadrature
+(Proposition~\ref{prop:first}).
+\begin{center}
+\begin{tabular}{rrrrrrrr}
+ $N$ & $s$ & $\E\cos(qY_t)$ & s.e. & Landau & 1st iter. & s.e. & $e^{-V_N/2}$\\ \hline
+ 250 & 0.5 & 0.9045 & 0.0004 & 0.8709 & 0.9035 & 0.0004 & 0.9033\\
+ 2000 & 0.5 & 0.8883 & 0.0006 & 0.8709 & 0.8878 & 0.0006 & 0.8875\\
+ 16000 & 0.5 & 0.8798 & 0.0016 & 0.8709 & 0.8793 & 0.0017 & 0.8792\\
+ 128000 & 0.5 & 0.8713 & 0.0059 & 0.8709 & 0.8713 & 0.0062 & 0.8750\\ \hline
+ 250 & 1.0 & 0.3953 & 0.0015 & 0.3309 & 0.3862 & 0.0017 & 0.3849\\
+ 2000 & 1.0 & 0.3641 & 0.0022 & 0.3309 & 0.3605 & 0.0024 & 0.3571\\
+ 16000 & 1.0 & 0.3486 & 0.0058 & 0.3309 & 0.3397 & 0.0063 & 0.3437\\
+ 128000 & 1.0 & 0.3135 & 0.0206 & 0.3309 & 0.3221 & 0.0237 & 0.3372\\ \hline
+ 250 & 1.5 & 0.0314 & 0.0016 & 0.0239 & 0.0346 & 0.0018 & 0.0337\\
+ 2000 & 1.5 & 0.0287 & 0.0023 & 0.0239 & 0.0303 & 0.0025 & 0.0284\\
+ 16000 & 1.5 & 0.0236 & 0.0060 & 0.0239 & 0.0246 & 0.0065 & 0.0261\\
+ 128000 & 1.5 & 0.0238 & 0.0201 & 0.0239 & 0.0446 & 0.0237 & 0.0250\\
+\end{tabular}
+\end{center}
+Reading: (1) the first iterate agrees with $e^{-V_N/2}$ within about one
+standard error in every row except $N=2000$, $s=1$ (1.4 s.e.), as
+\eqref{eq:nongauss} predicts. (2) The full orbit approaches the Landau
+value: at $s=1$ the differences are $0.064,0.033,0.018\pm0.006,
+-0.017\pm0.021$, roughly halving when $N$ increases eightfold, consistent
+with an $O(N^{-1/3})$ error (not proved at fixed $s$). (3) The JSON file
+also contains $q=2$, the imaginary parts (at most $0.018$ in absolute value;
+they are not zero at finite $N$ because $M$ is not symmetric about $v_0$),
+and the velocity variance $N\operatorname{Var}(w_t)/t$, which is
+$5.72,6.23,6.30\pm0.08,6.73\pm0.29$ at $s=1$ against $2D=6.636$.
+
+\paragraph{Variances and pathwise distance, $s=1$.}
+\begin{center}
+\begin{tabular}{rrrrrr}
+ $N$ & $\operatorname{Var}Y_t$ (s.e.) & $\tfrac23s^3D$ &
+ $\operatorname{Var}Y^{(1)}_t$ (s.e.) & exact $V_N$ & $\E|Y_t-Y^{(1)}_t|$ (s.e.)\\ \hline
+ 250 & 1.848 (0.007) & 2.212 & 1.906 (0.008) & 1.910 & 0.352 (0.001)\\
+ 2000 & 2.029 (0.011) & 2.212 & 2.054 (0.012) & 2.060 & 0.385 (0.002)\\
+ 16000 & 2.105 (0.029) & 2.212 & 2.147 (0.032) & 2.136 & 0.396 (0.004)\\
+ 128000 & 2.262 (0.103) & 2.212 & 2.262 (0.117) & 2.174 & 0.428 (0.016)\\
+\end{tabular}
+\end{center}
+The quadrature values satisfy $(V_N-\tfrac23t^3D/N)N/t^2\in[-1.93,-1.84]$
+in all twelve cases, in agreement with \eqref{eq:var}. The distance
+$\E|Y_t-Y^{(1)}_t|$ is essentially independent of $N$ and equals
+$0.05,0.39,1.15$ at $s=0.5,1,1.5$ ($N=16000$): it scales like $s^3$ for
+small $s$, as in \eqref{eq:pathwise}, and is of order one at $s=1$ although
+the two laws agree.
+
+\paragraph{Two tagged particles.} Correlation coefficient of the departures
+$Y_t$; ``limit'' is an Euler--Maruyama simulation of the two-point motion
+\eqref{eq:twopoint} ($2\times10^5$ paths, 200 steps; its own s.e.\ is
+$0.0025$ and its variance of $Y$ is within $1.3\%$ of $\frac23s^3D$).
+\begin{center}
+\small
+\begin{tabular}{rrrrrrr}
+ & \multicolumn{4}{c}{same $v_0$, separation $\pi/2$} &
+ \multicolumn{2}{c}{velocities $v_0$, $v_0+1$}\\
+ $s$ & $N=2000$ & $N=16000$ & $N=128000$ & limit & $N=2000$ & $N=16000$\\ \hline
+ 0.5 & $-0.348\,(0.006)$ & $-0.368\,(0.020)$ & $-0.274\,(0.066)$ & $-0.309$ & $0.042\,(0.008)$ & $-0.029\,(0.019)$\\
+ 1.0 & $-0.266\,(0.006)$ & $-0.304\,(0.018)$ & $-0.210\,(0.068)$ & $-0.247$ & $-0.013\,(0.008)$ & $-0.023\,(0.019)$\\
+ 1.5 & $-0.199\,(0.007)$ & $-0.232\,(0.016)$ & $-0.088\,(0.073)$ & $-0.182$ & $-0.014\,(0.007)$ & $-0.014\,(0.020)$\\
+\end{tabular}
+\end{center}
+The non-resonant pair decorrelates, as in Theorem~\ref{thm:two}(i); at
+$N=250$, $s=0.5$ ($t=3.1$, so $|\Delta|t$ is not large) the correlation is
+still $0.39$. The resonant pair is anticorrelated, with the sign and
+approximate size of the limit; the small-$\lambda$ value from
+\eqref{eq:twopoint} is $\mathcal D(\pi/2)/D=-1/3$. The agreement with the
+limit is only at the level of $0.02$--$0.06$, and at $N=16000$ the
+differences are about three standard errors. Part of this is a finite-$N$
+effect that can be computed: the first-iterate correlation at finite $t$ is
+$-0.354,-0.343,-0.340$ for $N=2000$ and $-0.343,-0.338,-0.336$ for
+$N=16000$ (by quadrature), not $-1/3$. The numerics support
+Theorem~\ref{thm:two} qualitatively; they do not test it sharply.
+
+\paragraph{Time-step error.} Rerunning $N=250$ (all gases) and $N=2000$
+(4000 gases) with half the step on the same gases changes
+$\E\cos(qY_t)$ by at most $1.4\times10^{-4}$ and $Y_t$ by at most
+$2.1\times10^{-3}$ in root mean square. This is separate from, and much
+smaller than, both the Monte Carlo standard errors and the finite-$N$
+differences in the tables.
+
+\section{What separates this from the particle system}
+
+Relative to the list in Section~8 of the earlier note:
+\begin{enumerate}
+  \item \emph{Self-consistency.} Not addressed. The proof uses that $b_k$
+    is a sum of $N$ independent terms; this fails as soon as the gas
+    particles feel a field. What survives is the deterministic part
+    (Lemmas~\ref{lem:red} and \ref{lem:map}): for \emph{any} field of the
+    form $N^{-1/2}\sum_kf_kb_k(\tau)e^{ik\cdot x}$, the orbit at scale
+    $N^{1/3}$ is a continuous functional of $t^{-1/2}\int_0^{t\sigma}b_k$ in
+    the frame of the ballistic orbit. A functional central limit theorem for
+    that integrated field, in the uniform topology, is then the only input
+    needed. For the interacting gas this is a statement about the
+    linearized Vlasov flow tested against the resonant functional
+    $\int_0^{t\sigma}e^{-ik\cdot(x-x_0-v_0r)}\dd r$, which is where Landau
+    damping and the dielectric factor would enter.
+  \item \emph{Back-reaction} is excluded by the model.
+  \item \emph{No Markov structure} and 4.\ \emph{sharp resonances}: handled
+    here. No Poisson equation is solved; the resonance is integrated
+    against $\rho_k$, which needs only to be bounded and continuous at the
+    resonance.
+  \item[5.] \emph{Non-Gaussian data}: handled; shot noise enters only
+    through a Lyapunov condition, $t_N/N\to0$.
+  \item[6.] \emph{From decorrelation to closure}: untouched, except for the
+    two-point statement of Theorem~\ref{thm:two}.
+\end{enumerate}
+Least secure points, for a referee: the standard theorems quoted in
+Lemmas~\ref{lem:fclt} and \ref{lem:id} are cited from memory (statement
+only, no theorem numbers); the application of the It\^o product rule in
+Lemma~\ref{lem:id} relies on adaptedness of $S_\lambda(\sB)$, which follows
+from uniqueness for \eqref{eq:ode}; and the constants in
+\eqref{eq:aconst} and \eqref{eq:Cbeta} were checked by hand but only the
+scalings ($t^2/N$, $t^4/N^2$, $s^3$) were checked numerically.
+
+\begin{thebibliography}{99}
+\small
+\bibitem{BodineauLeBris} T.~Bodineau, P.~Le~Bris, \emph{Linear Landau
+equation as a limit of a tagged particle in mean field interaction with a
+free gas}, arXiv:2602.16440 (2026, preprint). Not consulted in detail.
+\bibitem{BraunHepp} W.~Braun, K.~Hepp, \emph{The Vlasov dynamics and its
+fluctuations in the $1/N$ limit of interacting classical particles}, Comm.\
+Math.\ Phys.\ \textbf{56} (1977) 101--113.
+\bibitem{Lancellotti} C.~Lancellotti, \emph{On the fluctuations about the
+Vlasov limit for $N$-particle systems with mean-field interactions}, J.\
+Stat.\ Phys.\ \textbf{136} (2009) 643--665.
+\bibitem{DuerinckxChaos} M.~Duerinckx, \emph{On the size of chaos via Glauber
+calculus in the classical mean-field dynamics}, Comm.\ Math.\ Phys.\
+\textbf{382} (2021) 613--653.
+\bibitem{DuerinckxSR} M.~Duerinckx, L.~Saint-Raymond, \emph{Lenard--Balescu
+correction to mean-field theory}, Probab.\ Math.\ Phys.\ \textbf{2} (2021)
+27--69.
+\bibitem{NVW} A.~Nota, J.~J.~L. Vel\'azquez, R.~Winter, \emph{Interacting
+particle systems with long-range interactions: scaling limits and kinetic
+equations}, Atti Accad.\ Naz.\ Lincei Rend.\ Lincei Mat.\ Appl.\ \textbf{32}
+(2021) 335--377.
+\bibitem{KP} H.~Kesten, G.~C. Papanicolaou, \emph{A limit theorem for
+stochastic acceleration}, Comm.\ Math.\ Phys.\ \textbf{78} (1980) 19--63.
+(Quoted from memory; not verified online.)
+\bibitem{DGL} D.~D\"urr, S.~Goldstein, J.~L. Lebowitz, \emph{Asymptotic
+motion of a classical particle in a random potential in two dimensions:
+Landau model}, Comm.\ Math.\ Phys.\ \textbf{113} (1987) 209--230. (Quoted
+from memory; not verified online.)
+\bibitem{Bill} P.~Billingsley, \emph{Convergence of Probability Measures},
+2nd ed., Wiley (1999): convergence in $C[0,1]$ from finite-dimensional
+convergence and tightness; the moment criterion for tightness; and
+\emph{Probability and Measure}, 3rd ed., Wiley (1995): Lyapunov's central
+limit theorem for triangular arrays. (Standard results; theorem numbers not
+checked.)
+\bibitem{Kall} O.~Kallenberg, \emph{Foundations of Modern Probability}, 2nd
+ed., Springer (2002): the Kolmogorov--Chentsov tightness criterion.
+(Theorem number not checked.)
+\bibitem{RY} D.~Revuz, M.~Yor, \emph{Continuous Martingales and Brownian
+Motion}, 3rd ed., Springer (1999): L\'evy's characterization of Brownian
+motion. (Theorem number not checked.)
+\end{thebibliography}
+
+\end{document}

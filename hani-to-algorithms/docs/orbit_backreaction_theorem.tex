@@ -1,0 +1,1225 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\cP}{\mathcal{P}}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+\newcommand{\Div}{\operatorname{div}}
+\newcommand{\nrm}[2]{\|#1\|_{#2}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Orbit decorrelation with back-reaction:\\
+friction, the Einstein relation, and the kinetic limit\\
+in a particle--field model}
+\author{Working note}
+\date{24 November 2026}
+
+\begin{document}
+\maketitle
+
+\section{What is and is not proved}
+
+The note \texttt{orbit\_decorrelation\_theorem.tex} (``the companion note'')
+proves orbit decorrelation at $t\sim N^{1/3}$ for a tagged particle in a
+\emph{prescribed} Gaussian field. Its list of gaps has, as item~2,
+back-reaction: in the particle system the tagged particle polarizes the
+medium, which produces a friction of order $1/N$. This note treats that gap
+in a model. A particle is coupled to finitely many thermostatted field modes
+through a Hamiltonian, so that the particle acts on the field and the Gibbs
+measure at temperature $T$ is invariant. A parameter $\kappa\in[0,1]$
+multiplies the action of the particle on the field: $\kappa=1$ is the
+Hamiltonian model and $\kappa=0$ is the prescribed-field model of the
+companion note (for potential fields). Throughout, $\eps=N^{-1/2}$.
+
+\paragraph{Proved.}
+\begin{itemize}
+  \item Lemma~\ref{lem:gibbs}: the model is well posed and $e^{-H/T}$ is
+    annihilated by the adjoint generator. (Invariance of the Gibbs measure
+    under the semigroup is then quoted from a standard theorem; it is not
+    used anywhere else.)
+  \item Theorem~\ref{thm:third} (back-reaction is negligible at $N^{1/3}$):
+    for every $\kappa\in[0,1]$, $\E e^{iq\cdot Y_t}$ equals
+    $\exp(-\tfrac13\eps^2t^3\,q\cdot D(v_0)q)$ plus an explicit
+    error, with the \emph{same} $D$ as in the companion note. At
+    $t=sN^{1/3}$ the error is $O(N^{-1/3})$, uniformly in $\kappa$. For
+    $\kappa=0$ this improves the rate $N^{-1/6}$ and the range
+    $t\ll N^{3/8}$ of the companion note to $N^{-1/3}$ and $t\ll N^{2/5}$
+    (for potential fields).
+  \item Theorem~\ref{thm:drift} (the friction): the mean velocity satisfies
+    $\E v_t-v_0=\eps^2t\,m_\kappa(v_0)+O(\eps^2+\eps^3(t+t^{3/2}))$ with
+    \[
+      m_\kappa(v)=\Div_vD(v)-\frac{\kappa}{T}\,D(v)\,v ,
+    \]
+    and $\E Y_t=\tfrac12\eps^2t^2m_\kappa(v_0)+{}$smaller terms, which is
+    $O(N^{-1/3})$ at $t\sim N^{1/3}$, as the companion note predicted. The
+    first term of $m_\kappa$ is present without back-reaction; the second is
+    the polarization drag. Both come from exact algebraic identities
+    (Lemma~\ref{lem:id}).
+  \item Proposition~\ref{prop:einstein} (Einstein relation): the limiting
+    velocity generator is $\nabla\cdot(D\nabla)-\kappa T^{-1}(Dv)\cdot\nabla$.
+    For $\kappa=1$ it is symmetric with respect to the Maxwellian
+    $e^{-|v|^2/2T}$, which is stationary; the forward equation is
+    $\partial_\tau f=\nabla\cdot\bigl(D(\nabla f+vf/T)\bigr)$, the
+    ``diffusion plus friction'' structure of the linear Landau and
+    Lenard--Balescu operators.
+  \item Theorem~\ref{thm:kin} (kinetic time): for $t=\tau\eps^{-2}=\tau N$,
+    $|\E\varphi(v_t)-u(\tau,v_0)|\le C\eps$ where $u$ solves the
+    Fokker--Planck (backward) equation with the generator above. The theorem
+    is stated for a given classical solution $u$ with four bounded
+    derivatives; that such a solution exists for $\varphi\in C_b^4$ is a
+    classical fact which is quoted, not proved
+    (Remark~\ref{rem:reg}).
+\end{itemize}
+
+\paragraph{Not proved.}
+\begin{itemize}
+  \item Nothing is proved about the $N$-particle system. The medium here is
+    a finite set of field modes, each damped at a rate $\gamma_k>0$ and
+    driven by white noise. The damping stands in for Landau damping and is
+    put in by hand; the resonances are Lorentzians of width $\gamma_k$, not
+    $\delta(k\cdot(v-v_*))$ divided by a dielectric function. The constants
+    grow as $\gamma_k\to0$.
+  \item The coefficient of the $N^{-1/3}$ correction to the characteristic
+    function of $Y$ at $t\sim N^{1/3}$ is not identified. The mean
+    displacement is (Theorem~\ref{thm:drift}); the characteristic function
+    has other terms of the same order (Remark~\ref{rem:next}).
+  \item The field is still Markovian and Gaussian apart from the source;
+    gaps 1 and 3--6 of the companion note are untouched.
+\end{itemize}
+
+\paragraph{Prior art.}
+None of the methods is new. A particle coupled linearly to a bath of
+oscillators, with the bath eliminated to give friction and noise related by
+fluctuation--dissipation, is the Ford--Kac--Mazur, Caldeira--Leggett and
+Kac--Zwanzig construction \cite{FKM,CL,Zwanzig}; the Einstein relation in that
+setting is Kubo's \cite{Kubo}. The model here differs in that the coupling
+$e^{ik\cdot x}$ is nonlinear in the particle position and the bath modes
+carry their own thermostat, so the reduced equation is not a linear
+generalized Langevin equation. The proofs use perturbed test functions with
+explicit correctors for a fast Markov process
+\cite{PSV,PavliotisStuart}; the limit theorem for a particle in a weak
+random force field is Kesten--Papanicolaou \cite{KP}. In plasma test-particle
+theory the two parts of the drift are standard: the drag from the
+polarization wake of the test particle and the drift from the velocity
+dependence of the diffusion tensor, with the Lenard--Balescu operator as
+their sum \cite{RR,TH,Hubbard,Lenard,Balescu}. What is done here is to prove
+the corresponding statements, with rates, in a model that keeps the
+resonance structure $\omega_k=k\cdot v$ and is simple enough for every
+corrector to be written down. The references are cited from memory and were
+not checked against the sources.
+
+\section{The model}
+
+\subsection{Hamiltonian and thermostat}
+
+Fix a finite set $K\subset\mathbb{R}^d\setminus\{0\}$ and for $k\in K$
+numbers $c_k\in\mathbb{C}$, $\gamma_k>0$, $\omega_k\in\mathbb{R}$; fix $T>0$
+and $\eps\in(0,1]$. The state is $(x,v,a)$ with $x,v\in\mathbb{R}^d$ and
+$a=(a_k)_{k\in K}\in\mathbb{C}^K$. Let
+\begin{equation}
+  H(x,v,a)=\tfrac12|v|^2+T\sum_{k\in K}|a_k|^2
+    +\eps\sum_{k\in K}\Re\bigl(c_k\,a_k\,e^{ik\cdot x}\bigr).
+  \label{eq:H}
+\end{equation}
+Write $a_k=a_k'+ia_k''$ and
+$\partial_{\bar a_k}=\tfrac12(\partial_{a_k'}+i\partial_{a_k''})$. Let
+$(B_k)$ be independent complex Brownian motions with $\E|B_k(t)|^2=t$,
+$\E B_k(t)^2=0$. The dynamics is
+\begin{equation}
+\begin{aligned}
+  \dd x&=v\,\dd t,\qquad
+  \dd v=-\nabla_xH\,\dd t
+     =\eps\sum_k\Re\bigl(f_k\,a_k\,e^{ik\cdot x}\bigr)\dd t,
+     \qquad f_k=-i\,c_k\,k,\\
+  \dd a_k&=-\frac{\gamma_k+i\omega_k}{T}\,\partial_{\bar a_k}H\,\dd t
+     +\sqrt{2\gamma_k}\,\dd B_k
+   =-(\gamma_k+i\omega_k)\Bigl(a_k+\frac{\eps\,\bar c_k}{2T}\,e^{-ik\cdot x}\Bigr)\dd t
+     +\sqrt{2\gamma_k}\,\dd B_k .
+\end{aligned}
+\label{eq:model}
+\end{equation}
+The part with $i\omega_k$ is Hamiltonian; the part with $\gamma_k$, together
+with the noise, is a Langevin thermostat acting on the field only. With the
+source term $\eps\bar c_ke^{-ik\cdot x}/2T$ dropped, $a_k$ is the stationary
+Ornstein--Uhlenbeck mode of the companion note and
+$F=\sum_k\Re(f_ka_ke^{ik\cdot x})$ its potential field.
+
+\begin{lemma}\label{lem:gibbs}
+\emph{(i)} For every initial condition, \eqref{eq:model} has a unique global
+strong solution. \emph{(ii)} Let $\cL_H$ be the generator of
+\eqref{eq:model} and $\rho=e^{-H/T}$. Then $\cL_H^*\rho=0$ pointwise, where
+$\cL_H^*$ is the formal adjoint with respect to Lebesgue measure on
+$\mathbb{R}^d\times\mathbb{R}^d\times\mathbb{C}^K$. \emph{(iii)} With
+$\tilde a_k=a_k+\eps\bar c_ke^{-ik\cdot x}/2T$,
+\begin{equation}
+  H=\tfrac12|v|^2+T\sum_k|\tilde a_k|^2-\frac{\eps^2}{4T}\sum_k|c_k|^2 ,
+  \label{eq:Hdressed}
+\end{equation}
+so under $\rho$ the variables $x$, $v$, $(\tilde a_k)$ are independent: $x$
+has Lebesgue measure, $v$ is $N(0,T\,\mathrm{Id})$, and the $\tilde a_k$ are
+standard complex Gaussians ($\E|\tilde a_k|^2=1$, $\E\tilde a_k^2=0$).
+\end{lemma}
+
+\begin{proof}
+(i) Let $\hat a_k$ solve
+$\dd\hat a_k=-(\gamma_k+i\omega_k)\hat a_k\dd t+\sqrt{2\gamma_k}\dd B_k$,
+$\hat a_k(0)=a_k(0)$. For any continuous path $x$, the third line of
+\eqref{eq:model} is linear in $a_k$ and gives
+\[
+  a_k(t)=\hat a_k(t)-\frac{\eps\bar c_k}{2T}(\gamma_k+i\omega_k)
+    \int_0^te^{-(\gamma_k+i\omega_k)(t-s)}e^{-ik\cdot x_s}\,\dd s ,
+  \qquad
+  |a_k(t)-\hat a_k(t)|\le\frac{\eps|c_k|\,|\gamma_k+i\omega_k|}{2T\gamma_k}.
+\]
+The coefficients of \eqref{eq:model} are smooth and the noise is additive,
+so there is a unique strong solution up to a possible explosion time. On
+any interval of existence the display bounds $|a_k|$ by
+$|\hat a_k|+C$, hence the force on the particle by
+$\eps\sum_k|f_k|(|\hat a_k(t)|+C)$, which is locally bounded in $t$; so
+$v$ and $x$ stay bounded on bounded time intervals and there is no
+explosion.
+
+(ii) In the real coordinates $(a_k',a_k'')$ the drift of $a_k$ is
+\[
+  \frac{\omega_k}{2T}\bigl(\partial_{a_k''}H,\,-\partial_{a_k'}H\bigr)
+  -\frac{\gamma_k}{2T}\bigl(\partial_{a_k'}H,\,\partial_{a_k''}H\bigr),
+\]
+and $\sqrt{2\gamma_k}B_k$ has independent real and imaginary parts of
+variance $\gamma_kt$. So $\cL_H=X+\sum_k\cL_k$ with
+\[
+  X=v\cdot\nabla_x-\nabla_xH\cdot\nabla_v
+    +\sum_k\frac{\omega_k}{2T}\bigl(\partial_{a_k''}H\,\partial_{a_k'}
+      -\partial_{a_k'}H\,\partial_{a_k''}\bigr),
+  \qquad
+  \cL_k=\frac{\gamma_k}{2}\,e^{H/T}\,\nabla_{a_k}\!\cdot\!
+     \bigl(e^{-H/T}\nabla_{a_k}\,\cdot\,\bigr),
+\]
+$\nabla_{a_k}=(\partial_{a_k'},\partial_{a_k''})$. The vector field $X$ is
+divergence free and $XH=0$, so $X^*\rho=-X\rho=0$. For each $k$,
+$\cL_k^*\rho=\frac{\gamma_k}{2}\nabla_{a_k}\cdot
+(\rho\,\nabla_{a_k}(\rho^{-1}\rho))=0$. (The identity $\cL_H^*\rho=0$ was
+also checked symbolically for $d=1$ and one mode.)
+
+(iii) $T|\tilde a_k|^2=T|a_k|^2+\eps\Re(c_ka_ke^{ik\cdot x})
++\eps^2|c_k|^2/4T$.
+\end{proof}
+
+\begin{remark}[Invariance]\label{rem:inv}
+If $K\subset2\pi\mathbb{Z}^d$ the dynamics descends to
+$x\in\mathbb{T}^d$ and $\rho$ normalizes to a probability measure, the Gibbs
+measure. That it is invariant under the semigroup, and not only
+infinitesimally, follows from (i), (ii) and a standard argument: the
+martingale problem for $\cL_H$ on $C_c^\infty$ is well posed because the
+coefficients are locally Lipschitz and there is no explosion
+\cite{SV}, and then $\int\cL_Hf\,\rho=0$ for $f\in C_c^\infty$ implies
+invariance by Echeverr\'ia's theorem \cite[Ch.~4, Thm~9.17]{EK}. This is
+quoted, not proved here (the theorem number is from memory), and nothing
+below depends on it. The theorems below start the particle at a fixed
+$(x_0,v_0)$, not from the Gibbs measure.
+\end{remark}
+
+\subsection{Dressed variables and the interpolating family}
+
+By \eqref{eq:Hdressed} the force on the particle is
+$-\nabla_xH=\eps\sum_k\Re(f_k\tilde a_ke^{ik\cdot x})$: the self-force
+$\eps^2\Re(ik|c_k|^2)/2T$ vanishes. Since
+$\dd(e^{-ik\cdot x})=-i(k\cdot v)e^{-ik\cdot x}\dd t$,
+\[
+  \dd\tilde a_k=\Bigl[-(\gamma_k+i\omega_k)\tilde a_k
+     -i\eps\,(k\cdot v)\,\frac{\bar c_k}{2T}\,e^{-ik\cdot x}\Bigr]\dd t
+     +\sqrt{2\gamma_k}\,\dd B_k .
+\]
+In the dressed variable the source is proportional to $k\cdot v$: a particle
+at rest does not excite the field. For $\kappa\in[0,1]$ consider
+\begin{equation}
+\begin{aligned}
+  \dd x&=v\,\dd t,\qquad
+  \dd v=\eps\sum_k\Re\bigl(f_k\,\tilde a_k\,e^{ik\cdot x}\bigr)\dd t,\\
+  \dd\tilde a_k&=\Bigl[-(\gamma_k+i\omega_k)\tilde a_k
+     -i\eps\kappa\,(k\cdot v)\,\frac{\bar c_k}{2T}\,e^{-ik\cdot x}\Bigr]\dd t
+     +\sqrt{2\gamma_k}\,\dd B_k .
+\end{aligned}
+\label{eq:kappa}
+\end{equation}
+For $\kappa=1$ this is \eqref{eq:model}. For $\kappa=0$ it is the
+prescribed-field model of the companion note with $f_k=-ic_kk$. Only
+$\kappa\in\{0,1\}$ has a physical meaning; intermediate values are used to
+keep track of where the back-reaction enters.
+
+\subsection{Reduction and initial data}
+
+Let $z_k=\tilde a_k\,e^{ik\cdot x}$, the amplitude of mode $k$ seen by the
+particle, and
+\begin{equation}
+  \lambda_k(v)=\gamma_k+i(\omega_k-k\cdot v),\qquad
+  s_k(v)=-i\,(k\cdot v)\,\frac{\bar c_k}{2T},\qquad
+  G(z)=\sum_k\Re(f_kz_k).
+\end{equation}
+By It\^o's formula ($x$ has finite variation),
+\begin{equation}
+  \dd v=\eps\,G(z)\,\dd t,\qquad
+  \dd z_k=\bigl[-\lambda_k(v)\,z_k+\eps\kappa\,s_k(v)\bigr]\dd t
+     +\sqrt{2\gamma_k}\,\dd W_k,
+  \label{eq:vz}
+\end{equation}
+where $W_k=\int e^{ik\cdot x}\dd B_k$ are again independent complex Brownian
+motions with $\E|W_k(t)|^2=t$, $\E W_k(t)^2=0$ (L\'evy's characterization:
+$\dd[W_k,\bar W_l]=\delta_{kl}\dd t$, $\dd[W_k,W_l]=0$). So $(v,z)$ is
+itself a diffusion: the position has been eliminated. Let
+$Y_t=x_t-x_0-v_0t$ and $w_t=v_t-v_0$, so $\dot Y=w$. The generator of
+$(Y,v,z)$ is
+\begin{equation}
+  \cL=(v-v_0)\cdot\nabla_Y+\eps\,G\cdot\nabla_v+A^v+\eps\kappa\,S,
+  \label{eq:gen}
+\end{equation}
+\[
+  A^v=\sum_k\Bigl(-\lambda_k(v)z_k\partial_{z_k}
+     -\bar\lambda_k(v)\bar z_k\partial_{\bar z_k}
+     +2\gamma_k\partial_{z_k}\partial_{\bar z_k}\Bigr),
+  \qquad
+  S=\sum_k\bigl(s_k(v)\partial_{z_k}+\bar s_k(v)\partial_{\bar z_k}\bigr).
+\]
+$A^v$ is the generator of the modes seen from a particle moving at constant
+velocity $v$; its invariant law is $\pi$, the law of independent standard
+complex Gaussians, for every $v$.
+
+\paragraph{Initial data.} $(x_0,v_0)$ is deterministic and
+\begin{equation}
+  z_k(0)=\zeta_k+\eps\mu_k,\qquad
+  (\zeta_k)\sim\pi,\quad \mu_k\in\mathbb{C}\ \text{deterministic},\quad
+  \max_k|\mu_k|\le\mu_* .
+  \label{eq:init}
+\end{equation}
+Two cases matter. \emph{Dressed start}: $\mu=0$, the Gibbs law of the field
+given the particle (Lemma~\ref{lem:gibbs}(iii)); for $\kappa=0$ it is the
+initial law of the companion note. \emph{Undressed start}: the field is in
+its own equilibrium, $a_k(0)$ standard Gaussian in \eqref{eq:model}, which
+is $\mu_k=\bar c_k/2T$ at $\kappa=1$; the particle then acquires its
+polarization cloud during an initial transient of length $O(1/\gamma_k)$.
+All results hold for both, with constants depending on $\mu_*$.
+
+\paragraph{Constants.} Below, $C$ denotes a constant depending only on $d$,
+$K$, $(c_k)$, $(\gamma_k)$, $(\omega_k)$, $T$ and $\mu_*$ (and on $q$ in
+Section~\ref{sec:third}), and \emph{not} on $\eps\in(0,1]$,
+$\kappa\in[0,1]$, $t$, $x_0$, $v_0$. Its value changes from line to line.
+Write $|z|=\sum_k|z_k|$.
+
+\begin{lemma}[Moments of the modes]\label{lem:mom}
+Let $\hat a_k$ be the stationary Ornstein--Uhlenbeck process
+$\dd\hat a_k=-(\gamma_k+i\omega_k)\hat a_k\dd t+\sqrt{2\gamma_k}\dd B_k$
+with $\hat a_k(0)=e^{-ik\cdot x_0}\zeta_k$. Then, pathwise and for all
+$t\ge0$,
+\[
+  |z_k(t)|\le|\hat a_k(t)|+\eps\rho_k,\qquad
+  \rho_k=|\mu_k|+\frac{\kappa|c_k|}{2T}\Bigl(2+\frac{|\gamma_k+i\omega_k|}{\gamma_k}\Bigr).
+\]
+In particular \eqref{eq:kappa} has a unique global solution and, for every
+$p\ge1$,
+\[
+  m_p:=\sup_{t\ge0}\E\bigl(1+|z(t)|\bigr)^p
+  \le\E\Bigl(1+\sum_k(|\zeta_k|+\rho_k)\Bigr)^p<\infty .
+\]
+\end{lemma}
+
+\begin{proof}
+Let $a^\kappa_k=\tilde a_k-\eps\kappa\bar c_ke^{-ik\cdot x}/2T$. By
+\eqref{eq:kappa},
+$\dd a^\kappa_k=-(\gamma_k+i\omega_k)\tilde a_k\dd t+\sqrt{2\gamma_k}\dd B_k$,
+so $\delta_k=a_k^\kappa-\hat a_k$ solves
+$\dot\delta_k=-(\gamma_k+i\omega_k)\bigl(\delta_k
++\eps\kappa\bar c_ke^{-ik\cdot x}/2T\bigr)$ with
+$|\delta_k(0)|\le\eps(|\mu_k|+\kappa|c_k|/2T)$. Hence
+$|\delta_k(t)|\le\eps(|\mu_k|+\kappa|c_k|/2T)
++\eps\kappa|c_k||\gamma_k+i\omega_k|/(2T\gamma_k)$, and
+$|z_k|=|\tilde a_k|\le|\hat a_k|+|\delta_k|+\eps\kappa|c_k|/2T$. Global
+existence follows as in Lemma~\ref{lem:gibbs}(i). The moment bound uses
+$\eps\le1$ and stationarity of $\hat a$.
+\end{proof}
+
+So, with back-reaction, the modes are no longer an Ornstein--Uhlenbeck
+process independent of the orbit, but they differ from one by a
+deterministically bounded amount of order $\eps$. This is the only a priori
+information on the field that is used.
+
+\section{Coefficients, the Poisson equation, and three identities}
+
+Define
+\begin{equation}
+  D(v)=\frac12\sum_{k\in K}|c_k|^2\,\Re\!\Bigl(\frac1{\lambda_k(v)}\Bigr)\,k\otimes k,
+  \qquad
+  \Re\!\Bigl(\frac1{\lambda_k(v)}\Bigr)
+   =\frac{\gamma_k}{\gamma_k^2+(\omega_k-k\cdot v)^2}.
+  \label{eq:D}
+\end{equation}
+$D(v_0)$ is the matrix $D$ of the companion note for $f_k=-ic_kk$. Since
+$\nabla_v(1/\lambda_k)=ik/\lambda_k^2$,
+\begin{equation}
+  \Div D(v)=\frac12\sum_k|c_k|^2|k|^2\,\Re\!\Bigl(\frac{i}{\lambda_k(v)^2}\Bigr)k
+  =\sum_k|c_k|^2|k|^2\,
+   \frac{\gamma_k\,(\omega_k-k\cdot v)}{\bigl(\gamma_k^2+(\omega_k-k\cdot v)^2\bigr)^2}\;k ,
+  \label{eq:divD}
+\end{equation}
+where $(\Div D)_j=\sum_i\partial_{v_i}D_{ij}$. Define the drift
+\begin{equation}
+  m_\kappa(v)=\Div D(v)-\frac{\kappa}{T}\,D(v)\,v
+  =\sum_k|c_k|^2\,k\,\Bigl[
+    \frac{|k|^2\gamma_k(\omega_k-k\cdot v)}{(\gamma_k^2+(\omega_k-k\cdot v)^2)^2}
+    -\frac{\kappa}{2T}\,\frac{\gamma_k\,(k\cdot v)}{\gamma_k^2+(\omega_k-k\cdot v)^2}\Bigr].
+  \label{eq:m}
+\end{equation}
+
+\begin{lemma}\label{lem:coef}
+The functions $1/\lambda_k(v)$ and $(k\cdot v)/\lambda_k(v)$ are bounded on
+$\mathbb{R}^d$ with bounded derivatives of all orders. Consequently $D$,
+$\Div D$, $v\mapsto D(v)v$ and $m_\kappa$ belong to
+$C_b^\infty(\mathbb{R}^d)$, and $v\cdot D(v)v$ is bounded.
+\end{lemma}
+
+\begin{proof}
+$|\lambda_k|\ge\gamma_k$ and
+$|k\cdot v|\le|\omega_k|+|\omega_k-k\cdot v|\le|\omega_k|+|\lambda_k|$, so
+$|k\cdot v|/|\lambda_k|\le1+|\omega_k|/\gamma_k$. Derivatives of
+$\lambda_k^{-n}$ and of $(k\cdot v)\lambda_k^{-n}$ are linear combinations of
+functions of the same two forms with $n\ge1$. Finally
+$D(v)v=\frac12\sum|c_k|^2\Re(1/\lambda_k)(k\cdot v)k$ and
+$v\cdot D(v)v=\frac12\sum|c_k|^2\Re(1/\lambda_k)(k\cdot v)^2
+\le\frac12\sum|c_k|^2\gamma_k(k\cdot v)^2/|\lambda_k|^2$.
+\end{proof}
+
+\paragraph{Polynomial classes.} Let $\cP_n$ be the set of polynomials of
+degree at most $n$ in $(z,\bar z)$ whose coefficients are functions in
+$C_b^\infty(\mathbb{R}^d)$ of $v$. For $p\in\cP_n$ and every multi-index
+$j$, $|\partial_v^jp(v,z)|\le C_{p,j}(1+|z|)^n$. Write $\E_\pi p$ for the
+mean of $p(v,\cdot)$ under $\pi$, a function of $v$, and
+\[
+  \cK=G\cdot\nabla_v+\kappa S ,\qquad\text{so that}\qquad
+  \cL=(v-v_0)\cdot\nabla_Y+A^v+\eps\,\cK .
+\]
+If $p\in\cP_n$ then $G\cdot\nabla_vp\in\cP_{n+1}$, and $Sp$ is a polynomial
+of degree $n-1$ whose coefficients are $(k\cdot v)$ times functions in
+$C_b^\infty$; hence
+\begin{equation}
+  |\cK p(v,z)|\le C_p\,(1+|v|)\,(1+|z|)^{n+1}.
+  \label{eq:Kbound}
+\end{equation}
+
+\begin{lemma}[Poisson equation]\label{lem:poisson}
+Let $p\in\cP_n$ with $\E_\pi p=0$ for every $v$. There is a unique
+$Qp\in\cP_n$ with $\E_\pi Qp=0$ and $A^vQp=-p$. The map $Q$ is linear, acts
+on the coefficients of $p$ by multiplication with functions in $C_b^\infty$
+determined by $(\gamma_k,\omega_k,k)$, and preserves parity in $z$.
+\end{lemma}
+
+\begin{proof}
+For multi-indices $a,b\in\mathbb{N}^K$,
+\[
+  A^v(z^a\bar z^b)=-\Lambda_{ab}(v)\,z^a\bar z^b
+   +\sum_k2\gamma_ka_kb_k\,z^{a-e_k}\bar z^{b-e_k},
+  \qquad
+  \Lambda_{ab}=\sum_k\bigl(a_k\lambda_k+b_k\bar\lambda_k\bigr).
+\]
+For $(a,b)\ne0$, $\Re\Lambda_{ab}\ge\min_k\gamma_k>0$ and
+$\nabla_v\Lambda_{ab}$ is constant, so $1/\Lambda_{ab}\in C_b^\infty$. By
+induction on $n$ we claim: for every $p\in\cP_n$ there is $u\in\cP_n$
+without constant term such that $A^vu+p$ does not depend on $z$. For $n=0$
+take $u=0$. For $n\ge1$ let $\sum_{|a|+|b|=n}p_{ab}z^a\bar z^b$ be the top
+degree part of $p$ and $u_n=\sum p_{ab}\Lambda_{ab}^{-1}z^a\bar z^b$; then
+$A^vu_n+p\in\cP_{n-1}$ and the induction hypothesis applies to it. Next,
+$\int A^v(z^a\bar z^b)\dd\pi=0$: since
+$\int z^a\bar z^b\dd\pi=\delta_{ab}\,a!$, both terms vanish if $a\ne b$, and
+if $a=b$ the sum is $-2\sum_k\gamma_ka_k\,a!+\sum_k2\gamma_ka_k^2(a-e_k)!=0$.
+Therefore $A^vu+p=\E_\pi p=0$, and $Qp=u-\E_\pi u$. If $u\in\cP_n$ and
+$A^vu=0$, the top degree part of $u$ vanishes unless it is constant, so $u$
+is a function of $v$; this gives uniqueness. Linearity, the form of the
+coefficients, and parity are clear from the construction.
+\end{proof}
+
+Define the vector-valued first corrector and its companion
+\begin{equation}
+  \Psi(v,z)=\sum_k\Re\Bigl(\frac{f_k\,z_k}{\lambda_k(v)}\Bigr),\qquad
+  \Psi'(v,z)=\sum_k\Re\Bigl(\frac{f_k\,z_k}{\lambda_k(v)^2}\Bigr).
+  \label{eq:Psi}
+\end{equation}
+Compared with the companion note, the resonance denominator is evaluated at
+the \emph{current} velocity $v$, not at $v_0$. This removes the need for the
+corrector $\alpha_2$ of that note and is what makes the kinetic time
+accessible.
+
+\begin{lemma}[Identities]\label{lem:id}
+For all $v$ and $z$:
+\begin{enumerate}
+  \item[(a)] $A^v\Psi=-G$ and $A^v\Psi'=-\Psi$;
+  \item[(b)] $S\Psi=-\dfrac1T\,D(v)\,v$ \quad(polarization drag);
+  \item[(c)] $\E_\pi[G_i\Psi_j]=D_{ij}(v)$;
+  \item[(d)] $\E_\pi\bigl[(G\cdot\nabla_v)\Psi\bigr]=\Div D(v)$;
+  \item[(e)] $|\Psi|+|\Psi'|+|v\cdot\Psi|\le C|z|$, \
+    $|S\Psi'|\le C$, and
+    $\bigl|\sum_jw_j\,(G\cdot\nabla_v)\Psi_j\bigr|\le C(1+|v_0|)|z|^2$ for
+    $w=v-v_0$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) $A^vz_k=-\lambda_k(v)z_k$. (b) Since
+$\Psi=\frac12\sum_k(f_kz_k/\lambda_k+\text{c.c.})$,
+\[
+  S\Psi=\sum_k\Re\Bigl(\frac{f_ks_k}{\lambda_k}\Bigr)
+  =\sum_k\Re\Bigl(\frac{(-ic_kk)\,(-i)(k\cdot v)\bar c_k}{2T\lambda_k}\Bigr)
+  =-\frac1{2T}\sum_k|c_k|^2\Re\Bigl(\frac1{\lambda_k}\Bigr)k\,(k\cdot v).
+\]
+(c) Under $\pi$, $\E z_l\bar z_k=\delta_{lk}$ and $\E z_lz_k=0$, so
+$\E_\pi[G_i\Psi_j]=\frac14\sum_k\bigl(f_{k,i}\bar f_{k,j}/\bar\lambda_k
++\bar f_{k,i}f_{k,j}/\lambda_k\bigr)
+=\frac12\sum_k|c_k|^2k_ik_j\Re(1/\lambda_k)$.
+(d) $\partial_{v_i}\Psi_j=\sum_k\Re(ik_if_{k,j}z_k/\lambda_k^2)$, hence
+$\E_\pi[G_i\partial_{v_i}\Psi_j]
+=\frac12\sum_k\Re\bigl(i(k\cdot\bar f_k)f_{k,j}/\lambda_k^2\bigr)$, and
+$i(k\cdot\bar f_k)f_{k,j}=i\,(i\bar c_k|k|^2)(-ic_kk_j)=i|c_k|^2|k|^2k_j$;
+compare \eqref{eq:divD}.
+(e) $v\cdot f_k/\lambda_k=-ic_k(k\cdot v)/\lambda_k$ and
+$f_ks_k/\lambda_k^2$ are bounded by Lemma~\ref{lem:coef}. Further
+$\sum_jw_j(G\cdot\nabla_v)\Psi_j
+=\sum_k\Re\bigl(i(G\cdot k)(w\cdot f_k)z_k/\lambda_k^2\bigr)$ and
+$|w\cdot f_k|/|\lambda_k|^2\le|c_k|(|k\cdot v|+|k||v_0|)/|\lambda_k|^2$.
+\end{proof}
+
+Identities (b) and (d) are exact and hold for every $v$; they are the
+source of the two parts of the drift $m_\kappa$. They were also verified
+symbolically ($d=1$, two modes, exact rational arithmetic at randomly
+chosen parameter values), together with Lemmas~\ref{lem:rem},
+\ref{lem:diff} and the expansions in the proofs of
+Theorems~\ref{thm:drift} and~\ref{thm:kin}. The symbolic checks were
+scratch computations and are not part of the repository.
+
+\begin{remark}[Which drift without back-reaction]
+For $\kappa=0$ the drift is $\Div D$, so the limiting generator is
+$D:\nabla^2+\Div D\cdot\nabla=\nabla\cdot(D\nabla)$, in divergence form, and
+not $D:\nabla^2$. For a general (non-potential) field $f_k$ the same
+computation gives the drift
+$\frac12\sum_k\Re\bigl(i(k\cdot\bar f_k)f_k/\lambda_k^2\bigr)$, which need
+not equal $\Div D$; the divergence form is tied to the field being a
+gradient. Only potential fields are treated in this note.
+\end{remark}
+
+\section{A priori bounds}
+
+\begin{lemma}[Dynkin's formula]\label{lem:dynkin}
+Let $F(\tau,Y,v,z)$ be continuous on $[0,t]\times\mathbb{R}^d\times
+\mathbb{R}^d\times\mathbb{C}^K$, once continuously differentiable in
+$(\tau,Y,v)$ and twice in $z$, with $|F|$, $|\partial_zF|$ and
+$|(\partial_\tau+\cL)F|$ bounded by $C_F(1+|Y|+|v|)^a(1+|z|)^b$ for some
+$a,b$. Then
+\[
+  \E F(t,Y_t,v_t,z_t)-\E F(0,0,v_0,z_0)
+  =\E\int_0^t(\partial_\tau+\cL)F(\tau,Y_\tau,v_\tau,z_\tau)\,\dd\tau .
+\]
+\end{lemma}
+
+\begin{proof}
+$Y$ and $v$ have finite variation, so It\^o's formula applies and gives the
+identity up to a stochastic integral against the $W_k$ with integrands
+$\sqrt{2\gamma_k}\,\partial_{z_k}F$ and conjugates. Since
+$|v_\tau-v_0|\le\eps\int_0^\tau|G(z_\sigma)|\dd\sigma$ and
+$|Y_\tau|\le\tau\sup_{\sigma\le\tau}|v_\sigma-v_0|$, Minkowski's inequality
+and Lemma~\ref{lem:mom} give $\sup_{\tau\le t}\E(1+|Y_\tau|+|v_\tau|)^p<\infty$
+for every $p$. By H\"older's inequality the integrands are square integrable
+on $[0,t]$, the stochastic integral is a martingale, and all terms are
+integrable.
+\end{proof}
+
+\begin{lemma}[Diffusive bound]\label{lem:diff}
+For all $t\ge0$,
+\[
+  \E|v_t-v_0|^2\le C\,(1+|v_0|)\,\eps^2\,(1+t).
+\]
+\end{lemma}
+
+\begin{proof}
+Let $w=v-v_0$ and $h=|w|^2+2\eps\,w\cdot\Psi(v,z)$. Using
+Lemma~\ref{lem:id}(a),(b),
+\[
+  \cL h=2\eps\,G\cdot w+2\eps^2\bigl[G\cdot\Psi+\textstyle\sum_jw_j(G\cdot\nabla_v)\Psi_j\bigr]
+     -2\eps\,w\cdot G-\frac{2\eps^2\kappa}{T}\,w\cdot D(v)v .
+\]
+The terms of order $\eps$ cancel. By Lemma~\ref{lem:id}(e) and
+Lemma~\ref{lem:coef} the rest is bounded in absolute value by
+$C\eps^2(1+|v_0|)(1+|z|)^2$. Lemma~\ref{lem:dynkin} with $h(0)=0$ gives
+$\E|w_t|^2\le2\eps\,\E|w_t||\Psi|+C\eps^2(1+|v_0|)\,m_2\,t$, and
+$2\eps|w||\Psi|\le\frac12|w|^2+2\eps^2|\Psi|^2$ with $\E|w_t|^2<\infty$.
+\end{proof}
+
+This is the diffusive a priori bound that the companion note did not have
+(its proof uses only $|w_\tau|\lesssim\eps\tau$, as the remark closing that proof points out). It holds
+for all times, including the kinetic time, because the corrector $\Psi$ is
+exact in $v$ and $w\cdot\Psi$ is controlled by the resonance denominators.
+
+\begin{lemma}[Equal-time correlations]\label{lem:equal}
+Let $\phi\in C_b^1(\mathbb{R}^d;\mathbb{C})$ be such that
+$(k\cdot v)\phi(v)$ is bounded. Then for all $t\ge0$
+\[
+  \bigl|\E[\phi(v_t)\,z_k(t)]\bigr|\le C_\phi\,\eps,
+\]
+with $C_\phi$ depending on the data listed above and on
+$\nrm{\phi}{\infty}$, $\nrm{\nabla\phi}{\infty}$,
+$\nrm{(k\cdot v)\phi}{\infty}$. In particular
+$|\E\Psi(v_t,z_t)|\le C\eps$.
+\end{lemma}
+
+\begin{proof}
+Fix $t$ and let
+$h(\tau,v,z)=\phi(v)\,e^{-\lambda_k(v)(t-\tau)}z_k$. Since
+$\nabla_ve^{-\lambda_k(v)(t-\tau)}=ik(t-\tau)e^{-\lambda_k(v)(t-\tau)}$ and
+$A^vz_k=-\lambda_kz_k$,
+\[
+  (\partial_\tau+\cL)h=\eps\,e^{-\lambda_k(v)(t-\tau)}
+  \Bigl[G\cdot\bigl(\nabla\phi+i(t-\tau)k\,\phi\bigr)z_k+\kappa\,\phi\,s_k\Bigr].
+\]
+By Lemma~\ref{lem:dynkin} and $|e^{-\lambda_k(t-\tau)}|=e^{-\gamma_k(t-\tau)}$,
+\[
+  \bigl|\E[\phi(v_t)z_k(t)]-e^{-\lambda_k(v_0)t}\phi(v_0)\,\eps\mu_k\bigr|
+  \le\eps\int_0^te^{-\gamma_k(t-\tau)}\bigl[(\nrm{\nabla\phi}{\infty}
+   +|k|(t-\tau)\nrm{\phi}{\infty})\,C\,m_2+\nrm{\phi s_k}{\infty}\bigr]\dd\tau ,
+\]
+which is at most $C_\phi\eps$ uniformly in $t$. For $\Psi$ take
+$\phi=f_{k,j}/\lambda_k$ and its conjugate.
+\end{proof}
+
+\section{The friction: mean drift and the Einstein relation}
+
+\begin{theorem}[Mean drift]\label{thm:drift}
+For all $\eps\in(0,1]$, $\kappa\in[0,1]$, $t\ge0$ and initial data
+\eqref{eq:init},
+\begin{align}
+  \bigl|\E v_t-v_0-\eps^2t\,m_\kappa(v_0)\bigr|
+   &\le C(1+|v_0|)\bigl[\eps^2+\eps^3(t+t^{3/2})\bigr],
+   \label{eq:drift}\\
+  \bigl|\E Y_t-\tfrac12\eps^2t^2\,m_\kappa(v_0)\bigr|
+   &\le C(1+|v_0|)\bigl[\eps^2t+\eps^3(t^2+t^{5/2})\bigr],
+   \label{eq:driftY}
+\end{align}
+with $m_\kappa$ given by \eqref{eq:m}. The estimate \eqref{eq:drift}
+identifies the drift for $1\ll t\ll\eps^{-2}$. With $\eps=N^{-1/2}$ and
+$t=sN^{1/3}$,
+\[
+  \E Y_t=\tfrac12\,s^2\,m_\kappa(v_0)\,N^{-1/3}+O\bigl((1+|v_0|)(s+s^{5/2})N^{-2/3}\bigr).
+\]
+\end{theorem}
+
+The drift has two parts. $\Div D(v_0)$ is present in the prescribed field
+($\kappa=0$). The back-reaction adds exactly $-D(v_0)v_0/T$.
+
+\begin{proof}
+Let $\Phi=(G\cdot\nabla_v)\Psi-\Div D\in\cP_2$ (componentwise). By
+Lemma~\ref{lem:id}(d), $\E_\pi\Phi=0$; let $\Xi=Q\Phi\in\cP_2$
+(Lemma~\ref{lem:poisson}). Using $\cL=A^v+\eps\cK$ on functions of $(v,z)$
+and Lemma~\ref{lem:id}(a),(b),
+\begin{align*}
+  \cL v&=\eps G,\qquad
+  \cL(\eps\Psi)=-\eps G+\eps^2\bigl[(G\cdot\nabla_v)\Psi-\kappa T^{-1}D(v)v\bigr]
+   =-\eps G+\eps^2\bigl[m_\kappa(v)+\Phi\bigr],\\
+  \cL(\eps^2\Xi)&=-\eps^2\Phi+\eps^3\cK\Xi .
+\end{align*}
+Hence the exact identity
+\begin{equation}
+  \cL\bigl(v+\eps\Psi+\eps^2\Xi\bigr)=\eps^2m_\kappa(v)+\eps^3\cK\Xi .
+  \label{eq:exactdrift}
+\end{equation}
+By Lemma~\ref{lem:dynkin},
+\[
+  \E v_t-v_0=\eps^2\!\int_0^t\!\E\,m_\kappa(v_\tau)\dd\tau
+   -\eps\,\E\Psi(v_t,z_t)+\eps\,\E\Psi(v_0,z_0)
+   -\eps^2\,\E\bigl[\Xi(v_t,z_t)-\Xi(v_0,z_0)\bigr]
+   +\eps^3\!\int_0^t\!\E\,\cK\Xi\,\dd\tau .
+\]
+We bound each term. By Lemma~\ref{lem:equal}, $|\eps\E\Psi(v_t,z_t)|\le
+C\eps^2$. Since $\Psi$ is linear in $z$,
+$\eps\E\Psi(v_0,z_0)=\eps^2\sum_k\Re(f_k\mu_k/\lambda_k(v_0))$, of modulus
+at most $C\eps^2$ (and zero for the dressed start). $\eps^2\E|\Xi|\le
+C\eps^2m_2$. By \eqref{eq:Kbound}, the Cauchy--Schwarz inequality and
+Lemma~\ref{lem:diff},
+\[
+  \E|\cK\Xi|\le C\bigl(\E(1+|v_\tau|)^2\bigr)^{1/2}m_6^{1/2}
+  \le C\bigl(1+|v_0|+(1+|v_0|)^{1/2}\eps(1+\tau)^{1/2}\bigr),
+\]
+so the last term is at most $C(1+|v_0|)\eps^3(t+t^{3/2})$. Finally
+$m_\kappa$ is Lipschitz (Lemma~\ref{lem:coef}), so by Lemma~\ref{lem:diff}
+\[
+  \Bigl|\int_0^t\E\,m_\kappa(v_\tau)\dd\tau-t\,m_\kappa(v_0)\Bigr|
+  \le C\int_0^t\bigl(\E|v_\tau-v_0|^2\bigr)^{1/2}\dd\tau
+  \le C(1+|v_0|)^{1/2}\eps\,(t+t^{3/2}).
+\]
+This proves \eqref{eq:drift}; \eqref{eq:driftY} follows by integrating in
+time, since $\E Y_t=\int_0^t(\E v_\tau-v_0)\dd\tau$.
+\end{proof}
+
+\begin{remark}[Dressing transient]
+The term $\eps\E\Psi(v_0,z_0)=\eps^2\sum_k\Re(f_k\mu_k/\lambda_k(v_0))$ is
+the only place where the two initial conditions differ in the proof. For the
+undressed start at $\kappa=1$ it equals
+$-\frac{\eps^2}{2T}\sum_k|c_k|^2k\,
+(\omega_k-k\cdot v_0)/(\gamma_k^2+(\omega_k-k\cdot v_0)^2)$, a velocity kick
+of order $\eps^2$ acquired while the polarization cloud forms. It is inside
+the error term $C\eps^2$ of \eqref{eq:drift}; we do not claim that it is the
+whole $O(\eps^2)$ difference between the two starts.
+\end{remark}
+
+\begin{proposition}[Einstein relation]\label{prop:einstein}
+Let $\cL_\kappa=D:\nabla_v^2+m_\kappa\cdot\nabla_v$ and
+$M_\Theta(v)=(2\pi\Theta)^{-d/2}e^{-|v|^2/2\Theta}$. Then
+\begin{enumerate}
+  \item[(i)] $\cL_\kappa\varphi=\nabla\cdot(D\nabla\varphi)
+     -\kappa T^{-1}(Dv)\cdot\nabla\varphi$; the back-reaction drift is
+     $-T^{-1}Dv=D\,\nabla\log M_T$.
+  \item[(ii)] The formal adjoint is
+     $\cL_\kappa^*f=\nabla\cdot\bigl(D(\nabla f+\kappa T^{-1}vf)\bigr)$.
+  \item[(iii)] For $\kappa=1$,
+     $\cL_1\varphi=M_T^{-1}\nabla\cdot(M_TD\nabla\varphi)$, and for
+     $\varphi,\psi\in C_b^2(\mathbb{R}^d)$,
+     \[
+       \int\psi\,\cL_1\varphi\,M_T\,\dd v=-\int\nabla\psi\cdot D\nabla\varphi\,M_T\,\dd v .
+     \]
+     So $\cL_1$ is symmetric and nonpositive in $L^2(M_T)$,
+     $\cL_1^*M_T=0$, and $\int\cL_1\varphi\,M_T=0$.
+  \item[(iv)] For $\kappa\in(0,1]$, $\cL_\kappa^*M_{T/\kappa}=0$. For
+     $\kappa=0$, $\cL_0=\nabla\cdot(D\nabla)$ is symmetric with respect to
+     Lebesgue measure and $\cL_0^*M_\Theta=-\Theta^{-1}\nabla\cdot(DvM_\Theta)$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) is the definition of $m_\kappa$ and
+$\nabla\cdot(D\nabla\varphi)=D:\nabla^2\varphi+\Div D\cdot\nabla\varphi$
+($D$ is symmetric). (ii) Integrate by parts. (iii)
+$M_T^{-1}\nabla\cdot(M_TD\nabla\varphi)=\nabla\cdot(D\nabla\varphi)
++\nabla\log M_T\cdot D\nabla\varphi$ and $\nabla\log M_T=-v/T$. The
+integration by parts has no boundary term because $D$ and the derivatives of
+$\varphi,\psi$ are bounded and $M_T$ is Gaussian. (iv)
+$\nabla M_\Theta=-vM_\Theta/\Theta$, so
+$\cL_\kappa^*M_\Theta=(\kappa/T-1/\Theta)\nabla\cdot(DvM_\Theta)$.
+\end{proof}
+
+Statement (iii) is the fluctuation--dissipation relation of the model: the
+friction produced by the back-reaction (Lemma~\ref{lem:id}(b)) and the
+diffusion produced by the field fluctuations (Lemma~\ref{lem:id}(c)) involve
+the same matrix $D(v)$, with ratio $1/T$, at every velocity and not only on
+average. The stationary velocity law $M_T$ is the velocity marginal of the
+Gibbs measure of Lemma~\ref{lem:gibbs}. Without back-reaction no Maxwellian
+is stationary: the particle is heated by the field. (Item (iv) for
+$0<\kappa<1$ is an algebraic observation about the interpolating family.)
+
+\section{Back-reaction is negligible at \texorpdfstring{$N^{1/3}$}{N\textasciicircum(1/3)}}
+\label{sec:third}
+
+\begin{theorem}\label{thm:third}
+Let $q\in\mathbb{R}^d$, $\eps\in(0,1]$, $\kappa\in[0,1]$, and $t\ge0$ with
+$\eps^2t\le1$. For initial data \eqref{eq:init},
+\begin{equation}
+  \Bigl|\E\,e^{iq\cdot Y_t}-\exp\!\Bigl(-\tfrac13\eps^2t^3\,q\cdot D(v_0)q\Bigr)\Bigr|
+  \le C(1+|v_0|)\Bigl[\eps+\eps^2(t+t^2)+\eps^3(t^3+t^{7/2})
+     +\eps^4(t^4+t^5)+\eps^5t^6\Bigr],
+  \label{eq:third}
+\end{equation}
+with $D$ given by \eqref{eq:D}, the same matrix as without back-reaction,
+and $C$ independent of $\kappa$. In particular, with $\eps=N^{-1/2}$ and
+$t=sN^{1/3}$,
+\[
+  \E\,e^{iq\cdot Y_t}=\exp\!\Bigl(-\tfrac13s^3\,q\cdot D(v_0)q\Bigr)
+   +O\bigl((1+|v_0|)(1+s^6)\,N^{-1/3}\bigr),
+\]
+and the right-hand side of \eqref{eq:third} tends to zero as $N\to\infty$
+whenever $t\ll N^{2/5}$.
+\end{theorem}
+
+\begin{corollary}\label{cor:law}
+For the coupled model ($\kappa=1$) with either the dressed or the undressed
+start, as $N\to\infty$ with $t=sN^{1/3}$, $Y_t$ converges in law to a
+centred Gaussian vector with covariance $\tfrac23s^3D(v_0)$: the limit is
+the same as in the prescribed field.
+\end{corollary}
+
+\begin{corollary}\label{cor:rate}
+For the prescribed-field model of the companion note with a potential field
+$f_k=-ic_kk$ (this is $\kappa=0$, $\mu=0$), the error at $t=sN^{1/3}$ is
+$O(N^{-1/3})$ instead of $O(N^{-1/6})$, and the range of validity is
+$t\ll N^{2/5}$ instead of $t\ll N^{3/8}$.
+\end{corollary}
+
+\subsection{Proof of Theorem~\ref{thm:third}}
+
+Fix $q$ and $t$; write $\theta=t-\tau$, $w=v-v_0$, $g=q\cdot G$,
+$d(v)=q\cdot D(v)q$, $d_0=d(v_0)$. Let
+\[
+  U(\tau,Y,v)=\exp\!\Bigl(iq\cdot Y+i\theta\,q\cdot w-\tfrac13\eps^2\theta^3d_0\Bigr),
+\]
+so that $|U|\le1$,
+$(\partial_\tau+w\cdot\nabla_Y)U=\eps^2\theta^2d_0\,U$ and
+$\nabla_vU=i\theta q\,U$. Consequently, for a function $p(\tau,v,z)$,
+\begin{equation}
+  (\partial_\tau+\cL)(pU)
+  =U\bigl[\partial_\tau p+\eps^2\theta^2d_0\,p+i\eps\theta\,g\,p
+     +\eps\,\cK p+A^vp\bigr].
+  \label{eq:pU}
+\end{equation}
+\paragraph{Correctors.} Let
+\[
+  \alpha=q\cdot\Psi,\qquad\alpha'=q\cdot\Psi',\qquad
+  \beta=-Q(\alpha g-d),\qquad c=-Q(\beta g).
+\]
+Here $\alpha,\alpha'\in\cP_1$ with $A^v\alpha=-g$, $A^v\alpha'=-\alpha$
+(Lemma~\ref{lem:id}(a)); $\E_\pi[\alpha g]=d(v)$ by Lemma~\ref{lem:id}(c),
+so $\beta\in\cP_2$ is well defined, even in $z$, with $A^v\beta=\alpha g-d$;
+and $\beta g$ is odd in $z$, so $\E_\pi[\beta g]=0$ and $c\in\cP_3$ is well
+defined, odd, with $A^vc=\beta g$. Explicitly, with
+$A_k=q\cdot f_k/\lambda_k(v)$ and $B_k=q\cdot f_k$,
+\[
+  \beta=-\frac14\sum_{k,l}\Bigl(\frac{A_kB_l}{\lambda_k+\lambda_l}\,z_kz_l
+   +\frac{A_k\bar B_l}{\lambda_k+\bar\lambda_l}\,(z_k\bar z_l-\delta_{kl})
+   +\text{c.c.}\Bigr),
+\]
+the formula of the companion note with $\lambda_k=\lambda_k(v)$. Set
+\begin{equation}
+  U^\eps=U\Bigl[1+i\eps\theta\,\alpha+\eps^2\theta^2\beta
+    -i\eps\,\alpha'+i\eps^3\theta^3d_0\,\alpha'-i\eps^3\theta^3c\Bigr].
+\end{equation}
+The first two correctors are those of the companion note (with $v$ in place
+of $v_0$). The last three remove the terms that limited its rate to
+$N^{-1/6}$.
+
+\begin{lemma}\label{lem:rem}
+$(\partial_\tau+\cL)U^\eps=UR$ with
+\begin{align*}
+  R={}&\eps^2\theta^2\bigl(d_0-d(v)\bigr)
+     +i\eps^2\theta\,\cK\alpha-2\eps^2\theta\,\beta+\eps^2\theta\,g\alpha'
+     -i\eps^2\,\cK\alpha' \\
+   &+\eps^3\theta^2\,\cK\beta-4i\eps^3\theta^2d_0\,\alpha'+3i\eps^3\theta^2c \\
+   &+\eps^4\theta^4d_0\,\beta-\eps^4\theta^4d_0\,g\alpha'+\eps^4\theta^4gc
+     +i\eps^4\theta^3d_0\,\cK\alpha'-i\eps^4\theta^3\,\cK c \\
+   &+i\eps^5\theta^5d_0^2\,\alpha'-i\eps^5\theta^5d_0\,c .
+\end{align*}
+\end{lemma}
+
+\begin{proof}
+Apply \eqref{eq:pU} to each term, with $\partial_\tau\theta=-1$. The
+bracket in \eqref{eq:pU} is, for
+\begin{align*}
+  p&=1: &&\eps^2\theta^2d_0+i\eps\theta g;\\
+  p&=i\eps\theta\alpha: &&-i\eps\alpha+i\eps^3\theta^3d_0\alpha
+     -\eps^2\theta^2g\alpha+i\eps^2\theta\,\cK\alpha-i\eps\theta g;\\
+  p&=\eps^2\theta^2\beta: &&-2\eps^2\theta\beta+\eps^4\theta^4d_0\beta
+     +i\eps^3\theta^3g\beta+\eps^3\theta^2\cK\beta+\eps^2\theta^2(\alpha g-d(v));\\
+  p&=-i\eps\alpha': &&-i\eps^3\theta^2d_0\alpha'+\eps^2\theta g\alpha'
+     -i\eps^2\cK\alpha'+i\eps\alpha;\\
+  p&=i\eps^3\theta^3d_0\alpha': &&-3i\eps^3\theta^2d_0\alpha'
+     +i\eps^5\theta^5d_0^2\alpha'-\eps^4\theta^4d_0g\alpha'
+     +i\eps^4\theta^3d_0\cK\alpha'-i\eps^3\theta^3d_0\alpha;\\
+  p&=-i\eps^3\theta^3c: &&3i\eps^3\theta^2c-i\eps^5\theta^5d_0c
+     +\eps^4\theta^4gc-i\eps^4\theta^3\cK c-i\eps^3\theta^3\beta g.
+\end{align*}
+On summing, $\pm i\eps\theta g$, $\pm i\eps\alpha$,
+$\pm i\eps^3\theta^3d_0\alpha$, $\pm i\eps^3\theta^3\beta g$ and
+$\pm\eps^2\theta^2\alpha g$ cancel, and
+$\eps^2\theta^2d_0-\eps^2\theta^2d(v)$ remains from the first and third
+lines. The other terms are those listed.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:third}]
+$U^\eps$ is smooth and satisfies the growth conditions of
+Lemma~\ref{lem:dynkin}, so
+$\E U^\eps(t)-\E U^\eps(0)=\E\int_0^tUR\,\dd\tau$.
+
+\emph{Endpoint $\tau=t$.} $\theta=0$ and
+$U^\eps=e^{iq\cdot Y_t}(1-i\eps\alpha'(v_t,z_t))$, so
+$|\E U^\eps(t)-\E e^{iq\cdot Y_t}|\le\eps\E|\alpha'|\le C\eps$.
+
+\emph{Endpoint $\tau=0$.} $U^\eps(0)=e^{-\eps^2t^3d_0/3}[1+P(v_0,z_0)]$ with
+$P=i\eps t\alpha+\eps^2t^2\beta-i\eps\alpha'+i\eps^3t^3d_0\alpha'-i\eps^3t^3c$.
+Each of $\alpha,\alpha',\beta,c$ has zero mean under $\pi$, and for a
+polynomial $p$ with $\E_\pi p=0$,
+$|\E p(v_0,\zeta+\eps\mu)|\le C\eps$ (every term of
+$p(\zeta+\eps\mu)-p(\zeta)$ carries a factor $\eps$). Hence
+$|\E U^\eps(0)-e^{-\eps^2t^3d_0/3}|\le C(\eps^2+\eps^2t+\eps^3t^2+\eps^4t^3)$,
+and it vanishes for the dressed start.
+
+\emph{The remainder.} $|U|\le1$. By Lemma~\ref{lem:diff} and $\eps^2t\le1$,
+$\E(1+|v_\tau|)^2\le C(1+|v_0|)^2$ for $\tau\le t$. For $p\in\cP_n$,
+$\E|p|\le Cm_n$, and by \eqref{eq:Kbound} and Cauchy--Schwarz
+$\E|\cK p|\le C(1+|v_0|)$. Since $d$ is Lipschitz (Lemma~\ref{lem:coef}),
+$\E|d_0-d(v_\tau)|\le C(1+|v_0|)^{1/2}\eps(1+\tau)^{1/2}$ by
+Lemma~\ref{lem:diff}. With
+$\int_0^t\theta^a\dd\tau=t^{a+1}/(a+1)$ and
+$\int_0^t\theta^2(1+\tau)^{1/2}\dd\tau\le t^3+t^{7/2}$, the time integrals of
+the five groups of terms of $R$ are bounded by $C(1+|v_0|)$ times
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{ll}
+  terms of $R$ & bound \\ \hline
+  $\eps^2\theta^2(d_0-d(v))$ & $\eps^3(t^3+t^{7/2})$ \\
+  $\eps^2\theta\,(\cK\alpha,\ \beta,\ g\alpha')$ and $\eps^2\cK\alpha'$
+     & $\eps^2(t^2+t)$ \\
+  $\eps^3\theta^2\,(\cK\beta,\ d_0\alpha',\ c)$ & $\eps^3t^3$ \\
+  $\eps^4\theta^4\,(d_0\beta,\ d_0g\alpha',\ gc)$ and
+  $\eps^4\theta^3\,(d_0\cK\alpha',\ \cK c)$ & $\eps^4(t^5+t^4)$ \\
+  $\eps^5\theta^5\,(d_0^2\alpha',\ d_0c)$ & $\eps^5t^6$ \\
+\end{tabular}
+\end{center}
+Adding the endpoint terms gives \eqref{eq:third}. At $t=s\eps^{-2/3}$:
+$\eps^2t^2=s^2\eps^{2/3}$, $\eps^3t^{7/2}=s^{7/2}\eps^{2/3}$,
+$\eps^4t^5=s^5\eps^{2/3}$, $\eps^5t^6=s^6\eps$, and the remaining terms are
+smaller. If $\eps\to0$ and $\eps^4t^5\to0$, that is
+$t\ll\eps^{-4/5}=N^{2/5}$, then every term tends to zero
+($\eps^3t^{7/2}=(\eps^4t^5)^{7/10}\eps^{1/5}$ and
+$\eps^5t^6=(\eps^4t^5)^{6/5}\eps^{1/5}$).
+\end{proof}
+
+\begin{remark}[Where the back-reaction enters]\label{rem:where}
+$\kappa$ appears in $R$ only through $\kappa S$ in $\cK$. The largest such
+term is, by Lemma~\ref{lem:id}(b),
+\[
+  i\eps^2\theta\,\kappa\,S\alpha=-\,i\eps^2\theta\,\frac{\kappa}{T}\,q\cdot D(v)\,v ,
+\]
+which does not depend on $z$ and whose time integral is at most
+$\kappa\,\eps^2t^2\sup_v|q\cdot D(v)v|/2T$. This is the friction acting on
+the phase: a displacement $-\kappa\eps^2t^2D(v_0)v_0/2T$, of order
+$N^{-1/3}$ at $t\sim N^{1/3}$, in agreement with \eqref{eq:driftY} and with
+the estimate $t^2/N$ in gap~2 of the companion note. All other
+$\kappa$-dependent terms are $O(\eps^2t+\eps^3t^3+\eps^4t^4)$. So
+back-reaction changes the characteristic function at order $N^{-1/3}$ and
+not before; it does not change $D$.
+\end{remark}
+
+\begin{remark}[The next order is not identified]\label{rem:next}
+One cannot read the $N^{-1/3}$ coefficient of $\E e^{iq\cdot Y_t}$ off
+\eqref{eq:driftY}. In $R$ there are other terms of the same order at
+$t=s\eps^{-2/3}$: $\eps^2\theta\,g\alpha'$ has non-zero $\pi$-mean (it is
+the $O(t^2)$ correction to the variance in the proposition on the first
+iterate in the companion note); $\eps^2\theta^2(d_0-d(v))$ and $\eps^4\theta^4gc$ contribute at order
+$\eps^4t^5$ through the dependence of $D$ on the diffusing velocity. The
+Monte Carlo run below shows an imaginary part for $\kappa=0$ that is not
+equal to $e^{-s^3d_0/3}\,\tfrac12\eps^2t^2\,q\cdot\Div D$, consistent with
+this. Identifying the full $N^{-1/3}$ term would need one more layer of
+correctors, polynomial in $w$; this was not done.
+\end{remark}
+
+\section{The kinetic time}
+
+Let $\Sigma(v)$ be the $d\times|K|$ matrix with columns
+$\bigl(\tfrac12\Re(1/\lambda_k(v))\bigr)^{1/2}|c_k|\,k$, so that
+$\Sigma\Sigma^{\!\top}=D$ and $\Sigma\in C_b^\infty$ (because
+$\Re(1/\lambda_k)=\gamma_k/|\lambda_k|^2>0$ is smooth with a smooth square
+root $\gamma_k^{1/2}/|\lambda_k|$). The diffusion
+\begin{equation}
+  \dd V=m_\kappa(V)\,\dd\tau+\sqrt2\,\Sigma(V)\,\dd\mathcal{W}
+  \label{eq:FPsde}
+\end{equation}
+has generator $\cL_\kappa$ of Proposition~\ref{prop:einstein}.
+
+\begin{theorem}[Kinetic limit with friction]\label{thm:kin}
+Let $\tau_*>0$ and let $u:[0,\tau_*]\times\mathbb{R}^d\to\mathbb{R}$ be
+continuous, differentiable in $\tau$, with $\partial_v^ju$ continuous and
+bounded on $[0,\tau_*]\times\mathbb{R}^d$ for $|j|\le4$, and
+\[
+  \partial_\tau u=\cL_\kappa u
+  =\nabla\cdot(D\nabla u)-\frac{\kappa}{T}(Dv)\cdot\nabla u,
+  \qquad u(0,\cdot)=\varphi .
+\]
+Let $\mathcal{N}=\sup_{\tau\le\tau_*}\sum_{|j|\le4}\nrm{\partial_v^ju(\tau)}{\infty}$.
+Then for all $\eps\in(0,1]$, $\kappa\in[0,1]$, initial data \eqref{eq:init},
+and $t\ge0$ with $\tau=\eps^2t\le\tau_*$,
+\begin{equation}
+  \bigl|\E\varphi(v_t)-u(\eps^2t,v_0)\bigr|
+  \le C\,\mathcal{N}\,(1+|v_0|)\,(1+\tau)^{3/2}\,\eps .
+\end{equation}
+With $\eps=N^{-1/2}$ this is an error $O(N^{-1/2})$ at the kinetic time
+$t=\tau N$.
+\end{theorem}
+
+\begin{remark}[Existence and regularity of $u$]\label{rem:reg}
+The coefficients $m_\kappa$ and $\Sigma$ of \eqref{eq:FPsde} are in
+$C_b^\infty$ (Lemma~\ref{lem:coef}). For such coefficients it is classical
+that, for $\varphi\in C_b^4$, $u(\tau,v)=\E\varphi(V_\tau^v)$ has four
+continuous bounded $v$-derivatives, locally uniformly in $\tau$, and solves
+the backward equation (differentiability of the stochastic flow in the
+initial point; see \cite[Ch.~5]{Friedman} or \cite{Kunita}). This is quoted
+and not proved here; the chapter reference is from memory. Conversely any
+$u$ as in the theorem equals $\E\varphi(V_\tau^v)$, by It\^o's formula
+applied to $u(\tau-\sigma,V_\sigma)$. Granting the quoted fact,
+Theorem~\ref{thm:kin} gives: for every $\tau\ge0$, $v_{\tau/\eps^2}$
+converges in law to $V_\tau^{v_0}$ as $\eps\to0$ (test functions in
+$C_c^\infty\subset C_b^4$ determine convergence in law to a probability
+measure), and for $\kappa=1$ the limit dynamics is reversible with respect
+to the Maxwellian $M_T$ by Proposition~\ref{prop:einstein}.
+\end{remark}
+
+\begin{proof}[Proof of Theorem~\ref{thm:kin}]
+Since $u(\tau)=\varphi+\int_0^\tau\cL_\kappa u\,\dd\tau'$ and
+$\cL_\kappa u$ has two continuous bounded $v$-derivatives, one may
+differentiate under the integral:
+$\partial_\tau\partial_v^ju=\partial_v^j\cL_\kappa u$ for $|j|\le2$,
+continuous and bounded by $C\mathcal{N}$. Fix $t$ and let
+$u^0(\sigma,v)=u(\eps^2(t-\sigma),v)$ for $0\le\sigma\le t$, so
+$\partial_\sigma u^0=-\eps^2\cL_\kappa u^0$. Let
+\[
+  \Theta_{ij}=Q\bigl(G_i\Psi_j-D_{ij}\bigr),\qquad
+  \Xi_j=Q\bigl((G\cdot\nabla_v)\Psi_j-(\Div D)_j\bigr),
+\]
+both in $\cP_2$ by Lemma~\ref{lem:id}(c),(d) and Lemma~\ref{lem:poisson},
+and (summing over repeated indices)
+\[
+  u^\eps=u^0+\eps\,\Psi_j\,\partial_ju^0
+   +\eps^2\bigl(\Theta_{ij}\,\partial_{ij}u^0+\Xi_j\,\partial_ju^0\bigr).
+\]
+Compute $(\partial_\sigma+\cL)u^\eps$ with $\cL=A^v+\eps\cK$:
+\begin{align*}
+  \cL u^0&=\eps\,G_j\partial_ju^0,\\
+  \cL(\eps\Psi_j\partial_ju^0)&=-\eps\,G_j\partial_ju^0
+    +\eps^2\bigl[G_i\Psi_j\,\partial_{ij}u^0
+      +(G\cdot\nabla_v)\Psi_j\,\partial_ju^0
+      -\kappa T^{-1}(Dv)_j\partial_ju^0\bigr],\\
+  A^v\bigl(\eps^2(\Theta_{ij}\partial_{ij}u^0+\Xi_j\partial_ju^0)\bigr)
+   &=-\eps^2\bigl[(G_i\Psi_j-D_{ij})\partial_{ij}u^0
+     +((G\cdot\nabla_v)\Psi_j-(\Div D)_j)\partial_ju^0\bigr].
+\end{align*}
+The terms of order $\eps$ cancel and those of order $\eps^2$ sum to
+$\eps^2[D_{ij}\partial_{ij}+(\Div D)_j\partial_j-\kappa T^{-1}(Dv)_j\partial_j]u^0
+=\eps^2\cL_\kappa u^0=-\partial_\sigma u^0$. What is left is
+$(\partial_\sigma+\cL)u^\eps=\eps^3R_3+\eps^4R_4$,
+\begin{align*}
+  R_3&=-\Psi_j\,\partial_j\cL_\kappa u^0
+     +\cK\bigl(\Theta_{ij}\,\partial_{ij}u^0+\Xi_j\,\partial_ju^0\bigr),\\
+  R_4&=-\Theta_{ij}\,\partial_{ij}\cL_\kappa u^0-\Xi_j\,\partial_j\cL_\kappa u^0 ,
+\end{align*}
+where $\cK$ acts on the product (on the coefficient polynomials and, through
+$G\cdot\nabla_v$, on the derivatives of $u^0$). $R_3$ involves derivatives
+of $u$ up to order three and $R_4$ up to order four, so by
+\eqref{eq:Kbound}
+\[
+  |R_3|\le C\mathcal{N}(1+|v|)(1+|z|)^3,\qquad
+  |R_4|\le C\mathcal{N}(1+|z|)^2 .
+\]
+$u^\eps$ satisfies the hypotheses of Lemma~\ref{lem:dynkin}. At $\sigma=t$,
+$u^0=\varphi$ and $|\E u^\eps(t)-\E\varphi(v_t)|\le C\mathcal{N}(\eps+\eps^2)$.
+At $\sigma=0$, $|\E u^\eps(0)-u(\eps^2t,v_0)|\le C\mathcal{N}\eps^2$, because
+$\E\Psi(v_0,z_0)=O(\eps)$ and $\Theta,\Xi$ are bounded in mean. By
+Lemma~\ref{lem:diff},
+$(\E(1+|v_\sigma|)^2)^{1/2}\le C(1+|v_0|)(1+\eps(1+\sigma)^{1/2})
+\le C(1+|v_0|)(1+\tau^{1/2})$ for $\sigma\le t$. Hence
+\[
+  \bigl|\E\varphi(v_t)-u(\eps^2t,v_0)\bigr|
+  \le C\mathcal{N}\eps+C\mathcal{N}(1+|v_0|)(1+\tau^{1/2})\,\eps^3t
+     +C\mathcal{N}\eps^4t ,
+\]
+and $\eps^3t=\eps\tau$.
+\end{proof}
+
+\begin{remark}
+Theorem~\ref{thm:kin} for $\kappa=0$ is a quantitative form of the
+Kesten--Papanicolaou limit for this Markovian field; the content here is
+the case $\kappa=1$, in which the limit acquires the friction
+$-T^{-1}D(v)v$ and becomes the linear Fokker--Planck equation
+$\partial_\tau f=\nabla\cdot(D(\nabla f+vf/T))$ with Maxwellian equilibrium.
+The proof does not use ellipticity of $D$ (which may degenerate if $K$ does
+not span $\mathbb{R}^d$), only the regularity of $u$.
+\end{remark}
+
+\section{Numerical check}
+
+\begin{sloppypar}
+The script \texttt{scripts/orbit\_backreaction\_check.py} (numpy only,
+seed $20261124$) simulates \eqref{eq:kappa} for $d=2$, five modes,
+$T=0.5$, $v_0=(0.8,0.3)$, $q=(1,0.5)$, dressed start; the parameters are in
+the script and in the output file
+\texttt{orbit\_backreaction\_check.json} in
+\texttt{results/orbit\_backreaction/}.
+\end{sloppypar}
+\noindent For these parameters the formulas \eqref{eq:D}--\eqref{eq:m} give
+\[
+  \Div D(v_0)=(1.1884,\,0.3949),\qquad
+  D(v_0)v_0/T=(1.3201,\,0.4124),\qquad q\cdot D(v_0)q=0.9941 .
+\]
+The modes are split exactly as $\tilde a=\hat a+\eps r$ with $\hat a$ a
+stationary Ornstein--Uhlenbeck path, sampled exactly, and $r$ the solution
+of a pathwise ordinary differential equation; $(x,v,r)$ are advanced by a
+kick--drift--kick step of size $h=0.05$. The runs with $\kappa=0$ and
+$\kappa=1$ share $\hat a$ (common random numbers), so the difference
+isolates the back-reaction. For $\kappa=0$ the first Duhamel iterate, which
+has mean exactly zero, is used as a control variate. The run took
+$184$\,s on a machine that was heavily loaded by other jobs (an earlier
+version with about a fifth less work took $123$\,s under lighter load). Three errors are kept apart: the
+Monte Carlo standard error (s.e.), the time-step error (measured below),
+and the theoretical error of the theorems.
+
+\paragraph{(a) Mean velocity drift (Theorem~\ref{thm:drift}).} The table
+gives $\E w_t/(\eps^2t)$, first component (the second behaves in the same
+way and is in the output file). ``Paired'' is $\kappa=1$ minus $\kappa=0$
+on the same noise, to be compared with $-D(v_0)v_0/T$.
+\begin{center}\small\setlength{\tabcolsep}{4pt}
+\begin{tabular}{rr|rr|rr}
+  $\eps$ & $t$ & $\kappa=0$ (s.e.) & $\Div D$ & paired (s.e.) & $-Dv_0/T$ \\ \hline
+  0.02 & 10 & 0.949 (0.018) & 1.188 & $-1.2890$ (0.0011) & $-1.3201$ \\
+  0.02 & 20 & 1.047 (0.029) & 1.188 & $-1.3194$ (0.0030) & $-1.3201$ \\
+  0.02 & 30 & 1.095 (0.031) & 1.188 & $-1.3425$ (0.0060) & $-1.3201$ \\
+  0.02 & 40 & 1.083 (0.029) & 1.188 & $-1.3511$ (0.0097) & $-1.3201$ \\
+  0.01 & 10 & 0.944 (0.027) & 1.188 & $-1.2840$ (0.0008) & $-1.3201$ \\
+  0.01 & 20 & 1.046 (0.051) & 1.188 & $-1.3075$ (0.0021) & $-1.3201$ \\
+  0.01 & 30 & 1.035 (0.064) & 1.188 & $-1.3105$ (0.0039) & $-1.3201$ \\
+  0.01 & 40 & 1.069 (0.068) & 1.188 & $-1.3148$ (0.0062) & $-1.3201$ \\
+\end{tabular}
+\end{center}
+($10^5$ samples at $\eps=0.02$, $5\times10^4$ at $\eps=0.01$.) The
+deviations at $t=10$ are far outside the Monte Carlo error; they are the
+theoretical error $C\eps^2$ of \eqref{eq:drift}, which is of relative size
+$O(1/t)$. The increment between $t=10$ and $t=40$ removes that constant:
+\begin{center}\small\setlength{\tabcolsep}{4pt}
+\begin{tabular}{r|rr|rr}
+  $\eps$ & $\kappa=0$ slope (s.e.) & $\Div D$ & paired slope (s.e.) & $-Dv_0/T$ \\ \hline
+  0.02 & $(1.122,\,0.374)$ $(.036,\,.028)$ & $(1.188,\,0.395)$
+       & $(-1.372,\,-0.435)$ $(.013,\,.008)$ & $(-1.320,\,-0.412)$ \\
+  0.01 & $(1.130,\,0.390)$ $(.088,\,.066)$ & $(1.188,\,0.395)$
+       & $(-1.325,\,-0.414)$ $(.008,\,.005)$ & $(-1.320,\,-0.412)$ \\
+\end{tabular}
+\end{center}
+The polarization drag is confirmed to about $0.6\%$ at $\eps=0.01$ (within
+one standard error). At $\eps=0.02$ the paired slope is $4\%$ off, four
+standard errors; this is of the size of the relative theoretical error
+$O(\eps^2t)$ expected from the variation of $m_\kappa$ along the diffusing
+velocity (a heuristic second-order estimate
+$\eps^2t\,m+\tfrac12\eps^4t^2\cL_\kappa m_\kappa$, not proved here, gives
+$-1.398$ and $-1.339$ for the two rows), and it decreases with $\eps$ as it
+should. The drift $\Div D$ without back-reaction is resolved less well,
+because it is not helped by the pairing: the slopes agree with the formula
+within $1.9$ standard errors at $\eps=0.02$ (a $3\%$ standard error), and at
+$\eps=0.01$ the standard error is $8\%$, so that row is a weak test. The
+sign and size of $\Div D$, and the fact that the generator is
+$\nabla\cdot(D\nabla)$ rather than $D:\nabla^2$ (which would give zero
+drift), are nevertheless clearly resolved at $\eps=0.02$.
+
+\paragraph{(b) The $N^{1/3}$ law (Theorem~\ref{thm:third}).}
+$4\times10^4$ samples; the s.e.\ of each characteristic function is $0.0034$
+for $s=1$ and $0.0047$ for $s=1.5$.
+\begin{center}\small\setlength{\tabcolsep}{4pt}
+\begin{tabular}{rr|r|rr|rr}
+  $N$ & $s$ & predicted & $\kappa=0$ & $\kappa=1$ & paired diff.\ (s.e.) & heur. \\ \hline
+  $10^3$ & 1.0 & 0.7180 & $0.7244+0.0311i$ & $0.7308-0.0210i$ & $0.0064-0.0520i$ (0.0003) & $-0.0548i$ \\
+  $10^3$ & 1.5 & 0.3268 & $0.3341+0.0092i$ & $0.3466-0.0452i$ & $0.0125-0.0544i$ (0.0009) & $-0.0561i$ \\
+  $10^4$ & 1.0 & 0.7178 & $0.7250+0.0131i$ & $0.7265-0.0121i$ & $0.0016-0.0251i$ (0.0001) & $-0.0254i$ \\
+  $10^4$ & 1.5 & 0.3274 & $0.3387+0.0004i$ & $0.3412-0.0260i$ & $0.0025-0.0265i$ (0.0004) & $-0.0261i$ \\
+  $10^5$ & 1.0 & 0.7182 & $0.7211+0.0069i$ & $0.7214-0.0049i$ & $0.0004-0.0117i$ (0.0001) & $-0.0118i$ \\
+  $10^5$ & 1.5 & 0.3272 & $0.3285-0.0000i$ & $0.3290-0.0121i$ & $0.0006-0.0121i$ (0.0002) & $-0.0121i$ \\
+\end{tabular}
+\end{center}
+(The predicted value $\exp(-\eps^2t^3q\cdot Dq/3)$ varies slightly because
+$t$ is rounded to the grid.) With and without back-reaction the real part
+agrees with the same prediction: within one standard error at $N=10^5$,
+and within three at $N=10^4$, where the deviations (about $0.01$) are
+compatible with the proved $O(N^{-1/3})$ error ($N^{-1/3}=0.046$). The back-reaction is visible as an
+imaginary part that decreases like $N^{-1/3}$. The ``heuristic'' column is
+$-i\,e^{-s^3d_0/3}\,\eps^2t^2\,q\cdot D(v_0)v_0/2T$, the phase shift from
+the friction displacement of Remark~\ref{rem:where}; it is not a proved
+asymptotic for the paired difference, but agrees within about $5\%$. The
+proved statement \eqref{eq:driftY} can be tested on the same runs through
+$\E(Y^{\kappa=1}_t-Y^{\kappa=0}_t)$ against $-\eps^2t^2D(v_0)v_0/2T$: at
+$N=10^5$, $s=1$, the measured value is
+$(-0.014048,\,-0.004475)\pm(0.000012,\,0.000007)$ and the formula gives
+$(-0.014211,\,-0.004440)$. The $1\%$ discrepancy is thirteen standard
+errors and is theoretical error, of relative order $1/t=2\%$ by
+\eqref{eq:driftY}.
+
+\paragraph{(c) Time-step error.} On $2\times10^4$ samples at $\eps=0.02$,
+the particle was advanced with steps $h$ and $2h$ on the same
+Ornstein--Uhlenbeck paths. The differences in $\E w_t/(\eps^2t)$ between the
+two step sizes were, at $t=20$ and $t=40$: for $\kappa=0$,
+$-0.0001\pm0.0034$ and $-0.0007\pm0.0067$ (first component); for the paired
+difference, $0.0006\pm0.0004$ and $0.0065\pm0.0070$. The time-step error is
+therefore below the Monte Carlo error of the tables in (a), and not resolved.
+
+\paragraph{Summary.} The numerical evidence supports the formula for the
+polarization drag at the $1\%$ level, the divergence-form drift at the
+$3$--$10\%$ level, and the unchanged $N^{1/3}$ law. It does not test the
+rates in the error terms, nor Theorem~\ref{thm:kin}.
+
+\section{What remains between this model and the particle system}
+
+\begin{enumerate}
+  \item \textbf{The medium.} The field modes relax at rates $\gamma_k$
+    imposed by a thermostat. In the particle system the medium is the gas of
+    other particles, the relaxation of its response is Landau damping, and
+    the friction is the polarization drag
+    computed with the dielectric function. The mechanism proved here (the
+    drag is the response of the medium to the source $\propto k\cdot v$
+    carried by the particle, and is tied to $D$ by the Gibbs structure) is
+    the same, but the Markov property of the medium is not available there
+    (gap~3 of the companion note).
+  \item \textbf{Temperature.} The Einstein relation here is inherited from
+    the thermostat at temperature $T$. For a non-Maxwellian background the
+    Lenard--Balescu friction is $D$ applied to a different vector, and
+    there is no Gibbs measure to guide the computation.
+  \item \textbf{Sharp resonances.} All constants depend on
+    $\min_k\gamma_k>0$ and on the finiteness of $K$.
+  \item \textbf{Order $N^{-1/3}$.} The characteristic function of $Y$ is
+    computed up to $O(N^{-1/3})$; the coefficient of that term is not
+    (Remark~\ref{rem:next}).
+  \item \textbf{Regularity input.} Theorem~\ref{thm:kin} is conditional on a
+    classical regularity statement for the limiting Fokker--Planck equation
+    (Remark~\ref{rem:reg}), and the invariance of the Gibbs measure on a
+    quoted theorem (Remark~\ref{rem:inv}).
+  \item \textbf{Self-consistency.} The tagged particle now acts on the
+    field, but the field is not made of particles. Gap~1 of the companion
+    note is untouched.
+\end{enumerate}
+
+\begin{thebibliography}{99}
+\small
+\bibitem{Balescu} R.~Balescu, Irreversible processes in ionized gases,
+  \emph{Phys.\ Fluids} 3 (1960) 52--63.
+\bibitem{CL} A.~O.~Caldeira and A.~J.~Leggett, Path integral approach to
+  quantum Brownian motion, \emph{Physica A} 121 (1983) 587--616.
+\bibitem{EK} S.~N.~Ethier and T.~G.~Kurtz, \emph{Markov Processes:
+  Characterization and Convergence}, Wiley, 1986.
+\bibitem{FKM} G.~W.~Ford, M.~Kac and P.~Mazur, Statistical mechanics of
+  assemblies of coupled oscillators, \emph{J.\ Math.\ Phys.} 6 (1965)
+  504--515.
+\bibitem{Friedman} A.~Friedman, \emph{Stochastic Differential Equations and
+  Applications}, vol.~1, Academic Press, 1975.
+\bibitem{Hubbard} J.~Hubbard, The friction and diffusion coefficients of the
+  Fokker--Planck equation in a plasma, \emph{Proc.\ R.\ Soc.\ A} 260 (1961)
+  114--126.
+\bibitem{KP} H.~Kesten and G.~C.~Papanicolaou, A limit theorem for
+  stochastic acceleration, \emph{Comm.\ Math.\ Phys.} 78 (1980) 19--63.
+\bibitem{Kubo} R.~Kubo, The fluctuation-dissipation theorem, \emph{Rep.\
+  Prog.\ Phys.} 29 (1966) 255--284.
+\bibitem{Kunita} H.~Kunita, \emph{Stochastic Flows and Stochastic
+  Differential Equations}, Cambridge University Press, 1990.
+\bibitem{Lenard} A.~Lenard, On Bogoliubov's kinetic equation for a spatially
+  homogeneous plasma, \emph{Ann.\ Phys.} 10 (1960) 390--400.
+\bibitem{PSV} G.~C.~Papanicolaou, D.~Stroock and S.~R.~S.~Varadhan,
+  Martingale approach to some limit theorems, in \emph{Duke Turbulence
+  Conference}, Duke Univ.\ Math.\ Ser.\ III, 1977.
+\bibitem{PavliotisStuart} G.~A.~Pavliotis and A.~M.~Stuart, \emph{Multiscale
+  Methods: Averaging and Homogenization}, Springer, 2008.
+\bibitem{RR} N.~Rostoker and M.~N.~Rosenbluth, Test particles in a
+  completely ionized plasma, \emph{Phys.\ Fluids} 3 (1960) 1--14.
+\bibitem{SV} D.~W.~Stroock and S.~R.~S.~Varadhan, \emph{Multidimensional
+  Diffusion Processes}, Springer, 1979.
+\bibitem{TH} W.~B.~Thompson and J.~Hubbard, Long-range forces and the
+  diffusion coefficients of a plasma, \emph{Rev.\ Mod.\ Phys.} 32 (1960)
+  714--718.
+\bibitem{Zwanzig} R.~Zwanzig, Nonlinear generalized Langevin equations,
+  \emph{J.\ Stat.\ Phys.} 9 (1973) 215--220.
+\end{thebibliography}
+\noindent\emph{All bibliographic details above are from memory and were not
+checked against the sources.}
+
+\end{document}

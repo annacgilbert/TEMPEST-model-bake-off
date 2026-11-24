@@ -1,0 +1,1390 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\sD}{\mathsf{D}}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+\newcommand{\nrm}[2]{\|#1\|_{#2}}
+\newcommand{\avg}[1]{\langle #1\rangle}
+\newcommand{\tr}{\operatorname{tr}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Orbit decorrelation beyond $N^{3/8}$:\\
+diffusive a priori bound, joint law, first correction,\\
+and the breakdown at the kinetic time}
+\author{Working note}
+\date{24 November 2026}
+
+\begin{document}
+\maketitle
+
+\section{What is and is not proved}
+
+This note continues \texttt{orbit\_decorrelation\_theorem.tex} (``the first
+note''), in the same model: a tagged particle in a prescribed stationary
+Gaussian field of amplitude $\eps = N^{-1/2}$ whose mode amplitudes are
+Ornstein--Uhlenbeck processes. The main theorem of the first note (``Orbit
+decorrelation in a prescribed field'', called Theorem~1 in the project notes;
+it is numbered 2 in the compiled PDF) gave
+$\E e^{iq\cdot Y_t} = \exp(-\eps^2t^3q\cdot Dq/3) + O(N^{-1/6})$ at
+$t\sim N^{1/3}$, non-trivial only for $t\ll N^{3/8}$, using the trivial bound
+$|w_\tau|\lesssim\eps\tau$. The following is proved here.
+\begin{itemize}
+  \item \textbf{Diffusive a priori bound, all times}
+    (Theorem~\ref{thm:apriori}). An exact decomposition
+    $w_\tau = \eps M_\tau - \eps(\chi_\tau-\chi_0) + \eps^2\int_0^\tau Q$,
+    with $M$ a martingale whose bracket is exactly
+    $2\int_0^\tau D(v_0+w_\sigma)\,\dd\sigma$. Hence
+    $(\E|w_\tau|^r)^{1/r}\le C_r(\eps + \eps\sqrt\tau + \eps^2\tau)$ for all
+    $\tau\ge0$, and $\E|w_\tau|^2 = 2\eps^2\tau\,\tr D\,(1+o(1))$ for
+    $1\ll\tau\ll\eps^{-2}$.
+  \item \textbf{Joint law with a rate} (Theorem~\ref{thm:joint}). The
+    characteristic function of $(Y_t,w_t)$ equals that of the Kolmogorov
+    diffusion $\dd Y = w\,\dd t$, $\dd w = \eps\sqrt{2D}\,\dd W$ up to an
+    explicit error. Consequences: the error at $t = sN^{1/3}$ is
+    $O(N^{-1/3})$, not $O(N^{-1/6})$, jointly in $(Y_t, N^{1/3}w_t)$
+    (Corollary~\ref{cor:third}); in the natural scaling
+    $(Y_t/\eps t^{3/2}, w_t/\eps t^{1/2})$ the Gaussian law holds with error
+    $O(t^{-1} + \eps\sqrt t)$, that is for all $1\ll t\ll N$
+    (Corollary~\ref{cor:natural}); and for fixed $q$ the formula of the first
+    note holds uniformly on $0\le t\ll N$ (Corollary~\ref{cor:uniform}).
+  \item \textbf{First correction, with its coefficient}
+    (Theorem~\ref{thm:first}):
+    \[
+      \E e^{iq\cdot Y_t} = e^{-\eps^2t^3d/3}\Bigl[1
+        + \tfrac12\eps^2t^2\bigl(q\cdot\sD_2q + i\,q\cdot\beta\bigr)
+        - \tfrac{2i}{15}\,\eps^4t^5\,(Dq)\cdot\nabla_v(q\cdot Dq)\Bigr]
+        + O\bigl(t^{-3/2} + \eps + \eps^2t\bigr),
+    \]
+    with $d = q\cdot Dq$ and explicit $\sD_2$, $\beta$. At $t = sN^{1/3}$ the
+    bracket is $1 + N^{-1/3}c(s,q)$ and the remainder is $O(N^{-1/2})$. So
+    the true error of the Gaussian formula at $N^{1/3}$ is of order exactly
+    $N^{-1/3}$ unless $c(s,q)=0$. In the natural scaling the correction has a
+    part of size $1/t$ (finite correlation time) and a part of size
+    $\eps\sqrt t$ (drift and skewness produced by the velocity dependence of
+    $D$); the second is what destroys the Gaussian law at $t\sim\eps^{-2}=N$.
+  \item \textbf{Functional convergence} (Theorems~\ref{thm:func}
+    and~\ref{thm:kinetic}). On $t = sN^{1/3}$ the path
+    $(Y, N^{1/3}w)$ converges in law in $C([0,S])$ to the Kolmogorov
+    diffusion. On $t = TN$ the velocity $w$ converges in law in $C([0,T_0])$
+    to the diffusion with generator $D(v_0+v):\nabla_v^2 + \beta(v)\cdot\nabla_v$,
+    which is not Gaussian. These two proofs use the martingale decomposition
+    of Theorem~\ref{thm:apriori} and two classical limit theorems quoted from
+    the literature; no rate is obtained.
+\end{itemize}
+\textbf{Not proved.}
+(i) The first correction for the joint law of $(Y_t,w_t)$ (wave vector
+$p\ne0$ for $w$); it contains an additional final-time term, see
+Remark~\ref{rem:jointcorr}.
+(ii) That the remainder $O(\eps)$ in Theorem~\ref{thm:first} is sharp; the
+numerics are consistent with it and Remark~\ref{rem:offset} identifies one
+next-order term heuristically.
+(iii) Any rate in the functional theorems, and any statement for
+$t\gg\eps^{-2}$.
+(iv) Explicit constants: they depend on the model through solutions of
+Poisson equations and are not tracked. They grow as $\gamma_k\to0$.
+(v) Everything about the particle system. Of the six gaps listed in the last
+section of the first note, none is closed. What is removed is the limitation
+of the \emph{method} noted in the Remark after its proof: the range
+$t\ll N^{3/8}$ was an artefact of the trivial a priori bound.
+
+\textbf{Prior art.} Nothing here is new as a method. The model is a
+stochastic acceleration problem with a Markovian field; diffusion limits for
+such problems go back to Khasminskii~\cite{Khas} and Kesten and
+Papanicolaou~\cite{KP}, with the perturbed-test-function and martingale
+formulation of Papanicolaou, Stroock and Varadhan~\cite{PSV} and
+Kushner~\cite{Kushner}; see also Komorowski and Ryzhik~\cite{KR} and
+D\"urr, Goldstein and Lebowitz~\cite{DGL} for Hamiltonian fields, and
+\cite{FGPS} for the method. Theorem~\ref{thm:kinetic} is a special case of
+this classical theory. The $t^3$ law is Dupree's resonance
+broadening~\cite{Dupree}. Higher-order perturbed test functions giving the
+first correction to a diffusion limit are standard (see e.g.\
+\cite{PavSt}). What the note does is carry these computations out in the
+model of the first note, at the intermediate time $N^{1/3}$ that the plasma
+strategy needs, and with explicit rates and coefficients. The feature that
+makes the model exactly tractable (the Doppler-shifted resolvent of
+Section~\ref{sec:setting}) is special to Markovian mode amplitudes.
+The theorem numbers quoted from \cite{EK} are from memory and should be
+checked against the book.
+
+\section{Setting and tools}
+\label{sec:setting}
+
+\subsection{The model}
+
+As in the first note: $K\subset\mathbb{R}^d\setminus\{0\}$ is finite,
+$f_k\in\mathbb{C}^d$, $\gamma_k>0$, $\lambda_k = \gamma_k + i(\omega_k - k\cdot v_0)$,
+$(b_k)_{k\in K}$ are independent stationary complex Ornstein--Uhlenbeck
+processes, $\dd b_k = -\lambda_kb_k\,\dd\tau + \sqrt{2\gamma_k}\,\dd\tilde B_k$,
+with $\E|b_k|^2 = 1$, $\E b_k^2 = 0$, and
+\begin{equation}
+  \dot Y = w,\qquad \dot w = \eps\,G(Y,b),\qquad
+  G(Y,b) = \sum_{k\in K}\Re\bigl(f_kb_ke^{ik\cdot Y}\bigr),\qquad
+  Y_0 = 0,\ w_0 = 0 .
+  \label{eq:Yw}
+\end{equation}
+The generator is $\cL = w\cdot\nabla_Y + \eps G\cdot\nabla_w + A$ with $A$
+the Ornstein--Uhlenbeck generator of $b$. Throughout $0<\eps\le1$, and
+$\gamma_* = \min_k\gamma_k$. ``$C$'' denotes a constant depending only on the
+model data $(d,K,(f_k),(\gamma_k),(\omega_k),v_0)$ and on the indicated
+parameters, never on $\eps$, $t$, $q$, $p$. For a random variable $\xi$,
+$\nrm{\xi}{r} = (\E|\xi|^r)^{1/r}$.
+
+\subsection{Doppler variables}
+
+Put
+\[
+  z_k = b_k\,e^{ik\cdot Y},\qquad
+  \mu_k(w) = \lambda_k - i\,k\cdot w
+  = \gamma_k + i\bigl(\omega_k - k\cdot(v_0+w)\bigr).
+\]
+Then $|z_k| = |b_k|$, $G = \sum_k\Re(f_kz_k)$ depends on $(Y,b)$ only through
+$z$, and for a smooth function $\varphi(w,z)$, composed with $z = z(Y,b)$,
+\begin{equation}
+  \cL\varphi = \eps\,G\cdot\nabla_w\varphi + \cA_w\varphi,\qquad
+  \cA_w = \sum_{k\in K}\Bigl(-\mu_k(w)\,z_k\partial_{z_k}
+     - \bar\mu_k(w)\,\bar z_k\partial_{\bar z_k}
+     + 2\gamma_k\,\partial_{z_k}\partial_{\bar z_k}\Bigr).
+  \label{eq:Aw}
+\end{equation}
+Indeed $w\cdot\nabla_Yz_k = i(k\cdot w)z_k$, $Az_k = -\lambda_kz_k$, and
+$\partial_{b_k}\partial_{\bar b_k}\varphi = \partial_{z_k}\partial_{\bar z_k}\varphi$
+because $|e^{ik\cdot Y}| = 1$. So $w\cdot\nabla_Y + A$ acts on functions of
+$z$ as the generator $\cA_w$ of an Ornstein--Uhlenbeck process whose
+frequencies are Doppler-shifted to the current velocity $v_0+w$. The
+standard complex Gaussian law $\nu$ ($z_k$ independent, $\E|z_k|^2=1$,
+$\E z_k^2=0$) is invariant for $\cA_w$ for every $w$. Write
+$\avg{h}(w) = \int h(w,z)\,\nu(\dd z)$. At $\tau=0$, $z = b_0$ has law $\nu$.
+
+\subsection{Polynomial class and Poisson equation}
+
+Let $\cP$ be the set of functions
+$h(w,z) = \sum_{m,n}c_{mn}(w)\,z^m\bar z^n$ (finite sum over multi-indices
+$m,n\in\mathbb{N}^K$) with $c_{mn}\in C_b^\infty(\mathbb{R}^d;\mathbb{C})$,
+that is, bounded with all derivatives. $\cP$ is an algebra, stable under
+$\nabla_w$, $\cA_w$ and $\avg{\cdot}$, and $\avg{h}\in C_b^\infty$. An
+$h\in\cP$ is \emph{odd} (\emph{even}) if only monomials with $|m|+|n|$ odd
+(even) occur; odd elements have $\avg h = 0$.
+
+\begin{lemma}[Poisson equation]\label{lem:poisson}
+For every $h\in\cP$ there is a unique $\psi\in\cP$ with
+$\cA_w\psi = h - \avg h$ and $\avg\psi = 0$. Its degree in $z$ is at most that
+of $h$, and it is odd (even) if $h$ is. We write $\psi = \cA^{-1}(h-\avg h)$.
+Moreover, for fixed $w$,
+$\psi = -\int_0^\infty e^{s\cA_w}(h-\avg h)\,\dd s$.
+\end{lemma}
+
+\begin{proof}
+On monomials,
+\[
+  \cA_w(z^m\bar z^n) = -\sigma_{mn}(w)\,z^m\bar z^n
+   + \sum_k 2\gamma_km_kn_k\,z^{m-e_k}\bar z^{n-e_k},
+  \qquad \sigma_{mn} = \sum_k\bigl(m_k\mu_k + n_k\bar\mu_k\bigr),
+\]
+and $\Re\sigma_{mn} = \sum_k(m_k+n_k)\gamma_k\ge\gamma_*(|m|+|n|)$. Since
+$\sigma_{mn}$ is affine in $w$ with $|\sigma_{mn}|\ge\gamma_*$ when
+$|m|+|n|\ge1$, $1/\sigma_{mn}\in C_b^\infty$.
+Invariance of $\nu$: $\avg{z^m\bar z^n} = \delta_{mn}\,m!$, so
+$\avg{\cA_w(z^m\bar z^m)} = -2\sum_k\gamma_km_k\,m!
+ + \sum_k2\gamma_km_k^2\,(m-e_k)! = 0$, and the mean vanishes trivially for
+$m\ne n$.
+Existence, by induction on the degree $D$ of $h$. For $D=0$ take $\psi=0$.
+Let $h = c\,z^m\bar z^n$ with $|m|+|n| = D\ge1$, and
+$\ell = (c/\sigma_{mn})\sum_k2\gamma_km_kn_k\,z^{m-e_k}\bar z^{n-e_k}$, of
+degree $D-2$. By induction there is $\psi'\in\cP$ with
+$\cA_w\psi' = \ell - \avg\ell$. Then
+$\psi_0 = -(c/\sigma_{mn})z^m\bar z^n + \psi'$ satisfies
+$\cA_w\psi_0 = h - \avg\ell$; taking means and using invariance,
+$\avg\ell = \avg h$. Put $\psi = \psi_0 - \avg{\psi_0}$. Parity and degree are
+preserved by the construction.
+Uniqueness and the integral formula: for fixed $w$ the space $V$ of
+polynomials of degree $\le D$ with zero mean is finite dimensional and
+invariant under $\cA_w$, which is triangular on it with diagonal entries
+$-\sigma_{mn}$, $|m|+|n|\ge1$, of real part $\le-\gamma_*$. Hence $\cA_w$ is
+invertible on $V$ and $-\cA_w^{-1} = \int_0^\infty e^{s\cA_w}\dd s$ there.
+\end{proof}
+
+\subsection{Correctors and coefficients}
+
+Define the vector-valued elements of $\cP$
+\[
+  \chi(w,z) = \sum_k\Re\Bigl(\frac{f_kz_k}{\mu_k(w)}\Bigr),\qquad
+  \chi_2(w,z) = \sum_k\Re\Bigl(\frac{f_kz_k}{\mu_k(w)^2}\Bigr),
+\]
+so that $\cA_w\chi = -G$ and $\cA_w\chi_2 = -\chi$ (use
+$\cA_wz_k = -\mu_kz_k$, $\cA_w\bar z_k = -\bar\mu_k\bar z_k$). At $w=0$,
+$\chi$ and $\chi_2$ are the correctors $\alpha$, $\alpha_2$ of the first note
+without the factor $q$; here the denominators carry the exact velocity
+dependence, which is what removes the terms the first note could only bound
+by $\eps^3t^4$. From
+$\avg{\Re(az_k)\Re(bz_l)} = \tfrac12\delta_{kl}\Re(a\bar b)$ and
+$\partial_{w_j}(1/\mu_k) = ik_j/\mu_k^2$:
+\begin{align}
+  \sD_1(w)_{ij} &:= \avg{G_i\chi_j}
+     = \tfrac12\sum_k\Re\bigl(f_k^i\bar f_k^j/\bar\mu_k\bigr), &
+  D(w) &:= \tfrac12\bigl(\sD_1 + \sD_1^{T}\bigr)
+     = \tfrac12\sum_k\Re\Bigl(\frac1{\mu_k}\Bigr)\Re\bigl(f_k\otimes\bar f_k\bigr),
+     \notag\\
+  \sD_2(w)_{ij} &:= \avg{G_i\chi_{2,j}}
+     = \tfrac12\sum_k\Re\bigl(f_k^i\bar f_k^j/\bar\mu_k^2\bigr), &
+  \beta(w)_i &:= \avg{(G\cdot\nabla_w)\chi_i}
+     = \tfrac12\sum_k\Re\Bigl(\frac{i\,(k\cdot\bar f_k)\,f_k^i}{\mu_k^2}\Bigr).
+  \label{eq:coef}
+\end{align}
+$D(w)$ is the diffusion matrix $D$ of the first note evaluated at
+velocity $v_0+w$; we write $D = D(0)$, $\sD_2 = \sD_2(0)$, $\beta = \beta(0)$.
+All four are in $C_b^\infty$. In particular
+\[
+  q\cdot\sD_2q = \tfrac12\sum_k|q\cdot f_k|^2\,\Re\frac{1}{\lambda_k^2}
+  = \int_0^\infty u\,c(u)\,\dd u,
+\]
+with $c$ the covariance of $q\cdot G(0,b_\tau)$ (the proposition on the first iterate in the first
+note). For a potential field, $f_k = -i\varphi_kk$, one checks
+$\beta = \nabla_v\cdot D$; in general $\beta\ne\nabla_v\cdot D$.
+
+\subsection{The test function and Dynkin's formula}
+
+Fix $q,p\in\mathbb{R}^d$ and $t>0$, write $\theta = t-\tau$ and
+\begin{equation}
+  \xi(\theta) = p + \theta q,\qquad
+  \Lambda(\theta) = \int_0^\theta\xi\cdot D\xi\,\dd\sigma
+   = \theta\,p\cdot Dp + \theta^2\,p\cdot Dq + \tfrac13\theta^3\,q\cdot Dq,
+\end{equation}
+\begin{equation}
+  U_0(\tau,Y,w) = \exp\bigl(iq\cdot Y + i\xi(\theta)\cdot w
+     - \eps^2\Lambda(\theta)\bigr).
+\end{equation}
+$U_0$ solves the backward equation of the Kolmogorov diffusion
+$\dd Y = w\,\dd\tau$, $\dd w = \eps\sqrt{2D}\,\dd W$ with terminal value
+$e^{i(q\cdot Y+p\cdot w)}$, so that $U_0(0,0,0) = e^{-\eps^2\Lambda(t)}$ is the
+characteristic function of that diffusion at time $t$. Also
+$|U_0| = e^{-\eps^2\Lambda(\theta)}\le1$. Put $n(\theta) = \xi\cdot D\xi$ and
+$g = \xi\cdot G$.
+
+\begin{lemma}\label{lem:R}
+For smooth $\varphi(\theta,w,z)$,
+$(\partial_\tau+\cL)(U_0\varphi) = U_0\,\cR[\varphi]$ with
+\begin{equation}
+  \cR[\varphi] = \cA_w\varphi - \partial_\theta\varphi
+     + \eps^2n\,\varphi + i\eps\,g\,\varphi + \eps\,G\cdot\nabla_w\varphi .
+  \label{eq:R}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+$\partial_\tau U_0 = (-iq\cdot w + \eps^2n)U_0$ and
+$w\cdot\nabla_YU_0 = iq\cdot w\,U_0$, so
+$(\partial_\tau + w\cdot\nabla_Y)U_0 = \eps^2nU_0$; $\nabla_wU_0 = i\xi U_0$;
+$AU_0 = 0$. With \eqref{eq:Aw} and $\partial_\tau = -\partial_\theta$ on
+$\varphi$ the product rule gives \eqref{eq:R}.
+\end{proof}
+
+\begin{lemma}[Dynkin]\label{lem:dynkin}
+Let $\varphi(\theta,w,z)$ be a finite sum of terms
+$a(\theta)\,w^L\,h(w,z)$ with $a$ smooth, $w^L$ a monomial and $h\in\cP$.
+Then for $0\le\tau_0\le t$,
+\[
+  \E\bigl[U_0\varphi\bigr]_{\tau=t} - \E\bigl[U_0\varphi\bigr]_{\tau=\tau_0}
+  = \E\int_{\tau_0}^t\bigl(U_0\,\cR[\varphi]\bigr)(\tau,Y_\tau,w_\tau,b_\tau)\,\dd\tau .
+\]
+\end{lemma}
+
+\begin{proof}
+It\^o's formula, as in the Dynkin lemma of the first note. The stochastic integral has
+integrands $\sqrt{2\gamma_k}\,\partial_{b_k}(U_0\varphi)$ and conjugates,
+bounded by polynomials in $|b|$ and $|w|$; these are square integrable
+uniformly on $[0,t]$ since $|w_\tau|\le\eps\int_0^\tau\Gamma(b_\sigma)\dd\sigma$
+with $\Gamma(b) = \sum_k|f_k||b_k|$ and $b$ is stationary Gaussian. The same
+bounds make $U_0\cR[\varphi]$ integrable.
+\end{proof}
+
+Two facts are used repeatedly. If $h\in\cP$ then
+$|h(w,z)|\le C_h(1+|z|)^{\deg h}$ uniformly in $w$, and $|z_\tau| = |b_\tau|$
+with $b$ stationary; hence
+\begin{equation}
+  \sup_{\tau\ge0}\nrm{h(w_\tau,z_\tau)}{r}\le C_{h,r}\qquad(r\ge1).
+  \label{eq:hbound}
+\end{equation}
+
+\section{The martingale decomposition and the diffusive bound}
+
+Let $\Gamma_1(b) = \sum_k|f_k||b_k|/\gamma_k$,
+$\Gamma_2(b) = \Gamma(b)\sum_k|k||f_k||b_k|/\gamma_k^2$ and
+$\bar D = \sum_k|f_k|^2/(2\gamma_k)$. Let
+$Q = (G\cdot\nabla_w)\chi\in\cP$, so that $\avg Q = \beta(w)$.
+
+\begin{theorem}[Diffusive a priori bound]\label{thm:apriori}
+\begin{enumerate}
+\item[(i)] For all $\tau\ge0$,
+\begin{equation}
+  w_\tau = \eps M_\tau - \eps\bigl(\chi(w_\tau,z_\tau) - \chi(0,z_0)\bigr)
+    + \eps^2\int_0^\tau Q(w_\sigma,z_\sigma)\,\dd\sigma ,
+  \label{eq:decomp}
+\end{equation}
+where $M$ is a continuous square-integrable $\mathbb{R}^d$-valued martingale,
+$M_0=0$, with
+\begin{equation}
+  \langle M^i,M^j\rangle_\tau = 2\int_0^\tau D_{ij}(w_\sigma)\,\dd\sigma .
+  \label{eq:bracket}
+\end{equation}
+Moreover $|\chi|\le\Gamma_1(b)$, $|Q|\le\Gamma_2(b)$ and $\tr D(w)\le\bar D$.
+\item[(ii)] For $r\ge2$ there is $c_r$ (depending on $r$ and $d$ only,
+$c_2=1$) such that for all $\tau\ge0$
+\begin{equation}
+  \nrm{w_\tau}{r}\le\eps\Bigl(2\nrm{\Gamma_1}{r} + c_r\sqrt{2\bar D\tau}\Bigr)
+     + \eps^2\tau\,\nrm{\Gamma_2}{r}
+  \;\le\; C_r\,\omega(\tau),\qquad
+  \omega(\tau) := \eps(1+\sqrt\tau) + \eps^2\tau .
+  \label{eq:apriori}
+\end{equation}
+\item[(iii)] For all $\tau\ge0$,
+$\bigl|\E|w_\tau|^2 - 2\eps^2\tau\,\tr D\bigr|
+  \le C\bigl(\eps^2(1+\sqrt\tau) + \eps^3(1+\tau)^{3/2} + \eps^4\tau^2\bigr)$.
+\end{enumerate}
+\end{theorem}
+
+For $1\le\tau\le\eps^{-2}$, (ii) reads $\nrm{w_\tau}{r}\le3C_r\,\eps\sqrt\tau$,
+against $\eps\tau M_r$ in the a priori lemma of the first note, and (iii) reads
+$\E|w_\tau|^2 = 2\eps^2\tau\,\tr D\,\bigl(1 + O(\tau^{-1/2} + \eps\sqrt\tau)\bigr)$.
+The bound (ii) holds for all times; it is diffusive up to $\tau\sim\eps^{-2}$,
+where the drift term $\eps^2\tau$ becomes comparable (and is genuinely
+present, see Theorem~\ref{thm:kinetic}).
+
+\begin{proof}
+(i) Apply It\^o's formula to $\chi(w_\tau,z_\tau)$. By \eqref{eq:Aw},
+$\cL\chi = \eps(G\cdot\nabla_w)\chi + \cA_w\chi = \eps Q - G$, so
+\[
+  \chi(w_\tau,z_\tau) - \chi(0,z_0)
+  = \int_0^\tau(\eps Q - G)\,\dd\sigma + M_\tau,\qquad
+  M_\tau = \sum_k\sqrt{2\gamma_k}\int_0^\tau\bigl(
+    \partial_{b_k}\chi\,\dd\tilde B_k + \partial_{\bar b_k}\chi\,\dd\bar{\tilde B}_k\bigr).
+\]
+Since $w_\tau = \eps\int_0^\tau G\,\dd\sigma$, this is \eqref{eq:decomp}.
+Here $\partial_{b_k}\chi_i = f_k^ie^{ik\cdot Y}/(2\mu_k)$ and
+$\partial_{\bar b_k}\chi_i$ is its conjugate; they are bounded, so $M$ is a
+square-integrable martingale. With
+$\dd\langle\tilde B_k,\bar{\tilde B}_l\rangle = \delta_{kl}\dd\tau$ and
+$\dd\langle\tilde B_k,\tilde B_l\rangle = 0$,
+\[
+  \frac{\dd}{\dd\tau}\langle M^i,M^j\rangle
+  = \sum_k2\gamma_k\cdot2\Re\bigl(\partial_{b_k}\chi_i\,\overline{\partial_{b_k}\chi_j}\bigr)
+  = \sum_k\frac{\gamma_k}{|\mu_k|^2}\Re\bigl(f_k^i\bar f_k^j\bigr)
+  = 2D_{ij}(w),
+\]
+because $\Re(1/\mu_k) = \gamma_k/|\mu_k|^2$. The bounds on $\chi$, $Q$ follow
+from $|\mu_k|\ge\gamma_k$, $|z_k| = |b_k|$ and
+$\partial_{w_j}\chi = \sum_k\Re(ik_jf_kz_k/\mu_k^2)$; and
+$\tr D(w) = \frac12\sum_k\Re(1/\mu_k)|f_k|^2\le\bar D$.
+
+(ii) By \eqref{eq:bracket}, $\tr\langle M\rangle_\tau\le2\bar D\tau$
+deterministically. The Burkholder--Davis--Gundy inequality gives
+$\nrm{M_\tau}{r}\le c_r(2\bar D\tau)^{1/2}$, with equality-type constant
+$c_2 = 1$ since $\E|M_\tau|^2 = \E\tr\langle M\rangle_\tau$. Apply Minkowski's
+inequality to \eqref{eq:decomp} and stationarity of $b$.
+
+(iii) Write $w_\tau = \eps M_\tau + \rho_\tau$. By (i),
+$\nrm{\rho_\tau}{2}\le C(\eps+\eps^2\tau)$. By \eqref{eq:bracket},
+$\E|\eps M_\tau|^2 = 2\eps^2\int_0^\tau\E\tr D(w_\sigma)\dd\sigma$, and
+$|\tr D(w)-\tr D|\le C|w|$, so by (ii)
+$|\E|\eps M_\tau|^2 - 2\eps^2\tau\tr D|\le C\eps^2\tau\,\omega(\tau)$. Finally
+$|\E|w_\tau|^2 - \E|\eps M_\tau|^2|\le2\nrm{\eps M_\tau}{2}\nrm{\rho_\tau}{2}
++ \nrm{\rho_\tau}{2}^2\le C\eps\sqrt\tau(\eps+\eps^2\tau) + C(\eps+\eps^2\tau)^2$.
+Collect terms, using $\eps\le1$.
+\end{proof}
+
+\section{The joint characteristic function}
+
+\subsection{Statement}
+
+Let $P=|p|$, $Q_q = |q|$. For $0\le t_1\le t$ let
+\[
+  X = P + t_1Q_q,\qquad \bar\omega = \sup_{\tau\le t}\nrm{w_\tau}{2}
+  \le C\,\omega(t),
+\]
+\begin{align*}
+  \mathcal{B} &= \eps^2(1+P+Q_q)^2 + \eps^3(1+P+Q_q)^3,\\
+  \mathcal{E} &= \eps^2\bigl(X + XQ_q + Q_q\bigr) + \eps^2X^2\,\bar\omega
+     + \eps^3X^2(1+Q_q) + \eps^4\bigl(X^3+X^4\bigr) + \eps^5X^5 .
+\end{align*}
+
+\begin{theorem}[Joint law, with a rate]\label{thm:joint}
+There is a constant $C$ such that for all $q,p\in\mathbb{R}^d$,
+$\eps\in(0,1]$ and $t\ge0$,
+\begin{equation}
+  \Bigl|\E\,e^{i(q\cdot Y_t + p\cdot w_t)}
+    - \exp\Bigl(-\eps^2\bigl[t\,p\cdot Dp + t^2\,p\cdot Dq
+       + \tfrac13t^3\,q\cdot Dq\bigr]\Bigr)\Bigr|
+  \le C\bigl(\mathcal{B} + t\,\mathcal{E}\bigr),
+  \label{eq:joint}
+\end{equation}
+with $X = P+tQ_q$ in $\mathcal{E}$. More generally, for $0<t_1<t$,
+\begin{equation}
+  \Bigl|\E\,e^{i(q\cdot Y_t + p\cdot w_t)}\Bigr|
+  \le e^{-\eps^2\Lambda(t_1)}\Bigl(1 + C\bigl[\eps(X+Q_q) + \eps^2X^2 + \eps^3X^3\bigr]\Bigr)
+   + C\bigl(\mathcal{B} + t_1\,\mathcal{E}\bigr),
+  \label{eq:window}
+\end{equation}
+with $X = P + t_1Q_q$.
+\end{theorem}
+
+The right side of \eqref{eq:joint} replaces
+$C_1\eps t + C_2\eps^2t^2 + C_3\eps^3t^4 + C_4\eps^4t^5$ of the first note.
+For $p=0$ and $1\le t\le\eps^{-2}$ it is
+$C_q(\eps^2t^2 + \eps^3t^{7/2} + \eps^4t^5 + \eps^5t^6)$ up to smaller terms:
+the term $\eps t$ is gone, and $\eps^3t^4$ has become $\eps^3t^{7/2}$.
+The three corollaries below are the useful forms.
+
+\begin{corollary}[Rate $N^{-1/3}$ at $t = sN^{1/3}$]\label{cor:third}
+Let $S,R>0$. For $\eps = N^{-1/2}$, $t = s\eps^{-2/3}$ with $0\le s\le S$,
+and $|q|,|\pi|\le R$,
+\[
+  \Bigl|\E\exp\bigl(iq\cdot Y_t + i\pi\cdot\eps^{-2/3}w_t\bigr)
+   - \exp\bigl(-\bigl[s\,\pi\cdot D\pi + s^2\,\pi\cdot Dq
+     + \tfrac13s^3\,q\cdot Dq\bigr]\bigr)\Bigr|
+  \le C_{S,R}\,\eps^{2/3} = C_{S,R}\,N^{-1/3}.
+\]
+In particular
+$\E e^{iq\cdot Y_t} = \exp(-\tfrac13s^3q\cdot Dq) + O(N^{-1/3})$.
+\end{corollary}
+
+\begin{proof}
+Take $p = \eps^{-2/3}\pi$ in \eqref{eq:joint}. Then
+$P\le R\eps^{-2/3}$, $X\le R(1+S)\eps^{-2/3}$, and by
+Theorem~\ref{thm:apriori}, $\bar\omega\le C(1+\sqrt S+S)\eps^{2/3}$. Hence
+$\mathcal{B}\le C\eps^{2/3}$ and, term by term,
+$t\mathcal{E}\le C_{S,R}\,\eps^{-2/3}\bigl(\eps^{4/3} + \eps^{4/3}
++ \eps^{5/3} + \eps^{2} + \eps^{4/3} + \eps^{5/3}\bigr)\le C_{S,R}\,\eps^{2/3}$.
+\end{proof}
+
+\begin{corollary}[Natural scaling: valid for $1\ll t\ll N$]\label{cor:natural}
+Let $R>0$. For $1\le t\le\eps^{-2}$ and $|\kappa|,|\pi|\le R$,
+\[
+  \Bigl|\E\exp\Bigl(i\kappa\cdot\frac{Y_t}{\eps t^{3/2}}
+     + i\pi\cdot\frac{w_t}{\eps t^{1/2}}\Bigr)
+   - \exp\bigl(-\bigl[\pi\cdot D\pi + \pi\cdot D\kappa
+     + \tfrac13\kappa\cdot D\kappa\bigr]\bigr)\Bigr|
+  \le C_R\Bigl(\frac1t + \eps\sqrt t\Bigr).
+\]
+Consequently, if $t\to\infty$ and $\eps^2t\to0$, then
+$\bigl(Y_t/\eps t^{3/2},\,w_t/\eps t^{1/2}\bigr)$ converges in law to a
+centred Gaussian vector with covariance
+$\bigl(\begin{smallmatrix}\frac23D & D\\ D & 2D\end{smallmatrix}\bigr)$.
+\end{corollary}
+
+\begin{proof}
+Take $q = \kappa/(\eps t^{3/2})$, $p = \pi/(\eps t^{1/2})$; then
+$\eps^2\Lambda(t)$ is the bracket. Now $X\le2R/(\eps\sqrt t)$,
+$Q_q\le R/(\eps t^{3/2})$, $\bar\omega\le C\eps\sqrt t$, so
+$t\eps^2X\le C\eps\sqrt t$, $t\eps^2XQ_q\le C/t$, $t\eps^2Q_q\le C\eps$,
+$t\eps^2X^2\bar\omega\le C\eps\sqrt t$,
+$t\eps^3X^2(1+Q_q)\le C(\eps + t^{-3/2})$, $t\eps^4X^3\le C\eps$,
+$t\eps^4X^4\le C/t$, $t\eps^5X^5\le Ct^{-3/2}$, and
+$\mathcal{B}\le C(\eps^2 + 1/t)$. The last statement is L\'evy's continuity
+theorem.
+\end{proof}
+
+\begin{corollary}[Fixed $q$: uniform validity for $t\ll N$]\label{cor:uniform}
+Let $q\in\mathbb{R}^d$ with $d_q := q\cdot Dq>0$. There is $C_q$ such that for
+all $\eps\in(0,1]$, $0\le t\le\eps^{-2}$ and $S\ge1$,
+\[
+  \Bigl|\E\,e^{iq\cdot Y_t} - \exp\bigl(-\tfrac13\eps^2t^3d_q\bigr)\Bigr|
+  \le 2\,e^{-S^3d_q/3} + C_q\,S^7\bigl(\eps^{1/3} + \eps\sqrt t\bigr).
+\]
+In particular
+$\sup_{0\le t\le T_\eps}|\E e^{iq\cdot Y_t} - e^{-\eps^2t^3d_q/3}|\to0$ as
+$\eps\to0$ whenever $\eps^2T_\eps\to0$.
+\end{corollary}
+
+\begin{proof}
+Let $t_S = S\eps^{-2/3}$ and $p=0$. With $t_1\le t_S$ one has
+$X\le SQ_q\eps^{-2/3}$ and
+\begin{align*}
+  t_1\mathcal{E}\le{}& S^2Q_q(1+Q_q)\eps^{2/3} + SQ_q\eps^{4/3}
+   + S^3Q_q^2\,\bar\omega + S^3Q_q^2(1+Q_q)\eps \\
+  & + S^4Q_q^3\eps^{4/3} + S^5Q_q^4\eps^{2/3} + S^6Q_q^5\eps
+   \;\le\; C_qS^6\bigl(\eps^{2/3} + \bar\omega\bigr).
+\end{align*}
+If $t\le t_S$, use \eqref{eq:joint}: here
+$\bar\omega\le C\omega(t_S)\le CS\eps^{2/3}$, which gives the claim without
+the exponential term. If $t_S<t\le\eps^{-2}$, use \eqref{eq:window} with
+$t_1 = t_S$: $\eps^2\Lambda(t_S) = S^3d_q/3$,
+$\eps X\le SQ_q\eps^{1/3}$, and $\bar\omega\le C\omega(t)\le3C\eps\sqrt t$, so
+$|\E e^{iq\cdot Y_t}|\le e^{-S^3d_q/3} + C_qS^7(\eps^{1/3}+\eps\sqrt t)$, while
+$e^{-\eps^2t^3d_q/3}\le e^{-S^3d_q/3}$. For the last statement choose
+$S = S_\eps\to\infty$ slowly.
+\end{proof}
+
+\begin{remark}[The range]\label{rem:range}
+The first note's estimate was non-trivial for $t\ll N^{3/8}$. With the
+diffusive bound, the formula $\exp(-\eps^2t^3q\cdot Dq/3)$ for fixed $q$ is
+correct, with error $o(1)$, for all $0\le t\ll N$
+(Corollary~\ref{cor:uniform}); for $t\gg N^{1/3}$ this is the statement that
+both sides are small. The statement with content at long times is
+Corollary~\ref{cor:natural}: the \emph{rescaled} displacement is Gaussian for
+$1\ll t\ll N$, with relative error $O(1/t + \eps\sqrt t)$.
+Theorem~\ref{thm:first} shows both error terms are attained, and
+Theorem~\ref{thm:kinetic} shows the Gaussian law is false at $t\sim N$.
+\end{remark}
+
+\subsection{Correctors and the residual}
+
+By Lemma~\ref{lem:poisson} define, for vectors $\xi,\xi',\xi''$, the
+multilinear forms with values in $\cP$
+\[
+  \psi_2[\xi,\xi'] = \cA^{-1}\bigl((\xi\cdot G)(\xi'\cdot\chi)
+      - \xi\cdot\sD_1(w)\xi'\bigr),\qquad
+  \psi_3[\xi,\xi',\xi''] = \cA^{-1}\bigl((\xi\cdot G)\,\psi_2[\xi',\xi'']\bigr).
+\]
+$\psi_2$ is even with mean zero; $\psi_3$ is odd. With
+$\xi = \xi(\theta) = p+\theta q$ write $\alpha = \xi\cdot\chi$,
+$\alpha_2 = \xi\cdot\chi_2$, $\psi_2 = \psi_2[\xi,\xi]$,
+$\psi_3 = \psi_3[\xi,\xi,\xi]$, and set
+\begin{equation}
+  \Phi = 1 + \Phi_1 + \Phi_2 + \Phi_3,\qquad
+  \Phi_1 = i\eps\,\alpha,\quad
+  \Phi_2 = \eps^2\psi_2,\quad
+  \Phi_3 = -i\eps\,q\cdot\chi_2 + i\eps^3n\,\alpha_2 - i\eps^3\psi_3 .
+  \label{eq:Phi}
+\end{equation}
+
+\begin{lemma}[Residual]\label{lem:res}
+\begin{align}
+  \cR[\Phi] ={}& -\eps^2\,\xi\cdot\bigl(D(w)-D\bigr)\xi
+     + i\eps^2\,(G\cdot\nabla_w)\alpha
+     - \eps^2\,\partial_\theta\psi_2 + \eps^4n\,\psi_2
+     + \eps^3\,G\cdot\nabla_w\psi_2 \notag\\
+   & - \partial_\theta\Phi_3 + \eps^2n\,\Phi_3 + i\eps\,g\,\Phi_3
+     + \eps\,G\cdot\nabla_w\Phi_3 .
+  \label{eq:res}
+\end{align}
+\end{lemma}
+
+\begin{proof}
+From \eqref{eq:R}, $\partial_\theta\xi = q$, and the Poisson equations:
+\begin{align*}
+  \cR[1] &= \eps^2n + i\eps g,\\
+  \cR[\Phi_1] &= -i\eps g - i\eps\,q\cdot\chi + i\eps^3n\,\alpha
+      - \eps^2g\alpha + i\eps^2(G\cdot\nabla_w)\alpha,\\
+  \cR[\Phi_2] &= \eps^2\bigl(g\alpha - \xi\cdot D(w)\xi\bigr)
+      - \eps^2\partial_\theta\psi_2 + \eps^4n\psi_2 + i\eps^3g\psi_2
+      + \eps^3G\cdot\nabla_w\psi_2,\\
+  \cR[\Phi_3] &= \bigl(i\eps\,q\cdot\chi - i\eps^3n\,\alpha - i\eps^3g\psi_2\bigr)
+      - \partial_\theta\Phi_3 + \eps^2n\Phi_3 + i\eps g\Phi_3
+      + \eps G\cdot\nabla_w\Phi_3 .
+\end{align*}
+(In $\cR[\Phi_2]$, $\xi\cdot\sD_1\xi = \xi\cdot D(w)\xi$.) Adding, the terms
+$i\eps g$; $i\eps q\cdot\chi$; $i\eps^3n\alpha$; $\eps^2g\alpha$;
+$i\eps^3g\psi_2$ cancel in pairs and $\eps^2n - \eps^2\xi\cdot D(w)\xi$
+remains.
+\end{proof}
+
+\begin{lemma}[Decorrelation of the fast variable]\label{lem:decor}
+Let $h(w,z) = \sum_k\Re(c_k(w)z_k)$ with $c_k\in C_b^1$. Then for all $q,p$
+and $t\ge0$
+\[
+  \Bigl|\E\bigl[e^{i(q\cdot Y_t+p\cdot w_t)}\,h(w_t,z_t)\bigr]\Bigr|
+  \le C\,\max_k\nrm{c_k}{C^1}\,
+     \bigl[\eps(1+P+Q_q) + \eps^2(P+Q_q)^2\bigr].
+\]
+\end{lemma}
+
+\begin{proof}
+Let $\varphi(\theta,w,z) = \sum_k\Re\bigl(c_k(w)e^{-\mu_k(w)\theta}z_k\bigr)$.
+Then $\partial_\theta\varphi = \cA_w\varphi$ and $\varphi(0,\cdot) = h$, so
+$\cR[\varphi] = \eps^2n\varphi + i\eps g\varphi + \eps G\cdot\nabla_w\varphi$.
+At $\tau=0$, $\E[U_0\varphi] = e^{-\eps^2\Lambda(t)}\,\E\varphi(t,0,b_0) = 0$.
+Lemma~\ref{lem:dynkin} applies (its proof is unchanged for the coefficients
+$c_k(w)e^{-\mu_k(w)\theta}$, which are bounded with bounded $w$-gradient on
+$[0,t]$; $C^1$ dependence on $w$ suffices in It\^o's formula because $w_\tau$
+has finite variation) and gives
+$\E[e^{i(q\cdot Y_t+p\cdot w_t)}h] = \E\int_0^tU_0\,\cR[\varphi]\,\dd\tau$.
+Now $|\varphi|\le e^{-\gamma_*\theta}\max_k\nrm{c_k}{\infty}\sum_k|z_k|$ and,
+since $\nabla_we^{-\mu_k\theta} = ik\theta e^{-\mu_k\theta}$,
+$|\nabla_w\varphi|\le C(1+\theta)e^{-\gamma_*\theta}\max_k\nrm{c_k}{C^1}\sum_k|z_k|$.
+With $|\xi|\le P+\theta Q_q$ and \eqref{eq:hbound},
+$\E|\cR[\varphi]|\le C\max_k\nrm{c_k}{C^1}\,e^{-\gamma_*\theta}
+\bigl[\eps^2(P+\theta Q_q)^2 + \eps(P+\theta Q_q) + \eps(1+\theta)\bigr]$;
+integrate over $\theta\in[0,\infty)$.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:joint}}
+
+Let $\tau_0 = t-t_1$. By Lemmas~\ref{lem:R}, \ref{lem:dynkin} and $|U_0|\le1$,
+\begin{equation}
+  \Bigl|\E[U_0\Phi]_{\tau=t} - \E[U_0\Phi]_{\tau=\tau_0}\Bigr|
+  \le\int_{\tau_0}^t\E|\cR[\Phi]|\,\dd\tau .
+  \label{eq:dyn}
+\end{equation}
+
+\emph{The residual.} For $\theta\le t_1$, $|\xi|\le X$ and
+$n\le|D|X^2$. The multilinear forms $\psi_2,\psi_3$ and $\chi,\chi_2$ have
+coefficients in $\cP$, so \eqref{eq:hbound} bounds each factor not involving
+$\xi,q$. Term by term in \eqref{eq:res}, using
+$|D(w)-D|\le C|w|$, $\partial_\theta\psi_2 = \psi_2[q,\xi]+\psi_2[\xi,q]$,
+$\partial_\theta n = 2q\cdot D\xi$ and the corresponding formula for
+$\partial_\theta\psi_3$:
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{ll}
+  term of $\cR[\Phi]$ & bound on its expectation \\ \hline
+  $\eps^2\xi\cdot(D(w)-D)\xi$ & $C\eps^2X^2\,\bar\omega$ \\
+  $\eps^2(G\cdot\nabla_w)\alpha$ & $C\eps^2X$ \\
+  $\eps^2\partial_\theta\psi_2$ & $C\eps^2XQ_q$ \\
+  $\eps^4n\psi_2$ & $C\eps^4X^4$ \\
+  $\eps^3G\cdot\nabla_w\psi_2$ & $C\eps^3X^2$ \\
+  $\partial_\theta\Phi_3$ & $C\eps^3X^2Q_q$ \\
+  $\eps^2n\Phi_3$ & $C(\eps^3X^2Q_q + \eps^5X^5)$ \\
+  $\eps g\Phi_3$ & $C(\eps^2XQ_q + \eps^4X^4)$ \\
+  $\eps G\cdot\nabla_w\Phi_3$ & $C(\eps^2Q_q + \eps^4X^3)$
+\end{tabular}
+\end{center}
+The sum is at most $C\mathcal{E}$, so the right side of \eqref{eq:dyn} is at
+most $Ct_1\mathcal{E}$.
+
+\emph{The final time.} At $\tau=t$: $\theta=0$, $\xi=p$,
+$U_0 = e^{i(q\cdot Y_t+p\cdot w_t)}$ and
+\[
+  \Phi - 1 = i\eps\,(p\cdot\chi - q\cdot\chi_2) + \eps^2\psi_2[p,p]
+    + i\eps^3(p\cdot Dp)\,p\cdot\chi_2 - i\eps^3\psi_3[p,p,p].
+\]
+The first bracket is linear in $z$ with coefficients $p\cdot f_k/\mu_k$,
+$q\cdot f_k/\mu_k^2$; by Lemma~\ref{lem:decor} its contribution is at most
+$C\eps(P+Q_q)[\eps(1+P+Q_q)+\eps^2(P+Q_q)^2]$. The other terms are bounded by
+$C(\eps^2P^2+\eps^3P^3)$ using \eqref{eq:hbound}. Hence
+$|\E[U_0\Phi]_{\tau=t} - \E e^{i(q\cdot Y_t+p\cdot w_t)}|\le C\mathcal{B}$.
+(Without Lemma~\ref{lem:decor} this term would be of order $\eps(P+Q_q)$,
+which is $N^{-1/6}$ in Corollary~\ref{cor:third}.)
+
+\emph{The initial time.} If $\tau_0 = 0$: $Y=0$, $w=0$, $z = b_0\sim\nu$, and
+$\Phi_1,\Phi_2,\Phi_3$ have $\nu$-mean zero ($\Phi_1,\Phi_3$ are odd, $\psi_2$
+has mean zero), so $\E[U_0\Phi]_{\tau=0} = e^{-\eps^2\Lambda(t)}$ exactly. This
+proves \eqref{eq:joint}. If $\tau_0>0$: $|U_0| = e^{-\eps^2\Lambda(t_1)}$ and
+by \eqref{eq:hbound}
+$\E|\Phi|\le1 + C[\eps(X+Q_q)+\eps^2X^2+\eps^3X^3]$, which gives
+\eqref{eq:window}. \qed
+
+\section{The first correction}
+
+\subsection{Statement}
+
+Write $d = q\cdot Dq$ and
+$\nabla_vd = \nabla_w\bigl(q\cdot D(w)q\bigr)\big|_{w=0}
+= \tfrac12\sum_k|q\cdot f_k|^2\,\Re(i/\lambda_k^2)\,k$.
+
+\begin{theorem}[First correction to the Gaussian law]\label{thm:first}
+Let $R>0$. There is $C_R$ such that for all $\eps\in(0,1]$,
+$1\le t\le\eps^{-2}$ and $q\in\mathbb{R}^d$ with $|q|\,\eps t^{3/2}\le R$,
+\begin{equation}
+  \Bigl|\E\,e^{iq\cdot Y_t} - e^{-\eps^2t^3d/3}\Bigl[1
+    + \tfrac12\eps^2t^2\bigl(q\cdot\sD_2q + i\,q\cdot\beta\bigr)
+    - \tfrac{2i}{15}\,\eps^4t^5\,(Dq)\cdot\nabla_vd\Bigr]\Bigr|
+  \le C_R\Bigl(t^{-3/2} + \eps + \eps^2t\Bigr).
+  \label{eq:first}
+\end{equation}
+\end{theorem}
+
+\begin{corollary}\label{cor:firstN}
+Let $0<s_0\le S$ and $R>0$. For $\eps = N^{-1/2}$, $t = sN^{1/3}$,
+$s\in[s_0,S]$, $|q|\le R$,
+\[
+  \E\,e^{iq\cdot Y_t} = e^{-s^3d/3}\Bigl[1 + N^{-1/3}\Bigl(
+     \tfrac12s^2\,q\cdot\sD_2q + i\bigl(\tfrac12s^2\,q\cdot\beta
+     - \tfrac2{15}s^5\,(Dq)\cdot\nabla_vd\bigr)\Bigr)\Bigr]
+   + O\bigl(N^{-1/2}\bigr).
+\]
+Hence the error of the Gaussian formula at $t\sim N^{1/3}$ is of order
+exactly $N^{-1/3}$ whenever the bracketed coefficient is non-zero; the rate
+$N^{-1/6}$ of the first note is not attained, and $N^{-1/3}$ in
+Corollary~\ref{cor:third} cannot be improved in general.
+\end{corollary}
+
+\begin{proof}
+For $N\ge\max(s_0^{-3},S^{3/2})$ one has $1\le t\le\eps^{-2}$ and
+Theorem~\ref{thm:first} applies with $R$ replaced by $RS^{3/2}$:
+$t^{-3/2} = s^{-3/2}\eps$, $\eps^2t = s\eps^{4/3}$. For the finitely many
+smaller $N$ the statement is trivial, both sides being bounded.
+\end{proof}
+
+\begin{remark}[Meaning of the three terms]\label{rem:terms}
+With $q = \kappa/(\eps t^{3/2})$ the bracket in \eqref{eq:first} is
+\[
+  1 + \frac1t\cdot\tfrac12\,\kappa\cdot\sD_2\kappa
+    + \eps\sqrt t\cdot i\Bigl(\tfrac12\,\kappa\cdot\beta
+      - \tfrac2{15}\,(D\kappa)\cdot\nabla_v(\kappa\cdot D\kappa)\Bigr).
+\]
+(a) $\tfrac12\eps^2t^2q\cdot\sD_2q$ is the correction to the variance from the
+finite correlation time: it is the $O(t^2)$ term in the proposition on the first iterate in the
+first note, $\operatorname{Var}(q\cdot Y^{(1)}_t) = \eps^2(\tfrac23dt^3
+ - t^2\int_0^\infty uc(u)\,\dd u + \dots)$. It is present already for the
+linear (first-iterate) problem.
+(b) $\tfrac{i}{2}\eps^2t^2q\cdot\beta$ is a mean displacement:
+$\E w_\tau\approx\eps^2\tau\beta$ by \eqref{eq:decomp}, so
+$\E\,q\cdot Y_t\approx\tfrac12\eps^2t^2q\cdot\beta$. For a potential field
+$\beta = \nabla_v\cdot D$, the drift of the Fokker--Planck operator
+$\nabla_v\cdot D\nabla_v$.
+(c) $-\tfrac{2i}{15}\eps^4t^5(Dq)\cdot\nabla_vd$ is a third cumulant,
+$\kappa_3(q\cdot Y_t)\approx\tfrac45\eps^4t^5(Dq)\cdot\nabla_vd$, produced by
+the dependence of $D$ on the velocity: it is what one gets from
+$\dd w = \eps\sqrt{2D(v_0+w)}\,\dd W$ at first order in $\nabla_vD$.
+Terms (b) and (c) are nonlinear effects, of relative size $\eps\sqrt t$, the
+typical size of $w_t$. They are the first sign of the failure of the Gaussian
+law, which is complete when $\eps\sqrt t\sim1$.
+\end{remark}
+
+\subsection{Graded terms}
+
+In this section $p=0$, so $\xi = \theta q$, $n = \theta^2d$,
+$g = \theta\,q\cdot G$. For integers $a,b,e,f\ge0$ let $\cT(a,b,e,f)$ be the
+set of functions
+\[
+  T(\theta,w,z) = \eps^a\theta^b\sum_{|A|=e,\,|L|=f}q^A\,w^L\,h_{AL}(w,z),
+  \qquad h_{AL}\in\cP,
+\]
+($A,L$ multi-indices in $\mathbb{N}^d$; the $h_{AL}$ do not depend on
+$\eps,\theta,q$), and define the \emph{grade} of $T$ as
+\[
+  (I,J) = (a-2b+2e,\ a-e+f).
+\]
+We say $T$ has the \emph{parity property} if each $h_{AL}$ is odd when $a$ is
+odd and even when $a$ is even. Note $I\equiv a\pmod2$.
+
+\begin{lemma}[Size of a graded term]\label{lem:size}
+Let $T\in\cT(a,b,e,f)$, $1\le t\le\eps^{-2}$, $|q|\eps t^{3/2}\le R$. Then for
+$0\le\tau\le t$, $\theta = t-\tau$,
+\[
+  \E\bigl|T(\theta,w_\tau,z_\tau)\bigr|
+  \le C_{T,R}\,\lambda_1^{\,I}\lambda_2^{\,J},\qquad
+  \lambda_1 = t^{-1/2},\quad\lambda_2 = \eps\sqrt t,
+\]
+so that $\int_0^t\E|T|\,\dd\tau\le C_{T,R}\,\lambda_1^{\,I-2}\lambda_2^{\,J}$.
+\end{lemma}
+
+\begin{proof}
+By the Cauchy--Schwarz inequality, \eqref{eq:hbound} and
+Theorem~\ref{thm:apriori}(ii) (with $\omega(\tau)\le3\eps\sqrt t$),
+$\E|w^Lh_{AL}|\le\nrm{w_\tau}{2f}^f\nrm{h_{AL}}{2}\le C(\eps\sqrt t)^f$.
+Hence $\E|T|\le C\eps^at^b(R/\eps t^{3/2})^e(\eps\sqrt t)^f
+= CR^e\,\eps^{a-e+f}\,t^{\,b-3e/2+f/2}$, and
+$\lambda_1^I\lambda_2^J = \eps^{a-e+f}t^{-(a-2b+2e)/2+(a-e+f)/2}$ is the same
+power.
+\end{proof}
+
+\begin{lemma}[Operations]\label{lem:ops}
+Let $T\in\cT(a,b,e,f)$ have grade $(I,J)$ and the parity property. Then, with
+the parity property in each case:
+\begin{enumerate}
+\item[(a)] $\partial_\theta T\in\cT(a,b-1,e,f)$, grade $(I+2,J)$ (zero if $b=0$);
+\item[(b)] $\eps^2n\,T\in\cT(a+2,b+2,e+2,f)$, grade $(I+2,J)$;
+\item[(c)] $i\eps g\,T\in\cT(a+1,b+1,e+1,f)$, grade $(I+1,J)$;
+\item[(d)] $\eps G\cdot\nabla_wT\in\cT(a+1,b,e,f) + \cT(a+1,b,e,f-1)$,
+  grades $(I+1,J+1)$ and $(I+1,J)$;
+\item[(e)] $\avg T$ and $\cA^{-1}(T-\avg T)$ are in $\cT(a,b,e,f)$, grade
+  $(I,J)$; $\avg T=0$ if $I$ is odd;
+\item[(f)] if $c\in C_b^\infty$ and $c(0)=0$ then
+  $c(w)\,T\in\cT(a,b,e,f+1)$, grade $(I,J+1)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a)--(d) are read off from $n = \theta^2\,q\cdot Dq$,
+$g = \theta\,q\cdot G$, the product rule
+$\nabla_w(w^Lh) = (\nabla_ww^L)h + w^L\nabla_wh$, and the fact that $G$ is
+odd of degree one. (e) is Lemma~\ref{lem:poisson} applied to each $h_{AL}$.
+(f) is Hadamard's lemma: $c(w) = \sum_jw_jc_j(w)$ with
+$c_j(w) = \int_0^1\partial_jc(sw)\,\dd s\in C_b^\infty$.
+\end{proof}
+
+\subsection{The expansion}
+
+Let
+\begin{equation}
+  \rho(\theta) = \tfrac12\theta^2\bigl(q\cdot\sD_2q + i\,q\cdot\beta\bigr),\qquad
+  a(\theta) = \tfrac13\theta^3\,\nabla_vd,\qquad
+  \kappa(\theta) = \tfrac1{15}\theta^5\,(Dq)\cdot\nabla_vd,
+\end{equation}
+\begin{equation}
+  S_2(\theta,w) = \eps^2\rho(\theta) - \eps^2\,w\cdot a(\theta) - 2i\eps^4\kappa(\theta),
+\end{equation}
+so that
+\begin{equation}
+  \partial_\theta S_2 = \eps^2\theta\bigl(q\cdot\sD_2q + i\,q\cdot\beta\bigr)
+    - \eps^2\theta^2\,q\cdot(w\cdot\nabla_vD)q - 2i\eps^4\theta\,q\cdot Da(\theta).
+  \label{eq:dS}
+\end{equation}
+The pieces of $S_2$ have grades $(2,0)$ [$\eps^2\theta^2q\cdot\sD_2q$] and
+$(0,1)$ [the other three]. With $\alpha,\alpha_2,\psi_2,\psi_3$ as in
+Section~4 (now $\xi=\theta q$), put
+\begin{align*}
+  \Phi_1 &= i\eps\alpha, \qquad \Phi_2 = \eps^2\psi_2,\\
+  \Phi_3 &= -i\eps\,q\cdot\chi_2 + i\eps^3n\,\alpha_2 - i\eps^3\psi_3
+     + i\eps\,S_2\,\alpha - \eps^3\,a\cdot\chi .
+\end{align*}
+Grades: $\Phi_1$: $(1,0)$; $\Phi_2$: $(2,0)$; the first three terms of
+$\Phi_3$: $(3,0)$; $i\eps S_2\alpha$: $(3,0)$ and $(1,1)$;
+$\eps^3a\cdot\chi$: $(1,1)$. All have the parity property and, being of the
+form $\cA^{-1}(\cdot)$ or odd, $\nu$-mean zero.
+
+\begin{lemma}[A fourth-order identity]\label{lem:Q4}
+For every $w$ and $\xi$,
+$\avg{(\xi\cdot G)\,\psi_3[\xi,\xi,\xi]}
+ = \bigl(\xi\cdot D(w)\xi\bigr)\bigl(\xi\cdot\sD_2(w)\xi\bigr)$.
+\end{lemma}
+
+\begin{proof}
+Fix $w$, let $P_s = e^{s\cA_w}$ and let $\zeta$ be the stationary
+Ornstein--Uhlenbeck process with generator $\cA_w$ and law $\nu$. Then
+$X_u = \xi\cdot G(\zeta_u)$ is a real centred stationary Gaussian process;
+let $c(u) = \E X_0X_u$, $u\ge0$, which decays exponentially. With
+$\tilde g = \xi\cdot G$ and Lemma~\ref{lem:poisson},
+$\xi\cdot\chi = \int_0^\infty P_s\tilde g\,\dd s$,
+$\xi\cdot\chi_2 = \int_0^\infty uP_u\tilde g\,\dd u$, so
+$\xi\cdot D(w)\xi = \avg{\tilde g\,\xi\cdot\chi} = \int_0^\infty c =: C_1(0)$ and
+$\xi\cdot\sD_2(w)\xi = \int_0^\infty uc(u)\dd u$. Also
+$\psi_2 = -\int_0^\infty P_s(\tilde g\,\xi\cdot\chi - \avg{\tilde g\,\xi\cdot\chi})\dd s$
+and $\psi_3 = -\int_0^\infty P_s(\tilde g\psi_2)\dd s$. By the Markov property,
+$\avg{h_0P_{s}(h_1P_{s'}(h_2P_{s''}h_3))}
+= \E[h_0(\zeta_0)h_1(\zeta_s)h_2(\zeta_{s+s'})h_3(\zeta_{s+s'+s''})]$. Hence
+\[
+  \avg{\tilde g\psi_3} = \int_{[0,\infty)^3}\Bigl(
+    \E\bigl[X_0X_{s_3}X_{s_3+s_2}X_{s_3+s_2+s_1}\bigr] - c(s_3)c(s_1)\Bigr)
+    \dd s_1\dd s_2\dd s_3 .
+\]
+By Wick's (Isserlis') formula the integrand is
+$c(s_3+s_2)c(s_2+s_1) + c(s_3+s_2+s_1)c(s_2)$. Let
+$C_1(u) = \int_u^\infty c$ and $C_2(u) = \int_u^\infty C_1$. The first term
+integrates to $\int_0^\infty C_1^2$. The second integrates to
+$\int_0^\infty c(u)C_2(u)\dd u = C_1(0)C_2(0) - \int_0^\infty C_1^2$, by parts
+($C_1' = -c$, $C_2' = -C_1$). The sum is
+$C_1(0)C_2(0) = \int_0^\infty c\cdot\int_0^\infty uc(u)\dd u$.
+\end{proof}
+
+\begin{proposition}[Expansion to fourth order]\label{prop:exp}
+There is $\Phi_4$, a finite sum of graded terms with the parity property, of
+grades $(4,0)$ and $(2,1)$, with $\nu$-mean zero and vanishing at $\theta=0$,
+such that for
+\[
+  \Phi = 1 + S_2 + \Phi_1 + \Phi_2 + \Phi_3 + \Phi_4
+\]
+$\cR[\Phi]$ is a finite sum of graded terms each of whose grades $(I,J)$
+satisfies
+\begin{equation}
+  I\ge5,\quad\text{or}\quad I\ge3\ \text{and}\ J\ge1,\quad\text{or}\quad
+  I\ge2\ \text{and}\ J\ge2 .
+  \label{eq:goodgrades}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: orders one to three.} As in the proof of Lemma~\ref{lem:res},
+with the additional pieces
+\begin{align*}
+  \cR[S_2] &= -\partial_\theta S_2 + \eps^2nS_2 + i\eps gS_2 - \eps^3G\cdot a,\\
+  \cA_w\bigl(i\eps S_2\alpha - \eps^3a\cdot\chi\bigr)
+    &= -i\eps gS_2 + \eps^3G\cdot a
+\end{align*}
+($S_2$ and $a$ do not depend on $z$; $\nabla_wS_2 = -\eps^2a$). Adding as
+before, all terms of $\cR[1+S_2+\Phi_1+\Phi_2+\Phi_3]$ cancel except
+\begin{equation}
+  \cR[1+S_2+\Phi_1+\Phi_2+\Phi_3] = W + W',
+  \label{eq:WW}
+\end{equation}
+\begin{align*}
+  W ={}& -\eps^2\xi\cdot(D(w)-D)\xi + \eps^2nS_2 - \partial_\theta S_2
+     + i\eps^2(G\cdot\nabla_w)\alpha - \eps^2\partial_\theta\psi_2 + \eps^4n\psi_2\\
+   & + i\eps g\,\Phi_3 - i\eps^4(G\cdot a)\,\alpha,\\
+  W' ={}& \eps^3G\cdot\nabla_w\psi_2 - \partial_\theta\Phi_3 + \eps^2n\Phi_3
+     + \bigl(\eps G\cdot\nabla_w\Phi_3 + i\eps^4(G\cdot a)\alpha\bigr),
+\end{align*}
+where $-i\eps^4(G\cdot a)\alpha$ is the part of
+$\eps G\cdot\nabla_w(i\eps S_2\alpha)$ in which $\nabla_w$ falls on the factor
+$w$ of $S_2$. By Lemma~\ref{lem:ops} and the grades of $\Phi_2,\Phi_3$, every
+term of $W'$ has a grade in
+$\{(3,1),(5,0),(4,1),(2,2)\}$: (a),(b) send $(3,0),(1,1)$ to $(5,0),(3,1)$;
+(d) acting on coefficients sends $(2,0),(3,0),(1,1)$ to $(3,1),(4,1),(2,2)$;
+and the only explicit factor $w$ in $\Phi_3$ is the one already removed. So
+$W'$ satisfies \eqref{eq:goodgrades}.
+
+\emph{Step 2: the mean of $W$.} Expanding
+$i\eps g\Phi_3 = \eps^2g\,(q\cdot\chi_2) - \eps^4n\,g\alpha_2 + \eps^4g\psi_3
+ - \eps^2S_2\,g\alpha - i\eps^4g\,(a\cdot\chi)$ and using \eqref{eq:coef},
+Lemma~\ref{lem:Q4}, $\avg{\psi_2} = 0$, and
+$\xi\cdot\sD_1a + a\cdot\sD_1\xi = 2\xi\cdot D(w)a$:
+\begin{align*}
+  \avg W ={}& -\eps^2\xi\cdot(D(w)-D)\xi\,(1+S_2) - \partial_\theta S_2
+   + i\eps^2\xi\cdot\beta(w) + \eps^2\xi\cdot\sD_2(w)q\\
+  & + \eps^4\,\xi\cdot(D(w)-D)\xi\;\xi\cdot\sD_2(w)\xi
+   - 2i\eps^4\,\xi\cdot D(w)a .
+\end{align*}
+Insert \eqref{eq:dS} and $\xi = \theta q$. The terms of $\partial_\theta S_2$
+cancel the values at $w=0$ of $i\eps^2\xi\cdot\beta(w)$,
+$\eps^2\xi\cdot\sD_2(w)q$, $-2i\eps^4\xi\cdot D(w)a$ and the linear part of
+$-\eps^2\xi\cdot(D(w)-D)\xi$. What is left is
+\begin{align*}
+  \avg W ={}& -\eps^2\theta^2q\cdot\bigl(D(w)-D-w\cdot\nabla_vD\bigr)q
+   - \eps^2\theta^2S_2\,q\cdot(D(w)-D)q
+   + i\eps^2\theta\,q\cdot(\beta(w)-\beta)\\
+  & + \eps^2\theta\,q\cdot(\sD_2(w)-\sD_2)q
+   + \eps^4\theta^4\,q\cdot(D(w)-D)q\;q\cdot\sD_2(w)q
+   - 2i\eps^4\theta\,q\cdot(D(w)-D)a .
+\end{align*}
+By Lemma~\ref{lem:ops}(f) (applied twice for the first term) these six terms
+have grades $(2,2)$; $(4,1)$ and $(2,2)$; $(2,2)$; $(4,1)$; $(4,1)$; $(2,2)$.
+So $\avg W$ satisfies \eqref{eq:goodgrades}.
+
+\emph{Step 3: the fluctuating part of $W$.} Every term of $W$ is a graded
+term with the parity property, of grade $(4,0)$ or $(2,1)$, apart from the
+parts of $-\eps^2\xi\cdot(D(w)-D)\xi(1+S_2)$ beyond the linear one, which do
+not depend on $z$ and were dealt with in Step~2. (Grades: $\eps^2nS_2$,
+$\partial_\theta S_2$, $\eps^2S_2g\alpha$: $(4,0)$ and $(2,1)$;
+$\eps^2(G\cdot\nabla_w)\alpha$: $(2,1)$; $\eps^2\partial_\theta\psi_2$,
+$\eps^4n\psi_2$, $\eps^2g\,q\cdot\chi_2$, $\eps^4ng\alpha_2$,
+$\eps^4g\psi_3$: $(4,0)$; $\eps^4g\,a\cdot\chi$, $\eps^4(G\cdot a)\alpha$,
+$\eps^2\theta^2q\cdot(w\cdot\nabla_vD)q$: $(2,1)$.) Every one of these terms
+contains a factor $\theta$. Define
+\[
+  \Phi_4 = -\cA^{-1}\bigl(W - \avg W\bigr),
+\]
+which by Lemma~\ref{lem:ops}(e) is a sum of graded terms of grades $(4,0)$,
+$(2,1)$ with the parity property, has $\nu$-mean zero, and vanishes at
+$\theta=0$. Then
+$\cR[\Phi_4] = -(W-\avg W) + \bigl(-\partial_\theta + \eps^2n + i\eps g
+ + \eps G\cdot\nabla_w\bigr)\Phi_4$, and by Lemma~\ref{lem:ops}(a)--(d) the
+last bracket has grades in $\{(6,0),(4,1),(5,0),(3,1),(5,1),(3,2)\}$.
+Altogether $\cR[\Phi] = W' + \avg W + (\cR[\Phi_4] + W - \avg W)$ satisfies
+\eqref{eq:goodgrades}.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:first}}
+
+Apply Lemmas~\ref{lem:R} and~\ref{lem:dynkin} to $\Phi$ of
+Proposition~\ref{prop:exp} on $[0,t]$, with $p=0$.
+
+\emph{Residual.} By Lemma~\ref{lem:size} and \eqref{eq:goodgrades}, since
+$\lambda_1,\lambda_2\le1$,
+\[
+  \int_0^t\E|\cR[\Phi]|\,\dd\tau
+  \le C_R\bigl(\lambda_1^3 + \lambda_1\lambda_2 + \lambda_2^2\bigr)
+  = C_R\bigl(t^{-3/2} + \eps + \eps^2t\bigr).
+\]
+
+\emph{Initial time.} At $\tau=0$: $\theta=t$, $w=0$, $Y=0$, $z=b_0\sim\nu$.
+The terms $\Phi_1,\dots,\Phi_4$ have $\nu$-mean zero and
+$S_2(t,0) = \eps^2\rho(t) - 2i\eps^4\kappa(t)$. So
+$\E[U_0\Phi]_{\tau=0} = e^{-\eps^2t^3d/3}\bigl[1 + \eps^2\rho(t) - 2i\eps^4\kappa(t)\bigr]$,
+which is the main term of \eqref{eq:first}.
+
+\emph{Final time.} At $\tau=t$: $\theta=0$, so $\xi=0$, $S_2 = 0$, $a=0$,
+$\Phi_4=0$, and $\Phi = 1 - i\eps\,q\cdot\chi_2$. By Lemma~\ref{lem:decor}
+with $p=0$,
+$|\E[e^{iq\cdot Y_t}\,\eps q\cdot\chi_2]|\le C\eps|q|\,[\eps(1+|q|)+\eps^2|q|^2]$,
+and $\eps|q|\le Rt^{-3/2}$. So
+$|\E[U_0\Phi]_{\tau=t} - \E e^{iq\cdot Y_t}|\le C_Rt^{-3/2}$. \qed
+
+\begin{remark}[Checks of the algebra]\label{rem:checks}
+(1) For the linear problem (phases frozen, $\mu_k\equiv\lambda_k$) the law of
+$q\cdot Y^{(1)}_t$ is exactly Gaussian with the variance of the proposition on the first iterate in
+the first note; this reproduces term (a) and requires the quartic terms to
+cancel, which is Lemma~\ref{lem:Q4}.
+(2) Terms (b), (c) agree with the first two cumulants computed directly from
+$\dd w = \eps^2\beta\,\dd\tau + \eps\sqrt{2D(v_0+w)}\,\dd W$
+(Remark~\ref{rem:terms}).
+(3) For one mode in $d=1$ with generic complex $f$, the statement of
+Proposition~\ref{prop:exp} that concerns low orders was verified by computer
+algebra (\texttt{sympy}, scratch computation, not in the repository): with
+$\eps = \delta^3\eps'$, $\theta = \delta^{-2}\theta'$, $w = \delta^2w'$, the
+Taylor coefficients of $\cR[1+S_2+\Phi_1+\Phi_2+\Phi_3]$ in $\delta$ of orders
+$\le3$ vanish identically in $(z,\bar z)$ and the $\nu$-mean of the
+coefficient of order $4$ vanishes; Lemma~\ref{lem:Q4} and the closed forms
+\eqref{eq:coef} were verified in the same run. This does not test the vector
+structure for $d\ge2$ or cross terms between modes; those rest on the proof
+and on the Monte Carlo check of Section~\ref{sec:num} (which includes a
+non-potential field in $d=2$).
+\end{remark}
+
+\begin{remark}[Joint first correction: not proved]\label{rem:jointcorr}
+For $p\ne0$ the same expansion applies, but at the final time
+$\Phi_1 = i\eps\,p\cdot\chi$ does not vanish and its expectation against
+$e^{i(q\cdot Y_t+p\cdot w_t)}$ is of the same order as the correction
+(Lemma~\ref{lem:decor} only bounds it). A formal evaluation of the leading
+term of Lemma~\ref{lem:decor} suggests the additional factor
+$1 + \tfrac12\eps^2\sum_k|p\cdot f_k|^2\Re(1/\lambda_k^2)$, which is what the
+exact variance of the first iterate of $p\cdot w_t$ gives; this was not
+carried through with error bounds.
+\end{remark}
+
+\begin{remark}[Next order: heuristic]\label{rem:offset}
+Taking $q=p=0$ in the proof of Lemma~\ref{lem:decor} and keeping the leading
+term suggests $\E\chi(w_\tau,z_\tau)\approx\eps\beta_2$ for $\tau\gg1$, with
+$\beta_2 = \avg{(G\cdot\nabla_w)\chi_2}(0)
+= \sum_k\Re\bigl(i(k\cdot\bar f_k)f_k/\lambda_k^3\bigr)$, hence by
+\eqref{eq:decomp} $\E w_\tau\approx\eps^2(\tau\beta-\beta_2)$ and an extra
+factor $1 - i\eps^2t\,q\cdot\beta_2$ in \eqref{eq:first}. This is of size
+$N^{-2/3}$ at $t\sim N^{1/3}$, inside the remainder of
+Theorem~\ref{thm:first}. It is not proved here (other terms of the same order
+exist and were not computed), but it accounts for most of the residual seen
+in the numerics at $N=10^3$, $s=1$.
+\end{remark}
+
+\section{Functional convergence and the breakdown at the kinetic time}
+
+Both proofs below rest on \eqref{eq:decomp}--\eqref{eq:bracket} and on a
+maximal bound.
+
+\begin{lemma}\label{lem:max}
+$\E\sup_{\tau\le T}|b_k(\tau)|^4\le C(1+T)$ for all $T\ge0$.
+\end{lemma}
+
+\begin{proof}
+On $[0,1]$,
+$b_k(\tau) = e^{-\lambda_k\tau}\bigl(b_k(0) + \sqrt{2\gamma_k}\int_0^\tau
+e^{\lambda_k\sigma}\dd\tilde B_k\bigr)$; the stochastic integral is a
+martingale with finite fourth moment at $\tau=1$, so by Doob's inequality
+$m_4 := \E\sup_{[0,1]}|b_k|^4<\infty$. By stationarity and a union over
+$\lceil T\rceil$ unit intervals, $\E\sup_{\tau\le T}|b_k|^4\le\lceil T\rceil m_4$.
+\end{proof}
+
+\begin{theorem}[Functional limit at $N^{1/3}$]\label{thm:func}
+Let $\mathsf{Y}^\eps_s = Y_{s\eps^{-2/3}}$ and
+$\mathsf{W}^\eps_s = \eps^{-2/3}w_{s\eps^{-2/3}}$. For every $S>0$, as
+$\eps\to0$, $(\mathsf{Y}^\eps,\mathsf{W}^\eps)$ converges in law in
+$C([0,S];\mathbb{R}^{2d})$ to $(\int_0^\cdot\mathsf{W},\mathsf{W})$, where
+$\mathsf{W}$ is a Brownian motion with covariance $2Ds$. (Then
+$\dd\mathsf{Y}=\mathsf{W}\dd s$, $\dd\mathsf{W} = \sqrt{2D}\,\dd B$: the
+Kolmogorov diffusion.)
+\end{theorem}
+
+\begin{proof}
+Time is $\tau = s\eps^{-2/3}$. By \eqref{eq:decomp},
+$\mathsf{W}^\eps_s = \mathsf{M}^\eps_s + \mathsf{R}^\eps_s$ with
+$\mathsf{M}^\eps_s = \eps^{1/3}M_{s\eps^{-2/3}}$ and
+$\mathsf{R}^\eps_s = -\eps^{1/3}(\chi_\tau-\chi_0) + \eps^{4/3}\int_0^\tau Q$.
+
+\emph{$\mathsf{R}^\eps\to0$ uniformly in probability.}
+$|\chi|\le\Gamma_1(b)$ and Lemma~\ref{lem:max} give
+$\mathbb{P}(\eps^{1/3}\sup_{\tau\le S\eps^{-2/3}}|\chi|>\eta)
+\le C\eps^{4/3}(1+S\eps^{-2/3})\eta^{-4}\to0$, and
+$\E\sup_s\eps^{4/3}\int_0^\tau|Q|\le\eps^{4/3}\,S\eps^{-2/3}\,\nrm{\Gamma_2}{1}\to0$.
+
+\emph{The bracket.} $\mathsf{M}^\eps$ is a continuous martingale (for the
+time-changed filtration) and by \eqref{eq:bracket}
+$\langle\mathsf{M}^{\eps,i},\mathsf{M}^{\eps,j}\rangle_s
+= 2\int_0^sD_{ij}(\eps^{2/3}\mathsf{W}^\eps_r)\dd r$. Since
+$|D(w)-D|\le C|w|$ and, by Theorem~\ref{thm:apriori},
+$\sup_{\tau\le S\eps^{-2/3}}\nrm{w_\tau}{1}\le C_S\eps^{2/3}$,
+$\E\sup_{s\le S}|\langle\mathsf{M}^\eps\rangle_s - 2Ds|\le C_S\eps^{2/3}\to0$.
+
+\emph{Conclusion.} By the martingale central limit theorem
+(\cite{EK}, Chapter~7, Theorem~1.4; for continuous martingales the
+hypotheses reduce to convergence in probability of the bracket for each
+$s$), $\mathsf{M}^\eps$ converges in law in $C([0,S])$ to a Brownian motion
+with covariance $2Ds$; tightness is part of that theorem, and can also be
+seen from $\E|\mathsf{M}^\eps_s-\mathsf{M}^\eps_r|^4\le C|s-r|^2$, which
+follows from the Burkholder--Davis--Gundy inequality and
+$\tr D(w)\le\bar D$. Hence so does
+$\mathsf{W}^\eps = \mathsf{M}^\eps + \mathsf{R}^\eps$. Since
+$\mathsf{Y}^\eps_s = \int_0^s\mathsf{W}^\eps_r\dd r$ exactly and
+$\mathsf{W}\mapsto(\int_0^\cdot\mathsf{W},\mathsf{W})$ is continuous on
+$C([0,S])$, the pair converges.
+\end{proof}
+
+\begin{theorem}[Kinetic time: the limit is not Gaussian]\label{thm:kinetic}
+Let $v^\eps_T = w_{T\eps^{-2}}$. For every $T_0>0$, as $\eps\to0$, $v^\eps$
+converges in law in $C([0,T_0];\mathbb{R}^d)$ to the diffusion $V$ with
+$V_0=0$ and generator
+\[
+  \mathcal{G}\phi(v) = D(v):\nabla_v^2\phi(v) + \beta(v)\cdot\nabla_v\phi(v),
+\]
+with $D(v),\beta(v)$ as in \eqref{eq:coef} (functions of the velocity
+departure $v$; $D(v)$ is the diffusion matrix at velocity $v_0+v$). Moreover
+$\eps^2Y_{T\eps^{-2}} = \int_0^Tv^\eps$ converges jointly to $\int_0^TV$.
+For a potential field $\mathcal{G} = \nabla_v\cdot D\nabla_v$.
+\end{theorem}
+
+\begin{proof}
+\emph{The limit is well defined.} With $f_k = a_k + ic_k$ and
+$r_k(v) = \Re(1/\mu_k(v)) = \gamma_k/|\mu_k(v)|^2$,
+$2D(v) = \sum_kr_k(v)(a_k\otimes a_k + c_k\otimes c_k)$. The functions
+$\sqrt{r_k} = \sqrt{\gamma_k}/|\mu_k|$ and $\beta$ are smooth, bounded, with
+bounded derivatives, so the equation
+$\dd V = \beta(V)\dd T + \sum_k\sqrt{r_k(V)}\,(a_k\dd W^1_k + c_k\dd W^2_k)$
+has a pathwise unique strong solution, and the martingale problem for
+$\mathcal{G}$ is well posed (Lipschitz coefficients; see e.g.\ \cite{EK},
+Chapter~5).
+
+\emph{Semimartingale approximation.} Let $\tau = T\eps^{-2}$ and
+\[
+  X^\eps_T = \eps M_{T\eps^{-2}} + B^\eps_T,\qquad
+  B^\eps_T = \int_0^T\beta(v^\eps_{T'})\dd T',\qquad
+  A^\eps_T = 2\int_0^TD(v^\eps_{T'})\dd T' .
+\]
+Then $X^\eps - B^\eps$ is a continuous square-integrable martingale and by
+\eqref{eq:bracket} its bracket is $A^\eps$ (for the filtration of $b$, hence
+also for the smaller filtration generated by $X^\eps,B^\eps,A^\eps$, to which
+these processes are adapted). By \eqref{eq:decomp},
+\[
+  v^\eps_T - X^\eps_T = -\eps(\chi_\tau-\chi_0)
+    + \eps^2\int_0^\tau\bigl(Q - \beta(w_\sigma)\bigr)\dd\sigma .
+\]
+We claim $\sup_{T\le T_0}|v^\eps_T - X^\eps_T|\to0$ in probability. First,
+by Lemma~\ref{lem:max},
+$\mathbb{P}(\eps\sup_{\tau\le T_0\eps^{-2}}|\chi|>\eta)
+\le C\eps^4(1+T_0\eps^{-2})\eta^{-4}\to0$. Second, $Q-\beta(w)\in\cP$ has
+mean zero and degree two; let $\psi_Q = \cA^{-1}(Q-\beta)$
+(Lemma~\ref{lem:poisson}). It\^o's formula for $\psi_Q(w_\tau,z_\tau)$ gives
+\[
+  \eps^2\int_0^\tau(Q-\beta)\,\dd\sigma
+  = \eps^2\bigl[\psi_Q\bigr]_0^\tau
+    - \eps^3\int_0^\tau G\cdot\nabla_w\psi_Q\,\dd\sigma - \eps^2M'_\tau,
+\]
+with $M'$ a martingale whose bracket has density at most $C(1+|b|^2)$. On
+$\tau\le T_0\eps^{-2}$: $|\psi_Q|\le C(1+|b|^2)$ and Lemma~\ref{lem:max} give
+$\mathbb{P}(\eps^2\sup|\psi_Q|>\eta)\le C\eps^4(1+T_0\eps^{-2})\eta^{-2}\to0$;
+the second term has expected supremum at most $C\eps^3T_0\eps^{-2}\to0$; and
+by Doob's inequality $\E\sup|\eps^2M'|^2\le C\eps^4T_0\eps^{-2}\to0$.
+
+\emph{Conclusion.} $\beta$ and $D$ are Lipschitz, so
+$\sup_{T\le T_0}|B^\eps_T - \int_0^T\beta(X^\eps)|$ and
+$\sup_{T\le T_0}|A^\eps_T - 2\int_0^TD(X^\eps)|$ are at most
+$CT_0\sup_{T\le T_0}|v^\eps_T-X^\eps_T|\to0$ in probability. All processes
+are continuous and $X^\eps_0 = 0$. The diffusion approximation theorem
+(\cite{EK}, Chapter~7, Theorem~4.1, with $b = \beta$ and $a = 2D$) gives
+$X^\eps\Rightarrow V$, hence $v^\eps\Rightarrow V$. The statement on $Y$
+follows from $\dot Y = w$ and continuity of integration.
+\end{proof}
+
+\begin{remark}[Where the Gaussian law fails]\label{rem:breakdown}
+Combine the results. (1) The law
+$\exp(-\eps^2t^3q\cdot Dq/3)$ presupposes a velocity diffusion with the
+constant matrix $D(v_0)$. (2) By Corollary~\ref{cor:natural} and
+Theorem~\ref{thm:first}, for the rescaled displacement its relative error is
+$t^{-1}\cdot\frac12\kappa\cdot\sD_2\kappa
+ + i\eps\sqrt t\,(\frac12\kappa\cdot\beta - \frac2{15}(D\kappa)\cdot\nabla_v(\kappa\cdot D\kappa))$
+up to $O(t^{-3/2}+\eps+\eps^2t)$: it is \emph{smallest}, of order
+$\eps^{2/3} = N^{-1/3}$, at $t\sim\eps^{-2/3} = N^{1/3}$, and grows like
+$\eps\sqrt t = (t/N)^{1/2}$ after that. (3) At $t = TN$ it is of order one:
+by Theorem~\ref{thm:kinetic} the velocity is $V_T$, whose law is Gaussian for
+all $T$ only in degenerate cases (for instance, if $\beta(0)\ne0$ then
+$\E V_T = T\beta(0) + O(T^{3/2})\ne0$ for small $T$, while the Kolmogorov law
+is centred).
+So the breakdown time of the Gaussian law is the kinetic time $t\sim N$, not
+an intermediate time, and the first correction has the coefficients of
+Theorem~\ref{thm:first}. In the three-scale picture of
+\texttt{plasma\_extension.tex} this is as expected: $D$ is frozen at $v_0$
+exactly as long as $f$ has not relaxed.
+\end{remark}
+
+\section{Numerical check}
+\label{sec:num}
+
+Script: \texttt{hani-to-algorithms/scripts/orbit\_long\_time\_check.py}
+(numpy only; master seed $20261124$; run on 24 November 2026; $32$\,s with 8
+worker processes, about $3.5$ minutes with one; the numbers do not depend on
+the number of workers). Output:
+\texttt{hani-to-algorithms/results/orbit\_long\_time/orbit\_long\_time\_check.json}.
+All numbers below are copied from that file.
+
+\emph{Model.} $d=2$, three modes $k = (1,0),(0,1),(1,1)$,
+$\omega = (0.6,-0.5,0.5)$, $\gamma = (0.8,1.0,0.7)$, $v_0 = (0.3,-0.2)$,
+$q = (1,0.5)$. Potential field: $f_k = -i\varphi_kk$,
+$\varphi = (1,0.8,0.6)$, for which
+$q\cdot Dq = 1.0575$, $q\cdot\sD_2q = 0.8936$, $q\cdot\beta = 1.0853$,
+$(Dq)\cdot\nabla_vd = 1.0452$, $\tr D = 1.2292$, $\beta = (0.9275,0.3156)$.
+Non-potential field: generic complex $f_k$ (listed in the JSON), for which
+$q\cdot Dq = 0.9377$, $q\cdot\sD_2q = 0.8366$, $q\cdot\beta = 0.4772$,
+$(Dq)\cdot\nabla_vd = 0.6329$, $\beta = (0.6056,-0.2568)$ whereas
+$\nabla_v\cdot D = (0.6146,0.1662)$.
+
+\emph{Scheme.} Over a step $h$ the amplitudes $b_k$ and the integrals
+$\int_0^hb_k$, $\int_0^h(h-\sigma)b_k(\sigma)\dd\sigma$ are sampled exactly;
+the phase $e^{ik\cdot Y}$ is advanced within the step to first order in
+$k\cdot w\,h$. $h=0.2$ unless stated. The discretization error is not zero;
+it is assessed by the run with $h=0.1$ below. Monte Carlo standard errors
+(s.e.) are one standard deviation of the mean and are separate from the
+theoretical error terms.
+
+\emph{(A) The first correction at $t = sN^{1/3}$, potential field,
+$4\times10^5$ samples per $N$.} ``Gauss'' is $e^{-\eps^2t^3d/3}$; ``corr.''
+is the bracketed prediction of Theorem~\ref{thm:first}.
+\begin{center}
+\small
+\begin{tabular}{rrrrrrr}
+  $N$ & $t$ & measured & s.e.\ (re, im) & Gauss & corr. & measured $-$ corr. \\ \hline
+  $10^3$ & 10.0 & $0.7366+0.0147i$ & $0.0005,\,0.0009$ & 0.7029 & $0.7343+0.0283i$ & $+0.0023-0.0136i$ \\
+  $10^3$ & 15.0 & $0.3403+0.0010i$ & $0.0010,\,0.0011$ & 0.3043 & $0.3349+0.0050i$ & $+0.0054-0.0040i$ \\
+  $10^4$ & 21.6 & $0.7157+0.0083i$ & $0.0005,\,0.0010$ & 0.7010 & $0.7156+0.0132i$ & $+0.0001-0.0049i$ \\
+  $10^4$ & 32.4 & $0.3161+0.0010i$ & $0.0010,\,0.0011$ & 0.3015 & $0.3157+0.0022i$ & $+0.0005-0.0012i$ \\
+  $10^5$ & 46.4 & $0.7109+0.0061i$ & $0.0006,\,0.0010$ & 0.7032 & $0.7099+0.0061i$ & $+0.0010-0.0000i$ \\
+  $10^5$ & 69.6 & $0.3128+0.0008i$ & $0.0010,\,0.0011$ & 0.3047 & $0.3113+0.0011i$ & $+0.0015-0.0002i$ \\
+\end{tabular}
+\end{center}
+At $s\approx1$ the modulus of (measured $-$ Gauss) is $0.0368$, $0.0169$,
+$0.0098$ for $N = 10^3,10^4,10^5$: ratios $2.2$ and $1.7$ per decade, against
+$10^{1/3} = 2.15$ for $N^{-1/3}$ and $1.47$ for $N^{-1/6}$. The Gaussian
+formula is off by $8$ to $67$ standard errors in the real part in every row;
+the corrected formula is within $2$ standard errors in the real part for
+$N\ge10^4$. The residual after correction at $s\approx1$ has modulus
+$0.0138$, $0.0049$, $0.0010$, that is $0.44\,\eps$, $0.49\,\eps$,
+$0.3\,\eps$ (the last with relative statistical uncertainty of order one),
+consistent with the remainder $O(\eps)$ of Theorem~\ref{thm:first}. The data
+cannot distinguish $O(\eps)$ from $O(\eps^{4/3})$. At $N=10^3$ the residual
+is mostly in the imaginary part and most of it is accounted for by the
+heuristic factor of Remark~\ref{rem:offset}, which changes the prediction
+there to $0.7343+0.0055i$; that factor over-corrects at $s=1.5$
+($0.3349-0.0099i$), so it is not the whole next order.
+
+\emph{(A$'$) Joint law.} Same runs, $\E\exp(iq\cdot Y_t + i\pi\cdot N^{1/3}w_t)$
+with $\pi = (0.5,-0.3)$ against the Kolmogorov value of
+Corollary~\ref{cor:third}:
+\begin{center}
+\small
+\begin{tabular}{rrrrr}
+  $N$ & $t$ & measured (re, im) & Kolmogorov & s.e.\ (re) \\ \hline
+  $10^3$ & 10.0 & $0.4873,\ +0.0100$ & 0.4441 & 0.0009 \\
+  $10^3$ & 15.0 & $0.1464,\ -0.0115$ & 0.1231 & 0.0011 \\
+  $10^4$ & 21.6 & $0.4611,\ +0.0060$ & 0.4420 & 0.0009 \\
+  $10^4$ & 32.4 & $0.1309,\ -0.0050$ & 0.1215 & 0.0011 \\
+  $10^5$ & 46.4 & $0.4540,\ +0.0043$ & 0.4444 & 0.0009 \\
+  $10^5$ & 69.6 & $0.1268,\ -0.0016$ & 0.1233 & 0.0011 \\
+\end{tabular}
+\end{center}
+The real-part errors at $s\approx1$ are $0.0432$, $0.0191$, $0.0097$: ratios
+$2.3$, $2.0$ per decade, consistent with the rate $N^{-1/3}$ of
+Corollary~\ref{cor:third}.
+
+\emph{(A$''$) A priori bound and drift.} Same runs.
+$\E|w_t|^2/(2\eps^2t\,\tr D)$ is $0.907$, $0.929$, $0.959$, $0.973$, $0.979$,
+$0.987$ in the order of the table (s.e.\ $0.002$), tending to one as
+Theorem~\ref{thm:apriori}(iii) requires; the trivial bound
+$(\eps tM_2)^2$ of the first note exceeds the diffusive value by factors
+$24$ to $170$. The mean velocity $\E w_t/(\eps^2t)$ at $N=10^3$ is
+$(0.640,0.221)\pm0.018$ at $t=10$ and $(0.698,0.227)\pm0.015$ at $t=15$,
+against $\beta = (0.928,0.316)$; the heuristic offset of
+Remark~\ref{rem:offset} gives $\beta-\beta_2/t = (0.649,0.221)$ and
+$(0.742,0.253)$. So the drift is clearly present, with a $1/t$ deficit that
+the leading-order theory does not capture.
+
+\emph{(B) Towards the kinetic time.} $\eps=0.1$, $h=0.1$,
+$1.6\times10^5$ samples, $\kappa = (1,0.5)$:
+$\E\exp(i\kappa\cdot Y_t/\eps t^{3/2})$ against the Gaussian value
+$e^{-\kappa\cdot D\kappa/3} = 0.7029$ of Corollary~\ref{cor:natural}.
+\begin{center}
+\small
+\begin{tabular}{rrrrr}
+  $t$ & $\eps\sqrt t$ & measured (s.e.\ $\le0.0007,\,0.0015$) &
+  $\E|w_t|^2/(2\eps^2t\tr D)$ & $\E w^1_t/(\eps^2t)$ \\ \hline
+  4 & 0.2 & $0.7881+0.0096i$ & 0.759 & 0.273 \\
+  9 & 0.3 & $0.7547+0.0366i$ & 0.819 & 0.451 \\
+  16 & 0.4 & $0.7560+0.0621i$ & 0.781 & 0.420 \\
+  25 & 0.5 & $0.7681+0.0783i$ & 0.728 & 0.359 \\
+  49 & 0.7 & $0.7983+0.0939i$ & 0.624 & 0.255 \\
+  100 & 1.0 & $0.8362+0.0969i$ & 0.504 & 0.161 \\
+\end{tabular}
+\end{center}
+At this $\eps$ there is no window where both $1/t$ and $\eps\sqrt t$ are
+small, so this block does not test the coefficients of
+Theorem~\ref{thm:first} (the first-order prediction is quantitatively poor
+here: e.g.\ $0.7155+0.1417i$ at $t=25$). It illustrates
+Remark~\ref{rem:breakdown}: the departure from the Gaussian value grows with
+$\eps\sqrt t$ and is of order one at $t = \eps^{-2} = 100$, where the mean
+square velocity is half of the constant-$D$ diffusive value and the drift is
+a sixth of $\eps^2t\beta^1$ ($\beta^1 = 0.928$).
+
+\emph{(C) Non-potential field,} $4\times10^5$ samples per $N$.
+\begin{center}
+\small
+\begin{tabular}{rrrrrr}
+  $N$ & $t$ & measured & s.e.\ (re, im) & Gauss & corr. \\ \hline
+  $10^3$ & 10.0 & $0.7643+0.0058i$ & $0.0005,\,0.0009$ & 0.7316 & $0.7622+0.0113i$ \\
+  $10^3$ & 15.0 & $0.3860-0.0035i$ & $0.0010,\,0.0011$ & 0.3482 & $0.3810-0.0036i$ \\
+  $10^4$ & 21.6 & $0.7446+0.0047i$ & $0.0005,\,0.0009$ & 0.7298 & $0.7440+0.0052i$ \\
+  $10^4$ & 32.4 & $0.3623-0.0012i$ & $0.0010,\,0.0011$ & 0.3454 & $0.3605-0.0018i$ \\
+\end{tabular}
+\end{center}
+The real parts differ from the corrected prediction by $+0.0021$, $+0.0050$
+at $N=10^3$ (four to five standard errors, and $0.07\,\eps$ to $0.16\,\eps$)
+and by $+0.0006$, $+0.0018$ at $N=10^4$ (within two standard errors); the
+Gaussian formula is off by $0.015$ to $0.038$.
+The mean velocity at $N=10^3$ is $\E w_t/(\eps^2t) = (0.449,-0.227)\pm0.020$
+($t=10$) and $(0.483,-0.248)\pm0.016$ ($t=15$). Its second component agrees
+with $\beta^2 = -0.257$ and excludes $(\nabla_v\cdot D)^2 = +0.166$: for a
+non-potential field the drift is $\beta$ of \eqref{eq:coef}, not
+$\nabla_v\cdot D$.
+
+\emph{(D) Step size.} Block (A) at $N=10^3$ repeated with $h=0.1$ and
+independent seeds gives $0.7375+0.0143i$ and $0.3413+0.0016i$ (same s.e.),
+against $0.7366+0.0147i$ and $0.3403+0.0010i$ with $h=0.2$: differences
+within $1.3$ combined standard errors. The discretization error is therefore
+not resolved at this sample size; it is not otherwise bounded.
+
+\section{Relation to the gaps of the first note}
+
+The six gaps between the model and the particle system (self-consistency,
+back-reaction, no Markov structure, sharp resonances, non-Gaussian data, from
+decorrelation to closure) stand as stated there. Three comments.
+\begin{enumerate}
+\item The improvement from $N^{3/8}$ to $N$ and from $N^{-1/6}$ to $N^{-1/3}$
+comes entirely from replacing $A^{-1}$ by the Doppler-shifted resolvent
+$(A + w\cdot\nabla_Y)^{-1}$, which is explicit here because the modes are
+Ornstein--Uhlenbeck. In the particle system the analogue is the resolvent of
+the linearized Vlasov operator along the \emph{perturbed} orbit; gap~3 (no
+Markov structure) is therefore felt more strongly by the results of this
+note than by the main theorem of the first note.
+\item The drift $\beta$ is the model's version of dynamical friction's
+counterpart from the gradient of $D$ (for a potential field
+$\beta = \nabla_v\cdot D$). The polarization friction of gap~2 is absent
+from the model. Both are of relative size $N^{-1/3}$ at $t\sim N^{1/3}$, so
+a particle version of Theorem~\ref{thm:first} would have a further term at
+the same order; Corollary~\ref{cor:third} (rate $N^{-1/3}$) is the statement
+one may hope survives unchanged.
+\item The constants here are less explicit than in the first note and
+degenerate as $\gamma_k\to0$ (gap~4): $\sD_2$ and $\beta$ contain
+$\lambda_k^{-2}$, the heuristic $\beta_2$ contains $\lambda_k^{-3}$.
+\end{enumerate}
+
+\begin{thebibliography}{99}
+\small
+\bibitem{Khas} R.~Z. Khasminskii, \emph{A limit theorem for solutions of
+differential equations with random right-hand side}, Theory Probab.\ Appl.\
+\textbf{11} (1966) 390--406.
+\bibitem{KP} H.~Kesten, G.~C. Papanicolaou, \emph{A limit theorem for
+stochastic acceleration}, Comm.\ Math.\ Phys.\ \textbf{78} (1980) 19--63.
+\bibitem{PSV} G.~C. Papanicolaou, D.~Stroock, S.~R.~S. Varadhan,
+\emph{Martingale approach to some limit theorems}, in: Statistical Mechanics
+and Dynamical Systems, Duke Univ.\ Math.\ Ser.\ III (1977).
+\bibitem{Kushner} H.~J. Kushner, \emph{Approximation and Weak Convergence
+Methods for Random Processes, with Applications to Stochastic Systems
+Theory}, MIT Press (1984).
+\bibitem{KR} T.~Komorowski, L.~Ryzhik, \emph{Diffusion in a weakly random
+Hamiltonian flow}, Comm.\ Math.\ Phys.\ \textbf{263} (2006) 277--323.
+\bibitem{DGL} D.~D\"urr, S.~Goldstein, J.~L. Lebowitz, \emph{Asymptotic
+motion of a classical particle in a random potential in two dimensions:
+Landau model}, Comm.\ Math.\ Phys.\ \textbf{113} (1987) 209--230.
+\bibitem{FGPS} J.-P. Fouque, J.~Garnier, G.~Papanicolaou, K.~S{\o}lna,
+\emph{Wave Propagation and Time Reversal in Randomly Layered Media},
+Springer (2007).
+\bibitem{PavSt} G.~A. Pavliotis, A.~M. Stuart, \emph{Multiscale Methods:
+Averaging and Homogenization}, Springer (2008).
+\bibitem{EK} S.~N. Ethier, T.~G. Kurtz, \emph{Markov Processes:
+Characterization and Convergence}, Wiley (1986). Theorem numbers quoted from
+memory.
+\bibitem{Dupree} T.~H. Dupree, \emph{A perturbation theory for strong plasma
+turbulence}, Phys.\ Fluids \textbf{9} (1966) 1773--1782.
+\end{thebibliography}
+
+\end{document}
