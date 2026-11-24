@@ -98,5 +98,51 @@ line; the author is not recorded here.
 | `a_tournament_benchmark_for_learned_nonlocal_heat-flux_closures.tex` | 2026-11-12 | `6641909bbdb3` |
 | `a_tournament_benchmark_for_learned_nonlocal_heat-flux_closures.pdf` | 2026-11-12 | `981dc8624506` |
 
+## Cautionary examples
+
+- Higginbottom, Ercan, Antony, Sanchez Gonzalez, Grazzini Placucci,
+  Kassaï Koupaï, and Toshev,
+  [ModeCast: One-Shot Prediction of Linear MHD Eigenmodes and Growth Rates in
+  Tokamaks](https://arxiv.org/abs/2610.23844), v2 (23 Oct 2026), NeurIPS 2026
+  Sim2Science workshop. BibTeX key `higginbottom2026modecast`.
+
+  A supervised surrogate (a roughly 145M-parameter U-Net) trained on about
+  46,000 linear JOREK runs. It maps a tokamak equilibrium and toroidal mode
+  number to the fastest-growing resistive-MHD eigenmode and its growth rate.
+  In the bake-off taxonomy it is family 6 (supervised neural operator on
+  solution pairs) used as a black-box control: it replaces the solver and
+  supplies no identified correction to an explicit classical operator.
+
+  Why it is cautionary: the surrogate does not avoid a closure, it inherits
+  one. Three errors are stacked, and only the last is measured.
+
+  1. Model-form error: whether resistive MHD with collisional closures is the
+     right physics in the regime of interest. Not tested; there is no
+     higher-fidelity kinetic reference anywhere in the pipeline.
+  2. Discretization error: whether JOREK resolved those equations. The paper
+     is reported to flag that its 128x128 grid may under-resolve the
+     resistive layers, and its reference resistivity-scan slopes (+0.67 kink,
+     +0.51 tearing) differ from the scalings it cites (1/3 and 3/5).
+  3. Surrogate error: agreement with JOREK. This is what the headline numbers
+     report (growth-rate R^2 near 0.97, no missed unstable cases among 1,258
+     held-out tests).
+
+  All reported metrics are measured against the same code at the same
+  resolution, so a high score on item 3 says nothing about items 1 and 2.
+  Use it as the worked example for scientific principle 9 (separate
+  discretization, asymptotic-limit, and learned model-form error) and
+  engineering principle 10 (keep the classical reduced operator explicit).
+
+  Worth borrowing all the same: geometry-disjoint train/validation/test
+  splits, a calibrated classifier that abstains on borderline cases, checks
+  against known resistive scalings, and a frozen-trunk, refit-head protocol
+  for out-of-distribution transfer.
+
+  Provenance: abstract page and HTML full text (v2) read on 2026-11-24. Only
+  the first part of the HTML was read verbatim; the grid-resolution
+  limitation and the scan slopes in item 2 come from an extracted summary of
+  the remainder and have not been checked against the PDF. No local PDF is
+  stored.
+
 Do not silently replace or edit source documents. Record provenance, version,
 and retrieval date when a reference is added.
