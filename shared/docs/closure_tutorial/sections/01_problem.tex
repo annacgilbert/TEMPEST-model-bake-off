@@ -1,0 +1,203 @@
+\section{What a closure problem is}
+\label{sec:problem}
+
+\subsection{The abstract statement}
+
+Suppose a system has a full state $X$ obeying $\dot X = F(X)$, and we only
+want to track a reduced state $x = \cP X$: an average, a few moments, a
+coarse-grained field. Applying $\cP$ to the dynamics gives
+\begin{equation}
+  \dot x = \cP F(X).
+  \label{eq:unclosed}
+\end{equation}
+This equation is exact. Its right-hand side depends on the full state $X$,
+not only on $x$, and that is the closure problem. A \emph{closure} is a rule
+that replaces $\cP F(X)$ by something computable from $x$ alone, possibly
+from its gradients or its history:
+\begin{equation}
+  \dot x = f(x) + \underbrace{\bigl[\cP F(X) - f(x)\bigr]}_{\text{closure defect } d} .
+  \label{eq:defect}
+\end{equation}
+The bracket is what the closure gets wrong. It is a function of the full
+state, so it can be measured only where the full state is available: on
+reference trajectories or reference ensembles.
+
+Two different objects are called ``the reduced equation'', and it helps to
+keep them apart. Equation~\eqref{eq:unclosed} is an identity obtained by
+averaging, filtering, taking moments or projecting. The closed model
+$\dot x = f(x)$ is an approximation. The modelling enters only in the step
+from the first to the second.
+
+\subsection{Two ways to measure the error}
+
+Let $X(t)$ be a reference solution, and let $x_c(t)$ solve the closed model
+from the same reduced initial data.
+\begin{itemize}
+  \item The \textbf{a priori} error is the defect on the reference solution,
+    $d(t) = \cP F(X(t)) - f(\cP X(t))$.
+  \item The \textbf{a posteriori} (embedded) error is
+    $e(t) = x_c(t) - \cP X(t)$.
+\end{itemize}
+Subtracting the two evolution equations gives
+$\dot e = f(x_c) - f(\cP X) - d(t)$. If $f$ is Lipschitz with constant $L$
+then by Gr\"onwall's inequality
+\begin{equation}
+  |e(t)| \le \int_0^t e^{L(t-s)}\,|d(s)|\,\dd s .
+  \label{eq:gronwall}
+\end{equation}
+This inequality says three things. A small defect controls the embedded
+error for times of order $1/L$ and no longer, unless the closed model is
+contractive. The defect that matters is the one along the reference
+trajectory, while a closed model run for a long time visits states the
+reference never produced. And the bound is one-directional: a closure can
+have a large pointwise defect and still give good embedded statistics, as
+eddy-viscosity models do (Section~\ref{sec:turb}). These are the reasons the
+benchmark requires an embedded-solver test next to every a priori test.
+
+\subsection{Five items that describe any scale transition}
+
+Every transition in this project is described by five items. Later sections
+state them for each closure.
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}P{3.4cm}Y@{}}
+\toprule
+Exact hierarchy & The chain of exact equations in which each retained
+  quantity is coupled to one that is not retained. \\
+Limiting process & The parameter that is sent to zero or infinity, and the
+  scaling of time and space that goes with it. \\
+Retained state & What the reduced model evolves. \\
+Discarded information & What $\cP$ removes: velocity-space structure,
+  correlations, fluctuations, phases, fast fields, history. \\
+Closure defect & The bracket in \eqref{eq:defect}, with a statement of how
+  it is measured. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{Where the problem comes from}
+
+The problem has two causes, and usually both are present.
+\begin{itemize}
+  \item \textbf{Nonlinearity.} The average of a product is not the product of
+    averages. Averaging a quadratic term produces a second moment, whose
+    equation contains a third.
+  \item \textbf{Transport.} Streaming or advection couples each retained
+    quantity to one that is not retained. Multiplying
+    $\bv\cdot\nabla f$ by $\bv^k$ and integrating always produces a moment
+    of order $k+1$, even when the equation is linear.
+\end{itemize}
+A third situation is the elimination of whole degrees of freedom: fast
+variables, or fields carried by another species. It is the same problem with
+a different projection, and Section~\ref{sec:memory} treats it in general.
+
+\subsection{A worked example with every feature}
+\label{sec:fastslow}
+
+\begin{example}[A slow variable driven by a fast one]
+\label{ex:fastslow}
+Let
+\begin{equation}
+  \dot x = a\,x + b\,y, \qquad
+  \varepsilon\,\dot y = c\,x - y ,
+  \label{eq:fastslow}
+\end{equation}
+with $\varepsilon>0$ small. Retain $x$ and discard $y$. The second equation
+can be solved exactly,
+\[
+  y(t) = e^{-t/\varepsilon}\,y(0)
+       + \frac{c}{\varepsilon}\int_0^t e^{-s/\varepsilon}\,x(t-s)\,\dd s ,
+\]
+so the exact reduced equation is
+\begin{equation}
+  \dot x(t) = a\,x(t)
+   + \frac{bc}{\varepsilon}\int_0^t e^{-s/\varepsilon}\,x(t-s)\,\dd s
+   + b\,e^{-t/\varepsilon}\,y(0) .
+  \label{eq:fastslow-exact}
+\end{equation}
+The three terms are an instantaneous term, a \emph{memory} term, and a term
+that depends on the discarded initial data. Nothing has been approximated.
+
+Three closures follow from expanding the memory integral for slowly varying
+$x$, using $x(t-s) = x(t) - s\,\dot x(t) + \dots$:
+\begin{align}
+  \text{zeroth order (Markov):}\quad & \dot x = (a+bc)\,x, \nonumber\\
+  \text{first order:}\quad & \dot x = (a+bc)(1-\varepsilon bc)\,x, \\
+  \text{first order, rational:}\quad
+     & (1+\varepsilon bc)\,\dot x = (a+bc)\,x . \nonumber
+\end{align}
+The second line substitutes the zeroth-order equation for $\dot x$ in the
+correction. The third keeps $\dot x$ as an unknown. They agree to
+$O(\varepsilon)$ and differ at $O(\varepsilon^2)$.
+
+For $a=0$, $b=1$, $c=-1$ the exact slow eigenvalue is
+$\lambda = (-1+\sqrt{1-4\varepsilon})/(2\varepsilon)
+= -1-\varepsilon-2\varepsilon^2-\dots$:
+\begin{center}
+\begin{tabular}{rrrrr}
+\toprule
+$\varepsilon$ & exact & Markov & first order & rational \\
+\midrule
+0.2   & $-1.3820$ & $-1$ & $-1.2000$ & $-1.2500$ \\
+0.1   & $-1.1270$ & $-1$ & $-1.1000$ & $-1.1111$ \\
+0.05  & $-1.0557$ & $-1$ & $-1.0500$ & $-1.0526$ \\
+0.025 & $-1.0263$ & $-1$ & $-1.0250$ & $-1.0256$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+The Markov error is $O(\varepsilon)$ and the first-order errors are
+$O(\varepsilon^2)$.
+\end{example}
+
+The example contains the whole subject in miniature.
+\begin{itemize}
+  \item The exact reduced dynamics has memory. A local closure is obtained
+    only by assuming that the memory kernel decays faster than $x$ changes.
+    That is a statement about a small parameter, here $\varepsilon$, in
+    kinetic theory the Knudsen number.
+  \item The closure is \emph{asymptotic}: the kernel
+    $\varepsilon^{-1}e^{-s/\varepsilon}$ tends to a delta function, and the
+    corrections are a series in $\varepsilon$.
+  \item The discarded initial data matter for a time of order $\varepsilon$
+    (an initial layer). If they are unknown they act as noise.
+  \item The same order of accuracy can be reached by formulas that behave
+    very differently when $\varepsilon$ is not small. The polynomial form
+    changes sign at $\varepsilon bc = 1$. The rational form does not. The
+    same distinction separates the Burnett equations from their
+    regularizations (Section~\ref{sec:burnett}).
+  \item Keeping $y$ as a variable removes the closure problem at the cost of
+    a larger, stiffer system. Extended-moment models make this trade
+    (Section~\ref{sec:moment}).
+\end{itemize}
+
+\subsection{The kinds of closure}
+\label{sec:kinds}
+
+Closures differ in what the unclosed quantity is allowed to depend on.
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}P{3.3cm}P{5.3cm}Y@{}}
+\toprule
+Kind & Form & Examples \\
+\midrule
+Algebraic & $u = g(x)$ at the same point and time
+  & equation of state; Euler ($\boldsymbol\pi=\bq=0$); double-adiabatic
+    laws; Eddington factor \\
+Gradient & $u = -D(x)\,\nabla x$
+  & Navier--Stokes--Fourier; eddy viscosity; Braginskii; diffusion
+    approximation \\
+Nonlocal in space & $u(\bx) = \int W(\bx,\bx')\,x(\bx')\,\dd\bx'$
+  & Hammett--Perkins; nonlocal electron heat flux \\
+Memory & $u(t) = \int_0^t K(s)\,x(t-s)\,\dd s$
+  & Mori--Zwanzig; viscoelastic models \\
+Extended state & evolve $u$ with its own closed equation
+  & Grad; Reynolds-stress transport; $k$--$\varepsilon$; Cattaneo \\
+Stochastic & $u = g(x) + \text{noise}$
+  & Langevin models; stochastic subgrid forcing \\
+\bottomrule
+\end{tabularx}
+\end{center}
+These are not exclusive. An extended-state model is a memory closure with an
+exponential kernel (Section~\ref{sec:embedding}), and for linear problems
+every row is a choice of how to approximate one function of wavenumber and
+frequency (Section~\ref{sec:between}).

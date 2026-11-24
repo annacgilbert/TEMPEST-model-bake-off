@@ -1,0 +1,87 @@
+\section{Conventions and conversions}
+\label{app:conv}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{@{}P{3.6cm}YY@{}}
+\toprule
+Quantity & This tutorial and the Hammett--Perkins papers
+  & Elsewhere \\
+\midrule
+Thermal speed & $\vt=\sqrt{T_0/m}$
+  & $v_{\mathrm{th}}=\sqrt{2T_0/m}$ in \cite{Hunana19}: coefficients of
+    $\vt$ are divided by $\sqrt2$ per power \\
+Heat flux, one velocity dimension & third central moment,
+  $q=\avg{\He_3h}$
+  & energy flux $\tfrac12\avg{\He_3h}$ in the heat-flux manuscript:
+    $q$, $\chi$, $\kF$, $\theta$ are halved; $K$ is unchanged; $K/\kF^2$ is
+    multiplied by four \\
+Collisionless constant, one dimension & $\sqrt{8/\pi}$
+  & $\sqrt{2/\pi}$ in the manuscript \\
+Collisionless constant, three dimensions & not derived here
+  & $3\sqrt{2/\pi}$ (potential drive) and $\tfrac95\sqrt{2/\pi}$ (thermal
+    drive) in the manuscript \\
+Fourier modes & $e^{ikz-i\omega t}$ & \\
+Hilbert transform & multiplier $-i\,\sgn(k)$
+  & opposite sign in several Landau-fluid papers \\
+Temperature & energy units, $k_B=1$ & \\
+\bottomrule
+\end{tabularx}
+\end{center}
+Comparisons across velocity dimensions made from mixed conventions are not
+meaningful; the manuscript makes physical comparisons only within a fixed
+dimension, and so does this tutorial.
+
+\section{Hermite relations used}
+\label{app:hermite}
+
+Probabilists' Hermite polynomials: $\He_0=1$, $\He_1=v$,
+$\He_{n+1}=v\,\He_n-n\,\He_{n-1}$, with $\avg{\He_m\He_n}=n!\,\delta_{mn}$
+for the unit Gaussian and $\He_n'=n\,\He_{n-1}$. The orthonormal functions
+$\psi_n=\He_n/\sqrt{n!}$ satisfy
+$v\,\psi_n=\sqrt{n+1}\,\psi_{n+1}+\sqrt n\,\psi_{n-1}$. The operator
+$-\partial_v^2+v\,\partial_v$ has eigenfunctions $\He_n$ with eigenvalues
+$n$, which is why the Lenard--Bernstein and Dougherty operators are
+diagonal in this basis and damp high $n$ strongly. Values at the origin:
+$\He_{2j}(0)=(-1)^j(2j-1)!!$.
+
+\section{What was checked numerically}
+\label{app:checks}
+
+Run recorded in \texttt{\rundir/checks.json}; command
+\texttt{python3 checks.py --output \rundir}. No random numbers are used.
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}P{4.2cm}YP{3.2cm}@{}}
+\toprule
+Claim & Compared with & Agreement \\
+\midrule
+Fast--slow table & eigenvalues of the $2\times2$ matrix & exact \\
+Langevin moments & quadrature of the stationary density & $10^{-15}$ \\
+BGK $\kappa\nu=\tfrac52$, $\mu\nu=1$, 1D $\kF\nu=3$
+  & exact Gaussian moments in rational arithmetic & exact \\
+Truncation nodes, $N=8$ & Gauss--Hermite nodes from NumPy
+  & $3\times10^{-15}$ \\
+Eddington factors & quadrature of the ansatz & $10^{-15}$ \\
+Hammett--Perkins: orders of matching
+  & $R$ from the Faddeeva function: error $\propto\zeta^2$ ($R_3$),
+    $\zeta^3$ ($R_4$) as $\zeta\to0$; $\zeta^{-5}$, $\zeta^{-6}$ as
+    $\zeta\to\infty$
+  & orders $2.00$, $3.00$, $5.01$, $6.02$ \\
+$\sup|R_n-R|$ & grid of 24001 points on $0\le\zeta\le12$ & $0.344$, $0.059$ \\
+$c_N$, $N=2,\dots,8$ & quadrature of $W_n$ at $z=10^{-4}i$
+  & $2\times10^{-4}$ \\
+$\theta(y)$ for BGK & table in
+  \texttt{plasma\_closure\_gaps\_and\_bgk\_theorem.tex}; Hermite--Galerkin
+  solve, 1200 modes
+  & 4 digits; $10^{-14}$ \\
+$\theta_1(y)$ for Dougherty & Hermite--Galerkin solve, 1200 modes
+  & $10^{-15}$ \\
+Exact over interpolant & 81 points, $10^{-2}\le s\le10^2$
+  & ranges quoted in Section~\ref{sec:between} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+Not checked numerically: any statement about three velocity dimensions,
+about the Landau operator, or about a speed-dependent collision frequency.
+Those are quoted from the notes named in the text.

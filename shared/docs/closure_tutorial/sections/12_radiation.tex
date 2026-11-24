@@ -1,0 +1,105 @@
+\section{Radiation, neutrinos, and the supernova profile}
+\label{sec:rad}
+
+The second application profile, core-collapse supernovae, involves two
+closures: one for neutrino transport, which is a moment closure with a long
+history in radiation transport, and one for turbulence in a
+spherically symmetric model, which is a Reynolds closure. Both are
+recorded here because the first supplies the cleanest worked example of a
+maximum-entropy closure and the second defines the benchmark target.
+
+\subsection{The moment hierarchy of transport}
+
+The specific intensity $I(\bx,\boldsymbol\Omega,t)$ obeys a linear kinetic
+equation in which particles all move at speed $c$,
+\[
+  \frac1c\,\partial_tI+\boldsymbol\Omega\cdot\nabla I
+  =-\sigma_tI+\frac{\sigma_s}{4\pi}\int I\,\dd\Omega'+S .
+\]
+Angular moments give the energy density $E=c^{-1}\int I\,\dd\Omega$, the
+flux $\bF=\int\boldsymbol\Omega\,I\,\dd\Omega$ and the pressure tensor
+$\mathbf P=c^{-1}\int\boldsymbol\Omega\boldsymbol\Omega\,I\,\dd\Omega$,
+with
+\begin{equation}
+  \partial_tE+\nabla\cdot\bF=\text{sources},\qquad
+  \frac1{c^2}\,\partial_t\bF+\nabla\cdot\mathbf P=-\frac{\sigma_t}{c}\,\bF .
+\end{equation}
+The pressure is unclosed. With $f=|\bF|/(cE)$ and
+$\mathbf n=\bF/|\bF|$ the standard closures are written through an
+\emph{Eddington factor} $\chi$,
+\begin{equation}
+  \mathbf P=\Bigl[\frac{1-\chi}{2}\,\mathbf I
+     +\frac{3\chi-1}{2}\,\mathbf n\mathbf n\Bigr]E .
+\end{equation}
+Realizability requires $f\le1$ and $f^2\le\chi\le1$.
+
+\subsection{The closures}
+
+\begin{itemize}
+  \item \textbf{Diffusion.} $\chi=\tfrac13$ and the flux equation in
+    quasi-steady state: $\bF=-\tfrac{c}{3\sigma_t}\nabla E$. This is the
+    Chapman--Enskog closure, valid when the mean free path $1/\sigma_t$ is
+    short. In the opposite limit it gives $|\bF|>cE$: energy moving faster
+    than light.
+  \item \textbf{Flux-limited diffusion.} Keep the diffusion form with a
+    limited coefficient,
+    $\bF=-\tfrac{c\,\lambda(R)}{\sigma_t}\nabla E$ with
+    $R=|\nabla E|/(\sigma_tE)$. The Levermore--Pomraning limiter
+    \cite{LevermorePomraning81} is
+    $\lambda(R)=(\coth R-1/R)/R$, which tends to $\tfrac13$ as $R\to0$ and
+    to $1/R$ as $R\to\infty$, so that $|\bF|\to cE$. It is the transport
+    analogue of the electron flux limiter of Section~\ref{sec:plasma}, with
+    a derivation behind the limiter.
+  \item \textbf{M1.} Evolve both $E$ and $\bF$ and close with a function
+    $\chi(f)$.
+  \item \textbf{Variable Eddington tensor.} Compute
+    $\mathbf P/E$ from a separate, cheaper solution of the transport
+    equation and use it to close the moment system.
+\end{itemize}
+
+\begin{example}[Two maximum-entropy Eddington factors]
+\label{ex:m1}
+Assume the intensity is isotropic in a frame moving with some velocity
+$\beta c$, so that $I\propto(1-\beta\mu)^{-4}$ with $\mu$ the direction
+cosine. This is how Levermore derived the closure \cite{Levermore84}, and
+it coincides with maximizing the entropy of a photon gas subject to $E$
+and $\bF$. Its moments give the closed form
+\begin{equation}
+  \chi(f)=\frac{3+4f^2}{5+2\sqrt{4-3f^2}} ,
+  \label{eq:m1}
+\end{equation}
+with $\chi(0)=\tfrac13$ and $\chi(1)=1$. Maximizing the classical
+(Boltzmann) entropy instead gives $I\propto e^{b\mu}$, with
+$f=\coth b-1/b$ and $\chi=1-2f/b$ \cite{Minerbo78}. Both were checked by
+quadrature: for example $\beta=0.4$ gives $f=0.5063$ and $\chi=0.4684$
+from the integrals and from \eqref{eq:m1}.
+\end{example}
+
+The M1 closure is hyperbolic, realizable and exact in both limits, which
+is everything Section~\ref{sec:moment} asked of a maximum-entropy closure.
+Its known failure shows what the ansatz discards: for two beams crossing
+head-on $f=0$ and the true $\chi$ is $1$, while \eqref{eq:m1} gives
+$\tfrac13$. A function of $f$ alone cannot distinguish an isotropic field
+from two opposed beams. Neutrino transport in supernova simulations has the
+same structure with energy dependence and several species, and M1 is in
+common use there.
+
+\subsection{Turbulence in a one-dimensional supernova model}
+
+A spherically symmetric model evolves angle averages. Let
+$\avg{\cdot}_\Omega$ be the average over angles at fixed radius. Averaging
+the three-dimensional equations and subtracting the one-dimensional
+equations applied to the averaged state leaves
+\begin{equation}
+  C^\star_{\mathrm{SN}}[X]
+  =\avg{F_{3\mathrm D}(X)}_\Omega-F_{1\mathrm D}\bigl(\avg{X}_\Omega\bigr),
+\end{equation}
+which is \eqref{eq:defect} for this projection. It decomposes into a
+Reynolds stress (a turbulent pressure that helps support the shock), a
+turbulent energy or enthalpy flux, production, dissipation and mixing. The
+classical closure is mixing-length theory, the Prandtl model of
+Section~\ref{sec:turb} with buoyancy as the driver, used in
+one-dimensional explosion models \cite{CouchWarrenOConnor20}. What makes
+this harder than the terrestrial case is that the flow is compressible,
+passes through a moving shock, and never reaches a statistically steady
+state, so history enters.

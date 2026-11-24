@@ -1,0 +1,158 @@
+\section{Turbulence closures}
+\label{sec:turb}
+
+Turbulence is the case with no small parameter: eddies of all sizes between
+the mean-flow scale and the dissipation scale are present, and none is
+separated from the scale being resolved. The closures here are
+\emph{models}. They are included because the supernova profile needs them,
+because most of the vocabulary for testing closures (a priori and a
+posteriori tests, realizability) was developed for them, and because the
+contrast with Section~\ref{sec:asym} is instructive. The standard reference
+is Pope \cite{Pope}.
+
+\subsection{Eddy viscosity}
+
+Postulate the form of \eqref{eq:NSF} and model the coefficient. For the
+Reynolds stress (Boussinesq, 1877),
+\begin{equation}
+  \avg{u_i'u_j'}-\tfrac23k\,\delta_{ij}=-2\nu_t\,\bar S_{ij},
+  \qquad
+  \bar S_{ij}=\tfrac12(\partial_i\bar u_j+\partial_j\bar u_i),
+  \qquad k=\tfrac12\avg{u_i'u_i'} .
+  \label{eq:boussinesq}
+\end{equation}
+The assumption is tensorial: the anisotropic stress is aligned with the
+local mean strain. The eddy viscosity $\nu_t$ is then supplied at one of
+several levels.
+\begin{itemize}
+  \item \textbf{Mixing length} (Prandtl, 1925):
+    $\nu_t=\ell_m^2\,|\partial\bar u/\partial y|$ with a prescribed length
+    $\ell_m$. This is the kinetic estimate $\nu\sim\vt\lambda$ with eddies
+    in place of molecules. The analogy is not a derivation, because the
+    ``mean free path'' of an eddy is comparable to the scale of the mean
+    flow.
+  \item \textbf{Two-equation models.} Transport two turbulence quantities
+    and form $\nu_t$ from them. In the $k$--$\varepsilon$ model
+    \cite{LaunderSpalding74},
+    \begin{align}
+      \nu_t &= C_\mu\,\frac{k^2}{\varepsilon}, \nonumber\\
+      \frac{\bar Dk}{\bar Dt} &= P-\varepsilon
+         +\nabla\cdot\Bigl[\Bigl(\nu+\frac{\nu_t}{\sigma_k}\Bigr)\nabla k\Bigr],
+         \qquad P=2\nu_t\,\bar S_{ij}\bar S_{ij}, \\
+      \frac{\bar D\varepsilon}{\bar Dt} &= C_{\varepsilon1}\frac{\varepsilon}{k}P
+         -C_{\varepsilon2}\frac{\varepsilon^2}{k}
+         +\nabla\cdot\Bigl[\Bigl(\nu+\frac{\nu_t}{\sigma_\varepsilon}\Bigr)
+           \nabla\varepsilon\Bigr], \nonumber
+    \end{align}
+    with standard constants $C_\mu=0.09$, $C_{\varepsilon1}=1.44$,
+    $C_{\varepsilon2}=1.92$, $\sigma_k=1.0$, $\sigma_\varepsilon=1.3$.
+\end{itemize}
+The constants are calibrated on canonical flows: $C_{\varepsilon2}$ from
+the decay of grid turbulence, $C_\mu$ from the ratio of shear stress to $k$
+in the logarithmic layer, and the others from requiring the logarithmic
+law. The extra equations do not remove the closure problem. The $k$
+equation is derived and then modelled term by term, and the $\varepsilon$
+equation is largely constructed by analogy.
+
+\emph{Realizability.} Equation \eqref{eq:boussinesq} gives
+$\avg{u_1'^2}=\tfrac23k-2\nu_t\bar S_{11}$, which is negative when
+$\bar S_{11}>k/(3\nu_t)$. A true Reynolds stress is a covariance and is
+positive semidefinite. Realizable variants limit $C_\mu$ in strong strain.
+
+\subsection{Second-moment closures}
+
+Reynolds-stress transport models evolve all six components of $R_{ij}$,
+\[
+  \frac{\bar DR_{ij}}{\bar Dt}=P_{ij}+\Phi_{ij}-\varepsilon_{ij}+D_{ij} .
+\]
+Production $P_{ij}$ is closed. The pressure--strain redistribution
+$\Phi_{ij}$, the dissipation tensor and the turbulent transport $D_{ij}$
+are not. The closure has moved one level up the hierarchy, exactly as with
+Grad's equations relative to Navier--Stokes--Fourier. Algebraic stress
+models sit between the two levels: they expand the anisotropy in a tensor
+basis built from mean strain and rotation, with scalar coefficients that
+depend on invariants. That representation is the one tensor-basis neural
+networks later adopted (Section~\ref{sec:learned}).
+
+\subsection{Large-eddy simulation}
+
+LES resolves the large eddies and models the subgrid stress \eqref{eq:sgs}.
+Two families of model reflect two goals.
+
+\emph{Functional models} aim at the right net energy transfer to the
+unresolved scales. The Smagorinsky model \cite{Smagorinsky63} is
+\begin{equation}
+  \tau_{ij}-\tfrac13\tau_{kk}\delta_{ij}=-2\nu_t\bar S_{ij},
+  \qquad
+  \nu_t=(C_s\Delta)^2|\bar S|,
+  \qquad |\bar S|=\sqrt{2\bar S_{ij}\bar S_{ij}} .
+  \label{eq:smag}
+\end{equation}
+Its transfer $-\tau_{ij}\bar S_{ij}=\nu_t|\bar S|^2\ge0$ always removes
+energy from the resolved field. Requiring that it remove energy at the
+rate of the Kolmogorov cascade gives
+$C_s=\pi^{-1}(2/3C_K)^{3/4}\approx0.17$ for $C_K=1.5$
+(Exercise~\ref{ex:smag}). In shear flows smaller values are needed, which
+is the motivation for the dynamic procedure.
+
+\emph{The dynamic procedure} \cite{Germano91,Lilly92} computes the
+coefficient from the resolved field. Apply a second, wider test filter
+(hat) and let $T_{ij}$ be the subgrid stress at the test level. Then
+\begin{equation}
+  L_{ij}\equiv T_{ij}-\widehat{\tau_{ij}}
+  =\widehat{\bar u_i\bar u_j}-\hat{\bar u}_i\hat{\bar u}_j
+\end{equation}
+is computable from the resolved velocity (the Germano identity).
+Inserting \eqref{eq:smag} at both levels with the same coefficient
+$C=C_s^2$ gives $L_{ij}^{d}=C\,M_{ij}$ with
+$M_{ij}=2\Delta^2\widehat{|\bar S|\bar S_{ij}}
+-2\hat\Delta^2|\hat{\bar S}|\hat{\bar S}_{ij}$, and the least-squares
+solution is $C=\avg{L_{ij}M_{ij}}/\avg{M_{ij}M_{ij}}$. The idea is general:
+the closure is required to be consistent across two levels of
+coarse-graining, and its free parameter is fixed by that requirement.
+
+\emph{Structural models} aim at the stress tensor itself. The gradient
+model $\tau_{ij}\approx\tfrac1{12}\Delta^2\,\partial_k\bar u_i\,\partial_k\bar u_j$
+is the leading term of a Taylor expansion of \eqref{eq:sgs}; scale
+similarity and approximate deconvolution are related. In \emph{implicit}
+LES no stress is written and the dissipation of the numerical scheme is the
+closure, so the discretization is part of the model.
+
+\subsection{The lesson of a priori tests}
+
+Clark, Ferziger and Reynolds \cite{Clark79} filtered direct simulations and
+compared modelled and exact subgrid stresses point by point. The
+Smagorinsky stress correlates poorly with the exact one, and structural
+models correlate well. Embedded in a simulation the ranking reverses: the
+Smagorinsky model gives stable runs with reasonable statistics, and purely
+structural models tend to be unstable because they do not dissipate enough.
+The embedded behaviour depends on the net energy transfer, which a
+pointwise correlation does not measure. This is the origin of the rule that
+a closure must be tested both ways, and it is inequality \eqref{eq:gronwall}
+read in the other direction.
+
+\subsection{Statistical closure theories}
+\label{sec:statclosure}
+
+For homogeneous turbulence one can write the hierarchy for the spectrum
+$E(k,t)$ directly: its equation involves triple correlations, whose
+equation involves fourth-order ones.
+\begin{itemize}
+  \item \textbf{Quasi-normal.} Discard the fourth cumulant, as in
+    Example~\ref{ex:langevin}. The resulting equations develop negative
+    energy spectra: the closure is not realizable.
+  \item \textbf{EDQNM} \cite{Orszag70}. Add a damping of the triple
+    correlations at an eddy-turnover rate and make the equation Markovian.
+    Realizable, with a free constant.
+  \item \textbf{Direct-interaction approximation}
+    \cite{Kraichnan59}. A self-consistent closure for the two-time
+    correlation and the response function, with no free constant. It is the
+    exact statistics of a model system and therefore realizable. In its
+    Eulerian form it does not reproduce the Kolmogorov spectrum, because it
+    does not separate sweeping of small eddies by large ones from their
+    distortion; Lagrangian versions repair this.
+\end{itemize}
+The response function introduced by the direct-interaction approximation is
+the same object as the memory kernel of Section~\ref{sec:memory}, and the
+plasma versions (resonance broadening, Section~\ref{sec:waves}) are
+closures of this type.

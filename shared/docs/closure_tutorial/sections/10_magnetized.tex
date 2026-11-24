@@ -1,0 +1,109 @@
+\section{Magnetized plasmas}
+\label{sec:mag}
+
+A magnetic field confines particles to gyro-orbits of radius $\rho$ across
+the field while leaving them free along it. This introduces a second small
+parameter, $\rho/L$, that works even without collisions. The closure
+problem becomes anisotropic: the perpendicular direction is closed by
+gyromotion, and the parallel direction keeps all the difficulties of
+Sections~\ref{sec:plasma} and~\ref{sec:collisionless}.
+
+\subsection{Collisionless, across the field: double-adiabatic laws}
+
+When the fields vary slowly compared with the gyration, each particle
+conserves its magnetic moment $m v_\perp^2/2B$, and the pressure tensor is
+gyrotropic, $\mathbf P=p_\perp(\mathbf I-\bb\bb)+p_\parallel\bb\bb$ with
+$\bb=\bB/B$. If the heat fluxes along the field are neglected, the two
+pressures obey the double-adiabatic laws of Chew, Goldberger and Low
+\cite{CGL56},
+\begin{equation}
+  \frac{\dd}{\dd t}\!\left(\frac{p_\perp}{nB}\right)=0,
+  \qquad
+  \frac{\dd}{\dd t}\!\left(\frac{p_\parallel B^2}{n^3}\right)=0 .
+\end{equation}
+The first is conservation of the magnetic moment; the second is
+conservation of the parallel action for a flux tube whose length scales as
+$B/n$. This is an algebraic closure with a real small parameter in the
+perpendicular direction and none in the parallel direction: setting the
+parallel heat fluxes to zero is the truncation of Section~\ref{sec:moment},
+and it omits Landau damping. Landau-fluid models restore it by closing the
+parallel heat fluxes as in Section~\ref{sec:collisionless}
+\cite{Snyder97}.
+
+\subsection{Collisional: Braginskii}
+
+With collisions and a magnetic field the heat flux has three parts,
+\begin{equation}
+  \bq=-\kappa_\parallel\nabla_\parallel T-\kappa_\perp\nabla_\perp T
+      \mp\kappa_\wedge\,\bb\times\nabla T ,
+\end{equation}
+and for electrons with $Z=1$ and $\Omega_e\tau_e\gg1$ \cite{Braginskii65}
+\[
+  \kappa_\parallel=3.16\,\frac{nT_e\tau_e}{m_e},\qquad
+  \kappa_\perp=4.66\,\frac{nT_e}{m_e\Omega_e^2\tau_e},\qquad
+  \kappa_\wedge=\frac52\,\frac{nT_e}{m_e\Omega_e},
+\]
+with $\Omega_e$ the gyrofrequency. The parallel coefficient is the
+unmagnetized one. The perpendicular coefficient is smaller by
+$(\Omega\tau)^{-2}$, many orders of magnitude in a fusion plasma, because
+the step of the random walk is the gyroradius and not the mean free path.
+The third term is perpendicular to the gradient and does not depend on the
+collision time. It is not dissipative. The stress tensor has the same
+structure, with a non-dissipative \emph{gyroviscous} part.
+
+For a closure, the consequences are two. The parallel direction carries
+almost all the heat, so errors in the parallel closure and errors in the
+numerical alignment with the field dominate. And the non-dissipative terms
+are closures with a sign structure (they do no work) that a learned model
+must preserve.
+
+\subsection{Closing in phase space: drift kinetics and gyrokinetics}
+
+The same small parameter can be used before taking moments. Averaging the
+kinetic equation over the gyrophase removes one velocity coordinate and the
+fast gyration time scale. In gyrokinetics the ordering is
+\[
+  \frac{\omega}{\Omega}\sim\frac{\rho}{L}\sim\frac{\delta f}{f}
+  \sim\frac{k_\parallel}{k_\perp}\ll1,\qquad k_\perp\rho\sim1,
+\]
+and the result is a kinetic equation in five phase-space dimensions for
+rings of charge \cite{BrizardHahm07}. This is a closure in the sense of
+Section~\ref{sec:problem}: the retained state is the gyrophase-averaged
+distribution, the discarded information is the gyrophase dependence, and
+the limiting process is the ordering above. It is asymptotic, with a
+conserved adiabatic invariant behind it. Gyrofluid models are moment
+closures of gyrokinetics \cite{DorlandHammett93}.
+
+\subsection{Fluid models as a ladder of closures}
+
+Single-fluid models of a magnetized plasma differ in what they close and
+how.
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{@{}P{3.3cm}P{5.0cm}Y@{}}
+\toprule
+Model & Closure of the pressure & Closure of the electric field \\
+\midrule
+Ideal MHD & scalar, adiabatic: $\dd(p/n^{5/3})/\dd t=0$
+  & $\bE+\bu\times\bB=0$ \\
+Resistive MHD & scalar, with heating
+  & $\bE+\bu\times\bB=\eta\,\mathbf J$ \\
+Hall and extended MHD & scalar or Braginskii
+  & generalized Ohm's law \\
+Double-adiabatic & $p_\perp$, $p_\parallel$, no heat flux & ideal \\
+Landau fluid & $p_\perp$, $p_\parallel$, nonlocal parallel heat flux
+  & ideal or generalized \\
+\bottomrule
+\end{tabularx}
+\end{center}
+The generalized Ohm's law is the electron momentum equation solved for the
+electric field,
+\begin{equation}
+  \bE+\bu\times\bB=\eta\,\mathbf J+\frac{\mathbf J\times\bB}{ne}
+   -\frac{\nabla\cdot\mathbf P_e}{ne}
+   +\frac{m_e}{ne^2}\frac{\dd\mathbf J}{\dd t},
+\end{equation}
+and each MHD variant keeps a subset of the terms on the right. The
+electron pressure tensor in it is unclosed. In collisionless reconnection
+its off-diagonal part is what breaks the frozen-in condition, which is why
+ten-moment models with a heat-flux closure are used there \cite{Wang15}.

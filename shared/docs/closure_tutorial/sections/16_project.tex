@@ -1,0 +1,160 @@
+\section{This project: what is proved here, and how the benchmark uses it}
+\label{sec:repo}
+
+\subsection{The heat-flux results}
+
+The notes in \texttt{shared/docs/} and the manuscript
+\texttt{plasma\_heat\_flux\_paper/manuscript.tex} study the function
+$\chi(k,\omega)$ of Section~\ref{sec:between} for linear perturbations of a
+Maxwellian, mostly at zero frequency. The manuscript is the current
+statement; \texttt{summary\_of\_results.tex} predates several of its
+sections. What follows is a reading guide, with the manuscript's
+conditions. All of it is linear, for a homogeneous background, one Fourier
+direction, and an unbounded or periodic domain. None of the proofs has been
+checked by a second reader, and the Landau and electron results rest on
+published coercivity estimates that are cited and not reproved.
+
+\paragraph{Conventions.} The manuscript uses the energy flux, which in one
+dimension is half the third central moment used in
+Sections~\ref{sec:collisionless} and~\ref{sec:between}. Its
+one-dimensional collisionless constant is $\sqrt{2/\pi}$, and its
+conductivities are half those quoted above. Relative deficits are
+unaffected (Appendix~\ref{app:conv}).
+
+\paragraph{The response depends on the drive.} A response ratio is tied to
+its input. Two drives are treated: a potential force (the Hammett--Perkins
+setting) and an isotropic heating source. They share the conductivity and
+differ at order $k^2$.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{@{}P{3.7cm}YP{3.7cm}@{}}
+\toprule
+Setting & Established & Not established \\
+\midrule
+One velocity dimension, potential drive, any conserving symmetric
+non-negative operator
+  & dual variational principles;
+    $\kF/(1+Kk^2)\le\chi(k)\le\kF$ at every $k$; $K$ is the exact leading
+    deficit (under stated solvability hypotheses)
+  & nonlinear or arbitrary-initial-data closure \\
+BGK and Dougherty
+  & closed forms \eqref{eq:theta-bgk}, \eqref{eq:theta-dougherty}; both
+    limits; sharp leading deficits; exact frequency response for
+    constant-$\nu$ BGK
+  & equivalence to Coulomb collisions \\
+Three dimensions, potential drive
+  & a stress cross term appears; two-sided bounds at small $k$; leading
+    coefficient; positivity when $k^2\kF\eta<3$
+  & bounds at all $k$: they are false in general \\
+Counterexamples
+  & relaxation operators with a slow stress have $\chi>\kF$; with a slow
+    heat flux as well, $\chi<0$
+  & sharp thresholds \\
+Like-particle Landau
+  & weighted solvability; $|k|\chi\to3\sqrt{2/\pi}$ with rate
+    $O(|k|^{-2/3}\log|k|)$; positivity at small and at large $k$
+  & positivity at intermediate $k$; $\chi\le\kF$ at all $k$ \\
+Three dimensions, thermal drive
+  & $\kappa/(1+K_{\mathrm{th}}k^2)\le\chi_{\mathrm{th}}\le\kappa$ at every
+    $k$, without momentum conservation; $\chi_{\mathrm{th}}$ is a Stieltjes
+    function of $k^2$
+  & the spectral measure beyond two moments \\
+Electrons with ions of charge $Z$
+  & the thermal theorems with the zero-current conductivity;
+    $|k|\chi_{\mathrm{th}}\to\tfrac95\sqrt{2/\pi}$ for every $Z$; the
+    normalized deficit grows linearly in $Z$ with slope $1.4305$
+  & certified constants; a rate for the collisionless limit \\
+Frequency dependence
+  & the exact closure for data in the retained moments is a convolution in
+    time with a positive-real kernel; bounds on the error of the
+    quasi-static closure
+  & the continuum statement for Landau \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\paragraph{Numbers.} From polynomial Galerkin calculations: for
+like-particle Landau collisions $\kF/\tau\simeq3.9502$ and
+$K/\tau^2\simeq22.35$, a leading deficit about $7.45$ times that of the
+Dougherty operator at matched conductivity. For electrons the normalized
+deficit $K_{\mathrm{th}}/\kappa^2$ grows from about $4.3$ at $Z=1$ to $96$
+at $Z=64$. In the embedded tests the exact quasi-static closure has
+transient errors of up to $34\%$ in a one-dimensional model coupled to
+sound waves, and stays within $2\%$ in the quasi-neutral decay of an
+electron temperature perturbation at $Z=1$ and $|k|\lambda_e\le0.3$, where
+Spitzer--H\"arm conduction is off by $42\%$.
+
+\paragraph{What they are for.} These are analytic test targets for
+classical and learned closures, with known answers at both ends and proved
+intervals in between. They are not a general constitutive law.
+
+\subsection{The benchmark tracks, in the five items}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\small
+\begin{tabularx}{\textwidth}{@{}P{2.3cm}P{2.6cm}P{2.5cm}P{2.5cm}Y@{}}
+\toprule
+Track & Hierarchy and limit & Retained & Discarded & Defect measured by \\
+\midrule
+A1 particles to Boltzmann
+  & BBGKY; low density
+  & one-particle distribution
+  & cumulants, collision history
+  & factorization error, recollision counts, Boltzmann residual \\
+A2 waves to wave kinetics
+  & correlation hierarchy; weak nonlinearity
+  & spectrum
+  & phases, spectral cumulants
+  & spectral covariance error, kinetic residual \\
+A3 Boltzmann to fluid
+  & moment hierarchy; $\Kn\to0$
+  & $n$, $\bu$, $T$
+  & non-Maxwellian velocity structure
+  & constitutive flux error, Hilbert remainder \\
+B1 dusty plasma
+  & three stacked closures (Section~\ref{sec:strong}); no small parameter
+    assumed
+  & grains; then $f_1$; then moments
+  & plasma and wakes; correlations; velocity detail
+  & force decomposition, factorization defect, flux residuals \\
+B2 supernova
+  & Reynolds decomposition of 3D onto 1D; none
+  & radial profiles
+  & nonradial motion, history
+  & $C^\star_{\mathrm{SN}}$ by term \\
+\bottomrule
+\end{tabularx}
+\end{center}
+Track A is where the closure is a theorem and the asymptotic-limit error
+can be separated from everything else. Track B is where the assumptions
+fail and an augmented closure is needed. The heat-flux results sit between
+them: a kinetic-to-moment closure with exact answers and a regime
+parameter ($k\lambda$, and for electrons $Z$) that sweeps from the trusted
+limit to its breakdown.
+
+\subsection{The closure models compared}
+
+The list in \texttt{mathematical\_closure\_program.md} maps onto the
+sections of this tutorial as follows.
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{@{}YP{4.6cm}@{}}
+\toprule
+Model in the program & Section here \\
+\midrule
+Analytic and identifiable effective interaction laws & \ref{sec:strong} \\
+Contextual or finite-memory graph particle models
+  & \ref{sec:strong}, \ref{sec:memory} \\
+Classical Markov kinetic or fluid closure
+  & \ref{sec:asym}, \ref{sec:plasma}, \ref{sec:collisionless} \\
+Explicit finite-cumulant or finite-moment closure
+  & \ref{sec:hier}, \ref{sec:moment} \\
+Finite-memory closure with kernels or auxiliary variables
+  & \ref{sec:memory}, \ref{sec:between} \\
+Structure-preserving learned correction & \ref{sec:learned} \\
+Black-box surrogate as a control & \ref{sec:learned} \\
+\bottomrule
+\end{tabularx}
+\end{center}

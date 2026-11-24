@@ -1,0 +1,162 @@
+\section{Between the limits: closure as a function of wavenumber and frequency}
+\label{sec:between}
+
+Sections~\ref{sec:asym} and~\ref{sec:collisionless} fixed the heat flux at
+the two ends: Fourier's law when collisions dominate and the
+Hammett--Perkins closure when they are absent. Most applications sit in
+between. This section states the problem in a form that covers every
+closure met so far, and reports what is known exactly.
+
+\subsection{One function}
+
+For the linear problem \eqref{eq:linkin}, a single Fourier mode, and data
+that lie in the retained moments, the exact relation between heat flux and
+temperature is a multiplier,
+\begin{equation}
+  \hat q(k,\omega)=-ik\,\chi(k,\omega)\,\hat T(k,\omega) .
+  \label{eq:symbol}
+\end{equation}
+This is the Schur complement \eqref{eq:schur} for the kinetic equation:
+$\chi$ is the exact memory kernel, in Fourier--Laplace variables. Every
+linear closure is a choice of approximation to $\chi$:
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{@{}P{4.4cm}P{4.6cm}Y@{}}
+\toprule
+Closure & $\chi(k,\omega)$ & Character \\
+\midrule
+Fourier (Chapman--Enskog) & $\kF$ & local \\
+Gradient expansion, truncated & $\kF(1-Kk^2)$
+  & local; negative for $k^2>1/K$ \\
+Rational in $k^2$ & $\kF/(1+Kk^2)$
+  & exponential kernel in space \\
+Cattaneo, Grad & $\kF/(1-i\omega\tau)$
+  & exponential kernel in time \\
+Fokker--Planck fit (Section~\ref{sec:plasma}) & $\kF/(1+(30k\lambda_e)^{4/3})$ & fit \\
+Multigroup & $\sum_jw_j/(m_j+k^2)$, $w_j\ge0$
+  & sum of screened diffusions \\
+Hammett--Perkins & $\sqrt{8/\pi}\;n_0\vt/|k|$
+  & scale-free nonlocal \\
+Harmonic interpolant & $\bigl(1/\kF+|k|/(\sqrt{8/\pi}\,n_0\vt)\bigr)^{-1}$
+  & both limits by construction \\
+Exact, BGK & $i\,\Phi\bigl((\omega+i\nu)/|k|\bigr)/|k|$ & see below; units $n_0=\vt=1$ \\
+\bottomrule
+\end{tabularx}
+\end{center}
+A flux limiter is not in the table because it is nonlinear: it depends on
+the amplitude of the temperature gradient and has no multiplier.
+
+Physical requirements become conditions on the function $\chi$:
+causality is analyticity in the upper half of the $\omega$ plane;
+dissipativity is $\operatorname{Re}\chi\ge0$ on the real axes; a real
+kernel requires $\chi(-k,-\bar\omega)=\overline{\chi(k,\omega)}$; and the
+two limits are $\chi\to\kF$ as $k\to0$ and $|k|\chi\to$ a constant as
+$|k|\to\infty$ at $\omega=0$.
+
+The \emph{quasi-static} closure is $\chi(k,0)$. It is the right object when
+the retained dynamics is slow compared with the kinetic relaxation at that
+wavenumber, and Section~\ref{sec:repo} states when that holds.
+
+\subsection{Exact results in one velocity dimension}
+
+Two model collision operators can be solved in closed form. Both results
+are proved in the notes cited in Section~\ref{sec:repo}; the formulas were
+re-evaluated here and checked against an independent Hermite--Galerkin
+solve of \eqref{eq:hermitehier} with 1200 modes (agreement to
+$10^{-14}$ at $\nu/|k|=1$ and $3$).
+
+\paragraph{BGK with constant $\nu$.} Let $W(z)=\avg{1/(v-z)}$,
+$R(z)=1+zW(z)$, and
+\[
+  \Phi(z)=\frac{z\,\bigl(1-3R(z)+z^2R(z)\bigr)}{1-R(z)+z^2R(z)} .
+\]
+Then every solution satisfies
+$\hat q=\sgn(k)\,\Phi\bigl((\omega+i\nu)/|k|\bigr)\hat T$: the collisional
+closure is the collisionless one evaluated at the complex phase velocity
+$(\omega+i\nu)/|k|$. At zero frequency, with $y=\nu/|k|$,
+\begin{equation}
+  \hat q=-i\,\sgn(k)\,\theta(y)\,\hat T,\qquad
+  \theta(y)=\frac{1+y^2}{y\,(3+y^2)}\;
+  \frac{\avg{\He_3^2/(v^2+y^2)}}{\avg{\He_2^2/(v^2+y^2)}} .
+  \label{eq:theta-bgk}
+\end{equation}
+
+\paragraph{Dougherty.} With $E(s)=[(1-s)e^s]^{1/y^2}$,
+\begin{equation}
+  \theta_1(y)=\frac2y\;\frac{\int_0^1s\,E(s)\,\dd s}{\int_0^1E(s)\,\dd s}.
+  \label{eq:theta-dougherty}
+\end{equation}
+
+Both tend to $\sqrt{8/\pi}=1.5958$ as $y\to0$ (computed: $1.5949$ at
+$y=0.002$ for BGK and $1.573$ at $y=0.02$ for Dougherty), and both tend to
+Fourier's law as $y\to\infty$, with $\kF=3/\nu$ and $1/\nu$ respectively.
+The leading deficits \eqref{eq:deficit} are $K=4/\nu^2$ and
+$K=1/(3\nu^2)$ (computed at $y=50$: $3.986$ and $0.3333$).
+
+\subsection{Comparison at matched conductivity}
+
+Two collision operators with the same nominal $\nu$ have different
+conductivities, so a fair comparison fixes $\kF$. Use the variable
+$s=|k|\,\kF/(n_0\vt)$, in which Fourier's law is $\chi/\kF=1$ and the
+collisionless limit is $\chi/\kF=\sqrt{8/\pi}/s$.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+\begin{loglogaxis}[width=0.78\textwidth,height=7.2cm,
+  xlabel={$s=|k|\,\kF/(n_0\vt)$},ylabel={$\chi/\kF$},
+  xmin=0.01,xmax=100,ymin=0.01,ymax=1.5,grid=major,
+  legend style={font=\footnotesize,at={(0.03,0.03)},anchor=south west}]
+\addplot[black,thick] table[x=s,y=bgk]{\rundir/intermediate.dat};
+\addplot[red,densely dotted,very thick] table[x=s,y=dougherty]{\rundir/intermediate.dat};
+\addplot[blue,dashed,thick] table[x=s,y=harmonic]{\rundir/intermediate.dat};
+\addplot[gray,thin] table[x=s,y=limits]{\rundir/intermediate.dat};
+\legend{exact BGK,exact Dougherty,harmonic interpolant,the two limits}
+\end{loglogaxis}
+\end{tikzpicture}
+\caption{Quasi-static heat-flux closure in one velocity dimension for two
+collision operators at equal conductivity, with the harmonic interpolant
+between Fourier's law and the Hammett--Perkins closure. Data:
+\texttt{\rundir/intermediate.dat}.}
+\label{fig:between}
+\end{figure}
+
+\begin{center}
+\begin{tabular}{rrrr}
+\toprule
+$s$ & exact BGK & exact Dougherty & harmonic interpolant \\
+\midrule
+0.10 & 0.9956 & 0.9967 & 0.9410 \\
+0.32 & 0.9595 & 0.9685 & 0.8346 \\
+1.00 & 0.7570 & 0.7844 & 0.6148 \\
+3.16 & 0.3884 & 0.4001 & 0.3354 \\
+10.0 & 0.1466 & 0.1484 & 0.1376 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Three conclusions, the first two computed here and the third quoted.
+\begin{itemize}
+  \item \textbf{The interpolant is biased low for these operators.} Over
+    $0.01\le s\le100$ the ratio of exact to interpolated conductivity lies
+    between $1.006$ and $1.23$ for BGK and between $1.006$ and $1.28$ for
+    Dougherty. An interpolant that is exact at both ends is off by a
+    quarter in the middle.
+  \item \textbf{These two operators nearly agree at matched conductivity.}
+    Their collision frequencies do not depend on speed, and the two curves
+    differ by a few percent.
+  \item \textbf{A speed-dependent collision frequency changes the picture.}
+    For BGK with $\nu(v)=\nu_0/(1+|v|^3)$, which has the Coulomb tail, the
+    note \texttt{bgk\_velocity\_dependent\_closure.tex} reports
+    $\chi/\kF=0.57$ at $s\approx0.7$ and $0.13$ at $s\approx7$, far below
+    the curves in Figure~\ref{fig:between}; the leading deficit coefficient
+    at matched conductivity is larger by a factor of about fifteen to
+    twenty; and the error of the harmonic interpolant changes sign (the
+    interpolant is too high by up to $48\%$). That is the behaviour
+    reported for the Landau operator \cite{Brodrick17}.
+\end{itemize}
+The summary is the main finding of the heat-flux manuscript: matching the
+two limits and the conductivity does not determine the closure. The
+coefficient $K$ in \eqref{eq:deficit} is an independent property of the
+collision operator, and it is the first quantity a benchmark should test
+after the conductivity itself.

@@ -1,0 +1,217 @@
+\section{Where the hierarchies come from}
+\label{sec:hier}
+
+Five hierarchies recur in this project. Each is exact, and each has the
+same shape: the equation at level $s$ contains the unknown of level $s+1$.
+
+\subsection{Particles to kinetic: BBGKY}
+
+Take $N$ identical particles of mass $m$ with pair potential $\phi$, and let
+$F_N$ be a symmetric probability density on phase space obeying the
+Liouville equation. The $s$-particle marginal is
+$f_s = \int F_N\,\dd z_{s+1}\cdots\dd z_N$ with $z_i = (\bx_i,\bv_i)$.
+Integrating the Liouville equation gives the BBGKY hierarchy. Its first
+equation is
+\begin{equation}
+  \partial_t f_1 + \bv\cdot\nabla_{\bx} f_1
+  = \frac{N-1}{m}\int \nabla\phi(\bx-\bx')\cdot\nabla_{\bv}
+    f_2(\bx,\bv,\bx',\bv',t)\,\dd\bx'\,\dd\bv' ,
+  \label{eq:bbgky1}
+\end{equation}
+and in general
+\begin{equation}
+  \partial_t f_s = \cL_s f_s + \mathcal{C}_{s,s+1} f_{s+1},
+  \qquad s = 1,\dots,N-1,
+\end{equation}
+where $\cL_s$ is the dynamics of $s$ particles among themselves and
+$\mathcal{C}_{s,s+1}$ is their interaction with one more. Here the cause is
+the interaction, which is a two-body quantity.
+
+The useful variables are the connected correlations (cumulants),
+\[
+  f_2 = f_1 f_1 + g_2, \qquad
+  f_3 = f_1 f_1 f_1 + \textstyle\sum f_1\,g_2 + g_3, \qquad\dots
+\]
+A kinetic equation is a closure of \eqref{eq:bbgky1}. Which one depends on
+the scaling.
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}P{3.1cm}P{4.2cm}P{3.0cm}Y@{}}
+\toprule
+Scaling & Small parameter & Closure & Kinetic equation \\
+\midrule
+Low density (Boltzmann--Grad)
+  & hard spheres of diameter $\epsilon$, $N\epsilon^{d-1}$ fixed
+  & $g_2\to0$ for particles about to collide
+  & Boltzmann \\
+Mean field
+  & $\phi\to\phi/N$, long range
+  & $g_2 = O(1/N)$ neglected
+  & Vlasov \\
+Weak coupling
+  & weak potential, many grazing encounters
+  & $g_3$ neglected, $g_2$ slaved to $f_1$
+  & Landau \\
+Plasma
+  & $1/\Lambda$, particles per Debye volume
+  & as above, with collective screening
+  & Vlasov at leading order, Lenard--Balescu at next \\
+\bottomrule
+\end{tabularx}
+\end{center}
+In the first row the assumption is one-sided: particles are uncorrelated
+\emph{before} they collide, and correlated afterwards. That asymmetry is
+where irreversibility enters. Lanford proved the first row for short times
+\cite{Lanford75}; Deng, Hani and Ma extended it to the full lifespan of the
+Boltzmann solution \cite{DHM24}, by propagating a cumulant ansatz across
+time layers. Their organization of $g_2, g_3,\dots$ by collision history is
+the structure the mathematical closure program in this repository tries to
+turn into measurable diagnostics.
+
+\subsection{Kinetic to fluid: the moment hierarchy}
+\label{sec:momenthier}
+
+A dilute gas is described by $f(\bx,\bv,t)$ obeying
+\begin{equation}
+  \partial_t f + \bv\cdot\nabla f + \frac{\bF}{m}\cdot\nabla_{\bv} f = C[f],
+  \label{eq:kinetic}
+\end{equation}
+with $C$ the collision operator and $\bF$ a force. Define density
+$n=\int f\,\dd^3v$, flow $n\bu=\int\bv f\,\dd^3v$, and temperature
+$\tfrac32 nT=\int\tfrac12 m|\bv-\bu|^2f\,\dd^3v$ (with $k_B=1$). Because
+collisions conserve particles, momentum and energy, the first three moment
+equations contain no collision term:
+\begin{align}
+  \partial_t n + \nabla\cdot(n\bu) &= 0, \label{eq:mass}\\
+  mn\,\frac{D\bu}{Dt} &= -\nabla p - \nabla\cdot\boldsymbol{\pi} + n\bF,
+     \label{eq:mom}\\
+  \frac{3}{2}\,n\,\frac{DT}{Dt} + p\,\nabla\cdot\bu
+     &= -\nabla\cdot\bq - \boldsymbol{\pi}:\nabla\bu , \label{eq:energy}
+\end{align}
+with $p=nT$, $D/Dt = \partial_t+\bu\cdot\nabla$, and
+\[
+  \boldsymbol\pi = m\!\int\!\bigl(\bw\bw-\tfrac13|\bw|^2\mathbf I\bigr)f\,\dd^3v,
+  \qquad
+  \bq = \int \tfrac12 m|\bw|^2\,\bw\,f\,\dd^3v,
+  \qquad \bw=\bv-\bu .
+\]
+These are exact and not closed: $\boldsymbol\pi$ and $\bq$ are higher
+moments. Their equations contain still higher moments, and also moments of
+$C[f]$, which are not zero beyond the conserved ones. Maxwell wrote the
+hierarchy down in 1867.
+
+In one space and one velocity dimension the structure is plain. With
+$M_k=\int v^kf\,\dd v$ and a force-free, collisionless equation,
+\begin{equation}
+  \partial_t M_k + \partial_x M_{k+1} = 0, \qquad k=0,1,2,\dots
+  \label{eq:rawhier}
+\end{equation}
+Retaining $M_0,\dots,M_N$ leaves $M_{N+1}$ undetermined. Here the cause is
+transport alone; the equation is linear.
+
+\subsection{Fluid to mean flow: Reynolds averaging and filtering}
+
+For an incompressible fluid split $u_i=\bar u_i+u_i'$, where the bar is an
+ensemble average, and average the Navier--Stokes equations (Reynolds, 1895):
+\begin{equation}
+  \partial_t \bar u_i + \bar u_j\,\partial_j \bar u_i
+  = -\frac{1}{\rho}\,\partial_i \bar p + \nu\,\nabla^2 \bar u_i
+    - \partial_j \avg{u_i' u_j'} .
+  \label{eq:rans}
+\end{equation}
+The Reynolds stress $R_{ij}=\avg{u_i'u_j'}$ is not a function of the mean
+flow. Its equation contains triple correlations and pressure--velocity
+correlations, and so on. The cause is the quadratic nonlinearity.
+
+Large-eddy simulation replaces the average by a spatial filter of width
+$\Delta$. The filtered equations have the same form with the
+\emph{subgrid stress}
+\begin{equation}
+  \tau_{ij} = \overline{u_iu_j}-\bar u_i\,\bar u_j
+  \label{eq:sgs}
+\end{equation}
+in place of $R_{ij}$. Two differences matter later. A filter is not a
+projection in general ($\bar{\bar u}\ne\bar u$), and $\tau_{ij}$ fluctuates
+in space and time, so an LES closure is asked for a field and not a
+statistic.
+
+\subsection{A hierarchy of statistical moments, solved}
+\label{sec:langevin}
+
+The same structure appears whenever a nonlinear system is described by
+statistics.
+
+\begin{example}[Cumulant-discard closure for a nonlinear Langevin equation]
+\label{ex:langevin}
+Let $\dd x=-x^3\,\dd t+\sigma\,\dd W$ and $m_k=\mathbb E\,x^k$. It\^o's
+formula gives
+\begin{equation}
+  \dot m_k = -k\,m_{k+2} + \tfrac12\sigma^2\,k(k-1)\,m_{k-2} .
+\end{equation}
+The equation for $m_2$ contains $m_4$, that for $m_4$ contains $m_6$. The
+stationary density is $p\propto\exp(-x^4/2\sigma^2)$, so the exact answers
+are
+\[
+  m_2=\sqrt2\,\frac{\Gamma(3/4)}{\Gamma(1/4)}\,\sigma = 0.4780\,\sigma,
+  \qquad m_4=\tfrac12\sigma^2 .
+\]
+\emph{Gaussian closure.} Set the fourth cumulant to zero, $m_4=3m_2^2$.
+Then $\dot m_2=-6m_2^2+\sigma^2$, with stationary value
+$m_2=\sigma/\sqrt6=0.4082\,\sigma$, which is $14.6\%$ low.
+
+\emph{Next order.} Keep $m_2$ and $m_4$ and set the sixth cumulant to
+zero, $m_6=15m_2m_4-30m_2^3$. The stationary equations give
+$m_4=\sigma^2/2$ exactly and $m_2=\sigma/\sqrt5=0.4472\,\sigma$, which is
+$6.4\%$ low.
+\end{example}
+
+Three remarks carry over to turbulence and to plasmas. The closure assumes
+a \emph{shape} for the distribution (Gaussian, or Gaussian plus a fourth
+cumulant), which is closure by ansatz (Section~\ref{sec:moment}). No small
+parameter makes the discarded cumulant small, so the error is not
+controlled and improvement with order is not guaranteed. And a set of
+closed moments need not be the moments of any probability density; when it
+is not, the closure is not \emph{realizable} (Section~\ref{sec:realizability}).
+Discarding cumulants above the second is called the quasi-normal
+approximation in turbulence, and in that setting it does produce negative
+energy spectra (Section~\ref{sec:statclosure}).
+
+\subsection{Waves to wave kinetics}
+
+For weakly nonlinear dispersive waves, for example the cubic nonlinear
+Schr\"odinger equation
+$i\partial_tu+\Delta u=\lambda|u|^2u$ with random initial data, the retained
+quantity is the spectrum $n_k=\mathbb E|\hat u_k|^2$. Its equation contains
+fourth-order correlations of Fourier amplitudes, whose equation contains
+sixth-order ones. The closure is the random-phase (near-Gaussian)
+approximation, the analogue of molecular chaos, and the result is the wave
+kinetic equation (Section~\ref{sec:waves}).
+
+\subsection{The common pattern}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{@{}P{3.0cm}P{2.7cm}P{2.9cm}Y@{}}
+\toprule
+Problem & Retained state & Unclosed quantity & Discarded information \\
+\midrule
+Particles to kinetic & $f_1$ & $f_2$ (or $g_2$)
+  & correlations between particles, collision history \\
+Kinetic to fluid & $n$, $\bu$, $T$ & $\boldsymbol\pi$, $\bq$
+  & shape of $f$ in velocity \\
+Turbulence (RANS, LES) & $\bar{\bu}$, $\bar p$
+  & $\avg{u_i'u_j'}$ or $\tau_{ij}$
+  & fluctuations below the average or filter \\
+Waves to wave kinetic & $n_k$ & fourth-order correlations
+  & phases, higher spectral cumulants \\
+Radiation transport & energy density, flux & pressure tensor
+  & angular distribution of the radiation \\
+Dusty plasma particles & grain positions and velocities
+  & force on each grain
+  & ions, electrons, wakes and fields \\
+3D to 1D (supernova) & spherical averages
+  & turbulent stresses and fluxes
+  & nonradial motion, shock corrugation, history \\
+\bottomrule
+\end{tabularx}
+\end{center}

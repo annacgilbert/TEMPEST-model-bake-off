@@ -1,0 +1,61 @@
+\section{Waves: wave kinetics and quasilinear theory}
+\label{sec:waves}
+
+\subsection{Wave turbulence}
+
+For a weakly nonlinear dispersive system with four-wave interactions and
+dispersion relation $\omega_k$, the random-phase closure gives the wave
+kinetic equation for the spectrum $n_k$ \cite{ZLF92},
+\begin{equation}
+  \partial_tn_1\;\propto\;\lambda^2\!\int n_1n_2n_3n_4
+  \Bigl(\frac1{n_1}+\frac1{n_2}-\frac1{n_3}-\frac1{n_4}\Bigr)
+  \delta(k_1+k_2-k_3-k_4)\,\delta(\omega_1+\omega_2-\omega_3-\omega_4)
+  \,\dd k_2\,\dd k_3\,\dd k_4 ,
+\end{equation}
+which has the structure of a Boltzmann collision integral: resonant
+quartets of waves play the role of colliding pairs, and the kinetic time
+scales as $\lambda^{-2}$. The five items are: hierarchy, the equations for
+even-order correlations of Fourier amplitudes; limit, weak nonlinearity
+with a large box, taken together; retained state, the spectrum; discarded,
+phases and higher cumulants; defect, the difference between the measured
+spectral transfer and the collision integral. Deng and Hani \cite{DH23}
+proved the limit for the cubic nonlinear Schr\"odinger equation over the
+full lifespan of the kinetic solution. It is the second canonical track of
+the benchmark, chosen because the discarded information is spectral and
+not particle-based.
+
+\subsection{Quasilinear theory}
+
+The plasma version closes the interaction between waves and the particle
+distribution. Split $f=f_0+\delta f$, with $f_0$ the spatial average, in a
+one-dimensional electrostatic plasma. The average of the Vlasov equation is
+exact and unclosed,
+\begin{equation}
+  \partial_tf_0=-\frac{e}{m}\,\partial_v\avg{\delta E\,\delta f}.
+\end{equation}
+Quasilinear theory \cite{VVS62,DrummondPines62} closes it by using the
+\emph{linear} response of $\delta f$ to $\delta E$ about the slowly
+evolving $f_0$, which gives a diffusion equation in velocity,
+\begin{equation}
+  \partial_tf_0=\partial_v\bigl(D(v)\,\partial_vf_0\bigr),
+  \qquad
+  D(v)\propto\frac{e^2}{m^2}\int|E_k|^2\,\pi\,\delta(\omega_k-kv)\,\dd k,
+  \qquad
+  \partial_t|E_k|^2=2\gamma_k[f_0]\,|E_k|^2 ,
+\end{equation}
+with the growth rate $\gamma_k$ given by the slope of $f_0$ at the
+resonant velocity. The constant of proportionality depends on the
+normalization of the spectrum. The closure assumes many overlapping
+resonances and a field that decorrelates before a particle is trapped.
+
+Two connections to earlier sections. The delta function is the same
+resonance as in Section~\ref{sec:collisionless}; quasilinear theory is its
+nonlinear continuation for the mean distribution. And the natural repair
+when the assumptions fail, resonance broadening \cite{Dupree66}, replaces
+the delta function by a response function of finite width determined
+self-consistently by the diffusion, which is a closure of the
+direct-interaction type (Section~\ref{sec:statclosure}). Quasilinear
+transport models with fitted saturation rules are in routine use for
+turbulent transport in magnetized fusion plasmas, and they are closures in
+the sense of Section~\ref{sec:turb}: models, calibrated against nonlinear
+simulations.

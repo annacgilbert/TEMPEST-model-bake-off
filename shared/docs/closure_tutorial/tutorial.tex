@@ -1,0 +1,130 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{array,booktabs,tabularx}
+\usepackage{enumitem}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{xcolor}
+\definecolor{linkblue}{RGB}{24,69,102}
+\usepackage[colorlinks=true,allcolors=linkblue]{hyperref}
+
+\setlist{itemsep=2pt,topsep=4pt}
+\setlength{\emergencystretch}{2em}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\vt}{v_t}
+\newcommand{\Kn}{\mathrm{Kn}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\avg}[1]{\langle #1 \rangle}
+\newcommand{\bu}{\mathbf{u}}
+\newcommand{\bv}{\mathbf{v}}
+\newcommand{\bw}{\mathbf{w}}
+\newcommand{\bc}{\mathbf{c}}
+\newcommand{\bq}{\mathbf{q}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\bE}{\mathbf{E}}
+\newcommand{\bB}{\mathbf{B}}
+\newcommand{\bF}{\mathbf{F}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\Hil}{\mathcal{H}}
+\newcommand{\PV}{\mathrm{P.V.}\!\!}
+\newcommand{\He}{\mathrm{He}}
+\newcommand{\kF}{\kappa_{\mathrm F}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\cQ}{\mathcal{Q}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\rundir}{results/2026-11-24}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\theoremstyle{definition}
+\newtheorem{example}{Example}[section]
+\newtheorem{exercise}{Exercise}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[section]
+\numberwithin{equation}{section}
+
+\title{Closure methods: a comprehensive tutorial\\[4pt]
+\large Hierarchies, classical closures, plasma closures, learned closures,\\
+and how to test them}
+\author{Working note}
+\date{24 November 2026}
+
+\begin{document}
+\maketitle
+
+\noindent\emph{What this is.} An expanded version of the two earlier notes
+\texttt{closure\_models\_tutorial.tex} (a high-level overview) and
+\texttt{hammett\_perkins\_closure\_derivation.tex} (one derivation). Both are
+kept unchanged in the parent directory, because the heat-flux manuscript
+records their hashes as source notes. Everything in them is included here,
+with derivations, worked examples, the closure families they left out
+(turbulence, memory, magnetized and strongly coupled plasmas, radiation,
+waves, learned closures), and a map onto the benchmark.
+
+\medskip
+\noindent\emph{Status.}
+\begin{itemize}
+  \item \textbf{Derived here and checked numerically.} The worked examples
+    and every number in them: the fast--slow model
+    (Section~\ref{sec:problem}), the cubic Langevin hierarchy
+    (Section~\ref{sec:hier}), the BGK transport coefficients
+    (Section~\ref{sec:asym}), the Hermite truncation
+    (Section~\ref{sec:moment}), the Eddington factors
+    (Section~\ref{sec:rad}), the Hammett--Perkins coefficients, the
+    closure at general order and the error figures
+    (Section~\ref{sec:collisionless}), and the comparison between the
+    limits (Section~\ref{sec:between}). The script is \texttt{checks.py};
+    its output is \texttt{\rundir/checks.json}, and
+    Appendix~\ref{app:checks} lists what was compared with what.
+  \item \textbf{Quoted from this repository.} Results of the closure notes
+    and of the heat-flux manuscript are quoted with the conditions stated
+    there (Section~\ref{sec:repo}). They are not re-proved here, and no
+    proof in those notes has been checked by a second reader.
+  \item \textbf{Written from general knowledge.} The standard theory, the
+    historical attributions, and the numerical constants of named models
+    (turbulence-model constants, Braginskii coefficients, nonlocal
+    transport fits, freezing thresholds). These were not compared line by
+    line with the cited sources. The status of the bibliography is given at
+    the head of the reference list.
+\end{itemize}
+
+\noindent\emph{How to read it.} Sections~\ref{sec:problem}
+and~\ref{sec:hier} set up the problem. Sections~\ref{sec:asym}
+to~\ref{sec:memory} cover the four classical ways to close. Sections
+\ref{sec:plasma} to~\ref{sec:waves} cover plasmas and the two other TEMPEST
+settings. Sections~\ref{sec:learned} to~\ref{sec:repo} cover learned
+closures, testing, and this project. A reader who wants only the argument
+can read Sections~\ref{sec:problem}, \ref{sec:asym}, \ref{sec:memory},
+\ref{sec:collisionless}, \ref{sec:between} and~\ref{sec:judge}.
+Section~\ref{sec:summary} has summary tables, exercises with answers, and a
+list of symbols.
+
+\tableofcontents
+
+\input{sections/01_problem}
+\input{sections/02_hierarchies}
+\input{sections/03_asymptotic}
+\input{sections/04_moment}
+\input{sections/05_turbulence}
+\input{sections/06_memory}
+\input{sections/07_plasma}
+\input{sections/08_collisionless}
+\input{sections/09_between}
+\input{sections/10_magnetized}
+\input{sections/11_strong}
+\input{sections/12_radiation}
+\input{sections/13_waves}
+\input{sections/14_learned}
+\input{sections/15_judging}
+\input{sections/16_project}
+\input{sections/17_summary}
+
+\appendix
+\input{sections/A_appendices}
+
+\input{sections/B_bibliography}
+
+\end{document}

@@ -1,0 +1,182 @@
+\section{Collisional plasmas}
+\label{sec:plasma}
+
+Each of the three facts of Section~\ref{sec:easy} fails in a plasma. This
+section covers the particle-to-kinetic closure and the collisional
+kinetic-to-fluid closure. The collisionless and magnetized cases follow in
+Sections~\ref{sec:collisionless} and~\ref{sec:mag}. A standard reference
+for the collisional theory is Helander and Sigmar \cite{HelanderSigmar02}.
+
+\subsection{Parameters}
+
+For electrons of density $n$ and temperature $T$ (energy units),
+\[
+  \lambda_D=\sqrt{\frac{\varepsilon_0T}{ne^2}},\qquad
+  \omega_p=\sqrt{\frac{ne^2}{\varepsilon_0m_e}},\qquad
+  \Lambda=\frac{4\pi}{3}\,n\lambda_D^3,\qquad
+  \Gamma=\frac{e^2}{4\pi\varepsilon_0\,a\,T},\quad
+  a=\Bigl(\frac{3}{4\pi n}\Bigr)^{1/3}.
+\]
+$\Lambda$ is the number of particles in a Debye sphere and $\Gamma$ is the
+ratio of the potential energy of neighbours to the thermal energy. They are
+one parameter: $\Gamma=\tfrac13\Lambda^{-2/3}$
+(Exercise~\ref{ex:gamma}). A weakly coupled plasma has $\Lambda\gg1$ and
+$\Gamma\ll1$.
+
+\subsection{Particles to kinetic: mean field first, collisions second}
+
+The Coulomb force is long-range, so each particle interacts with many
+others at once. When $\Lambda\gg1$ the leading-order closure of BBGKY is a
+mean field and not a collision term:
+\begin{equation}
+  \partial_t f_s + \bv\cdot\nabla f_s
+  + \frac{q_s}{m_s}\left(\bE + \bv\times\bB\right)\cdot\nabla_{\bv} f_s
+  = \sum_{s'}C_{ss'}[f_s,f_{s'}],
+  \label{eq:vlasov-landau}
+\end{equation}
+with $\bE$ and $\bB$ determined self-consistently by Maxwell's equations.
+Collisions enter as a correction of relative size $\ln\Lambda/\Lambda$.
+They are the cumulative effect of many small-angle deflections, so the
+operator is of Fokker--Planck type. For like particles the Landau operator
+\cite{Landau36} is
+\begin{equation}
+  C[f,f]=\frac{q^4\ln\Lambda}{8\pi\varepsilon_0^2m^2}\;
+  \nabla_{\bv}\cdot\!\int\mathbf U(\bv-\bv')\cdot
+  \bigl[f(\bv')\nabla_{\bv}f(\bv)-f(\bv)\nabla_{\bv'}f(\bv')\bigr]\dd^3v',
+  \qquad
+  \mathbf U(\bw)=\frac{|\bw|^2\mathbf I-\bw\bw}{|\bw|^3}.
+\end{equation}
+The logarithm comes from cutting off the Coulomb interaction at the Debye
+length and at the distance of closest approach. The Lenard--Balescu
+operator \cite{Lenard60,Balescu60} removes the long-range cutoff by
+including the dielectric response of the plasma, and is obtained from BBGKY
+by neglecting $g_3$ and solving the equation for $g_2$. The expansion
+parameter for the particle-to-kinetic closure is weak coupling, not low
+density. A rigorous derivation of these equations from particle dynamics is
+open; the strategy explored in \texttt{hani-to-algorithms/} is one
+approach.
+
+When $\Gamma\gtrsim1$, as for the dust component of a dusty plasma, pair
+correlations are not small and this closure fails
+(Section~\ref{sec:strong}).
+
+\subsection{Collisions weaken with energy}
+\label{sec:coulomb-tail}
+
+The Coulomb collision frequency falls steeply with speed. For electrons
+scattering on ions of charge $Z$,
+\begin{equation}
+  \nu_{ei}(v)=\frac{n_iZ^2e^4\ln\Lambda}{4\pi\varepsilon_0^2m_e^2\,v^3},
+  \qquad
+  \lambda(v)=\frac{v}{\nu(v)}\propto v^4 .
+\end{equation}
+There is no single mean free path. The Chapman--Enskog calculation still
+goes through (Spitzer and H\"arm \cite{SH53}; Braginskii
+\cite{Braginskii65}) and gives $\bq=-\kappa\nabla T$ with
+$\kappa\propto T^{5/2}/(Z\ln\Lambda)$ times a function of $Z$. But the
+integrand of the heat flux weights high speeds heavily: the heat is carried
+by electrons at several times the thermal speed, whose mean free path is
+two orders of magnitude longer than the thermal one. The local closure
+therefore fails when the thermal mean free path is still of order one
+percent of the temperature gradient length or less. In the linear response
+language of \eqref{eq:deficit}, the coefficient $K$ is large.
+
+The one-dimensional model results in this repository isolate the mechanism
+(Section~\ref{sec:between}). With a velocity-independent collision
+frequency the local closure fails only at $k\lambda$ of order one. A
+$|v|^{-3}$ tail in the collision frequency moves the breakdown to
+$k\lambda\sim10^{-2}$.
+
+\subsection{Repairs used in practice}
+
+\begin{itemize}
+  \item \textbf{Flux limiter.} Cap the local flux at a fraction of the
+    free-streaming flux,
+    \begin{equation}
+      q=\min\bigl(q_{\mathrm{SH}},\;f\,nT\vt\bigr)
+      \quad\text{or}\quad
+      \frac1q=\frac1{q_{\mathrm{SH}}}+\frac1{f\,nT\vt},
+    \end{equation}
+    with $f$ tuned between about $0.03$ and $0.15$ against experiments or
+    kinetic simulations. It is local, it has no predictive value for $f$,
+    and it cannot produce preheat ahead of a temperature front.
+  \item \textbf{Convolution kernels.} Luciani, Mora and Virmont
+    \cite{LMV83} write
+    \begin{equation}
+      q(x)=\int W(x,x')\,q_{\mathrm{SH}}(x')\,\dd x',
+    \end{equation}
+    with an exponential kernel whose range is a few tens of thermal mean
+    free paths. In a uniform background an exponential kernel of range
+    $\ell$ is the multiplier $1/(1+k^2\ell^2)$, which has the form
+    \eqref{eq:rational}.
+  \item \textbf{Fits to linear kinetic theory.} Epperlein and Short
+    \cite{ES91} built a nonlocal model on linear Fokker--Planck results.
+    The fit usually quoted from that line of work is
+    $\kappa/\kappa_{\mathrm{SH}}=1/\bigl(1+(30\,k\lambda_e)^{4/3}\bigr)$,
+    with $\lambda_e=\sqrt{\lambda_{ee}\lambda_{ei}}$ a delocalization length
+    and not the thermal mean free path. The formula was confirmed from a
+    later paper that quotes it, not from the original.
+  \item \textbf{Multigroup diffusion.} Schurtz, Nicola\"i and Busquet
+    \cite{SNB00} solve one screened diffusion equation per electron energy
+    group and sum the contributions. This is the form used in
+    radiation-hydrodynamics codes, because it works in several dimensions
+    and avoids an explicit convolution.
+  \item \textbf{Moment-based integral closures} for heat flux, viscosity
+    and friction together at arbitrary collisionality \cite{JiHeld14}.
+\end{itemize}
+Comparisons against kinetic solvers show that the ranking of these models
+depends on the drive, the temperature contrast and the collision physics
+\cite{Brodrick17}. The heat-flux manuscript in this repository proves that
+for a thermal drive the exact linear closure is a positive superposition of
+screened diffusion responses (a Stieltjes function of $k^2$), which is the
+structure the multigroup models assume; it does not tell how many groups
+are needed or what their weights are (Section~\ref{sec:repo}).
+
+\subsection{Two fluids: more to close}
+
+A plasma has at least two species with a mass ratio of 1836 or more, which
+can have different temperatures and flows, and electromagnetic fields that
+are dynamical variables. The fluid equations for each species contain, in
+addition to $\boldsymbol\pi_s$ and $\bq_s$, the collisional exchange of
+momentum $\mathbf R$ and of heat between species. Braginskii's closure
+\cite{Braginskii65} for the unmagnetized direction gives, for $Z=1$,
+\begin{equation}
+  \mathbf R_\parallel=-0.51\,\frac{m_en}{\tau_e}\,u_\parallel
+      -0.71\,n\nabla_\parallel T_e,
+  \qquad
+  q_{e\parallel}=0.71\,nT_e\,u_\parallel
+      -3.16\,\frac{nT_e\tau_e}{m_e}\nabla_\parallel T_e ,
+\end{equation}
+where $u_\parallel$ is the electron flow relative to the ions and $\tau_e$
+the electron collision time. The thermal force (second term of
+$\mathbf R$) and the convective heat flux (first term of $q$) carry the
+same coefficient $0.71$. That is an Onsager symmetry, a structural
+constraint that any closure of the coupled system should respect. The
+electron momentum equation with $\mathbf R$ closed is the generalized Ohm's
+law (Section~\ref{sec:mag}).
+
+The Debye length, the skin depths and the gyroradii of each species are
+distinct scales, and a closure valid at one may fail at another.
+
+\subsection{Closures in sequence}
+
+A plasma model stacks several closures, each with its own defect:
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{@{}P{4.2cm}P{4.2cm}Y@{}}
+\toprule
+Transition & Small parameter & Fails when \\
+\midrule
+Particles $\to$ kinetic & $1/\Lambda$ (weak coupling)
+   & strong coupling, dense or dusty plasmas \\
+Kinetic $\to$ fluid, collisional & $\lambda/L$
+   & steep gradients, fast particles \\
+Kinetic $\to$ fluid, magnetized & $\rho/L$
+   & unmagnetized regions, parallel dynamics \\
+Kinetic $\to$ fluid, collisionless & none; matched to linear response
+   & nonlinear trapping, strong drives \\
+Fluid $\to$ mean transport & none in general
+   & always a model (turbulence) \\
+\bottomrule
+\end{tabularx}
+\end{center}

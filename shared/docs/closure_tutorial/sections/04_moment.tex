@@ -1,0 +1,170 @@
+\section{Closure by an ansatz for the distribution}
+\label{sec:moment}
+
+When no small parameter is available, or when a model must stay valid away
+from equilibrium, the alternative is to retain more moments and assume a
+shape for $f$ with as many free parameters as retained moments. The missing
+moment is then computed from that shape. These closures give evolution
+equations for the fluxes, so the fluxes have finite relaxation times and
+signals have finite speeds.
+
+\subsection{The linear model problem in a Hermite basis}
+\label{sec:hermite}
+
+One linear problem is used repeatedly below. Take one space and one
+velocity dimension, units with $n_0=m=\vt=1$, the Maxwellian
+$M(v)=(2\pi)^{-1/2}e^{-v^2/2}$, and write $f=M(1+h)$. The linearized
+kinetic equation with acceleration $a(x,t)$ is
+\begin{equation}
+  \partial_th+v\,\partial_xh+\Lambda h=a\,v .
+  \label{eq:linkin}
+\end{equation}
+Expand $h=\sum_{n\ge0}a_n(x,t)\,\psi_n(v)$ in the orthonormal Hermite
+functions $\psi_n=\He_n/\sqrt{n!}$, where $\He_0=1$, $\He_1=v$,
+$\He_2=v^2-1$, $\He_3=v^3-3v$. The recurrence
+$v\,\psi_n=\sqrt{n+1}\,\psi_{n+1}+\sqrt n\,\psi_{n-1}$ turns
+\eqref{eq:linkin} into
+\begin{equation}
+  \partial_ta_n+\partial_x\bigl(\sqrt{n+1}\,a_{n+1}+\sqrt n\,a_{n-1}\bigr)
+  +(\Lambda a)_n=a\,\delta_{n1} .
+  \label{eq:hermitehier}
+\end{equation}
+The coefficients are the fluid moments: $a_0$ is the density perturbation,
+$a_1$ the velocity, $\sqrt2\,a_2$ the temperature, $\sqrt6\,a_3$ the heat
+flux (third central moment), $\sqrt{24}\,a_4$ the deviation of the fourth
+moment from its Maxwellian value. For BGK, $\Lambda$ is diagonal with
+entries $0,0,0,\nu,\nu,\dots$; for the Dougherty (Lenard--Bernstein)
+operator \cite{LenardBernstein58,Dougherty64} the entries are
+$0,0,0,3\nu,4\nu,\dots$.
+
+Streaming is a tridiagonal (Jacobi) matrix in this basis. It couples each
+coefficient to its two neighbours and nothing else, and all closure
+questions for the linear problem are questions about what to do at the last
+retained row.
+
+\subsection{Truncation}
+
+The simplest choice is $a_{N+1}=0$. For a linear problem this is Grad's
+closure. Its content is exact and worth knowing.
+
+\begin{example}[Truncation is a discrete-velocity model]
+With $a_{N+1}=0$ the collisionless system is
+$\partial_t\mathbf a+J_N\,\partial_x\mathbf a=0$, where $J_N$ is the
+$(N+1)\times(N+1)$ Jacobi matrix with off-diagonal entries
+$\sqrt1,\dots,\sqrt N$. Its eigenvalues are the roots of $\He_{N+1}$, the
+Gauss--Hermite quadrature nodes. (Checked for $N=8$: the eigenvalues and
+the nodes agree to $3\times10^{-15}$, and the largest is $4.51$.) The
+truncated moment system is therefore equivalent to a kinetic equation with
+$N+1$ discrete velocities and Gauss--Hermite weights.
+\end{example}
+
+Two consequences follow. The truncated system is hyperbolic with real wave
+speeds, so it is well posed. And without collisions it cannot damp: a
+density perturbation at wavenumber $k$ is a finite sum of oscillations
+$e^{-ikv_jt}$, which decays for a while and then returns. The recurrence
+time is of order $\sqrt N/(|k|\vt)$. Landau damping
+(Section~\ref{sec:collisionless}) is lost, however many moments are kept,
+unless something absorbs the flow of perturbation energy to high $n$. That
+absorber is either collisions, which act strongly at high $n$, or a
+closure that models the outflow.
+
+\subsection{Grad's method}
+
+Grad \cite{Grad49} expands the nonlinear distribution as a local Maxwellian
+times a polynomial,
+\[
+  f=f_M(n,\bu,T)\Bigl[1+\frac{\boldsymbol\pi:\bc\bc}{2p}
+     +\frac{2}{5}\,\frac{\bq\cdot\bc}{p\,\vt}
+       \Bigl(\frac{|\bc|^2}{2}-\frac52\Bigr)\Bigr],
+\]
+which has thirteen parameters $(n,\bu,T,\boldsymbol\pi,\bq)$, and takes
+moments of the Boltzmann equation to get thirteen evolution equations. The
+unclosed higher moments are evaluated with this $f$. The standard counts
+are 5 (Euler), 10 (Gaussian), 13, 14, 20, 26 and 35 moments.
+
+Grad's equations contain Navier--Stokes--Fourier as the limit in which
+$\boldsymbol\pi$ and $\bq$ relax quickly. They have two known defects. The
+ansatz is not positive, and the equations lose hyperbolicity at moderate
+departures from equilibrium, which appears as unphysical sub-shocks.
+Regularized (R13) and globally hyperbolic variants address these
+\cite{StruchtrupTorrilhon03,Struchtrup05}.
+
+\subsection{Maximum entropy}
+
+Levermore \cite{Levermore96} chooses the distribution that maximizes the
+entropy $-\int(f\ln f-f)\,\dd v$ subject to the retained moments
+$\int m_i(\bv)f\,\dd v=\rho_i$. The maximizer is
+\begin{equation}
+  f=\exp\Bigl(\sum_i\alpha_i\,m_i(\bv)\Bigr),
+\end{equation}
+with multipliers $\alpha_i$ determined by the moments. The resulting system
+has three structural properties by construction: it is symmetric hyperbolic
+in the variables $\alpha$, it dissipates an entropy, and the ansatz is
+positive, so its moments are realizable.
+
+The costs are also structural. The map from moments to multipliers has a
+closed form only for the 5-moment (Euler) and 10-moment (Gaussian) systems,
+so each flux evaluation is an optimization problem. And beyond ten moments
+the set of moments for which the problem is solvable is not what one would
+hope: Junk showed that for the simplest higher system equilibrium lies on
+the boundary of that set, and the fluxes are singular there \cite{Junk98}.
+A closed-form example in another setting, the M1 closure for radiation, is
+worked in Section~\ref{sec:rad}.
+
+\subsection{Realizability and hyperbolicity}
+\label{sec:realizability}
+
+A vector of moments is \emph{realizable} if it comes from some non-negative
+distribution. In one velocity dimension this is the Hamburger moment
+problem: $(M_0,\dots,M_{2r})$ is realizable when the Hankel matrices
+$(M_{i+j})_{i,j=0}^{r}$ are positive semidefinite. The first conditions are
+$M_0\ge0$, $M_0M_2-M_1^2\ge0$ (non-negative temperature), and a lower bound
+on the fourth moment in terms of the lower ones. A closure can leave the
+realizable set in two ways: its formula for the unclosed moment can be
+inconsistent with the retained ones, or the closed dynamics can carry
+realizable data out of the set.
+
+\emph{Hyperbolicity} is the requirement that the flux Jacobian of the
+closed first-order system have real eigenvalues and a full set of
+eigenvectors. Without it the initial-value problem is ill posed, and no
+amount of accuracy in the closure term compensates. For learned closures
+this is the property most often lost when a network is fitted to the
+unclosed moment directly (Section~\ref{sec:learned}).
+
+\subsection{Other ansatz closures}
+
+\begin{itemize}
+  \item \textbf{Gaussian (10-moment).} Retain the full pressure tensor and
+    set the heat flux to zero. Used in plasma modelling where pressure
+    anisotropy matters; the heat-flux closure added on top is often a
+    relaxation term built on the Hammett--Perkins idea \cite{Wang15}.
+  \item \textbf{Spectral truncations.} $P_N$ in radiation transport is
+    truncation of a spherical-harmonic expansion; it is linear and can
+    produce negative densities.
+  \item \textbf{Quadrature-based methods.} Represent $f$ as a sum of delta
+    functions (or kernels) whose weights and nodes are recovered from the
+    retained moments \cite{McGraw97}. Realizable by construction; the
+    inversion is ill conditioned at high order.
+\end{itemize}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}P{2.9cm}P{3.5cm}YY@{}}
+\toprule
+Closure & Ansatz & Guarantees & Known failures \\
+\midrule
+Truncation / Grad & Maxwellian times polynomial
+  & linear problem hyperbolic; recovers NSF
+  & not positive; nonlinear loss of hyperbolicity; no collisionless damping \\
+Maximum entropy & exponential of polynomial
+  & hyperbolic, entropy, realizable
+  & costly; singular fluxes beyond 10 moments \\
+Quadrature & sum of deltas
+  & realizable
+  & ill-conditioned inversion; weakly hyperbolic variants \\
+Gaussian & anisotropic Maxwellian
+  & hyperbolic, realizable, closed form
+  & no heat flux \\
+\bottomrule
+\end{tabularx}
+\end{center}

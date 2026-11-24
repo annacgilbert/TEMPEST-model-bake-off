@@ -1,0 +1,195 @@
+\section{Asymptotic closure}
+\label{sec:asym}
+
+If a small parameter makes the discarded variables relax quickly to a state
+determined by the retained ones, the closure can be \emph{derived}, with an
+error estimate. This is the only kind of closure that comes with one.
+
+\subsection{The small parameter and two expansions}
+
+For a gas the parameter is the Knudsen number
+\begin{equation}
+  \Kn = \frac{\lambda}{L},
+\end{equation}
+the mean free path over the gradient length. In units of the macroscopic
+length and time the Boltzmann equation reads
+$\partial_tf+\bv\cdot\nabla f=\Kn^{-1}C[f]$. As $\Kn\to0$ the collision
+term forces $C[f]=0$, whose solutions are the local Maxwellians
+\[
+  f_M(n,\bu,T) = n\Bigl(\frac{m}{2\pi T}\Bigr)^{3/2}
+  \exp\Bigl(-\frac{m|\bv-\bu|^2}{2T}\Bigr).
+\]
+Two expansions organize the corrections.
+\begin{itemize}
+  \item \textbf{Hilbert (1912)} expands both $f$ and the fluid fields in
+    powers of $\Kn$. Every order solves linearized Euler equations forced by
+    the previous orders. The result is a series solution, not a new set of
+    equations.
+  \item \textbf{Chapman--Enskog (1916--17)} expands $f$ but not the fluid
+    fields:
+    $f=f_M(n,\bu,T)\,(1+\Kn\,\phi_1+\Kn^2\phi_2+\dots)$, with each
+    $\phi_j$ a function of the fields and their gradients and carrying no
+    density, momentum or energy. The time derivative is expanded instead.
+    The result is a sequence of closed equations for $n$, $\bu$, $T$: Euler,
+    Navier--Stokes--Fourier, Burnett.
+\end{itemize}
+
+\subsection{First order: Navier--Stokes--Fourier}
+\label{sec:ce}
+
+Let $\Lambda$ be the linearized collision operator about $f_M$, written so
+that $C[f_M(1+\phi)] = -f_M\,\Lambda\phi+O(\phi^2)$. It is self-adjoint and
+non-negative in the Maxwellian-weighted inner product
+$\avg{\phi,\psi}=n^{-1}\int\phi\psi f_M\,\dd^3v$, and its kernel is spanned
+by the collision invariants $1$, $\bv$, $|\bv|^2$.
+
+At order $\Kn^0$ the kinetic equation gives
+\begin{equation}
+  \Lambda\phi_1 = -\bigl(\partial_t+\bv\cdot\nabla\bigr)\ln f_M ,
+  \label{eq:ce1}
+\end{equation}
+where the time derivatives on the right are replaced by the Euler
+equations. Writing $\bw=\bv-\bu$, a direct computation gives
+\begin{equation}
+  \bigl(\partial_t+\bv\cdot\nabla\bigr)\ln f_M
+  = \Bigl(\frac{m|\bw|^2}{2T}-\frac52\Bigr)\bw\cdot\nabla\ln T
+  + \frac{m}{T}\Bigl(\bw\bw-\tfrac13|\bw|^2\mathbf I\Bigr):\nabla\bu .
+  \label{eq:ce-source}
+\end{equation}
+Three points deserve attention.
+\begin{enumerate}
+  \item \emph{Solvability.} Equation \eqref{eq:ce1} can be solved only if
+    its right-hand side is orthogonal to the kernel of $\Lambda$. The Euler
+    equations are exactly that condition. This is the Fredholm alternative,
+    and it is where the fluid equations come from at every order.
+  \item \emph{The source has two pieces,} a vector multiplying $\nabla T$
+    and a traceless tensor multiplying $\nabla\bu$. By isotropy of
+    $\Lambda$ the first produces only a heat flux and the second only a
+    stress. No density-gradient term survives.
+  \item \emph{The transport coefficients are quadratic forms.} With
+    dimensionless $\bc=\bw/\vt$, $\vt=\sqrt{T/m}$, and
+    \[
+      \mathbf A=\bigl(\tfrac12|\bc|^2-\tfrac52\bigr)\bc,\qquad
+      \mathbf B=\bc\bc-\tfrac13|\bc|^2\mathbf I,
+    \]
+    the fluxes are
+    \begin{equation}
+      \boldsymbol{\pi} = -\mu\left(\nabla\bu + \nabla\bu^{\mathsf T}
+         - \tfrac{2}{3}(\nabla\cdot\bu)\,\mathbf{I}\right),
+      \qquad
+      \bq = -\kappa\,\nabla T ,
+      \label{eq:NSF}
+    \end{equation}
+    \begin{equation}
+      \kappa = \frac{nT}{m}\cdot\frac13\avg{\mathbf A,\Lambda^{-1}\mathbf A},
+      \qquad
+      \mu = nT\cdot\frac1{10}\avg{\mathbf B,\Lambda^{-1}\mathbf B} .
+      \label{eq:transport-forms}
+    \end{equation}
+\end{enumerate}
+Because $\Lambda$ is non-negative, each coefficient is the maximum of a
+concave quadratic functional,
+\begin{equation}
+  \avg{\mathbf A,\Lambda^{-1}\mathbf A}
+  = \max_{\boldsymbol\varphi}\bigl\{2\avg{\mathbf A,\boldsymbol\varphi}
+      -\avg{\boldsymbol\varphi,\Lambda\boldsymbol\varphi}\bigr\},
+  \label{eq:variational}
+\end{equation}
+so any trial function gives a lower bound. This is how transport
+coefficients have been computed since Chapman and Enskog (polynomial trial
+functions, the Sonine expansion), and it is the starting point of the
+two-sided bounds proved in this repository (Section~\ref{sec:repo}).
+
+\begin{example}[BGK]
+\label{ex:bgk}
+The BGK model replaces collisions by relaxation to the local Maxwellian at
+rate $\nu$, $C[f]=\nu(f_M-f)$ \cite{BGK54}. Then $\Lambda=\nu$ on the
+complement of the collision invariants, and \eqref{eq:transport-forms}
+needs only Gaussian moments:
+$\tfrac13\avg{\mathbf A,\mathbf A}=\tfrac52$ and
+$\tfrac1{10}\avg{\mathbf B,\mathbf B}=1$. Hence
+\begin{equation}
+  \kappa=\frac52\,\frac{nT}{m\nu},\qquad \mu=\frac{nT}{\nu},\qquad
+  \Pr=\frac{c_p\,\mu}{\kappa}=1 \quad(c_p=\tfrac52/m).
+\end{equation}
+A monatomic gas has $\Pr\approx\tfrac23$. With one relaxation rate BGK
+cannot match the viscosity and the conductivity together, which is a first
+instance of a theme of Section~\ref{sec:between}: a model collision
+operator fitted to one transport coefficient does not reproduce the others.
+
+In one velocity dimension, with the heat flux defined as the third central
+moment (the convention of Section~\ref{sec:collisionless}), the same
+calculation gives $\kF=3\,nT/(m\nu)$.
+\end{example}
+
+For hard spheres of diameter $d$ the first Sonine approximation gives
+$\mu=\tfrac{5}{16d^2}\sqrt{mT/\pi}$ and $\Pr=\tfrac23$; higher
+approximations change $\mu$ and $\kappa$ by about two percent
+\cite{ChapmanCowling}. In both cases
+$\mu\sim mn\,\vt\lambda$ and $\kappa\sim n\,\vt\lambda$: a mean free path
+times a thermal speed.
+
+\subsection{Higher order, and why it fails}
+\label{sec:burnett}
+
+The second order of the Chapman--Enskog expansion gives the Burnett
+equations, with terms of second order in gradients. They are not an
+improvement in practice. Bobylev showed that they are linearly unstable at
+short wavelengths \cite{Bobylev82}.
+
+The mechanism can be seen in one line. For a linear temperature
+perturbation $\propto e^{ikx}$ write the heat flux as
+$\hat q=-ik\,\chi(k)\,\hat T$, so that the temperature equation is
+$\partial_t\hat T\propto-k^2\chi(k)\hat T$. Fourier's law is
+$\chi=\kF$. The expansion continued in powers of the gradient gives
+\begin{equation}
+  \chi(k)=\kF\bigl(1-K\,k^2+O(k^4)\bigr),\qquad K>0,
+  \label{eq:deficit}
+\end{equation}
+where the sign reflects that the true flux falls below Fourier's as
+gradients steepen. Truncating after the $k^2$ term makes $\chi$ negative for
+$k^2>1/K$, where the temperature mode grows at a rate proportional to
+$k^4$: an ill-posed equation. The rational form
+\begin{equation}
+  \chi(k)=\frac{\kF}{1+K\,k^2}
+  \label{eq:rational}
+\end{equation}
+has the same expansion to this order and is positive and bounded at every
+$k$. This is the same distinction as in Example~\ref{ex:fastslow} between
+the polynomial and the rational first-order closures. For conserving
+collision operators in one velocity dimension, \eqref{eq:rational} is a
+proved lower bound on the exact response, and $\kF$ is an upper bound
+(Section~\ref{sec:repo}).
+
+Repairs of the Burnett equations take three routes: regularized moment
+systems such as R13 \cite{StruchtrupTorrilhon03,Struchtrup05}; exact
+summation of the expansion in linear problems, and invariant-manifold
+constructions \cite{GorbanKarlin14,KogelbauerKarlin24}; and abandoning the
+expansion for a moment closure (Section~\ref{sec:moment}).
+
+\subsection{What is proved}
+
+The formal expansions are backed by theorems in several settings. Caflisch
+justified the compressible Euler limit for smooth solutions
+\cite{Caflisch80}. Bardos, Golse and Levermore set out the program for
+incompressible limits \cite{BGL91}, and Golse and Saint-Raymond carried it
+through for the incompressible Navier--Stokes limit in the setting of
+renormalized solutions \cite{GSR04}. Deng, Hani and Ma connect hard-sphere
+dynamics through the Boltzmann equation to the fluid equations
+\cite{DHM25}. These are the theorem-faithful settings that Track~A of the
+benchmark uses.
+
+\subsection{Why neutral gases are the easy case}
+\label{sec:easy}
+
+Collisions between neutral molecules are short-range and frequent. Three
+facts follow, and each fails for plasmas (Section~\ref{sec:plasma}).
+\begin{enumerate}
+  \item \textbf{Fast local relaxation.} Collisions drive $f$ to a local
+    Maxwellian in a few collision times, so the kinetic state is determined
+    by $n$, $\bu$, $T$ and their gradients.
+  \item \textbf{One small parameter.} All molecules have comparable mean
+    free paths, so a single $\Kn$ controls the expansion.
+  \item \textbf{Locality.} Fluxes depend on gradients at the same point and
+    time.
+\end{enumerate}

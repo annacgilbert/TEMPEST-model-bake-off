@@ -1,0 +1,302 @@
+{
+  "environment": {
+    "python": "3.13.0",
+    "numpy": "2.4.4",
+    "scipy": "1.17.1",
+    "seed": "none used"
+  },
+  "fast_slow": [
+    {
+      "eps": 0.2,
+      "exact_slow_eigenvalue": -1.381966011250105,
+      "markov": -1.0,
+      "first_order": -1.2,
+      "rational": -1.25,
+      "err_markov": 0.3819660112501051,
+      "err_first_order": 0.18196601125010514,
+      "err_rational": 0.1319660112501051
+    },
+    {
+      "eps": 0.1,
+      "exact_slow_eigenvalue": -1.1270166537925839,
+      "markov": -1.0,
+      "first_order": -1.1,
+      "rational": -1.1111111111111112,
+      "err_markov": 0.12701665379258387,
+      "err_first_order": 0.027016653792583778,
+      "err_rational": 0.015905542681472706
+    },
+    {
+      "eps": 0.05,
+      "exact_slow_eigenvalue": -1.0557280900008408,
+      "markov": -1.0,
+      "first_order": -1.05,
+      "rational": -1.0526315789473684,
+      "err_markov": 0.05572809000084078,
+      "err_first_order": 0.005728090000840735,
+      "err_rational": 0.003096511053472417
+    },
+    {
+      "eps": 0.025,
+      "exact_slow_eigenvalue": -1.0263340389897238,
+      "markov": -1.0,
+      "first_order": -1.025,
+      "rational": -1.0256410256410258,
+      "err_markov": 0.02633403898972375,
+      "err_first_order": 0.0013340389897238403,
+      "err_rational": 0.0006930133486979795
+    }
+  ],
+  "cubic_langevin": {
+    "exact_m2_over_sigma": 0.477988797486125,
+    "exact_m2_by_quadrature": 0.47798879748612505,
+    "exact_m4_over_sigma2": 0.5000000000000001,
+    "gaussian_closure_m2": 0.4082482904638631,
+    "gaussian_relative_error": -0.14590406174589554,
+    "sixth_cumulant_closure_m2": 0.4472135954999579,
+    "sixth_cumulant_relative_error": -0.06438477668937503
+  },
+  "bgk_chapman_enskog": {
+    "kappa_times_nu_3d": "5/2",
+    "mu_times_nu_3d": "1",
+    "prandtl_bgk": "1",
+    "kappa_times_nu_1d_third_central_moment": "3"
+  },
+  "hermite_truncation": {
+    "retained_order": 8,
+    "max_difference_eigenvalues_vs_gauss_hermite_nodes": 2.6645352591003757e-15,
+    "largest_node": 4.512745863399783
+  },
+  "eddington": {
+    "m1_limits": {
+      "f0": 0.3333333333333333,
+      "f1": 1.0
+    },
+    "m1_boosted_isotropic": [
+      {
+        "beta": 0.1,
+        "f": 0.13289036544850502,
+        "chi_quadrature": 0.3421926910299003,
+        "chi_formula": 0.34219269102990035
+      },
+      {
+        "beta": 0.4,
+        "f": 0.5063291139240506,
+        "chi_quadrature": 0.46835443037974683,
+        "chi_formula": 0.46835443037974683
+      },
+      {
+        "beta": 0.7,
+        "f": 0.8022922636103152,
+        "chi_quadrature": 0.7077363896848138,
+        "chi_formula": 0.7077363896848139
+      },
+      {
+        "beta": 0.9,
+        "f": 0.9448818897637794,
+        "chi_quadrature": 0.9002624671916011,
+        "chi_formula": 0.9002624671916009
+      }
+    ],
+    "minerbo_exponential": [
+      {
+        "b": 0.5,
+        "f": 0.16395341373865285,
+        "f_formula": 0.1639534137386529,
+        "chi_quadrature": 0.34418634504538864,
+        "chi_formula": 0.3441863450453886
+      },
+      {
+        "b": 2.0,
+        "f": 0.5373147207275482,
+        "f_formula": 0.5373147207275482,
+        "chi_quadrature": 0.46268527927245195,
+        "chi_formula": 0.46268527927245184
+      },
+      {
+        "b": 8.0,
+        "f": 0.8750002250703749,
+        "f_formula": 0.8750002250703748,
+        "chi_quadrature": 0.7812499437324064,
+        "chi_formula": 0.7812499437324063
+      }
+    ],
+    "levermore_pomraning_limiter": {
+      "R_small": 0.3333333111186221,
+      "R_large_times_R": 0.9990000000000001
+    }
+  },
+  "hammett_perkins": {
+    "chi1": 1.1283791670955126,
+    "D1": 2.4880422068690504,
+    "beta1": 2.6149099861707605,
+    "b": 5.61490998617076,
+    "small_zeta_residual_exact": 1.7724534662328522e-09,
+    "small_zeta_R3_minus_R": 7.123875714691507e-07,
+    "small_zeta_R4_minus_R": 1.2156092761762512e-10,
+    "small_zeta_error_order_R3": 1.9991452524335052,
+    "small_zeta_error_order_R4": 2.9996094582404855,
+    "large_zeta_coefficient_exact": 3.006559711502632,
+    "large_zeta_coefficient_R4": 5.603025337768486,
+    "large_zeta_error_decay_order_R3": 5.012924231901286,
+    "large_zeta_error_decay_order_R4": 6.016300182468561,
+    "sup_error_R3_real_axis": 0.3442043082914265,
+    "argmax_R3": 1.0185,
+    "sup_error_R4_real_axis": 0.05884371639487649,
+    "argmax_R4": 1.2745,
+    "sup_abs_R_real_axis": 1.0,
+    "static_ratios": [
+      {
+        "n": 2,
+        "c_formula": 0.9213177319235614,
+        "c_quadrature": 0.9214647810544045,
+        "quadrature_residual": 0.00014704913084317983
+      },
+      {
+        "n": 3,
+        "c_formula": 0.9399856029866251,
+        "c_quadrature": 0.9397856076670769,
+        "quadrature_residual": 0.0001999953195482851
+      },
+      {
+        "n": 4,
+        "c_formula": 0.9515328619481445,
+        "c_quadrature": 0.9517353645538937,
+        "quadrature_residual": 0.00020250260574927736
+      },
+      {
+        "n": 5,
+        "c_formula": 0.959368788699833,
+        "c_quadrature": 0.9591238466799613,
+        "quadrature_residual": 0.0002449420198716856
+      },
+      {
+        "n": 6,
+        "c_formula": 0.9650304561473718,
+        "c_quadrature": 0.9652769182940246,
+        "quadrature_residual": 0.00024646214665280386
+      },
+      {
+        "n": 7,
+        "c_formula": 0.9693106997139538,
+        "c_quadrature": 0.9690278619843294,
+        "quadrature_residual": 0.00028283772962434117
+      },
+      {
+        "n": 8,
+        "c_formula": 0.9726592741215881,
+        "c_quadrature": 0.9729431814938475,
+        "quadrature_residual": 0.00028390737225936213
+      }
+    ],
+    "static_ratio_n200": 0.9987569972050447,
+    "static_ratio_n201": 0.9987631468268187,
+    "three_moment_coefficient_from_c2": 1.5957691216057306,
+    "sqrt_8_over_pi": 1.5957691216057308
+  },
+  "intermediate": {
+    "bgk_table": [
+      {
+        "y": 0.01,
+        "theta": 1.5912413257698113
+      },
+      {
+        "y": 0.1,
+        "theta": 1.5511549006021896
+      },
+      {
+        "y": 1.0,
+        "theta": 1.2117257812521987
+      },
+      {
+        "y": 3.0,
+        "theta": 0.7570149271505642
+      },
+      {
+        "y": 10.0,
+        "theta": 0.2889638302703915
+      },
+      {
+        "y": 100.0,
+        "theta": 0.029988011061336767
+      }
+    ],
+    "galerkin_checks": [
+      {
+        "y": 1.0,
+        "operator": "bgk",
+        "formula": 1.2117257812521987,
+        "galerkin_real": 1.2117257812521964,
+        "galerkin_imag": -0.0
+      },
+      {
+        "y": 1.0,
+        "operator": "dougherty",
+        "formula": 0.7844223823546654,
+        "galerkin_real": 0.7844223823546654,
+        "galerkin_imag": -0.0
+      },
+      {
+        "y": 3.0,
+        "operator": "bgk",
+        "formula": 0.7570149271505642,
+        "galerkin_real": 0.7570149271505553,
+        "galerkin_imag": -0.0
+      },
+      {
+        "y": 3.0,
+        "operator": "dougherty",
+        "formula": 0.32173266689485164,
+        "galerkin_real": 0.32173266689485214,
+        "galerkin_imag": -0.0
+      }
+    ],
+    "collisionless_limits": {
+      "hammett_perkins": 1.5957691216057308,
+      "bgk_y_0p002": 1.594862376434574,
+      "dougherty_y_0p02": 1.572873545233815
+    },
+    "leading_deficit": {
+      "bgk_coefficient": 3.985670618286141,
+      "dougherty_coefficient": 0.3332555763624345
+    },
+    "exact_over_harmonic_interpolant": {
+      "bgk_min": 1.006221861189339,
+      "bgk_max": 1.2314036823288967,
+      "dougherty_min": 1.0062330304240532,
+      "dougherty_max": 1.2774690436133844
+    },
+    "matched_conductivity_table": [
+      {
+        "s": 0.1,
+        "bgk": 0.9955994124341617,
+        "dougherty": 0.9966859819291527,
+        "harmonic": 0.9410297081566684
+      },
+      {
+        "s": 0.31622776601683794,
+        "bgk": 0.9594761230434796,
+        "dougherty": 0.9684895735222492,
+        "harmonic": 0.8346086397608918
+      },
+      {
+        "s": 1.0,
+        "bgk": 0.7570149271505642,
+        "dougherty": 0.7844223823546654,
+        "harmonic": 0.6147577256865571
+      },
+      {
+        "s": 3.1622776601683795,
+        "bgk": 0.3884228028350045,
+        "dougherty": 0.4001053375185722,
+        "harmonic": 0.33538323492706895
+      },
+      {
+        "s": 10.0,
+        "bgk": 0.14662786262220784,
+        "dougherty": 0.14838958226563512,
+        "harmonic": 0.13761649657480898
+      }
+    ]
+  }
+}

@@ -1,0 +1,240 @@
+\section{Summary, exercises, and symbols}
+\label{sec:summary}
+
+\subsection{Side by side}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabularx}{\textwidth}{@{}P{2.7cm}P{2.8cm}P{2.8cm}Y@{}}
+\toprule
+  & Neutral gas & Fluid turbulence & Plasma \\
+\midrule
+  What relaxes the discarded variables
+    & frequent short-range collisions
+    & nothing fast; cascade
+    & weak, speed-dependent collisions; phase mixing; gyromotion \\
+  Small parameter
+    & $\Kn$
+    & none
+    & several ($1/\Lambda$, $\lambda/L$, $\rho/L$), often not small \\
+  Form of closure
+    & local gradient law
+    & modelled eddy viscosity
+    & nonlocal in space, anisotropic, sometimes with memory \\
+  Status
+    & derived, with error control
+    & modelled
+    & derived only in limits; modelled or matched elsewhere \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{@{}P{3.0cm}P{3.6cm}YY@{}}
+\toprule
+Method & Needs & Gives & Typical failure \\
+\midrule
+Asymptotic (Chapman--Enskog) & a small parameter, a collision operator
+  & derived coefficients, error estimate
+  & no scale separation; higher orders ill posed \\
+Ansatz (Grad, maximum entropy) & a choice of moments and shape
+  & finite speeds, far-from-equilibrium range
+  & realizability, hyperbolicity, cost \\
+Gradient-diffusion model & a calibrated coefficient
+  & robust, dissipative
+  & wrong tensor structure, no backscatter, tuned \\
+Memory & a kernel or auxiliary variables
+  & exact in principle
+  & kernel unknown; cost grows with memory length \\
+Response matching (Hammett--Perkins) & the linear kinetic response
+  & correct linear limits without collisions
+  & linear only; irreversible; intermediate accuracy \\
+Learned & reference data and a declared budget
+  & flexible correction
+  & extrapolation, instability when embedded \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\paragraph{In one sentence.} In a gas the closure is justified because
+collisions enforce local equilibrium below every scale that is resolved; in
+a plasma that justification is often missing, so the discarded kinetic
+information is not determined by the local fluid state, and the closure
+becomes nonlocal, anisotropic, and tied to wave--particle resonance.
+
+\subsection{Choosing a closure}
+
+Four questions, in order.
+\begin{enumerate}
+  \item \emph{Is there a small parameter, and is it small where the model
+    will be used?} If so, use the asymptotic closure and its error
+    estimate, and test the limit.
+  \item \emph{If not, what relaxes the discarded variables, and how fast
+    compared with the resolved dynamics?} Fast and local: gradient law.
+    Fast but long-range in space: nonlocal quasi-static closure.
+    Comparable to the resolved time scale: retain the flux or a memory
+    kernel.
+  \item \emph{Which structural properties must hold exactly?} Build those
+    in. Leave the rest to be tested.
+  \item \emph{What reference data exist, and with what uncertainty?} That
+    bounds what a learned correction can be credited with.
+\end{enumerate}
+
+\subsection{Exercises}
+
+Short answers follow the list.
+
+\begin{exercise}\label{ex:gron}
+Derive \eqref{eq:gronwall}. Show that if $f$ satisfies the one-sided bound
+$(x-y)\cdot(f(x)-f(y))\le-\gamma|x-y|^2$ with $\gamma>0$, the embedded error
+is bounded by $\sup|d|/\gamma$ for all time.
+\end{exercise}
+
+\begin{exercise}
+For \eqref{eq:fastslow}, expand the slow eigenvalue to $O(\varepsilon^2)$
+and compare with the three closures. Which of the two first-order closures
+has the smaller $O(\varepsilon^2)$ error, and does the answer depend on
+$a$, $b$, $c$?
+\end{exercise}
+
+\begin{exercise}
+Derive the moment hierarchy of Example~\ref{ex:langevin}. Verify
+$m_4=\sigma^2/2$ in the stationary state without any closure, and both
+closure values of $m_2$. Is the pair $(m_2,m_4)$ from the second closure
+realizable?
+\end{exercise}
+
+\begin{exercise}
+Verify \eqref{eq:ce-source}, and compute $\kappa$ and $\mu$ for BGK from
+\eqref{eq:transport-forms}.
+\end{exercise}
+
+\begin{exercise}
+For the temperature equation
+$\partial_t\hat T=-k^2\chi(k)\hat T$ (equation \eqref{eq:T} with the flow
+neglected), compare the growth rates for $\chi=\kF(1-Kk^2)$ and
+$\chi=\kF/(1+Kk^2)$. What is the large-$k$ decay rate in the second case,
+and how does it compare with the collisionless rate $\propto|k|$?
+\end{exercise}
+
+\begin{exercise}
+Show that the eigenvalues of the truncated Jacobi matrix $J_N$ are the
+roots of $\He_{N+1}$.
+\end{exercise}
+
+\begin{exercise}
+Derive $T_k=2\zeta n_k/(\zeta+i\chi_1)$ and \eqref{eq:R3}, and obtain
+$\chi_1=2/\sqrt\pi$.
+\end{exercise}
+
+\begin{exercise}
+Prove the recurrence for $W_n$ and derive \eqref{eq:cN}. Show
+$c_N\to1$.
+\end{exercise}
+
+\begin{exercise}
+Show that the kernel $(2\ell)^{-1}e^{-|x|/\ell}$ has Fourier transform
+$1/(1+k^2\ell^2)$, and verify \eqref{eq:lorentz}.
+\end{exercise}
+
+\begin{exercise}
+Show that Cattaneo's law is equivalent to the exponential memory kernel of
+Example~\ref{ex:cattaneo}, and find the dispersion relation of the
+resulting temperature equation.
+\end{exercise}
+
+\begin{exercise}
+Verify \eqref{eq:m1} for $I\propto(1-\beta\mu)^{-4}$ in slab geometry, and
+show that it satisfies $f^2\le\chi\le1$.
+\end{exercise}
+
+\begin{exercise}\label{ex:smag}
+Using the Kolmogorov spectrum $E(k)=C_K\varepsilon^{2/3}k^{-5/3}$ up to the
+cutoff $\pi/\Delta$, and the approximation
+$\avg{|\bar S|^3}\approx\avg{|\bar S|^2}^{3/2}$, derive
+$C_s=\pi^{-1}(2/3C_K)^{3/4}$.
+\end{exercise}
+
+\begin{exercise}
+Find the strain rate at which the Boussinesq closure \eqref{eq:boussinesq}
+gives a negative normal stress in plane strain.
+\end{exercise}
+
+\begin{exercise}\label{ex:gamma}
+Show $\Gamma=\tfrac13\Lambda^{-2/3}$.
+\end{exercise}
+
+\paragraph{Answers.}
+\begin{enumerate}[label=\arabic*.]
+  \item Multiply $\dot e=f(x_c)-f(\cP X)-d$ by $e$:
+    $\tfrac12\tfrac{\dd}{\dd t}|e|^2\le-\gamma|e|^2+|d||e|$.
+  \item $\lambda=(a+bc)-\varepsilon bc(a+bc)
+    +\varepsilon^2bc(a+bc)(a+2bc)+\dots$ The polynomial closure has no
+    $\varepsilon^2$ term; the rational one has
+    $\varepsilon^2(bc)^2(a+bc)$. The errors are
+    $\varepsilon^2|bc(a+bc)(a+2bc)|$ and $\varepsilon^2|bc(a+bc)^2|$, so the
+    rational form is closer exactly when $a/(bc)>-\tfrac32$, as for $a=0$
+    in the table.
+  \item $\dot m_4=-4m_6+6\sigma^2m_2$ and $\dot m_2=-2m_4+\sigma^2$. Yes:
+    $m_4=0.5\,\sigma^2\ge m_2^2=0.2\,\sigma^2$.
+  \item $\kappa=\tfrac52nT/(m\nu)$, $\mu=nT/\nu$ (Example~\ref{ex:bgk}).
+  \item The first grows like $k^4$ for $k^2>1/K$. The second decays at a
+    rate tending to the constant $\kF/K$: bounded, where the collisionless
+    rate grows like $|k|$. The rational form is well posed but
+    underdamps short wavelengths.
+  \item Expand $\det(v-J_N)$ along the last row; the determinants obey the
+    three-term recurrence of $\He_n$.
+  \item Section~\ref{sec:collisionless}.
+  \item $N!!/(N-1)!!\sim\sqrt{\pi N/2}$ for even $N$ and
+    $\sqrt{2N/\pi}$ for odd $N$ (Wallis).
+  \item Direct integration; substitute $m=k^2t^2$ in \eqref{eq:lorentz}.
+  \item $-i\omega(1-i\omega\tau)=-\kappa k^2$ in suitable units: two
+    damped modes for $4\kappa k^2\tau<1$, propagating damped waves
+    otherwise.
+  \item The moments are elementary integrals of $(1-\beta\mu)^{-4}$;
+    eliminate $\beta$. Checked numerically in \texttt{checks.py}.
+  \item $\avg{|\bar S|^2}=2\int_0^{\pi/\Delta}k^2E\,\dd k
+    =\tfrac32C_K\varepsilon^{2/3}(\pi/\Delta)^{4/3}$; set
+    $\varepsilon=(C_s\Delta)^2\avg{|\bar S|^2}^{3/2}$.
+  \item $\bar S_{11}>k/(3\nu_t)$.
+  \item $e^2/(\varepsilon_0T)=1/(n\lambda_D^2)$ and $n=3/(4\pi a^3)$ give
+    $\Gamma=a^2/(3\lambda_D^2)$, and $\Lambda=(\lambda_D/a)^3$.
+\end{enumerate}
+
+\subsection{Symbols}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{}P{2.6cm}Y@{}}
+\toprule
+$X$, $x=\cP X$ & full and retained state \\
+$d$, $e$ & a priori defect; a posteriori error \\
+$f$, $f_M$, $h$ & distribution; local Maxwellian; relative perturbation,
+   $f=M(1+h)$ \\
+$n$, $\bu$, $T$, $p$ & density, flow, temperature (energy units), pressure \\
+$\boldsymbol\pi$, $\bq$ & viscous stress, heat flux \\
+$\vt$ & $\sqrt{T/m}$ (not $\sqrt{2T/m}$) \\
+$\Lambda$ (operator) & linearized collision operator, non-negative \\
+$\Lambda$ (number) & particles per Debye sphere; $\ln\Lambda$ the Coulomb
+   logarithm \\
+$\nu$, $\tau$, $\lambda$ & collision frequency, collision time, mean free
+   path \\
+$\Kn$, $\Gamma$, $\rho$ & Knudsen number, coupling parameter, gyroradius \\
+$\kappa$, $\kF$, $\mu$ & conductivity; its Chapman--Enskog value;
+   viscosity \\
+$\chi(k,\omega)$ & heat-flux multiplier, $\hat q=-ik\chi\hat T$ \\
+$K$ & leading deficit, $\chi=\kF(1-Kk^2+\dots)$ \\
+$\theta$, $y$, $s$ & $|k|\chi$; $\nu/|k|$; $|k|\kF/(n_0\vt)$ \\
+$\zeta$, $Z$, $R$ & $\omega/(\sqrt2|k|\vt)$; plasma dispersion function;
+   $1+\zeta Z$ \\
+$a_n$, $\psi_n$, $\He_n$ & Hermite coefficients, orthonormal Hermite
+   functions, Hermite polynomials \\
+$\Hil$ & Hilbert transform, multiplier $-i\,\sgn(k)$ \\
+$R_{ij}$, $\tau_{ij}$, $\nu_t$ & Reynolds stress, subgrid stress, eddy
+   viscosity \\
+$E$, $\bF$, $\mathbf P$, $\chi(f)$ & radiation energy density, flux,
+   pressure; Eddington factor (Section~\ref{sec:rad} only) \\
+\bottomrule
+\end{tabularx}
+\end{center}

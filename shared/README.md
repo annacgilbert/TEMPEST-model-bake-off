@@ -14,6 +14,11 @@ Background used by all three projects. Nothing here is project-specific code.
   and reproducible computations; the original notes remain intact.
   The [electron heat-flux extension](docs/electron_heat_flux_extension/README.md)
   carries those results to a thermal drive and to electron-ion collisions.
+  The [closure methods tutorial](docs/closure_tutorial/README.md) is a
+  comprehensive introduction to the subject: hierarchies, classical, plasma
+  and learned closures, and how to test them. It expands
+  `closure_models_tutorial` and `hammett_perkins_closure_derivation`, which
+  remain intact as source notes of the paper.
 - `presentations/`: the full TEMPEST closure-models talk.
 - `assets/`: figures reused across documents and the talk.
 

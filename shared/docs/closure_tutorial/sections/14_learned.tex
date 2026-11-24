@@ -1,0 +1,136 @@
+\section{Learned closures}
+\label{sec:learned}
+
+Machine learning changes how a closure is represented and calibrated. It
+does not remove the closure problem, and every structural question of the
+previous sections applies unchanged. The literature chapter in
+\texttt{shared/references/} treats the surrounding methods (PINNs, neural
+operators, world models) at length; this section is restricted to closures
+and to the design decisions that determine whether a learned closure can be
+trusted. Reviews from the turbulence side are in
+\cite{DuraisamyIaccarinoXiao19}.
+
+\subsection{What is learned}
+
+The first decision is the mathematical object. The options are the rows of
+the table in Section~\ref{sec:kinds}, and the choice fixes what the model
+can and cannot represent.
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{@{}P{3.6cm}P{5.2cm}Y@{}}
+\toprule
+Learned object & Form & Examples \\
+\midrule
+Coefficients of a classical closure
+  & $\nu_t=g_\theta(\text{invariants})$
+  & tensor-basis networks for the Reynolds stress \cite{Ling16} \\
+The unclosed moment
+  & $M_{N+1}=g_\theta(M_0,\dots,M_N)$
+  & direct regression; no guarantee of hyperbolicity \\
+Its gradient
+  & $\partial_xM_{N+1}=\sum_ja_{j,\theta}\,\partial_xM_j$
+  & hyperbolic moment closures \cite{Huang21,Christlieb25} \\
+A nonlocal operator
+  & $q=\mathcal W_\theta[T]$
+  & learned Landau-fluid closures \cite{Ma20} \\
+The choice of moments and the closure
+  & encoder plus closed dynamics
+  & learned generalized moments \cite{HanMaMaE19} \\
+A memory kernel or auxiliary state
+  & $K_\theta(s)$, or $\dot z=g_\theta(z,x)$
+  & data-driven Mori--Zwanzig \cite{Lin21} \\
+A collision operator
+  & $C_\theta[f]$ in a conservative form
+  & learned from molecular dynamics \cite{Zhao25} \\
+A discretization-level correction
+  & correction to a coarse solver step
+  & learned corrections to coarse solvers \cite{Kochkov21} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+Whole-solution surrogates (a network that maps initial data to the solution)
+are not closures. They discard the reduced equation instead of completing
+it, and in this project they are run as black-box controls.
+
+\subsection{How structure enters}
+
+A constraint can be imposed softly, as a penalty in the loss, or hard, by
+construction. A soft constraint holds approximately on the training
+distribution. A hard constraint holds everywhere and is the only kind that
+supports a claim about behaviour in a long rollout.
+\begin{itemize}
+  \item \textbf{Conservation:} learn a flux, not a source, and apply a
+    conservative difference to it.
+  \item \textbf{Symmetry:} build inputs from invariants and outputs in a
+    tensor basis (Galilean and rotational invariance).
+  \item \textbf{Hyperbolicity:} parameterize the closure so that the flux
+    Jacobian has real eigenvalues, for instance through a symmetrizer or
+    through the eigenvalues themselves.
+  \item \textbf{Dissipation:} parameterize a non-negative symbol or a
+    positive semidefinite coefficient matrix.
+  \item \textbf{Limits:} learn a correction to a classical closure that
+    vanishes in the regime where the classical one is trusted,
+    \begin{equation}
+      q=q_{\mathrm{classical}}+\delta q_\theta ,
+      \qquad \delta q_\theta\to0\ \text{as}\ k\lambda\to0 .
+    \end{equation}
+\end{itemize}
+The last item is engineering principle 10 of this project: the classical
+reduced operator stays explicit and the learned part supplies only an
+identified correction. For the linear heat flux the results of
+Section~\ref{sec:repo} make it concrete. In one velocity dimension the
+correction satisfies $0\le\kF-\chi\le\kF Kk^2/(1+Kk^2)$, so its amplitude
+and its long-wavelength scaling are known in advance. For a thermal drive
+the exact symbol is $\int(m+k^2)^{-1}\dd\rho(m)$ with $\rho\ge0$, so a
+finite sum $\sum_jw_j/(m_j+k^2)$ with non-negative weights has the right
+analytic type, and two linear conditions on the weights fix the
+conductivity and the leading deficit.
+
+\subsection{How it is trained}
+
+\begin{itemize}
+  \item \textbf{A priori (offline):} regress the closure term on reference
+    data. Cheap, and it optimizes the wrong quantity: the defect on
+    reference states, not the behaviour of the closed model.
+  \item \textbf{A posteriori (solver in the loop):} differentiate through
+    the closed solver and penalize the error of the rolled-out solution
+    \cite{ListChenThuerey22,Kochkov21}. It optimizes the right quantity,
+    needs a differentiable solver, and couples the closure to one
+    discretization.
+  \item \textbf{Statistical targets:} fit long-time statistics when
+    trajectories diverge chaotically and pointwise rollout error is
+    meaningless.
+\end{itemize}
+
+\subsection{How it fails}
+
+\begin{itemize}
+  \item \textbf{The a priori to a posteriori gap.} A small defect on
+    reference data, an unstable or biased closed model
+    (Section~\ref{sec:turb}).
+  \item \textbf{Distribution shift under rollout.} The closed model drifts
+    to states outside the training set, where the closure is unconstrained.
+  \item \textbf{Extrapolation in the regime parameter.} A closure trained
+    at one collisionality, coupling strength or resolution is used at
+    another. Figure~\ref{fig:between} and the electron results of
+    Section~\ref{sec:repo} show how much a closure can differ at fixed
+    conductivity.
+  \item \textbf{Non-identifiability.} Different closures fit the same data
+    when the data do not excite the directions in which they differ, such
+    as frequencies near the collision rate.
+  \item \textbf{Entanglement with numerics.} A correction trained at one
+    grid and time step absorbs discretization error, and is then a
+    different model at another resolution.
+  \item \textbf{Leakage.} Test cases that influenced normalization,
+    hyperparameters or early stopping.
+\end{itemize}
+
+\subsection{What must be declared}
+
+A comparison between closures is meaningful only at a matched
+\emph{information budget}: which equations, paired fields, ensembles,
+cumulants, histories, closure targets and solver calls each method
+received (see \texttt{model-bakeoff/docs/information\_budgets.md}). Access
+to kinetic trajectories or to frequency responses is a different budget
+from access to temperature profiles alone, and a method given more will
+appear better for that reason.

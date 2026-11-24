@@ -1,0 +1,89 @@
+\section{Strongly coupled and dusty plasmas}
+\label{sec:strong}
+
+The first application profile of the project is a dusty plasma: micron-size
+grains, each carrying thousands of elementary charges, suspended in a weakly
+ionized gas. The grains are few and individually tracked. Their coupling
+parameter $\Gamma$ is large, so the weak-coupling closure of
+Section~\ref{sec:plasma} does not apply to them. Three closures are
+stacked.
+
+\subsection{First closure: the effective force}
+
+The full system contains electrons, ions, neutrals and fields. The
+retained state is the grain positions and velocities. Eliminating the rest
+leaves a force on each grain that the grains alone must determine.
+\begin{itemize}
+  \item The classical closure is an \emph{instantaneous pair law}: a
+    screened Coulomb (Yukawa) potential
+    $\phi(r)=Q^2e^{-r/\lambda_D}/(4\pi\varepsilon_0r)$, plus confinement
+    and gas drag. The state of the grain system is then described by
+    $\Gamma$ and the screening parameter $\kappa=a/\lambda_D$.
+  \item What it discards: ion flow past a grain produces a wake, so the
+    force between two grains is not reciprocal and not a gradient of a
+    potential; grain charge depends on the local plasma and fluctuates; the
+    wake takes time to form, which is memory; and the force on a grain
+    depends on more than one neighbour.
+\end{itemize}
+In the terms of Section~\ref{sec:kinds} the candidates are an algebraic
+pair closure, a many-body (graph) closure, and a memory closure, and the
+project's decisive experiment nests them in that order. The eliminated
+plasma has its own dynamics and is not in equilibrium, so the
+fluctuation--dissipation relation \eqref{eq:gle} need not hold for the
+effective grain dynamics. The data-driven force inference of the Burton
+laboratory \cite{Yu25} is an instance of learning this closure.
+
+\subsection{Second closure: correlations}
+
+Given a pair law, the equilibrium hierarchy relates the pair distribution
+$g(r)$ to the triplet distribution. Liquid-state theory calls its
+approximations \emph{closures}, in exactly the sense used here
+\cite{HansenMcDonald}.
+\begin{itemize}
+  \item \textbf{Kirkwood superposition:}
+    $g_3(1,2,3)\approx g(1,2)\,g(2,3)\,g(1,3)$, the factorization of the
+    triplet function into pairs.
+  \item \textbf{Integral-equation closures.} The Ornstein--Zernike relation
+    $h=c+n\,c*h$ defines the direct correlation function $c$ from
+    $h=g-1$. It is an identity with two unknowns. A second relation closes
+    it:
+    \[
+      \text{hypernetted chain:}\quad g=\exp(-\phi/T+h-c),
+      \qquad
+      \text{Percus--Yevick:}\quad c=(1-e^{\phi/T})\,g .
+    \]
+    The first is accurate for long-range, soft potentials such as Coulomb
+    and Yukawa; the second for short-range, hard ones.
+\end{itemize}
+For the dynamics, the BBGKY closure $g_2\to0$ fails outright at
+$\Gamma\gtrsim1$: the system is a liquid, and for the one-component plasma
+it freezes at $\Gamma\approx175$. Kinetic descriptions that keep
+correlations use them as input: local-field corrections to the mean field,
+and the quasi-localized charge approximation, in which particles oscillate
+in a slowly changing cage described by $g(r)$ \cite{GoldenKalman00}.
+
+\subsection{Third closure: moments with memory}
+
+At the fluid level a strongly coupled liquid supports shear waves at short
+wavelength, which a Newtonian stress cannot. The standard closure is
+viscoelastic: the stress relaxes over a time $\tau_m$,
+\begin{equation}
+  \Bigl(1+\tau_m\frac{\partial}{\partial t}\Bigr)\boldsymbol\pi
+  =-\mu\bigl(\nabla\bu+\nabla\bu^{\mathsf T}
+     -\tfrac23(\nabla\cdot\bu)\mathbf I\bigr),
+\end{equation}
+which is Cattaneo's law (Example~\ref{ex:cattaneo}) for momentum, a
+one-pole memory kernel. It gives viscous behaviour for
+$\omega\tau_m\ll1$ and elastic behaviour for $\omega\tau_m\gg1$. This
+generalized-hydrodynamic model was applied to dusty plasmas by Kaw and Sen
+\cite{KawSen98}. Here the memory is not a refinement: without it the
+closure has the wrong qualitative behaviour.
+
+\subsection{What transfers}
+
+The dusty-plasma profile is where the discarded information is
+\emph{observable}: grain trajectories give two- and three-particle
+statistics directly, so the factorization defect $g_2$, and the size of the
+memory and many-body parts of the force, can be measured instead of
+assumed. That is the reason it is paired with the canonical tracks, in
+which the same quantities are controlled by theorems.
